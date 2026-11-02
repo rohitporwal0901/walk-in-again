@@ -1,0 +1,195 @@
+<div class="register-page">
+  <!-- Animated Background -->
+  <div class="bg-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="register-header animate-fade-in-up">
+    <div class="logo-wrap">
+      <div class="logo-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <path d="M16 4C9.37 4 4 9.37 4 16s5.37 12 12 12 12-5.37 12-12S22.63 4 16 4z" fill="rgba(255,255,255,0.2)"/>
+          <path d="M20 10c-2.2 0-4 1.8-4 4v8h-2v-6c0-1.1-.9-2-2-2s-2 .9-2 2v6H8v-8c0-4.42 3.58-8 8-8 1.48 0 2.87.41 4.05 1.12L20 10z" fill="white"/>
+          <circle cx="22" cy="12" r="3" fill="#F4A62A"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span class="logo-title">Walk In Again</span>
+        <span class="logo-sub">PHYSIOTHERAPY</span>
+      </div>
+    </div>
+    <p class="tagline">Start your recovery journey today</p>
+  </header>
+
+  <!-- Card Container -->
+  <div class="register-card animate-fade-in-up" style="animation-delay: 0.1s">
+    <div class="card-header">
+      <a routerLink="/login" class="back-link" aria-label="Back to login">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M12 4L6 10L12 16" stroke="#0B2545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <div>
+        <h1 class="screen-title">Patient Registration</h1>
+        <p class="screen-sub">Enter details to create your account</p>
+      </div>
+    </div>
+
+    <!-- Error Alert -->
+    @if (errorMessage()) {
+      <div class="error-msg animate-fade-in-up">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="7" stroke="#EF4444" stroke-width="1.5"/>
+          <path d="M8 5v4M8 11v.5" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+      <!-- Full Name -->
+      <div class="form-group">
+        <label class="form-label" for="name">Full Name *</label>
+        <div class="input-wrap" [class.error]="f['name'].invalid && f['name'].touched">
+          <input
+            id="name"
+            type="text"
+            formControlName="name"
+            placeholder="e.g. Priya Mehta"
+            class="form-input"
+          />
+        </div>
+        @if (f['name'].hasError('required') && f['name'].touched) {
+          <span class="form-error">Full name is required</span>
+        }
+      </div>
+
+      <!-- Mobile Number -->
+      <div class="form-group">
+        <label class="form-label" for="reg-mobile">Mobile Number *</label>
+        <div class="input-wrap" [class.error]="f['mobileNumber'].invalid && f['mobileNumber'].touched">
+          <span class="input-prefix">🇮🇳 +91</span>
+          <input
+            id="reg-mobile"
+            type="tel"
+            formControlName="mobileNumber"
+            placeholder="10-digit mobile number"
+            maxlength="10"
+            class="form-input"
+          />
+        </div>
+        @if (f['mobileNumber'].hasError('required') && f['mobileNumber'].touched) {
+          <span class="form-error">Mobile number is required</span>
+        }
+        @if (f['mobileNumber'].hasError('pattern') && f['mobileNumber'].touched) {
+          <span class="form-error">Enter a valid 10-digit Indian mobile number</span>
+        }
+      </div>
+
+      <!-- Age & Gender Row -->
+      <div class="form-row">
+        <div class="form-group flex-1">
+          <label class="form-label" for="age">Age *</label>
+          <div class="input-wrap" [class.error]="f['age'].invalid && f['age'].touched">
+            <input
+              id="age"
+              type="number"
+              formControlName="age"
+              placeholder="e.g. 28"
+              min="1"
+              max="120"
+              class="form-input"
+            />
+          </div>
+          @if (f['age'].invalid && f['age'].touched) {
+            <span class="form-error">Valid age is required</span>
+          }
+        </div>
+
+        <div class="form-group flex-1">
+          <label class="form-label" for="gender">Gender *</label>
+          <div class="input-wrap">
+            <select id="gender" formControlName="gender" class="form-input select-input">
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Condition / Chief Complaint -->
+      <div class="form-group">
+        <label class="form-label" for="condition">Primary Concern / Area of Pain *</label>
+        <div class="input-wrap">
+          <select id="condition" formControlName="condition" class="form-input select-input">
+            @for (c of conditions; track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <!-- M-PIN Row -->
+      <div class="form-row">
+        <div class="form-group flex-1">
+          <label class="form-label" for="mpin">Set M-PIN (4 or 6 Digits) *</label>
+          <div class="input-wrap" [class.error]="f['mpin'].invalid && f['mpin'].touched">
+            <input
+              id="mpin"
+              type="password"
+              formControlName="mpin"
+              placeholder="4 or 6 digits"
+              maxlength="6"
+              inputmode="numeric"
+              class="form-input"
+            />
+          </div>
+          @if (f['mpin'].invalid && f['mpin'].touched) {
+            <span class="form-error">Must be 4 or 6 digits</span>
+          }
+        </div>
+
+        <div class="form-group flex-1">
+          <label class="form-label" for="confirmMpin">Confirm M-PIN *</label>
+          <div class="input-wrap" [class.error]="f['confirmMpin'].invalid && f['confirmMpin'].touched">
+            <input
+              id="confirmMpin"
+              type="password"
+              formControlName="confirmMpin"
+              placeholder="Re-enter M-PIN"
+              maxlength="6"
+              inputmode="numeric"
+              class="form-input"
+            />
+          </div>
+          @if (f['confirmMpin'].invalid && f['confirmMpin'].touched) {
+            <span class="form-error">Please confirm your M-PIN</span>
+          }
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="btn btn--primary btn--full btn--lg submit-btn"
+        [disabled]="isLoading()"
+      >
+        @if (isLoading()) {
+          <span class="spinner spinner--white"></span>
+          <span>Creating Account...</span>
+        } @else {
+          <span>Complete Registration</span>
+        }
+      </button>
+
+      <p class="login-footer">
+        Already registered?
+        <a routerLink="/login" class="text-accent font-semibold">Sign In with M-PIN</a>
+      </p>
+    </form>
+  </div>
+</div>

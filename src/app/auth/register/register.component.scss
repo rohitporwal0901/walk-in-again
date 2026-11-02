@@ -1,0 +1,270 @@
+@use '../../../styles/mixins' as *;
+
+.register-page {
+  min-height: 100vh;
+  @include navy-gradient;
+  @include flex-center;
+  flex-direction: column;
+  padding: 32px 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+// Background Shapes
+.bg-shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+
+  .shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.15;
+  }
+
+  .shape-1 {
+    width: 320px;
+    height: 320px;
+    background: var(--primary-light);
+    top: -60px;
+    right: -60px;
+  }
+
+  .shape-2 {
+    width: 240px;
+    height: 240px;
+    background: var(--accent);
+    bottom: -40px;
+    left: -40px;
+  }
+
+  .shape-3 {
+    width: 200px;
+    height: 200px;
+    background: var(--info);
+    top: 40%;
+    left: 20%;
+  }
+}
+
+// Header
+.register-header {
+  text-align: center;
+  margin-bottom: 24px;
+  z-index: 1;
+
+  .logo-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  .logo-icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: var(--radius-md);
+    @include flex-center;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+
+  .logo-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -0.3px;
+    line-height: 1.1;
+  }
+
+  .logo-sub {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 2px;
+  }
+
+  .tagline {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+  }
+}
+
+// Card
+.register-card {
+  width: 100%;
+  max-width: 440px;
+  background: white;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  padding: 28px 24px;
+  z-index: 1;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+
+  .back-link {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    @include flex-center;
+    transition: var(--transition);
+    flex-shrink: 0;
+
+    &:hover {
+      background: var(--border);
+    }
+  }
+}
+
+.screen-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 2px;
+}
+
+.screen-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.error-msg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #FEE2E2;
+  color: #DC2626;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+
+  .flex-1 {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.form-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.input-wrap {
+  display: flex;
+  align-items: center;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0 12px;
+  height: 46px;
+  transition: var(--transition);
+
+  &:focus-within {
+    border-color: var(--primary);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(11, 37, 69, 0.08);
+  }
+
+  &.error {
+    border-color: var(--danger);
+  }
+}
+
+.input-prefix {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding-right: 8px;
+  border-right: 1px solid var(--border);
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+.form-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  font-family: inherit;
+
+  &::placeholder {
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+}
+
+.select-input {
+  cursor: pointer;
+  padding: 0;
+}
+
+.form-error {
+  font-size: 11px;
+  color: var(--danger);
+  font-weight: 500;
+}
+
+.submit-btn {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.login-footer {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  margin-bottom: 0;
+
+  a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

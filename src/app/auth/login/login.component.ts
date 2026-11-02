@@ -117,4 +117,38 @@ export class LoginComponent implements OnInit {
   navigateToRegister() {
     this.router.navigate(['/register']);
   }
+
+  loginAs(role: 'admin' | 'worker' | 'patient') {
+    const demoProfiles: Record<'admin' | 'worker' | 'patient', User> = {
+      admin: {
+        mobileNumber: '9999999999',
+        mpinHash: 'demo',
+        role: 'admin',
+        name: 'Admin Dr. Verma',
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      worker: {
+        mobileNumber: '9876543210',
+        mpinHash: 'demo',
+        role: 'worker',
+        name: 'Rahul Sharma (PT)',
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      patient: {
+        mobileNumber: '9123456789',
+        mpinHash: 'demo',
+        role: 'patient',
+        name: 'Priya Mehta',
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    };
+
+    this.authService.setCurrentUser(demoProfiles[role]);
+  }
 }

@@ -71,13 +71,12 @@
 
         <div class="divider-text"><span>or</span></div>
 
-        <button class="btn btn--outline btn--full" (click)="navigateToRegister()">
-          Create Worker Account
+        <button type="button" class="btn btn--outline btn--full" (click)="navigateToRegister()">
+          ➕ New Patient? Register Here
         </button>
 
         <p class="login-footer">
-          Already have an account?
-          <a class="text-accent" href="#">Login as Patient</a>
+          Already registered? Enter your mobile above to sign in.
         </p>
       </div>
     }
@@ -148,15 +147,18 @@
   </div>
 
   <!-- Quick Login Badges -->
-  <div class="role-badges animate-fade-in" style="animation-delay: 0.3s">
-    <div class="role-badge">
-      <span>🏥</span> Patient
-    </div>
-    <div class="role-badge">
-      <span>👨‍⚕️</span> Physiotherapist
-    </div>
-    <div class="role-badge">
-      <span>📊</span> Admin
+  <div class="demo-section animate-fade-in" style="animation-delay: 0.3s; text-align: center; z-index: 1;">
+    <p style="font-size: 12px; color: rgba(255,255,255,0.7); margin-bottom: 8px; font-weight: 600;">⚡ Quick 1-Click Access (Test Portals):</p>
+    <div class="role-badges">
+      <button type="button" class="role-badge" (click)="loginAs('admin')">
+        <span>📊</span> Admin
+      </button>
+      <button type="button" class="role-badge" (click)="loginAs('worker')">
+        <span>👨‍⚕️</span> Physio
+      </button>
+      <button type="button" class="role-badge" (click)="loginAs('patient')">
+        <span>🏥</span> Patient
+      </button>
     </div>
   </div>
 </div>
