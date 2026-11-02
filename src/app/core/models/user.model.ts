@@ -1,38 +1,29 @@
 export type UserRole = 'worker' | 'patient' | 'admin';
 
 export interface User {
+  uid: string;
+  userId?: string; // compatibility alias for uid
   mobileNumber: string;
-  mpinHash: string;
-  role: UserRole;
   name: string;
-  email?: string;
+  role: UserRole;
+  pin?: string;
+  // Patient details
+  age?: number;
+  gender?: 'Male' | 'Female' | 'Other';
+  condition?: string; // Primary area of pain
+  totalSessions?: number;
+  completedSessions?: number;
+  // Worker details
+  specialization?: string;
+  experience?: string;
+  totalEarnings?: number;
+  rating?: number;
+  // Metadata
   avatarUrl?: string;
   isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export interface WorkerProfile {
-  userId: string;
-  mobileNumber: string;
-  name: string;
-  specialization: string;
-  experience: string; // e.g. "5 Years Exp."
-  avatarUrl?: string;
-  totalSessions: number;
-  completedSessions: number;
-  totalEarnings: number;
-  rating?: number;
-}
-
-export interface PatientProfile {
-  userId: string;
-  mobileNumber: string;
-  name: string;
-  email?: string;
-  address?: string;
-  avatarUrl?: string;
-  totalSessions: number;
-  completedSessions: number;
-  condition?: string; // e.g. "Knee Pain", "Back Pain"
-}
+export type PatientProfile = User;
+export type WorkerProfile = User;

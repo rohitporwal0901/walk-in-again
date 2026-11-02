@@ -1,91 +1,265 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import {
+  Auth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  User as FirebaseUser
+} from '@angular/fire/auth';
+import {
+  Firestore,
+  doc,
+  setDoc,
+  getDoc,
+  onSnapshot,
+  collection,
+  query,
+  where,
+  getDocs,
+  Unsubscribe
+} from '@angular/fire/firestore';
 import { User, UserRole } from '../models/user.model';
-
-// Simple SHA-256 based M-PIN hashing (in production use Firebase Functions with bcrypt)
-async function hashMpin(mpin: string, salt: string): Promise<string> {
-  const data = new TextEncoder().encode(mpin + salt);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-export const MPIN_SALT = 'WALKIN_PHYSIO_2026_SALT';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  // Angular Signals State
-  private _currentUser = signal<User | null>(null);
-  private _isLoading = signal<boolean>(false);
-  private _authError = signal<string | null>(null);
+  private auth = inject(Auth);
+  private firestore = inject(Firestore);
+  private router = inject(Router);
 
-  // Public readonly signals
-  readonly currentUser = this._currentUser.asReadonly();
-  readonly isLoading = this._isLoading.asReadonly();
-  readonly authError = this._authError.asReadonly();
-  readonly isAuthenticated = computed(() => this._currentUser() !== null);
-  readonly userRole = computed(() => this._currentUser()?.role ?? null);
-  readonly userName = computed(() => this._currentUser()?.name ?? '');
+  private profileUnsubscribe?: Unsubscribe;
 
-  constructor(private router: Router) {
-    this.loadFromSession();
+  // Angular Signals
+  currentUser = signal<User | null>(null);
+  authLoading = signal<boolean>(true); // True while Firebase initializes auth state
+  isLoading = signal<boolean>(false);
+  authError = signal<string | null>(null);
+
+  // Computed Signals
+  isAuthenticated = computed(() => this.currentUser() !== null);
+  userRole = computed(() => this.currentUser()?.role ?? null);
+  userName = computed(() => this.currentUser()?.name ?? '');
+
+  constructor() {
+    this.initAuthStateListener();
   }
 
-  /** Hash M-PIN before storing or comparing */
-  async hashMpin(mpin: string): Promise<string> {
-    return hashMpin(mpin, MPIN_SALT);
+  /**
+   * Listen to Firebase Auth state.
+   * Session persists across refreshes and only terminates when signOut() is called.
+   */
+  private initAuthStateListener(): void {
+    onAuthStateChanged(this.auth, async (firebaseUser: FirebaseUser | null) => {
+      if (firebaseUser) {
+        // Listen to live document updates from Firestore 'users' collection
+        if (this.profileUnsubscribe) this.profileUnsubscribe();
+
+        const userDocRef = doc(this.firestore, `users/${firebaseUser.uid}`);
+        this.profileUnsubscribe = onSnapshot(
+          userDocRef,
+          (snap) => {
+            if (snap.exists()) {
+              const userData = snap.data() as User;
+              this.currentUser.set(userData);
+            }
+            this.authLoading.set(false);
+          },
+          (err) => {
+            console.error('Firestore profile stream error:', err);
+            this.authLoading.set(false);
+          }
+        );
+      } else {
+        if (this.profileUnsubscribe) {
+          this.profileUnsubscribe();
+          this.profileUnsubscribe = undefined;
+        }
+        this.currentUser.set(null);
+        this.authLoading.set(false);
+      }
+    });
   }
 
-  /** Validate M-PIN format (4 or 6 digits) */
-  validateMpinFormat(mpin: string): boolean {
-    return /^\d{4}$|^\d{6}$/.test(mpin);
+  // ─── Helpers: Phone to Email & 4-Digit M-PIN to Password ───────────────────
+  phoneToEmail(phone: string): string {
+    return `${phone.trim()}@walkinphysio.app`;
   }
 
-  /** Set authenticated user and navigate by role */
-  setCurrentUser(user: User): void {
-    this._currentUser.set(user);
-    sessionStorage.setItem('walkin_user', JSON.stringify(user));
-    this.navigateByRole(user.role);
+  pinToPassword(pin: string): string {
+    return `PIN#${pin.trim()}#SECURE`;
   }
 
-  /** Navigate based on user role */
+  // ─── Check if phone is already registered in 'users' collection ────────────
+  async isPhoneRegistered(phone: string): Promise<User | null> {
+    try {
+      const usersRef = collection(this.firestore, 'users');
+      const q = query(usersRef, where('mobileNumber', '==', phone.trim()));
+      const snap = await getDocs(q);
+
+      if (!snap.empty) {
+        return snap.docs[0].data() as User;
+      }
+      return null;
+    } catch (e) {
+      console.error('Error checking phone registration:', e);
+      return null;
+    }
+  }
+
+  // ─── Login with 4-Digit M-PIN ──────────────────────────────────────────────
+  async loginWithMpin(phone: string, pin: string): Promise<User> {
+    this.authError.set(null);
+    this.isLoading.set(true);
+
+    try {
+      const email = this.phoneToEmail(phone);
+      const password = this.pinToPassword(pin);
+
+      const userCred = await signInWithEmailAndPassword(this.auth, email, password);
+      const uid = userCred.user.uid;
+
+      // Fetch user profile from Firestore
+      const userDoc = await getDoc(doc(this.firestore, `users/${uid}`));
+      if (!userDoc.exists()) {
+        throw new Error('User profile record not found in system.');
+      }
+
+      const userData = userDoc.data() as User;
+      this.currentUser.set(userData);
+      this.isLoading.set(false);
+
+      this.navigateByRole(userData.role);
+      return userData;
+    } catch (err: any) {
+      this.isLoading.set(false);
+      if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+        throw new Error('Incorrect 4-digit M-PIN. Please try again.');
+      } else if (err.code === 'auth/user-not-found') {
+        throw new Error('Account not found. Please register as patient.');
+      }
+      throw new Error(err.message || 'Login failed. Please check credentials.');
+    }
+  }
+
+  // ─── Patient Registration (Front se ONLY Patient account banega) ───────────
+  async registerPatient(data: {
+    name: string;
+    phone: string;
+    pin: string;
+    age: number;
+    gender: 'Male' | 'Female' | 'Other';
+    condition: string;
+  }): Promise<User> {
+    this.authError.set(null);
+    this.isLoading.set(true);
+
+    try {
+      const email = this.phoneToEmail(data.phone);
+      const password = this.pinToPassword(data.pin);
+
+      const userCred = await createUserWithEmailAndPassword(this.auth, email, password);
+      const uid = userCred.user.uid;
+
+      const newUser: User = {
+        uid,
+        mobileNumber: data.phone.trim(),
+        name: data.name.trim(),
+        role: 'patient', // Front se always patient
+        pin: data.pin.trim(),
+        age: data.age,
+        gender: data.gender,
+        condition: data.condition,
+        totalSessions: 0,
+        completedSessions: 0,
+        isActive: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      // Save to 'users' collection
+      await setDoc(doc(this.firestore, `users/${uid}`), newUser);
+
+      this.currentUser.set(newUser);
+      this.isLoading.set(false);
+
+      this.navigateByRole('patient');
+      return newUser;
+    } catch (err: any) {
+      this.isLoading.set(false);
+      if (err.code === 'auth/email-already-in-use') {
+        throw new Error('Mobile number is already registered. Please login.');
+      }
+      throw new Error(err.message || 'Registration failed. Please try again.');
+    }
+  }
+
+  // ─── Worker Creation (Admin Panel se Worker Register hoga) ─────────────────
+  async createWorkerFromAdmin(data: {
+    name: string;
+    phone: string;
+    pin: string;
+    specialization: string;
+    experience: string;
+  }): Promise<User> {
+    const email = this.phoneToEmail(data.phone);
+    const password = this.pinToPassword(data.pin);
+
+    // Create Firebase Auth user
+    const userCred = await createUserWithEmailAndPassword(this.auth, email, password);
+    const uid = userCred.user.uid;
+
+    const newWorker: User = {
+      uid,
+      mobileNumber: data.phone.trim(),
+      name: data.name.trim(),
+      role: 'worker',
+      pin: data.pin.trim(),
+      specialization: data.specialization.trim(),
+      experience: data.experience.trim(),
+      totalSessions: 0,
+      completedSessions: 0,
+      totalEarnings: 0,
+      rating: 5.0,
+      isActive: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    await setDoc(doc(this.firestore, `users/${uid}`), newWorker);
+    return newWorker;
+  }
+
+  // ─── Navigate by Role ───────────────────────────────────────────────────────
   navigateByRole(role: UserRole): void {
     const routes: Record<UserRole, string> = {
+      admin: '/admin/dashboard',
       worker: '/worker/dashboard',
-      patient: '/patient/home',
-      admin: '/admin/dashboard'
+      patient: '/patient/home'
     };
     this.router.navigate([routes[role]]);
   }
 
-  /** Logout and clear state */
-  logout(): void {
-    this._currentUser.set(null);
-    sessionStorage.removeItem('walkin_user');
+  // ─── Logout (Explicit user action) ──────────────────────────────────────────
+  async logout(): Promise<void> {
+    if (this.profileUnsubscribe) {
+      this.profileUnsubscribe();
+      this.profileUnsubscribe = undefined;
+    }
+    await signOut(this.auth);
+    this.currentUser.set(null);
     this.router.navigate(['/login']);
   }
 
   setLoading(loading: boolean): void {
-    this._isLoading.set(loading);
+    this.isLoading.set(loading);
   }
 
   setError(error: string | null): void {
-    this._authError.set(error);
+    this.authError.set(error);
   }
 
   clearError(): void {
-    this._authError.set(null);
-  }
-
-  private loadFromSession(): void {
-    try {
-      const stored = sessionStorage.getItem('walkin_user');
-      if (stored) {
-        const user: User = JSON.parse(stored);
-        this._currentUser.set(user);
-      }
-    } catch {
-      sessionStorage.removeItem('walkin_user');
-    }
+    this.authError.set(null);
   }
 }

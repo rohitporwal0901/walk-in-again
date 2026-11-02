@@ -3,10 +3,9 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
-import { FirestoreService } from '../../core/services/firestore.service';
-import { User, PatientProfile } from '../../core/models/user.model';
+import { User } from '../../core/models/user.model';
 
-export type AuthStep = 'splash' | 'mobile' | 'otp' | 'register';
+export type SheetMode = 'closed' | 'login-pin' | 'register';
 
 @Component({
   selector: 'app-login',
@@ -17,36 +16,31 @@ export type AuthStep = 'splash' | 'mobile' | 'otp' | 'register';
 })
 export class LoginComponent implements OnInit {
   private fb = inject(FormBuilder);
-  private router = inject(Router);
   private authService = inject(AuthService);
-  private firestoreService = inject(FirestoreService);
+  private router = inject(Router);
 
-  @ViewChildren('otpInput') otpInputs!: QueryList<ElementRef<HTMLInputElement>>;
+  @ViewChildren('pinBox') pinBoxes!: QueryList<ElementRef<HTMLInputElement>>;
 
-  // Step state
-  currentStep = signal<AuthStep>('splash');
+  // State Signals
+  sheetMode = signal<SheetMode>('closed');
+  phoneNumber = signal<string>('');
+  isCheckingPhone = signal<boolean>(false);
   isLoading = signal<boolean>(false);
-  errorMessage = signal<string | null>(null);
+  errorMsg = signal<string>('');
 
-  // Existing user found from Firestore or demo
+  // Existing user retrieved from Firestore
   existingUser = signal<User | null>(null);
 
-  // 4-box OTP digits
-  otpValues = signal<string[]>(['', '', '', '']);
+  // 4-Digit M-PIN array
+  loginPinDigits = signal<string[]>(['', '', '', '']);
 
-  // Mobile Form
-  mobileForm: FormGroup = this.fb.group({
-    mobileNumber: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]]
-  });
-
-  // Patient Registration Form (front se only patient ka account banega)
+  // Patient Registration Form (Front se ONLY patient register hoga)
   registerForm: FormGroup = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
-    mobileNumber: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
     age: ['', [Validators.required, Validators.min(1), Validators.max(120)]],
     gender: ['Male', [Validators.required]],
     condition: ['Knee Pain', [Validators.required]],
-    mpin: ['', [Validators.required, Validators.pattern(/^\d{4}$/)]]
+    pin: ['', [Validators.required, Validators.pattern(/^\d{4}$/)]]
   });
 
   conditions = [
@@ -58,268 +52,170 @@ export class LoginComponent implements OnInit {
     'General Mobility & Wellness'
   ];
 
-  // Pre-configured demo accounts for testing without database setup
-  private demoAccounts: Record<string, User> = {
-    '9999999999': {
-      mobileNumber: '9999999999',
-      mpinHash: '1234',
-      role: 'admin',
-      name: 'Admin Dr. Verma',
-      isActive: true,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    },
-    '9876543210': {
-      mobileNumber: '9876543210',
-      mpinHash: '1234',
-      role: 'worker',
-      name: 'Dr. Rahul Sharma (PT)',
-      isActive: true,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    },
-    '9123456789': {
-      mobileNumber: '9123456789',
-      mpinHash: '1234',
-      role: 'patient',
-      name: 'Priya Mehta',
-      isActive: true,
-      createdAt: new Date(),
-      updatedAt: new Date()
+  async ngOnInit() {
+    // If user is already authenticated in Firebase, automatically navigate by role
+    while (this.authService.authLoading()) {
+      await new Promise(r => setTimeout(r, 50));
     }
-  };
 
-  ngOnInit() {
     if (this.authService.isAuthenticated()) {
-      this.authService.navigateByRole(this.authService.userRole()!);
+      const role = this.authService.userRole();
+      if (role) {
+        this.authService.navigateByRole(role);
+      }
     }
-  }
-
-  get mobile() {
-    return this.mobileForm.get('mobileNumber');
   }
 
   get reg() {
     return this.registerForm.controls;
   }
 
-  goToLogin() {
-    this.currentStep.set('mobile');
-    this.errorMessage.set(null);
-  }
-
-  goToSplash() {
-    this.currentStep.set('splash');
-    this.errorMessage.set(null);
-  }
-
-  backToMobile() {
-    this.currentStep.set('mobile');
-    this.errorMessage.set(null);
-    this.otpValues.set(['', '', '', '']);
-  }
-
-  // 1. Mobile number submit -> Check Firestore for existing user
-  async checkMobileNumber() {
-    this.errorMessage.set(null);
-
-    if (this.mobileForm.invalid) {
-      this.mobileForm.markAllAsTouched();
-      return;
-    }
-
-    const mobile = this.mobileForm.value.mobileNumber;
-    this.isLoading.set(true);
-
-    // 1. Check if it's one of the demo accounts
-    if (this.demoAccounts[mobile]) {
-      this.existingUser.set(this.demoAccounts[mobile]);
-      this.isLoading.set(false);
-      this.currentStep.set('otp');
-      this.otpValues.set(['', '', '', '']);
-      setTimeout(() => this.focusOtpInput(0), 100);
-      return;
-    }
-
-    // 2. Check Firestore 'users' collection
-    try {
-      this.firestoreService.getDoc<User>('users', mobile).subscribe({
-        next: (user) => {
-          this.isLoading.set(false);
-          if (user) {
-            // User exists -> Show 4-box OTP / M-PIN input
-            this.existingUser.set(user);
-            this.currentStep.set('otp');
-            this.otpValues.set(['', '', '', '']);
-            setTimeout(() => this.focusOtpInput(0), 100);
-          } else {
-            // User does NOT exist -> Open Patient Registration form with pre-filled mobile!
-            this.existingUser.set(null);
-            this.registerForm.patchValue({ mobileNumber: mobile });
-            this.currentStep.set('register');
-          }
-        },
-        error: () => {
-          this.isLoading.set(false);
-          // If Firestore is offline or empty, direct to register
-          this.registerForm.patchValue({ mobileNumber: mobile });
-          this.currentStep.set('register');
-        }
-      });
-    } catch {
-      this.isLoading.set(false);
-      this.registerForm.patchValue({ mobileNumber: mobile });
-      this.currentStep.set('register');
-    }
-  }
-
-  // 2. OTP 4-Box Input Handling
-  onOtpInput(event: Event, index: number) {
+  // ─── 1. Phone Input & Auto-Proceed (10 Digits) ──────────────────────────────
+  onPhoneInput(event: Event) {
     const input = event.target as HTMLInputElement;
-    const val = input.value.replace(/\D/g, ''); // only digits
+    input.value = input.value.replace(/\D/g, '');
+    this.phoneNumber.set(input.value);
+    this.errorMsg.set('');
 
-    if (val) {
-      // take last character entered
-      const char = val.slice(-1);
-      const current = [...this.otpValues()];
-      current[index] = char;
-      this.otpValues.set(current);
-      input.value = char;
-
-      // Auto-focus next input box
-      if (index < 3) {
-        this.focusOtpInput(index + 1);
-      } else {
-        // Auto-verify when 4th digit entered
-        this.verifyOtp();
-      }
+    // Rapido / Khandelwal style: auto check when 10 digits entered
+    if (input.value.length === 10) {
+      setTimeout(() => this.checkPhone(), 150);
     }
   }
 
-  onOtpKeyDown(event: KeyboardEvent, index: number) {
-    if (event.key === 'Backspace') {
-      const current = [...this.otpValues()];
-      if (!current[index] && index > 0) {
-        // If current is empty, delete previous and focus it
-        current[index - 1] = '';
-        this.otpValues.set(current);
-        this.focusOtpInput(index - 1);
-      } else {
-        current[index] = '';
-        this.otpValues.set(current);
-      }
-    }
-  }
-
-  private focusOtpInput(index: number) {
-    if (this.otpInputs && this.otpInputs.toArray()[index]) {
-      this.otpInputs.toArray()[index].nativeElement.focus();
-    }
-  }
-
-  // 3. Verify OTP / M-PIN and Route by Role
-  async verifyOtp() {
-    this.errorMessage.set(null);
-    const pin = this.otpValues().join('');
-
-    if (pin.length < 4) {
-      this.errorMessage.set('Please enter complete 4-digit M-PIN / OTP');
+  async checkPhone() {
+    const phone = this.phoneNumber();
+    if (phone.length !== 10) {
+      this.errorMsg.set('Please enter a valid 10-digit mobile number.');
       return;
     }
 
-    const user = this.existingUser();
-    if (!user) {
-      this.errorMessage.set('User session expired. Please enter mobile again.');
-      this.currentStep.set('mobile');
+    this.isCheckingPhone.set(true);
+    this.errorMsg.set('');
+
+    try {
+      const user = await this.authService.isPhoneRegistered(phone);
+      this.isCheckingPhone.set(false);
+
+      if (user) {
+        // Account exists -> Open Login Action Sheet (4-Box PIN)
+        this.existingUser.set(user);
+        this.loginPinDigits.set(['', '', '', '']);
+        this.sheetMode.set('login-pin');
+        setTimeout(() => this.focusPinBox(0), 200);
+      } else {
+        // Account does NOT exist -> Open Patient Registration Action Sheet
+        this.existingUser.set(null);
+        this.registerForm.reset({
+          name: '',
+          age: '',
+          gender: 'Male',
+          condition: 'Knee Pain',
+          pin: ''
+        });
+        this.sheetMode.set('register');
+      }
+    } catch {
+      this.isCheckingPhone.set(false);
+      this.errorMsg.set('Network error checking phone. Please try again.');
+    }
+  }
+
+  // ─── 2. 4-Box PIN Input Handling ────────────────────────────────────────────
+  onPinInput(event: Event, index: number) {
+    const input = event.target as HTMLInputElement;
+    const val = input.value.replace(/\D/g, '').slice(-1);
+    input.value = val;
+
+    const arr = [...this.loginPinDigits()];
+    arr[index] = val;
+    this.loginPinDigits.set(arr);
+    this.errorMsg.set('');
+
+    if (val && index < 3) {
+      this.focusPinBox(index + 1);
+    }
+
+    // Auto-submit when all 4 digits are entered
+    if (index === 3 && val) {
+      const allFilled = arr.every(d => d !== '');
+      if (allFilled) {
+        setTimeout(() => this.submitLogin(), 150);
+      }
+    }
+  }
+
+  onPinBackspace(event: Event, index: number) {
+    const arr = [...this.loginPinDigits()];
+    if (!arr[index] && index > 0) {
+      arr[index - 1] = '';
+      this.loginPinDigits.set(arr);
+      this.focusPinBox(index - 1);
+    } else {
+      arr[index] = '';
+      this.loginPinDigits.set(arr);
+    }
+  }
+
+  private focusPinBox(index: number) {
+    if (this.pinBoxes && this.pinBoxes.toArray()[index]) {
+      this.pinBoxes.toArray()[index].nativeElement.focus();
+    }
+  }
+
+  // ─── 3. Submit Login (M-PIN) ────────────────────────────────────────────────
+  async submitLogin() {
+    const pin = this.loginPinDigits().join('');
+    if (pin.length !== 4) {
+      this.errorMsg.set('Please enter complete 4-digit M-PIN.');
       return;
     }
 
     this.isLoading.set(true);
+    this.errorMsg.set('');
 
     try {
-      const hashedPin = await this.authService.hashMpin(pin);
-
-      // Check PIN: matches hash OR demo PIN '1234'
-      const isMatch = (user.mpinHash === hashedPin) || (user.mpinHash === '1234') || (pin === '1234');
-
-      if (!isMatch) {
-        this.isLoading.set(false);
-        this.errorMessage.set('Incorrect M-PIN. Please try again.');
-        this.otpValues.set(['', '', '', '']);
-        this.focusOtpInput(0);
-        return;
-      }
-
-      // Success: set authenticated user and navigate role-wise
+      await this.authService.loginWithMpin(this.phoneNumber(), pin);
+      // Navigation is handled inside authService.loginWithMpin based on user.role
+    } catch (e: any) {
       this.isLoading.set(false);
-      this.authService.setCurrentUser(user);
-    } catch {
-      this.isLoading.set(false);
-      this.errorMessage.set('Verification failed. Try again.');
+      this.errorMsg.set(e.message || 'Login failed. Please check your M-PIN.');
+      this.loginPinDigits.set(['', '', '', '']);
+      this.focusPinBox(0);
     }
   }
 
-  // 4. Register new Patient (Front se only patient account banega)
-  async onRegisterPatient() {
-    this.errorMessage.set(null);
-
+  // ─── 4. Submit Patient Registration ─────────────────────────────────────────
+  async submitRegister() {
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
       return;
     }
 
-    const { name, mobileNumber, age, gender, condition, mpin } = this.registerForm.value;
+    const val = this.registerForm.value;
     this.isLoading.set(true);
+    this.errorMsg.set('');
 
     try {
-      const hashedPin = await this.authService.hashMpin(mpin);
-
-      const newUser: User = {
-        mobileNumber,
-        mpinHash: hashedPin,
-        role: 'patient', // Front se only patient account banega
-        name,
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      };
-
-      const patientProfile: PatientProfile = {
-        userId: mobileNumber,
-        mobileNumber,
-        name,
-        totalSessions: 0,
-        completedSessions: 0,
-        condition
-      };
-
-      // Save in Firestore 'users' and 'patients'
-      await this.firestoreService.setDoc('users', mobileNumber, newUser);
-      await this.firestoreService.setDoc('patients', mobileNumber, patientProfile);
-
+      await this.authService.registerPatient({
+        name: val.name,
+        phone: this.phoneNumber(),
+        pin: val.pin,
+        age: Number(val.age),
+        gender: val.gender,
+        condition: val.condition
+      });
+      // Automatically navigates to /patient/home on success
+    } catch (e: any) {
       this.isLoading.set(false);
-
-      // Automatically authenticate and navigate to patient home
-      this.authService.setCurrentUser(newUser);
-    } catch {
-      // Local fallback in case Firestore is unreachable
-      const newUser: User = {
-        mobileNumber,
-        mpinHash: mpin,
-        role: 'patient',
-        name,
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      };
-      this.isLoading.set(false);
-      this.authService.setCurrentUser(newUser);
+      this.errorMsg.set(e.message || 'Registration failed. Please try again.');
     }
   }
 
-  // Helper for 1-click quick demo testing
-  quickDemoLogin(mobile: string) {
-    this.mobileForm.patchValue({ mobileNumber: mobile });
-    this.checkMobileNumber();
+  // ─── Action Sheet Controls ──────────────────────────────────────────────────
+  closeSheet() {
+    this.sheetMode.set('closed');
+    this.errorMsg.set('');
+    this.loginPinDigits.set(['', '', '', '']);
   }
 }
