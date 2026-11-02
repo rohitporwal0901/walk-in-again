@@ -18,9 +18,29 @@ export const ADMIN_ROUTES: Routes = [
           import('./patients/admin-patients.component').then(m => m.AdminPatientsComponent)
       },
       {
+        path: 'workers',
+        loadComponent: () =>
+          import('./workers/admin-workers.component').then(m => m.AdminWorkersComponent)
+      },
+      {
+        path: 'sessions',
+        loadComponent: () =>
+          import('./sessions/admin-sessions.component').then(m => m.AdminSessionsComponent)
+      },
+      {
         path: 'transactions',
         loadComponent: () =>
           import('./transactions/admin-transactions.component').then(m => m.AdminTransactionsComponent)
+      },
+      {
+        path: 'reports',
+        loadComponent: () =>
+          import('./reports/admin-reports.component').then(m => m.AdminReportsComponent)
+      },
+      {
+        path: 'settings',
+        loadComponent: () =>
+          import('./settings/admin-settings.component').then(m => m.AdminSettingsComponent)
       }
     ]
   }

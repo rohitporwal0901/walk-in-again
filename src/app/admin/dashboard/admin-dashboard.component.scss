@@ -322,33 +322,54 @@
 }
 
 // ─── Modal ────────────────────────────────────────────────────────────────────
-.modal-backdrop {
+.modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(11, 37, 69, 0.6);
+  background: rgba(11, 37, 69, 0.65);
   backdrop-filter: blur(4px);
-  z-index: 100;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+  animation: fadeIn 0.2s ease-out;
 }
 
 .worker-modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90%;
+  position: relative;
+  width: 100%;
   max-width: 480px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
   background: white;
-  border-radius: var(--radius-xl);
-  padding: 24px;
-  box-shadow: var(--shadow-xl);
-  z-index: 101;
+  border-radius: 20px;
+  padding: 22px 24px;
+  box-shadow: 0 25px 60px rgba(11, 37, 69, 0.4);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  animation: modalScaleUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+
+  @keyframes modalScaleUp {
+    from {
+      opacity: 0;
+      transform: scale(0.92) translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
 
   .modal-header {
     @include flex-between;
-    margin-bottom: 18px;
+    margin-bottom: 14px;
+    flex-shrink: 0;
 
     .modal-title { font-size: 18px; font-weight: 800; color: #0B2545; margin: 0; }
-    .modal-sub   { font-size: 12.5px; color: var(--text-muted); margin: 2px 0 0; }
+    .modal-sub   { font-size: 12px; color: var(--text-muted); margin: 2px 0 0; }
     .btn-close   {
       width: 32px; height: 32px;
       border-radius: 50%;
@@ -357,6 +378,10 @@
       cursor: pointer;
       font-weight: 700;
       color: #64748B;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &:hover { background: #E2E8F0; color: #0B2545; }
     }
   }
 
@@ -367,7 +392,7 @@
     border-radius: var(--radius-md);
     font-size: 13px;
     font-weight: 600;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
 
   .alert-error {
@@ -377,29 +402,29 @@
     border-radius: var(--radius-md);
     font-size: 13px;
     font-weight: 600;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
 
   .modal-form {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
   }
 
   .form-group {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 5px;
   }
 
   .form-row {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     .flex-1 { flex: 1; min-width: 0; }
   }
 
   .form-label {
-    font-size: 12.5px;
+    font-size: 12px;
     font-weight: 700;
     color: #0B2545;
   }
@@ -407,14 +432,15 @@
   .modal-input,
   .modal-select {
     width: 100%;
-    height: 44px;
-    padding: 0 14px;
+    height: 40px;
+    padding: 0 12px;
     border: 1.5px solid var(--border);
     border-radius: var(--radius-md);
     background: #F8FAFC;
-    font-size: 14px;
+    font-size: 13.5px;
     outline: none;
     font-family: inherit;
+    box-sizing: border-box;
 
     &:focus {
       border-color: #0B2545;
@@ -428,11 +454,18 @@
     background: #F8FAFC;
     border: 1.5px solid var(--border);
     border-radius: var(--radius-md);
-    padding: 0 12px;
+    padding: 0 10px;
+    height: 40px;
+    box-sizing: border-box;
+
+    &:focus-within {
+      border-color: #0B2545;
+      background: white;
+    }
 
     .prefix {
       font-weight: 700;
-      font-size: 13.5px;
+      font-size: 13px;
       color: #0B2545;
       margin-right: 8px;
       padding-right: 8px;
@@ -442,6 +475,7 @@
     .modal-input {
       border: none;
       padding: 0;
+      height: 100%;
       background: transparent;
     }
   }

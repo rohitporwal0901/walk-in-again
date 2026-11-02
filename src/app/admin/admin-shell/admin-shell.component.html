@@ -19,6 +19,7 @@
         <a
           [routerLink]="item.route"
           routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
           class="sidebar-item"
           [id]="item.id"
           [title]="item.label"

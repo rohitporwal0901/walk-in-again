@@ -24,13 +24,13 @@ export class AdminShellComponent {
   searchQuery = signal<string>('');
 
   navItems: NavItem[] = [
-    { id: 'nav-dashboard',     icon: '📊', label: 'Dashboard',    route: '/admin/dashboard'    },
-    { id: 'nav-patients',      icon: '👥', label: 'Patients',     route: '/admin/patients'     },
-    { id: 'nav-workers',       icon: '👨‍⚕️', label: 'Workers',      route: '/admin/dashboard'    },
-    { id: 'nav-sessions',      icon: '📋', label: 'Sessions',     route: '/admin/dashboard'    },
-    { id: 'nav-transactions',  icon: '💳', label: 'Transactions', route: '/admin/transactions' },
-    { id: 'nav-reports',       icon: '📈', label: 'Reports',      route: '/admin/dashboard'    },
-    { id: 'nav-settings',      icon: '⚙️', label: 'Settings',     route: '/admin/dashboard'    },
+    { id: 'nav-dashboard', icon: '📊', label: 'Dashboard', route: '/admin/dashboard' },
+    { id: 'nav-patients', icon: '👥', label: 'Patients', route: '/admin/patients' },
+    { id: 'nav-workers', icon: '👨‍⚕️', label: 'Workers', route: '/admin/workers' },
+    { id: 'nav-sessions', icon: '📋', label: 'Sessions', route: '/admin/sessions' },
+    { id: 'nav-transactions', icon: '💳', label: 'Transactions', route: '/admin/transactions' },
+    { id: 'nav-reports', icon: '📈', label: 'Reports', route: '/admin/reports' },
+    { id: 'nav-settings', icon: '⚙️', label: 'Settings', route: '/admin/settings' },
   ];
 
   toggleSidebar() { this.sidebarOpen.update(v => !v); }

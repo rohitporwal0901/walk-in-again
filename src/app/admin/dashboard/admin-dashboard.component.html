@@ -131,104 +131,104 @@
 
   <!-- ─── ADD WORKER MODAL (Admin only registers workers) ──────────────────── -->
   @if (showAddWorkerModal()) {
-    <div class="modal-backdrop animate-fade-in" (click)="closeAddWorkerModal()"></div>
-
-    <div class="worker-modal animate-scale-in">
-      <div class="modal-header">
-        <div>
-          <h2 class="modal-title">Register New Worker / Physio</h2>
-          <p class="modal-sub">Create worker staff account in Walk In Physio</p>
-        </div>
-        <button class="btn-close" (click)="closeAddWorkerModal()">✕</button>
-      </div>
-
-      @if (workerModalSuccess()) {
-        <div class="alert-success animate-fade-in">
-          <span>✓ {{ workerModalSuccess() }}</span>
-        </div>
-      }
-
-      @if (workerModalError()) {
-        <div class="alert-error animate-fade-in">
-          <span>⚠️ {{ workerModalError() }}</span>
-        </div>
-      }
-
-      <form [formGroup]="workerForm" (ngSubmit)="submitNewWorker()" class="modal-form">
-        <!-- Worker Full Name -->
-        <div class="form-group">
-          <label class="form-label">Full Name *</label>
-          <input
-            type="text"
-            formControlName="name"
-            placeholder="e.g. Dr. Rahul Sharma"
-            class="modal-input"
-          />
-        </div>
-
-        <!-- Mobile Number -->
-        <div class="form-group">
-          <label class="form-label">Mobile Number *</label>
-          <div class="input-with-prefix">
-            <span class="prefix">+91</span>
-            <input
-              type="tel"
-              formControlName="phone"
-              placeholder="10-digit mobile"
-              maxlength="10"
-              class="modal-input"
-            />
+    <div class="modal-overlay" (click)="closeAddWorkerModal()">
+      <div class="worker-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div>
+            <h2 class="modal-title">Register New Worker / Physio</h2>
+            <p class="modal-sub">Create worker staff account in Walk In Physio</p>
           </div>
+          <button class="btn-close" (click)="closeAddWorkerModal()">✕</button>
         </div>
 
-        <!-- Specialization & Experience Row -->
-        <div class="form-row">
-          <div class="form-group flex-1">
-            <label class="form-label">Specialization *</label>
-            <select formControlName="specialization" class="modal-select">
-              @for (spec of specializations; track spec) {
-                <option [value]="spec">{{ spec }}</option>
-              }
-            </select>
+        @if (workerModalSuccess()) {
+          <div class="alert-success animate-fade-in">
+            <span>✓ {{ workerModalSuccess() }}</span>
           </div>
+        }
 
-          <div class="form-group flex-1">
-            <label class="form-label">Experience *</label>
+        @if (workerModalError()) {
+          <div class="alert-error animate-fade-in">
+            <span>⚠️ {{ workerModalError() }}</span>
+          </div>
+        }
+
+        <form [formGroup]="workerForm" (ngSubmit)="submitNewWorker()" class="modal-form">
+          <!-- Worker Full Name -->
+          <div class="form-group">
+            <label class="form-label">Full Name *</label>
             <input
               type="text"
-              formControlName="experience"
-              placeholder="e.g. 4 Years"
+              formControlName="name"
+              placeholder="e.g. Dr. Rahul Sharma"
               class="modal-input"
             />
           </div>
-        </div>
 
-        <!-- 4-Digit M-PIN -->
-        <div class="form-group">
-          <label class="form-label">Assign 4-Digit M-PIN *</label>
-          <input
-            type="password"
-            formControlName="pin"
-            placeholder="4-digit PIN (e.g. 1234)"
-            maxlength="4"
-            inputmode="numeric"
-            class="modal-input"
-          />
-          <span class="field-hint">Worker will use this PIN to log in on their mobile.</span>
-        </div>
+          <!-- Mobile Number -->
+          <div class="form-group">
+            <label class="form-label">Mobile Number *</label>
+            <div class="input-with-prefix">
+              <span class="prefix">+91</span>
+              <input
+                type="tel"
+                formControlName="phone"
+                placeholder="10-digit mobile"
+                maxlength="10"
+                class="modal-input"
+              />
+            </div>
+          </div>
 
-        <div class="modal-actions">
-          <button type="button" class="btn btn-secondary" (click)="closeAddWorkerModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary" [disabled]="isSubmittingWorker() || workerForm.invalid">
-            @if (isSubmittingWorker()) {
-              <span class="spinner"></span>
-              <span>Creating Worker Account...</span>
-            } @else {
-              <span>Save & Register Worker</span>
-            }
-          </button>
-        </div>
-      </form>
+          <!-- Specialization & Experience Row -->
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label class="form-label">Specialization *</label>
+              <select formControlName="specialization" class="modal-select">
+                @for (spec of specializations; track spec) {
+                  <option [value]="spec">{{ spec }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="form-group flex-1">
+              <label class="form-label">Experience *</label>
+              <input
+                type="text"
+                formControlName="experience"
+                placeholder="e.g. 4 Years"
+                class="modal-input"
+              />
+            </div>
+          </div>
+
+          <!-- 4-Digit M-PIN -->
+          <div class="form-group">
+            <label class="form-label">Assign 4-Digit M-PIN *</label>
+            <input
+              type="password"
+              formControlName="pin"
+              placeholder="4-digit PIN (e.g. 1234)"
+              maxlength="4"
+              inputmode="numeric"
+              class="modal-input"
+            />
+            <span class="field-hint">Worker will use this PIN to log in on their mobile.</span>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" (click)="closeAddWorkerModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary" [disabled]="isSubmittingWorker() || workerForm.invalid">
+              @if (isSubmittingWorker()) {
+                <span class="spinner"></span>
+                <span>Creating Worker Account...</span>
+              } @else {
+                <span>Save & Register Worker</span>
+              }
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   }
 
