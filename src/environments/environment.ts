@@ -1,14 +1,16 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: 'YOUR_API_KEY',
-    authDomain: 'YOUR_PROJECT.firebaseapp.com',
-    projectId: 'YOUR_PROJECT_ID',
-    storageBucket: 'YOUR_PROJECT.appspot.com',
-    messagingSenderId: 'YOUR_SENDER_ID',
-    appId: 'YOUR_APP_ID'
+    apiKey: 'AIzaSyBm_Za-Vd_sezRiR62nmYkRYMBubnSRAf8',
+    authDomain: 'drivergo-4c1c8.firebaseapp.com',
+    projectId: 'drivergo-4c1c8',
+    storageBucket: 'drivergo-4c1c8.firebasestorage.app',
+    messagingSenderId: '962764678417',
+    appId: '1:962764678417:web:3f3861fe4ca1e8fe9658b0',
+    measurementId: 'G-3JV9CRKEXP'
   },
   razorpay: {
-    keyId: 'rzp_test_YOUR_KEY_ID'
+    keyId: 'rzp_test_T0ghGBsIrMwMjX',
+    keySecret: 'jEqpFmHvIsIOHaP6GIYwcsxw'
   }
 };

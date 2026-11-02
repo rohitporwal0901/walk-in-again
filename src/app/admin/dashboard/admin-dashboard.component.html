@@ -107,14 +107,14 @@
           <h3>Payment Methods</h3>
           <div class="donut-wrap">
             <svg width="120" height="120" viewBox="0 0 100 100" id="payment-donut">
-              @for (method of paymentMethods; track method.label; let i = $index) {
+              @for (segment of donutSegments; track segment.label) {
                 <circle
                   cx="50" cy="50" r="45"
                   fill="none"
-                  [attr.stroke]="method.color"
+                  [attr.stroke]="segment.color"
                   stroke-width="10"
-                  [attr.stroke-dasharray]="getDonutDashArray(method.percent)"
-                  [attr.stroke-dashoffset]="getDonutOffset(paymentMethods.slice(0, i).map(m => m.percent))"
+                  [attr.stroke-dasharray]="segment.dashArray"
+                  [attr.stroke-dashoffset]="segment.dashOffset"
                   stroke-linecap="butt"
                   style="transition: stroke-dashoffset 0.5s ease"
                 />
