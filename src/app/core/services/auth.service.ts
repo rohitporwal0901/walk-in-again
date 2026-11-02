@@ -6,6 +6,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  updatePassword,
   User as FirebaseUser
 } from '@angular/fire/auth';
 import {
@@ -13,6 +14,7 @@ import {
   doc,
   setDoc,
   getDoc,
+  updateDoc,
   onSnapshot,
   collection,
   query,
@@ -139,6 +141,63 @@ export class AuthService {
         throw new Error('Account not found. Please register as patient.');
       }
       throw new Error(err.message || 'Login failed. Please check credentials.');
+    }
+  }
+
+  // ─── Reset PIN (Forgot M-PIN) ───────────────────────────────────────────────
+  async resetPin(phone: string, newPin: string): Promise<User> {
+    this.authError.set(null);
+    this.isLoading.set(true);
+
+    try {
+      const usersRef = collection(this.firestore, 'users');
+      const q = query(usersRef, where('mobileNumber', '==', phone.trim()));
+      const snap = await getDocs(q);
+
+      if (snap.empty) {
+        throw new Error('No account found with this phone number.');
+      }
+
+      const userDoc = snap.docs[0];
+      const userData = userDoc.data() as User;
+      const uid = userDoc.id;
+
+      // Sign-in using old PIN if available to update password
+      if (userData.pin) {
+        try {
+          await signInWithEmailAndPassword(
+            this.auth,
+            this.phoneToEmail(phone),
+            this.pinToPassword(userData.pin)
+          );
+          if (this.auth.currentUser) {
+            await updatePassword(this.auth.currentUser, this.pinToPassword(newPin));
+          }
+        } catch {
+          // If old PIN didn't match auth, proceed with updating Firestore
+        }
+      }
+
+      // Update in Firestore users collection
+      const updatedUser: User = {
+        ...userData,
+        pin: newPin.trim(),
+        updatedAt: new Date().toISOString()
+      };
+
+      await updateDoc(doc(this.firestore, `users/${uid}`), {
+        pin: newPin.trim(),
+        updatedAt: new Date().toISOString()
+      });
+
+      this.currentUser.set(updatedUser);
+      this.isLoading.set(false);
+
+      this.navigateByRole(updatedUser.role);
+      return updatedUser;
+    } catch (err: any) {
+      this.isLoading.set(false);
+      throw new Error(err.message || 'Unable to reset M-PIN. Please try again.');
     }
   }
 

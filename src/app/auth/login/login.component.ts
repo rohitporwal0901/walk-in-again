@@ -1,11 +1,11 @@
-import { Component, signal, inject, OnInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { User } from '../../core/models/user.model';
 
-export type SheetMode = 'closed' | 'login-pin' | 'register';
+export type SheetMode = 'closed' | 'login-pin' | 'register' | 'forgot-pin';
 
 @Component({
   selector: 'app-login',
@@ -19,8 +19,6 @@ export class LoginComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  @ViewChildren('pinBox') pinBoxes!: QueryList<ElementRef<HTMLInputElement>>;
-
   // State Signals
   sheetMode = signal<SheetMode>('closed');
   phoneNumber = signal<string>('');
@@ -31,16 +29,19 @@ export class LoginComponent implements OnInit {
   // Existing user retrieved from Firestore
   existingUser = signal<User | null>(null);
 
-  // 4-Digit M-PIN array
+  // 4-Digit PIN Arrays for all flows
   loginPinDigits = signal<string[]>(['', '', '', '']);
+  registerPinDigits = signal<string[]>(['', '', '', '']);
+  registerConfirmPinDigits = signal<string[]>(['', '', '', '']);
+  forgotPinDigits = signal<string[]>(['', '', '', '']);
+  forgotConfirmPinDigits = signal<string[]>(['', '', '', '']);
 
   // Patient Registration Form (Front se ONLY patient register hoga)
   registerForm: FormGroup = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
     age: ['', [Validators.required, Validators.min(1), Validators.max(120)]],
     gender: ['Male', [Validators.required]],
-    condition: ['Knee Pain', [Validators.required]],
-    pin: ['', [Validators.required, Validators.pattern(/^\d{4}$/)]]
+    condition: ['Knee Pain', [Validators.required]]
   });
 
   conditions = [
@@ -70,7 +71,7 @@ export class LoginComponent implements OnInit {
     return this.registerForm.controls;
   }
 
-  // ─── 1. Phone Input & Auto-Proceed (10 Digits) ──────────────────────────────
+  // ─── 1. Phone Input & Auto-Check (10 Digits) ────────────────────────────────
   onPhoneInput(event: Event) {
     const input = event.target as HTMLInputElement;
     input.value = input.value.replace(/\D/g, '');
@@ -102,7 +103,7 @@ export class LoginComponent implements OnInit {
         this.existingUser.set(user);
         this.loginPinDigits.set(['', '', '', '']);
         this.sheetMode.set('login-pin');
-        setTimeout(() => this.focusPinBox(0), 200);
+        setTimeout(() => this.focusId('login-pin-0'), 200);
       } else {
         // Account does NOT exist -> Open Patient Registration Action Sheet
         this.existingUser.set(null);
@@ -110,9 +111,10 @@ export class LoginComponent implements OnInit {
           name: '',
           age: '',
           gender: 'Male',
-          condition: 'Knee Pain',
-          pin: ''
+          condition: 'Knee Pain'
         });
+        this.registerPinDigits.set(['', '', '', '']);
+        this.registerConfirmPinDigits.set(['', '', '', '']);
         this.sheetMode.set('register');
       }
     } catch {
@@ -121,46 +123,73 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  // ─── 2. 4-Box PIN Input Handling ────────────────────────────────────────────
-  onPinInput(event: Event, index: number) {
+  // ─── 2. Generic 4-Box PIN Input & Backspace Helpers ─────────────────────────
+  onBoxInput(event: Event, index: number, type: 'login' | 'reg' | 'reg-conf' | 'forgot' | 'forgot-conf') {
     const input = event.target as HTMLInputElement;
     const val = input.value.replace(/\D/g, '').slice(-1);
     input.value = val;
 
-    const arr = [...this.loginPinDigits()];
+    const arr = [...this.getPinArray(type)];
     arr[index] = val;
-    this.loginPinDigits.set(arr);
+    this.setPinArray(type, arr);
     this.errorMsg.set('');
 
+    // Advance to next box
     if (val && index < 3) {
-      this.focusPinBox(index + 1);
+      this.focusId(`${type}-${index + 1}`);
     }
 
-    // Auto-submit when all 4 digits are entered
+    // Auto-actions
     if (index === 3 && val) {
       const allFilled = arr.every(d => d !== '');
       if (allFilled) {
-        setTimeout(() => this.submitLogin(), 150);
+        if (type === 'login') {
+          setTimeout(() => this.submitLogin(), 150);
+        } else if (type === 'reg') {
+          this.focusId('reg-conf-0');
+        } else if (type === 'forgot') {
+          this.focusId('forgot-conf-0');
+        }
       }
     }
   }
 
-  onPinBackspace(event: Event, index: number) {
-    const arr = [...this.loginPinDigits()];
+  onBoxBackspace(event: Event, index: number, type: 'login' | 'reg' | 'reg-conf' | 'forgot' | 'forgot-conf') {
+    const arr = [...this.getPinArray(type)];
     if (!arr[index] && index > 0) {
       arr[index - 1] = '';
-      this.loginPinDigits.set(arr);
-      this.focusPinBox(index - 1);
+      this.setPinArray(type, arr);
+      this.focusId(`${type}-${index - 1}`);
     } else {
       arr[index] = '';
-      this.loginPinDigits.set(arr);
+      this.setPinArray(type, arr);
     }
   }
 
-  private focusPinBox(index: number) {
-    if (this.pinBoxes && this.pinBoxes.toArray()[index]) {
-      this.pinBoxes.toArray()[index].nativeElement.focus();
+  private getPinArray(type: string): string[] {
+    switch (type) {
+      case 'login': return this.loginPinDigits();
+      case 'reg': return this.registerPinDigits();
+      case 'reg-conf': return this.registerConfirmPinDigits();
+      case 'forgot': return this.forgotPinDigits();
+      case 'forgot-conf': return this.forgotConfirmPinDigits();
+      default: return [];
     }
+  }
+
+  private setPinArray(type: string, arr: string[]): void {
+    switch (type) {
+      case 'login': this.loginPinDigits.set(arr); break;
+      case 'reg': this.registerPinDigits.set(arr); break;
+      case 'reg-conf': this.registerConfirmPinDigits.set(arr); break;
+      case 'forgot': this.forgotPinDigits.set(arr); break;
+      case 'forgot-conf': this.forgotConfirmPinDigits.set(arr); break;
+    }
+  }
+
+  private focusId(id: string): void {
+    const el = document.getElementById(id) as HTMLInputElement | null;
+    if (el) el.focus();
   }
 
   // ─── 3. Submit Login (M-PIN) ────────────────────────────────────────────────
@@ -176,19 +205,34 @@ export class LoginComponent implements OnInit {
 
     try {
       await this.authService.loginWithMpin(this.phoneNumber(), pin);
-      // Navigation is handled inside authService.loginWithMpin based on user.role
     } catch (e: any) {
       this.isLoading.set(false);
       this.errorMsg.set(e.message || 'Login failed. Please check your M-PIN.');
       this.loginPinDigits.set(['', '', '', '']);
-      this.focusPinBox(0);
+      this.focusId('login-pin-0');
     }
   }
 
-  // ─── 4. Submit Patient Registration ─────────────────────────────────────────
+  // ─── 4. Submit Patient Registration with 4-Box PIN & Confirm PIN ────────────
   async submitRegister() {
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
+      return;
+    }
+
+    const pin = this.registerPinDigits().join('');
+    const confirmPin = this.registerConfirmPinDigits().join('');
+
+    if (pin.length !== 4) {
+      this.errorMsg.set('Please set a 4-digit security M-PIN.');
+      this.focusId('reg-0');
+      return;
+    }
+
+    if (pin !== confirmPin) {
+      this.errorMsg.set('M-PIN and Confirm M-PIN do not match. Please verify.');
+      this.registerConfirmPinDigits.set(['', '', '', '']);
+      this.focusId('reg-conf-0');
       return;
     }
 
@@ -200,15 +244,51 @@ export class LoginComponent implements OnInit {
       await this.authService.registerPatient({
         name: val.name,
         phone: this.phoneNumber(),
-        pin: val.pin,
+        pin: pin,
         age: Number(val.age),
         gender: val.gender,
         condition: val.condition
       });
-      // Automatically navigates to /patient/home on success
     } catch (e: any) {
       this.isLoading.set(false);
       this.errorMsg.set(e.message || 'Registration failed. Please try again.');
+    }
+  }
+
+  // ─── 5. Forgot PIN Flow ─────────────────────────────────────────────────────
+  openForgotPin() {
+    this.errorMsg.set('');
+    this.forgotPinDigits.set(['', '', '', '']);
+    this.forgotConfirmPinDigits.set(['', '', '', '']);
+    this.sheetMode.set('forgot-pin');
+    setTimeout(() => this.focusId('forgot-0'), 200);
+  }
+
+  async submitResetPin() {
+    const newPin = this.forgotPinDigits().join('');
+    const confirmPin = this.forgotConfirmPinDigits().join('');
+
+    if (newPin.length !== 4) {
+      this.errorMsg.set('Please enter a 4-digit new M-PIN.');
+      this.focusId('forgot-0');
+      return;
+    }
+
+    if (newPin !== confirmPin) {
+      this.errorMsg.set('New M-PIN and Confirm M-PIN do not match.');
+      this.forgotConfirmPinDigits.set(['', '', '', '']);
+      this.focusId('forgot-conf-0');
+      return;
+    }
+
+    this.isLoading.set(true);
+    this.errorMsg.set('');
+
+    try {
+      await this.authService.resetPin(this.phoneNumber(), newPin);
+    } catch (e: any) {
+      this.isLoading.set(false);
+      this.errorMsg.set(e.message || 'Unable to reset M-PIN. Please try again.');
     }
   }
 
@@ -217,5 +297,9 @@ export class LoginComponent implements OnInit {
     this.sheetMode.set('closed');
     this.errorMsg.set('');
     this.loginPinDigits.set(['', '', '', '']);
+    this.registerPinDigits.set(['', '', '', '']);
+    this.registerConfirmPinDigits.set(['', '', '', '']);
+    this.forgotPinDigits.set(['', '', '', '']);
+    this.forgotConfirmPinDigits.set(['', '', '', '']);
   }
 }

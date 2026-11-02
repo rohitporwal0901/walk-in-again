@@ -599,3 +599,68 @@
   font-weight: 500;
   padding-left: 8px;
 }
+
+// ─── PIN Compact & Sub-Links ──────────────────────────────────────────────────
+.pin-boxes-compact {
+  gap: 8px !important;
+  margin: 4px 0 10px !important;
+
+  .pin-box-sm {
+    width: 48px !important;
+    height: 50px !important;
+    border-radius: 14px !important;
+    font-size: 22px !important;
+  }
+}
+
+.pin-links-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: -6px 0 16px;
+  padding: 0 4px;
+
+  .pin-auto-hint {
+    margin: 0;
+    font-size: 12px;
+  }
+
+  .link-btn-forgot {
+    background: none;
+    border: none;
+    color: #1565C0;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.link-btn-back {
+  background: none;
+  border: none;
+  color: #64748B;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  margin-top: 14px;
+
+  &:hover {
+    color: #0B2545;
+    text-decoration: underline;
+  }
+}
+
+.badge-warning {
+  background: #FEF3C7 !important;
+  color: #92400E !important;
+}
+
+.mt-2 {
+  margin-top: 8px;
+}
