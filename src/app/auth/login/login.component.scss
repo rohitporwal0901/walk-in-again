@@ -1,354 +1,626 @@
-@use '../../../styles/variables' as *;
 @use '../../../styles/mixins' as *;
 
-// ─── Page Shell ───────────────────────────────────────────────────────────────
-.login-page {
+// ─── Main Viewport & Phone Frame ─────────────────────────────────────────────
+.auth-viewport {
   min-height: 100vh;
-  background: linear-gradient(160deg, var(--navy) 0%, var(--navy-light) 50%, #1565C0 100%);
+  background: #E8EEF4;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 24px 16px;
-  position: relative;
-  overflow: hidden;
-}
+  padding: 16px;
+  font-family: inherit;
 
-// ─── Animated Background Shapes ───────────────────────────────────────────────
-.bg-shapes {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-
-  .shape {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.04);
-    animation: float 6s ease-in-out infinite;
-
-    &-1 {
-      width: 300px; height: 300px;
-      top: -80px; right: -80px;
-      animation-delay: 0s;
-    }
-    &-2 {
-      width: 200px; height: 200px;
-      bottom: 100px; left: -60px;
-      animation-delay: 2s;
-      background: rgba(244, 166, 42, 0.08);
-    }
-    &-3 {
-      width: 120px; height: 120px;
-      top: 40%; left: 20%;
-      animation-delay: 4s;
-    }
-  }
-}
-
-// ─── Logo Header ──────────────────────────────────────────────────────────────
-.login-header {
-  text-align: center;
-  margin-bottom: 32px;
-  z-index: 1;
-
-  .logo-wrap {
-    @include flex-center;
-    gap: 12px;
-    margin-bottom: 8px;
-  }
-
-  .logo-icon {
-    width: 56px; height: 56px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 16px;
-    @include flex-center;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(8px);
-  }
-
-  .logo-text {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .logo-title {
-    font-size: 20px;
-    font-weight: 800;
-    color: white;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-  }
-
-  .logo-sub {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--gold);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
-  .tagline {
-    color: rgba(255, 255, 255, 0.65);
-    font-size: 13px;
-    font-weight: 400;
-    letter-spacing: 0.03em;
-  }
-}
-
-// ─── Login Card ───────────────────────────────────────────────────────────────
-.login-card {
-  width: 100%;
-  max-width: 400px;
-  background: rgba(255, 255, 255, 0.97);
-  backdrop-filter: blur(20px);
-  border-radius: 24px;
-  padding: 32px;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
-  z-index: 1;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-}
-
-// ─── Screen ───────────────────────────────────────────────────────────────────
-.screen {
-  position: relative;
-
-  .screen-title {
-    font-size: 24px;
-    font-weight: 800;
-    color: var(--text-primary);
-    margin-bottom: 4px;
-    letter-spacing: -0.02em;
-  }
-
-  .screen-sub {
-    font-size: 14px;
-    color: var(--text-secondary);
-    margin-bottom: 28px;
-  }
-}
-
-// ─── Back Button ──────────────────────────────────────────────────────────────
-.back-btn {
-  position: absolute;
-  top: -8px;
-  left: -8px;
-  width: 36px; height: 36px;
-  border-radius: 10px;
-  background: var(--bg);
-  @include flex-center;
-  transition: all var(--transition-fast);
-  cursor: pointer;
-  color: var(--text-primary);
-
-  &:hover { background: var(--border); }
-}
-
-// ─── Mobile Input ─────────────────────────────────────────────────────────────
-.input-wrap {
-  display: flex;
-  align-items: center;
-  border: 2px solid var(--border);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  transition: border-color var(--transition-fast);
-  background: var(--bg);
-
-  &:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.15); }
-  &.error { border-color: var(--danger); }
-
-  .input-prefix {
-    padding: 14px 12px;
-    font-size: 14px;
-    color: var(--text-secondary);
-    font-weight: 500;
-    border-right: 2px solid var(--border);
-    white-space: nowrap;
+  @media (max-width: 480px) {
+    padding: 0;
     background: white;
   }
-
-  .mobile-input {
-    flex: 1;
-    padding: 14px 16px;
-    font-size: 16px;
-    color: var(--text-primary);
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    background: transparent;
-    border: none;
-    outline: none;
-    width: 100%;
-    font-family: var(--font-family);
-  }
 }
 
-// ─── Divider ──────────────────────────────────────────────────────────────────
-.divider-text {
+.phone-frame {
+  width: 100%;
+  max-width: 390px;
+  min-height: 780px;
+  max-height: 880px;
+  background: #FFFFFF;
+  border-radius: 40px;
+  box-shadow: 0 25px 60px -15px rgba(11, 37, 69, 0.25), 0 0 0 1px rgba(11, 37, 69, 0.06);
   position: relative;
-  text-align: center;
-  margin: 20px 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0; right: 0;
-    height: 1px;
-    background: var(--border);
+  @media (max-width: 480px) {
+    max-width: 100%;
+    min-height: 100vh;
+    max-height: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+// ─── Mobile Status Bar ────────────────────────────────────────────────────────
+.mobile-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px 8px;
+  color: #0B2545;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 10;
+  flex-shrink: 0;
+
+  .status-icons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
-  span {
+  .battery-icon {
+    width: 22px;
+    height: 11px;
+    border: 1.5px solid currentColor;
+    border-radius: 3px;
+    padding: 1.5px;
     position: relative;
-    background: var(--card);
-    padding: 0 12px;
-    font-size: 13px;
-    color: var(--text-muted);
+
+    &::after {
+      content: '';
+      position: absolute;
+      right: -3.5px;
+      top: 2.5px;
+      width: 2px;
+      height: 4px;
+      background: currentColor;
+      border-radius: 0 1px 1px 0;
+    }
+
+    .battery-fill {
+      width: 80%;
+      height: 100%;
+      background: currentColor;
+      border-radius: 1px;
+    }
   }
 }
 
-.login-footer {
+// ─── Screen Base ──────────────────────────────────────────────────────────────
+.screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+// ─── 1. SPLASH SCREEN ─────────────────────────────────────────────────────────
+.splash-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 8px 24px 28px;
   text-align: center;
-  margin-top: 16px;
-  font-size: 13px;
-  color: var(--text-secondary);
-  a { color: var(--accent); font-weight: 600; margin-left: 4px; }
+  min-height: 720px;
 }
 
-// ─── M-PIN Avatar ────────────────────────────────────────────────────────────
-.mpin-avatar {
-  width: 64px; height: 64px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), var(--navy-light));
-  @include flex-center;
-  margin: 0 auto 12px;
-  box-shadow: 0 8px 24px rgba(33, 150, 243, 0.35);
+.splash-header {
+  margin-top: 8px;
+  margin-bottom: 12px;
 
-  .avatar-initials {
-    font-size: 26px;
-    font-weight: 700;
-    color: white;
+  .brand-logo-icon {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .brand-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: #0B2545;
+    margin: 0;
+    letter-spacing: -0.3px;
+  }
+
+  .brand-subtitle {
+    font-size: 13px;
+    font-weight: 800;
+    color: #0B2545;
+    letter-spacing: 2px;
+    margin: 2px 0 4px;
+  }
+
+  .brand-tagline {
+    font-size: 12.5px;
+    color: #1976D2;
+    font-style: italic;
+    font-weight: 500;
+    margin: 0;
   }
 }
 
-// ─── PIN Dots ─────────────────────────────────────────────────────────────────
-.pin-dots {
+.splash-hero-wrap {
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 16px 36px -10px rgba(11, 37, 69, 0.16);
+
+  .splash-hero-img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    object-position: center 20%;
+    display: block;
+  }
+}
+
+.splash-actions {
+  margin-top: auto;
+  position: relative;
+  z-index: 2;
+  padding-top: 24px;
+
+  .splash-footer-text {
+    font-size: 13.5px;
+    color: #64748B;
+    margin-top: 14px;
+    margin-bottom: 0;
+
+    .link-btn {
+      background: none;
+      border: none;
+      color: #0B2545;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0 4px;
+      font-size: inherit;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// ─── 2. LOGIN / MOBILE SCREEN ─────────────────────────────────────────────────
+.login-screen,
+.otp-screen,
+.register-screen {
+  padding: 8px 24px 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+.screen-top-nav {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  margin-bottom: 8px;
+
+  .icon-back-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #F1F5F9;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background: #E2E8F0;
+    }
+  }
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 24px;
+
+  .brand-logo-icon-sm {
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .welcome-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: #0B2545;
+    margin: 0 0 4px;
+  }
+
+  .welcome-sub {
+    font-size: 13.5px;
+    color: #64748B;
+    margin: 0;
+  }
+
+  .mobile-badge {
+    display: inline-block;
+    background: #EFF6FF;
+    color: #1E40AF;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    margin-top: 8px;
+  }
+
+  .user-avatar-badge {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    border: 2px solid #BFDBFE;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin: 0 auto 10px;
+  }
+}
+
+.login-form,
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+// ─── Input Cards (Rounded Pill Style Matching Mockup) ────────────────────────
+.input-card {
+  display: flex;
+  align-items: center;
+  background: #F8FAFC;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 30px;
+  padding: 0 18px;
+  height: 52px;
+  transition: all 0.2s ease;
+
+  &:focus-within {
+    border-color: #0B2545;
+    background: #FFFFFF;
+    box-shadow: 0 4px 14px rgba(11, 37, 69, 0.08);
+  }
+
+  &.input-card-error {
+    border-color: #EF4444;
+    background: #FEF2F2;
+  }
+
+  &.disabled-card {
+    background: #F1F5F9;
+    opacity: 0.9;
+  }
+
+  .input-icon {
+    font-size: 18px;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+
+  .country-prefix {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #0B2545;
+    margin-right: 8px;
+    padding-right: 8px;
+    border-right: 1.5px solid #CBD5E1;
+    flex-shrink: 0;
+  }
+
+  .clean-input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    font-weight: 500;
+    color: #0B2545;
+    outline: none;
+    font-family: inherit;
+
+    &::placeholder {
+      color: #94A3B8;
+      font-weight: 400;
+    }
+  }
+
+  .clean-select {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 500;
+    color: #0B2545;
+    outline: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .verified-tag {
+    font-size: 11px;
+    font-weight: 700;
+    color: #16A34A;
+    background: #DCFCE7;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+}
+
+.input-row {
+  display: flex;
+  gap: 10px;
+
+  .flex-1 {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.field-error {
+  font-size: 12px;
+  color: #DC2626;
+  font-weight: 500;
+  padding-left: 12px;
+  margin-top: -8px;
+}
+
+.flow-hint {
+  font-size: 12px;
+  color: #64748B;
+  text-align: center;
+  margin: -4px 0 4px;
+  line-height: 1.4;
+}
+
+// ─── Buttons ──────────────────────────────────────────────────────────────────
+.btn-pill-navy {
+  width: 100%;
+  height: 52px;
+  background: #0B2545;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 30px;
+  font-size: 15.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 10px 22px rgba(11, 37, 69, 0.22);
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: #10325C;
+    transform: translateY(-1px);
+    box-shadow: 0 12px 26px rgba(11, 37, 69, 0.28);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.btn-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// ─── 4-Box OTP Input ──────────────────────────────────────────────────────────
+.otp-boxes-container {
   display: flex;
   justify-content: center;
   gap: 12px;
-  margin: 24px 0 16px;
+  margin: 16px 0 24px;
+  position: relative;
+  z-index: 2;
 
-  .pin-dot {
-    width: 16px; height: 16px;
-    border-radius: 50%;
-    border: 2.5px solid var(--border);
-    background: transparent;
-    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  .otp-digit-box {
+    width: 54px;
+    height: 56px;
+    border-radius: 16px;
+    border: 2px solid #CBD5E1;
+    background: #F8FAFC;
+    font-size: 24px;
+    font-weight: 800;
+    color: #0B2545;
+    text-align: center;
+    outline: none;
+    transition: all 0.2s ease;
 
-    &.filled {
-      background: var(--navy);
-      border-color: var(--navy);
-      transform: scale(1.15);
-    }
-    &.active {
-      box-shadow: 0 0 0 3px rgba(11, 37, 69, 0.2);
-    }
-  }
-}
-
-// ─── Error Message ────────────────────────────────────────────────────────────
-.error-msg {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--danger-bg);
-  color: var(--danger);
-  padding: 10px 14px;
-  border-radius: var(--radius-md);
-  font-size: 13px;
-  font-weight: 500;
-  margin-bottom: 16px;
-}
-
-// ─── Keypad ───────────────────────────────────────────────────────────────────
-.keypad {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-top: 8px;
-
-  .key-btn {
-    height: 60px;
-    border-radius: var(--radius-md);
-    background: var(--bg);
-    color: var(--text-primary);
-    font-size: 22px;
-    font-weight: 600;
-    @include flex-center;
-    transition: all var(--transition-fast);
-    cursor: pointer;
-    border: 2px solid transparent;
-    font-family: var(--font-family);
-
-    &:hover:not(.empty) {
-      background: var(--navy);
-      color: white;
-      border-color: var(--navy);
-      transform: scale(1.04);
-    }
-
-    &:active:not(.empty) {
-      transform: scale(0.94);
-      background: var(--navy-dark);
-      color: white;
-    }
-
-    &.empty {
-      background: transparent;
-      cursor: default;
-      pointer-events: none;
-    }
-
-    &.delete {
-      color: var(--text-secondary);
-      &:hover { background: var(--danger-bg); color: var(--danger); }
-    }
-  }
-}
-
-// ─── Verifying ────────────────────────────────────────────────────────────────
-.verifying-wrap {
-  @include flex-center;
-  gap: 10px;
-  margin-top: 16px;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-// ─── Role Badges ──────────────────────────────────────────────────────────────
-.role-badges {
-  display: flex;
-  gap: 10px;
-  margin-top: 24px;
-  z-index: 1;
-
-  .role-badge {
-    @include flex-center;
-    gap: 6px;
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 8px 14px;
-    border-radius: var(--radius-full);
-    font-size: 12px;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(8px);
-    transition: all var(--transition-fast);
-    cursor: pointer;
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.2);
+    &:focus {
+      border-color: #0B2545;
+      background: #FFFFFF;
+      box-shadow: 0 4px 16px rgba(11, 37, 69, 0.15);
       transform: translateY(-2px);
     }
+
+    &.box-filled {
+      border-color: #0B2545;
+      background: #EFF6FF;
+    }
+  }
+}
+
+.otp-hint {
+  font-size: 12.5px;
+  color: #64748B;
+  text-align: center;
+  margin: -12px 0 16px;
+  position: relative;
+  z-index: 2;
+
+  strong {
+    color: #0B2545;
+  }
+}
+
+.back-link-wrap {
+  text-align: center;
+  font-size: 13px;
+  color: #64748B;
+  margin-top: 14px;
+  position: relative;
+  z-index: 2;
+
+  .link-btn {
+    background: none;
+    border: none;
+    color: #0B2545;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: inherit;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// ─── Registration Screen ──────────────────────────────────────────────────────
+.register-header {
+  text-align: center;
+  margin-bottom: 20px;
+
+  .pill-badge {
+    display: inline-block;
+    background: #EFF6FF;
+    color: #1D4ED8;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    margin-bottom: 6px;
+  }
+}
+
+// ─── Quick Demo Box ───────────────────────────────────────────────────────────
+.quick-demo-box {
+  margin-top: 24px;
+  padding: 12px 14px;
+  background: #F8FAFC;
+  border: 1px dashed #CBD5E1;
+  border-radius: 18px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+
+  .demo-box-title {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #475569;
+    margin: 0 0 8px;
+  }
+
+  .demo-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+
+    .demo-chip {
+      border: none;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &.chip-admin {
+        background: #FEE2E2;
+        color: #991B1B;
+      }
+
+      &.chip-worker {
+        background: #DCFCE7;
+        color: #166534;
+      }
+
+      &.chip-patient {
+        background: #DBEAFE;
+        color: #1E40AF;
+      }
+
+      &:hover {
+        transform: translateY(-1px);
+        filter: brightness(0.95);
+      }
+    }
+  }
+}
+
+// ─── Error Banner ─────────────────────────────────────────────────────────────
+.error-banner {
+  background: #FEF2F2;
+  border: 1px solid #FCA5A5;
+  color: #B91C1C;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 10px 14px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+// ─── Bottom Organic Waves ─────────────────────────────────────────────────────
+.wave-bg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 140px;
+  pointer-events: none;
+  z-index: 0;
+
+  .wave-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+}
+
+.wave-bg-login {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.9;
+
+  .wave-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
   }
 }

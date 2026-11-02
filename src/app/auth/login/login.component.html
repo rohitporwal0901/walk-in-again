@@ -1,164 +1,394 @@
-<div class="login-page">
-  <!-- Animated Background -->
-  <div class="bg-shapes">
-    <div class="shape shape-1"></div>
-    <div class="shape shape-2"></div>
-    <div class="shape shape-3"></div>
-  </div>
+<div class="auth-viewport">
 
-  <!-- Logo Header -->
-  <header class="login-header animate-fade-in-up">
-    <div class="logo-wrap">
-      <div class="logo-icon">
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-          <path d="M16 4C9.37 4 4 9.37 4 16s5.37 12 12 12 12-5.37 12-12S22.63 4 16 4z" fill="rgba(255,255,255,0.2)"/>
-          <path d="M20 10c-2.2 0-4 1.8-4 4v8h-2v-6c0-1.1-.9-2-2-2s-2 .9-2 2v6H8v-8c0-4.42 3.58-8 8-8 1.48 0 2.87.41 4.05 1.12L20 10z" fill="white"/>
-          <circle cx="22" cy="12" r="3" fill="#F4A62A"/>
+  <!-- Mobile Phone Container (Pixel-perfect matching mockup) -->
+  <div class="phone-frame">
+
+    <!-- Top Mobile Status Bar (9:41, Wifi, Battery) -->
+    <div class="mobile-status-bar">
+      <span class="status-time">9:41</span>
+      <div class="status-icons">
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor">
+          <path d="M0 10h2V6H0v4zm3 0h2V4H3v6zm3 0h2V2H6v8zm3 0h2V0H9v10zm3 0h2v-7h-2v7z"/>
         </svg>
-      </div>
-      <div class="logo-text">
-        <span class="logo-title">Walk In Again</span>
-        <span class="logo-sub">PHYSIOTHERAPY</span>
+        <svg width="15" height="11" viewBox="0 0 15 11" fill="currentColor">
+          <path d="M7.5 2.5a8.4 8.4 0 015.6 2.1l1.4-1.4A10.4 10.4 0 007.5.5 10.4 10.4 0 00.5 3.2L1.9 4.6A8.4 8.4 0 017.5 2.5zm0 4a4.4 4.4 0 013 1.2l1.4-1.4A6.4 6.4 0 007.5 4.5 6.4 6.4 0 003.1 6.3L4.5 7.7a4.4 4.4 0 013-1.2zm0 4a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
+        </svg>
+        <div class="battery-icon">
+          <div class="battery-fill"></div>
+        </div>
       </div>
     </div>
-    <p class="tagline">Move Better. Live Stronger.</p>
-  </header>
 
-  <!-- Card Container -->
-  <div class="login-card animate-fade-in-up" style="animation-delay: 0.1s">
+    <!-- ================================================================= -->
+    <!-- 1. SPLASH SCREEN (Left Screen of Mockup)                          -->
+    <!-- ================================================================= -->
+    @if (currentStep() === 'splash') {
+      <div class="screen splash-screen animate-fade-in">
 
-    <!-- ── Mobile Number Screen ── -->
-    @if (!showMpinScreen()) {
-      <div class="screen" id="mobile-screen">
-        <h1 class="screen-title">Welcome Back!</h1>
-        <p class="screen-sub">Sign in to continue</p>
-
-        <form [formGroup]="mobileForm" (ngSubmit)="onMobileSubmit()">
-          <div class="form-group">
-            <label class="form-label" for="mobile">Mobile Number</label>
-            <div class="input-wrap" [class.error]="mobile?.invalid && mobile?.touched">
-              <span class="input-prefix">🇮🇳 +91</span>
-              <input
-                id="mobile"
-                type="tel"
-                formControlName="mobileNumber"
-                placeholder="Enter 10-digit number"
-                maxlength="10"
-                autocomplete="tel"
-                class="mobile-input"
-              />
-            </div>
-            @if (mobile?.hasError('required') && mobile?.touched) {
-              <span class="form-error">Mobile number is required</span>
-            }
-            @if (mobile?.hasError('pattern') && mobile?.touched) {
-              <span class="form-error">Enter a valid 10-digit mobile number</span>
-            }
+        <!-- Logo Header -->
+        <div class="splash-header">
+          <!-- Dynamic Swoosh Athlete Logo -->
+          <div class="brand-logo-icon">
+            <svg width="44" height="44" viewBox="0 0 48 48" fill="none">
+              <!-- Head -->
+              <circle cx="24" cy="10" r="4.5" fill="#0B2545"/>
+              <!-- Blue Body Swoosh -->
+              <path d="M16 28C14 20 18 16 24 16C21 21 20 28 22 38C19 36 17 32 16 28Z" fill="#1565C0"/>
+              <!-- Golden Wing Swoosh -->
+              <path d="M25 16C31 16 35 22 34 32C31 29 28 25 25 21C26 27 24 33 22 38C25 30 25 22 25 16Z" fill="#F4A62A"/>
+            </svg>
           </div>
+          <h1 class="brand-title">Walk In Again</h1>
+          <h2 class="brand-subtitle">PHYSIOTHERAPY</h2>
+          <p class="brand-tagline">Move Better. Live Stronger.</p>
+        </div>
+
+        <!-- Hero Image (Physiotherapist & Patient Stretching) -->
+        <div class="splash-hero-wrap">
+          <img
+            src="/assets/images/splash-hero.jpg"
+            alt="Physiotherapy stretching session"
+            class="splash-hero-img"
+          />
+        </div>
+
+        <!-- Curved Wave Graphic Background (Bottom) -->
+        <div class="wave-bg">
+          <svg viewBox="0 0 375 140" fill="none" preserveAspectRatio="none" class="wave-svg">
+            <path d="M0,60 C90,110 180,20 280,70 C330,95 360,85 375,80 L375,140 L0,140 Z" fill="#F4A62A" opacity="0.35"/>
+            <path d="M0,85 C100,40 200,120 300,75 C340,55 365,65 375,70 L375,140 L0,140 Z" fill="#1565C0" opacity="0.45"/>
+            <path d="M0,105 C120,60 220,130 375,85 L375,140 L0,140 Z" fill="#0B2545"/>
+          </svg>
+        </div>
+
+        <!-- Bottom Action Buttons -->
+        <div class="splash-actions">
+          <button class="btn btn-pill-navy" (click)="goToLogin()">
+            Get Started
+          </button>
+
+          <p class="splash-footer-text">
+            Already have an account?
+            <button class="link-btn" (click)="goToLogin()">Login</button>
+          </p>
+        </div>
+
+      </div>
+    }
+
+    <!-- ================================================================= -->
+    <!-- 2. LOGIN / MOBILE SCREEN (Right Screen of Mockup)                 -->
+    <!-- ================================================================= -->
+    @if (currentStep() === 'mobile') {
+      <div class="screen login-screen animate-fade-in">
+
+        <!-- Top Navigation -->
+        <div class="screen-top-nav">
+          <button class="icon-back-btn" (click)="goToSplash()" aria-label="Back to splash">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M15 18L9 12L15 6" stroke="#0B2545" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Center Logo Icon -->
+        <div class="login-header">
+          <div class="brand-logo-icon-sm">
+            <svg width="38" height="38" viewBox="0 0 48 48" fill="none">
+              <circle cx="24" cy="10" r="4.5" fill="#0B2545"/>
+              <path d="M16 28C14 20 18 16 24 16C21 21 20 28 22 38C19 36 17 32 16 28Z" fill="#1565C0"/>
+              <path d="M25 16C31 16 35 22 34 32C31 29 28 25 25 21C26 27 24 33 22 38C25 30 25 22 25 16Z" fill="#F4A62A"/>
+            </svg>
+          </div>
+          <h1 class="welcome-title">Welcome Back!</h1>
+          <p class="welcome-sub">Sign in to continue</p>
+        </div>
+
+        <!-- Mobile Input Form -->
+        <form [formGroup]="mobileForm" (ngSubmit)="checkMobileNumber()" class="login-form">
+
+          <!-- Mobile Input with Country Code -->
+          <div class="input-card" [class.input-card-error]="mobile?.invalid && mobile?.touched">
+            <span class="input-icon">📱</span>
+            <span class="country-prefix">+91</span>
+            <input
+              id="mobile-input"
+              type="tel"
+              formControlName="mobileNumber"
+              placeholder="Enter Mobile Number"
+              maxlength="10"
+              class="clean-input"
+              autocomplete="tel"
+            />
+          </div>
+
+          @if (mobile?.invalid && mobile?.touched) {
+            <span class="field-error">Please enter a valid 10-digit mobile number</span>
+          }
+
+          @if (errorMessage()) {
+            <div class="error-banner animate-fade-in">
+              <span>⚠️ {{ errorMessage() }}</span>
+            </div>
+          }
+
+          <p class="flow-hint">
+            💡 If registered, you'll enter M-PIN / OTP. If new, registration opens automatically.
+          </p>
 
           <button
             type="submit"
-            class="btn btn--primary btn--full btn--lg"
+            class="btn btn-pill-navy"
             [disabled]="isLoading()"
           >
             @if (isLoading()) {
-              <span class="spinner spinner--white"></span>
+              <span class="btn-spinner"></span>
+              <span>Checking Account...</span>
             } @else {
-              Continue
+              <span>Login / Continue</span>
             }
           </button>
         </form>
 
-        <div class="divider-text"><span>or</span></div>
-
-        <button type="button" class="btn btn--outline btn--full" (click)="navigateToRegister()">
-          ➕ New Patient? Register Here
-        </button>
-
-        <p class="login-footer">
-          Already registered? Enter your mobile above to sign in.
-        </p>
-      </div>
-    }
-
-    <!-- ── M-PIN Screen ── -->
-    @if (showMpinScreen()) {
-      <div class="screen animate-scale-in" id="mpin-screen">
-        <button class="back-btn" (click)="goBack()">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M12 4L6 10L12 16" stroke="#0B2545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-
-        <div class="mpin-avatar">
-          <span class="avatar-initials">{{ mobile?.value?.slice(0,1) }}</span>
-        </div>
-        <h2 class="screen-title">Enter M-PIN</h2>
-        <p class="screen-sub">+91 {{ mobile?.value }}</p>
-
-        <!-- PIN Dots -->
-        <div class="pin-dots" id="pin-display">
-          @for (filled of mpinDots(); track $index) {
-            <div class="pin-dot" [class.filled]="filled" [class.active]="$index === mpin().length - 1 && filled"></div>
-          }
-        </div>
-
-        <!-- Error -->
-        @if (authError()) {
-          <div class="error-msg animate-fade-in-up">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <circle cx="8" cy="8" r="7" stroke="#EF4444" stroke-width="1.5"/>
-              <path d="M8 5v4M8 11v.5" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-            {{ authError() }}
-          </div>
-        }
-
-        <!-- Keypad -->
-        <div class="keypad" id="mpin-keypad">
-          @for (key of keypadKeys; track $index) {
-            <button
-              class="key-btn"
-              [class.empty]="key === ''"
-              [class.delete]="key === '⌫'"
-              (click)="onKeyPress(key)"
-              [disabled]="isLoading()"
-              [attr.aria-label]="key === '⌫' ? 'Backspace' : key === '' ? '' : 'Key ' + key"
-            >
-              @if (key === '⌫') {
-                <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
-                  <path d="M8 1L1 8L8 15M1 8H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              } @else {
-                {{ key }}
-              }
+        <!-- Quick 1-Click Demo Testing Buttons (Admin / Physio / Patient) -->
+        <div class="quick-demo-box">
+          <p class="demo-box-title">⚡ Quick 1-Click Demo Testing:</p>
+          <div class="demo-chips">
+            <button class="demo-chip chip-admin" (click)="quickDemoLogin('9999999999')">
+              📊 Admin (Dr. Verma)
             </button>
+            <button class="demo-chip chip-worker" (click)="quickDemoLogin('9876543210')">
+              👨‍⚕️ Physio (Rahul)
+            </button>
+            <button class="demo-chip chip-patient" (click)="quickDemoLogin('9123456789')">
+              🏥 Patient (Priya)
+            </button>
+          </div>
+        </div>
+
+        <!-- Curved Wave Graphic Background (Bottom) -->
+        <div class="wave-bg-login">
+          <svg viewBox="0 0 375 140" fill="none" preserveAspectRatio="none" class="wave-svg">
+            <path d="M0,60 C90,110 180,20 280,70 C330,95 360,85 375,80 L375,140 L0,140 Z" fill="#F4A62A" opacity="0.35"/>
+            <path d="M0,85 C100,40 200,120 300,75 C340,55 365,65 375,70 L375,140 L0,140 Z" fill="#1565C0" opacity="0.45"/>
+            <path d="M0,105 C120,60 220,130 375,85 L375,140 L0,140 Z" fill="#0B2545"/>
+          </svg>
+        </div>
+
+      </div>
+    }
+
+    <!-- ================================================================= -->
+    <!-- 3. 4-BOX OTP / M-PIN SCREEN (If Account Exists)                   -->
+    <!-- ================================================================= -->
+    @if (currentStep() === 'otp') {
+      <div class="screen otp-screen animate-fade-in">
+
+        <div class="screen-top-nav">
+          <button class="icon-back-btn" (click)="backToMobile()" aria-label="Back">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M15 18L9 12L15 6" stroke="#0B2545" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="login-header">
+          <div class="user-avatar-badge">
+            <span class="user-role-icon">
+              @if (existingUser()?.role === 'admin') { 📊 }
+              @else if (existingUser()?.role === 'worker') { 👨‍⚕️ }
+              @else { 🏥 }
+            </span>
+          </div>
+          <h1 class="welcome-title">Enter M-PIN</h1>
+          <p class="welcome-sub">
+            Welcome back, <strong>{{ existingUser()?.name }}</strong> ({{ existingUser()?.role | uppercase }})
+          </p>
+          <span class="mobile-badge">+91 {{ existingUser()?.mobileNumber }}</span>
+        </div>
+
+        <!-- 4-Box OTP Input -->
+        <div class="otp-boxes-container">
+          @for (val of [0, 1, 2, 3]; track val) {
+            <input
+              #otpInput
+              type="password"
+              maxlength="1"
+              inputmode="numeric"
+              class="otp-digit-box"
+              [class.box-filled]="otpValues()[val]"
+              [value]="otpValues()[val]"
+              (input)="onOtpInput($event, val)"
+              (keydown)="onOtpKeyDown($event, val)"
+            />
           }
         </div>
 
-        @if (isLoading()) {
-          <div class="verifying-wrap">
-            <span class="spinner"></span>
-            <span class="text-secondary">Verifying...</span>
+        @if (errorMessage()) {
+          <div class="error-banner animate-fade-in">
+            <span>⚠️ {{ errorMessage() }}</span>
           </div>
         }
+
+        <p class="otp-hint">Default test PIN is <strong>1234</strong></p>
+
+        <button
+          type="button"
+          class="btn btn-pill-navy"
+          [disabled]="isLoading()"
+          (click)="verifyOtp()"
+        >
+          @if (isLoading()) {
+            <span class="btn-spinner"></span>
+            <span>Verifying...</span>
+          } @else {
+            <span>Verify & Proceed</span>
+          }
+        </button>
+
+        <p class="back-link-wrap">
+          Wrong number?
+          <button class="link-btn" (click)="backToMobile()">Change Mobile</button>
+        </p>
+
+        <!-- Bottom Curved Wave -->
+        <div class="wave-bg-login">
+          <svg viewBox="0 0 375 140" fill="none" preserveAspectRatio="none" class="wave-svg">
+            <path d="M0,60 C90,110 180,20 280,70 C330,95 360,85 375,80 L375,140 L0,140 Z" fill="#F4A62A" opacity="0.35"/>
+            <path d="M0,85 C100,40 200,120 300,75 C340,55 365,65 375,70 L375,140 L0,140 Z" fill="#1565C0" opacity="0.45"/>
+            <path d="M0,105 C120,60 220,130 375,85 L375,140 L0,140 Z" fill="#0B2545"/>
+          </svg>
+        </div>
+
       </div>
     }
-  </div>
 
-  <!-- Quick Login Badges -->
-  <div class="demo-section animate-fade-in" style="animation-delay: 0.3s; text-align: center; z-index: 1;">
-    <p style="font-size: 12px; color: rgba(255,255,255,0.7); margin-bottom: 8px; font-weight: 600;">⚡ Quick 1-Click Access (Test Portals):</p>
-    <div class="role-badges">
-      <button type="button" class="role-badge" (click)="loginAs('admin')">
-        <span>📊</span> Admin
-      </button>
-      <button type="button" class="role-badge" (click)="loginAs('worker')">
-        <span>👨‍⚕️</span> Physio
-      </button>
-      <button type="button" class="role-badge" (click)="loginAs('patient')">
-        <span>🏥</span> Patient
-      </button>
-    </div>
+    <!-- ================================================================= -->
+    <!-- 4. PATIENT REGISTRATION FORM (If Account Does Not Exist)          -->
+    <!-- ================================================================= -->
+    @if (currentStep() === 'register') {
+      <div class="screen register-screen animate-fade-in">
+
+        <div class="screen-top-nav">
+          <button class="icon-back-btn" (click)="backToMobile()" aria-label="Back">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M15 18L9 12L15 6" stroke="#0B2545" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="register-header">
+          <span class="pill-badge">New Patient Registration</span>
+          <h1 class="welcome-title">Create Patient Profile</h1>
+          <p class="welcome-sub">Complete your details to start physiotherapy care</p>
+        </div>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onRegisterPatient()" class="register-form">
+
+          <!-- Full Name -->
+          <div class="input-card" [class.input-card-error]="reg['name'].invalid && reg['name'].touched">
+            <span class="input-icon">👤</span>
+            <input
+              type="text"
+              formControlName="name"
+              placeholder="Full Name (e.g. Priya Mehta)"
+              class="clean-input"
+            />
+          </div>
+
+          <!-- Mobile Number (Pre-filled & Readonly) -->
+          <div class="input-card disabled-card">
+            <span class="input-icon">📱</span>
+            <span class="country-prefix">+91</span>
+            <input
+              type="tel"
+              formControlName="mobileNumber"
+              class="clean-input"
+              readonly
+            />
+            <span class="verified-tag">✓ Mobile</span>
+          </div>
+
+          <!-- Age & Gender Row -->
+          <div class="input-row">
+            <div class="input-card flex-1" [class.input-card-error]="reg['age'].invalid && reg['age'].touched">
+              <span class="input-icon">🎂</span>
+              <input
+                type="number"
+                formControlName="age"
+                placeholder="Age"
+                min="1"
+                max="120"
+                class="clean-input"
+              />
+            </div>
+
+            <div class="input-card flex-1">
+              <select formControlName="gender" class="clean-select">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Primary Pain / Concern Area -->
+          <div class="input-card">
+            <span class="input-icon">🩺</span>
+            <select formControlName="condition" class="clean-select">
+              @for (c of conditions; track c) {
+                <option [value]="c">{{ c }}</option>
+              }
+            </select>
+          </div>
+
+          <!-- Set 4-digit M-PIN -->
+          <div class="input-card" [class.input-card-error]="reg['mpin'].invalid && reg['mpin'].touched">
+            <span class="input-icon">🔒</span>
+            <input
+              type="password"
+              formControlName="mpin"
+              placeholder="Set 4-Digit M-PIN"
+              maxlength="4"
+              inputmode="numeric"
+              class="clean-input"
+            />
+          </div>
+          @if (reg['mpin'].invalid && reg['mpin'].touched) {
+            <span class="field-error">M-PIN must be exactly 4 numeric digits</span>
+          }
+
+          @if (errorMessage()) {
+            <div class="error-banner animate-fade-in">
+              <span>⚠️ {{ errorMessage() }}</span>
+            </div>
+          }
+
+          <button
+            type="submit"
+            class="btn btn-pill-navy"
+            [disabled]="isLoading()"
+          >
+            @if (isLoading()) {
+              <span class="btn-spinner"></span>
+              <span>Registering Patient...</span>
+            } @else {
+              <span>Complete & Start Recovery</span>
+            }
+          </button>
+        </form>
+
+        <!-- Bottom Curved Wave -->
+        <div class="wave-bg-login">
+          <svg viewBox="0 0 375 140" fill="none" preserveAspectRatio="none" class="wave-svg">
+            <path d="M0,60 C90,110 180,20 280,70 C330,95 360,85 375,80 L375,140 L0,140 Z" fill="#F4A62A" opacity="0.35"/>
+            <path d="M0,85 C100,40 200,120 300,75 C340,55 365,65 375,70 L375,140 L0,140 Z" fill="#1565C0" opacity="0.45"/>
+            <path d="M0,105 C120,60 220,130 375,85 L375,140 L0,140 Z" fill="#0B2545"/>
+          </svg>
+        </div>
+
+      </div>
+    }
+
   </div>
 </div>
