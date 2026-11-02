@@ -1,11 +1,23 @@
-import { Injectable, signal, computed } from '@angular/core';
-import { FirestoreService } from './firestore.service';
+import { Injectable, signal, computed, inject } from '@angular/core';
+import {
+  Firestore,
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  query,
+  where,
+  onSnapshot,
+  Unsubscribe
+} from '@angular/fire/firestore';
 import { Session, SessionStatus, TherapyItem, DEFAULT_THERAPIES } from '../models/session.model';
-import { where, orderBy } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Transaction } from '../models/transaction.model';
 
 @Injectable({ providedIn: 'root' })
 export class SessionService {
+  private firestore = inject(Firestore);
+
   // Timer Signals
   private _timerSeconds = signal<number>(0);
   private _timerRunning = signal<boolean>(false);
@@ -23,8 +35,6 @@ export class SessionService {
   readonly timerRunning = this._timerRunning.asReadonly();
   readonly timerSeconds = this._timerSeconds.asReadonly();
   readonly activeSession = this._activeSession.asReadonly();
-
-  constructor(private firestoreService: FirestoreService) {}
 
   // ─── Timer Controls ───────────────────────────────────────────────────────
 
@@ -49,64 +59,202 @@ export class SessionService {
     this._timerSeconds.set(0);
   }
 
-  // ─── Session CRUD ─────────────────────────────────────────────────────────
+  // ─── Session Management ───────────────────────────────────────────────────
 
-  getSessionsByWorker(workerId: string): Observable<Session[]> {
-    return this.firestoreService.watchCollection<Session>(
-      'sessions',
-      where('workerId', '==', workerId),
-      orderBy('date', 'desc')
-    );
-  }
+  /** Create a new session (e.g. walk-in intake by Worker) */
+  async createSession(data: {
+    patientId: string;
+    patientName: string;
+    patientMobile: string;
+    workerId: string;
+    workerName: string;
+    workerMobile?: string;
+    notes?: string;
+  }): Promise<string> {
+    const sessionId = `sess_${Date.now()}`;
+    const sessionRef = doc(this.firestore, 'sessions', sessionId);
 
-  getTodaySessionsByWorker(workerId: string): Observable<Session[]> {
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
+    const now = new Date();
+    const timeSlot = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    return this.firestoreService.watchCollection<Session>(
-      'sessions',
-      where('workerId', '==', workerId),
-      where('date', '>=', startOfDay),
-      where('date', '<=', endOfDay)
-    );
-  }
-
-  getSessionsByPatient(patientId: string): Observable<Session[]> {
-    return this.firestoreService.watchCollection<Session>(
-      'sessions',
-      where('patientId', '==', patientId),
-      orderBy('date', 'desc')
-    );
-  }
-
-  startSession(session: Session): Observable<void> {
-    this._activeSession.set(session);
-    this.startTimer();
-    return this.firestoreService.updateDoc('sessions', session.sessionId, {
+    const newSession: Record<string, any> = {
+      sessionId,
+      patientId: data.patientId,
+      patientName: data.patientName,
+      patientMobile: data.patientMobile,
+      workerId: data.workerId,
+      workerName: data.workerName,
+      workerMobile: data.workerMobile || '',
+      date: now.toISOString(),
+      timeSlot,
+      duration: 0,
       status: 'active' as SessionStatus,
-      updatedAt: new Date()
+      therapies: this.getDefaultTherapies(),
+      notes: data.notes || '',
+      fee: 500,
+      createdAt: now.toISOString(),
+      updatedAt: now.toISOString()
+    };
+
+    await setDoc(sessionRef, newSession);
+    return sessionId;
+  }
+
+  /** Get single session by ID */
+  async getSession(sessionId: string): Promise<Session | null> {
+    try {
+      const snap = await getDoc(doc(this.firestore, 'sessions', sessionId));
+      if (!snap.exists()) return null;
+      return snap.data() as Session;
+    } catch (e) {
+      console.error('Error fetching session:', e);
+      return null;
+    }
+  }
+
+  /** Real-time listener for a single session */
+  listenToSession(sessionId: string, callback: (session: Session | null) => void): Unsubscribe {
+    const sessionRef = doc(this.firestore, 'sessions', sessionId);
+    return onSnapshot(sessionRef, snap => {
+      if (snap.exists()) {
+        callback(snap.data() as Session);
+      } else {
+        callback(null);
+      }
+    }, err => {
+      console.error('Error watching session:', err);
+      callback(null);
     });
   }
 
-  endSession(sessionId: string, notes: string, therapies: TherapyItem[]): Observable<void> {
-    const duration = Math.ceil(this._timerSeconds() / 60);
+  /** Real-time listener for all sessions for a specific patient */
+  listenToPatientSessions(patientIdentifier: string, callback: (sessions: Session[]) => void): Unsubscribe {
+    const colRef = collection(this.firestore, 'sessions');
+    // Listen for patientId == patientIdentifier
+    const q = query(colRef, where('patientId', '==', patientIdentifier));
+    return onSnapshot(q, snap => {
+      const list: Session[] = [];
+      snap.forEach(d => {
+        list.push(d.data() as Session);
+      });
+      // Sort newest first
+      list.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      callback(list);
+    }, err => {
+      console.error('Error watching patient sessions:', err);
+      callback([]);
+    });
+  }
+
+  /** Real-time listener for all sessions for a specific worker */
+  listenToWorkerSessions(workerIdentifier: string, callback: (sessions: Session[]) => void): Unsubscribe {
+    const colRef = collection(this.firestore, 'sessions');
+    const q = query(colRef, where('workerId', '==', workerIdentifier));
+    return onSnapshot(q, snap => {
+      const list: Session[] = [];
+      snap.forEach(d => {
+        list.push(d.data() as Session);
+      });
+      // Sort newest first
+      list.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      callback(list);
+    }, err => {
+      console.error('Error watching worker sessions:', err);
+      callback([]);
+    });
+  }
+
+  /** End/Complete session */
+  async endSession(
+    sessionId: string,
+    notes: string,
+    therapies: TherapyItem[],
+    fee: number,
+    durationMinutes: number
+  ): Promise<void> {
     this.resetTimer();
     this._activeSession.set(null);
-    return this.firestoreService.updateDoc('sessions', sessionId, {
+
+    const sessionRef = doc(this.firestore, 'sessions', sessionId);
+    await updateDoc(sessionRef, {
       status: 'completed' as SessionStatus,
-      duration,
+      duration: durationMinutes,
       notes,
       therapies,
-      updatedAt: new Date()
+      fee,
+      updatedAt: new Date().toISOString()
     });
   }
 
-  updateSessionStatus(sessionId: string, status: SessionStatus): Observable<void> {
-    return this.firestoreService.updateDoc('sessions', sessionId, {
-      status,
-      updatedAt: new Date()
+  /** Record completed payment transaction */
+  async saveTransaction(data: {
+    sessionId: string;
+    patientId: string;
+    patientName: string;
+    patientMobile: string;
+    workerId: string;
+    workerName: string;
+    workerMobile?: string;
+    amount: number;
+    paymentMethod: 'UPI' | 'Card' | 'Cash';
+    razorpayPaymentId?: string;
+    durationMinutes: number;
+  }): Promise<string> {
+    const transactionId = `txn_${Date.now()}`;
+    const txnRef = doc(this.firestore, 'transactions', transactionId);
+
+    const now = new Date();
+    const timeSlot = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    const newTxn: Record<string, any> = {
+      transactionId,
+      sessionId: data.sessionId,
+      patientId: data.patientId,
+      patientName: data.patientName,
+      patientMobile: data.patientMobile,
+      workerId: data.workerId,
+      workerName: data.workerName,
+      workerMobile: data.workerMobile || '',
+      amount: data.amount,
+      paymentMethod: data.paymentMethod,
+      razorpayPaymentId: data.razorpayPaymentId || '',
+      status: 'Paid',
+      sessionDate: now.toISOString(),
+      sessionTimeSlot: timeSlot,
+      sessionDuration: data.durationMinutes,
+      timestamp: now.toISOString()
+    };
+
+    await setDoc(txnRef, newTxn);
+
+    // Also link transactionId in session
+    try {
+      const sessionRef = doc(this.firestore, 'sessions', data.sessionId);
+      await updateDoc(sessionRef, {
+        transactionId,
+        updatedAt: now.toISOString()
+      });
+    } catch (e) {
+      console.warn('Could not update session transactionId:', e);
+    }
+
+    return transactionId;
+  }
+
+  /** Real-time listener for patient's transactions */
+  listenToPatientTransactions(patientIdentifier: string, callback: (txns: Transaction[]) => void): Unsubscribe {
+    const colRef = collection(this.firestore, 'transactions');
+    const q = query(colRef, where('patientId', '==', patientIdentifier));
+    return onSnapshot(q, snap => {
+      const list: Transaction[] = [];
+      snap.forEach(d => {
+        list.push(d.data() as Transaction);
+      });
+      list.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      callback(list);
+    }, err => {
+      console.error('Error watching patient transactions:', err);
+      callback([]);
     });
   }
 
@@ -115,9 +263,8 @@ export class SessionService {
   }
 
   getSessionFee(durationMinutes: number): number {
-    // ₹500 for 30 min session base rate
     const baseRate = 500;
-    const multiplier = Math.ceil(durationMinutes / 30);
+    const multiplier = Math.max(1, Math.ceil(durationMinutes / 30));
     return baseRate * multiplier;
   }
 }

@@ -6,15 +6,15 @@
     <div class="header-content">
       <div class="header-left">
         <p class="greeting-text">{{ greeting() }}, 👋</p>
-        <h1 class="worker-name">{{ workerName() || 'Rahul' }}</h1>
-        <span class="role-chip">Physiotherapist</span>
+        <h1 class="worker-name">Dr. {{ workerName() || 'Physiotherapist' }}</h1>
+        <span class="role-chip">Physiotherapist Staff</span>
       </div>
       <div class="header-actions">
         <button class="icon-btn" id="notif-btn" aria-label="Notifications">
           <span>🔔</span>
           <span class="notif-dot"></span>
         </button>
-        <div class="worker-avatar">R</div>
+        <div class="worker-avatar">{{ (workerName() || 'W').charAt(0).toUpperCase() }}</div>
       </div>
     </div>
   </header>
@@ -25,7 +25,7 @@
     <!-- Metrics Grid -->
     <section class="metrics-section animate-fade-in-up">
       <div class="metrics-grid">
-        @for (metric of metrics; track metric.label; let i = $index) {
+        @for (metric of metrics(); track metric.label; let i = $index) {
           <div class="metric-card stagger-{{ i + 1 }}" [style.--accent-color]="metric.color" [style.--accent-bg]="metric.bgColor">
             <div class="metric-icon">{{ metric.icon }}</div>
             <div class="metric-value">{{ metric.value }}</div>
@@ -38,8 +38,8 @@
     <!-- Today's Patients -->
     <section class="patients-section">
       <div class="section-header">
-        <h2>Today's Patients</h2>
-        <button class="view-all" id="view-all-patients">View All</button>
+        <h2>Today's Patient Queue</h2>
+        <span class="badge badge--info">{{ todaySessions().length }} Patients</span>
       </div>
 
       @if (isLoading()) {
@@ -57,22 +57,22 @@
         @for (session of todaySessions(); track session.sessionId; let i = $index) {
           <div class="patient-card animate-fade-in-up stagger-{{ i + 1 }}">
             <div class="patient-avatar">
-              {{ session.patientName.charAt(0) }}
+              {{ (session.patientName || 'P').charAt(0).toUpperCase() }}
             </div>
             <div class="patient-info">
               <p class="patient-name">{{ session.patientName }}</p>
-              <p class="patient-meta">{{ session.timeSlot }}</p>
+              <p class="patient-meta">{{ session.patientMobile ? '+91 ' + session.patientMobile : '' }} · {{ session.timeSlot }}</p>
             </div>
             <div class="patient-status">
               @if (session.status === 'completed') {
-                <span class="badge badge--success">Done</span>
+                <span class="badge badge--success">Completed (₹{{ session.fee || 500 }})</span>
               } @else {
                 <button
                   class="btn btn--accent btn--sm start-btn"
                   (click)="startSession(session)"
                   [id]="'start-' + session.sessionId"
                 >
-                  Start
+                  Start Session
                 </button>
               }
             </div>
@@ -80,9 +80,13 @@
         }
 
         @if (todaySessions().length === 0) {
-          <div class="empty-state">
-            <span class="empty-icon">📭</span>
-            <p>No sessions scheduled for today</p>
+          <div class="empty-state" style="padding: 36px 16px; text-align: center; background: white; border-radius: 16px; border: 1px dashed #CBD5E1;">
+            <span class="empty-icon" style="font-size: 36px; display: block; margin-bottom: 8px;">👨‍⚕️</span>
+            <h3 style="font-size: 15px; font-weight: 700; color: #0B2545; margin: 0 0 4px;">No Patients in Queue</h3>
+            <p style="font-size: 12.5px; color: #64748B; margin: 0 0 14px;">Search for a walk-in patient below to start a new therapy session.</p>
+            <button class="btn btn--primary btn--sm" routerLink="/worker/search">
+              ➕ Intake Walk-In Patient
+            </button>
           </div>
         }
       }
@@ -91,11 +95,11 @@
     <!-- Quick Action CTA -->
     <div class="quick-cta animate-fade-in-up">
       <div class="cta-content">
-        <p class="cta-title">Find a Patient</p>
-        <p class="cta-sub">Search by name or mobile</p>
+        <p class="cta-title">Walk-In Patient Intake</p>
+        <p class="cta-sub">Search registered patients by Mobile or Name</p>
       </div>
       <button class="btn btn--gold btn--sm" routerLink="/worker/search" id="quick-search">
-        🔍 Search
+        🔍 Search Patient
       </button>
     </div>
 

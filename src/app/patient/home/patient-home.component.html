@@ -5,8 +5,8 @@
     <div class="header-top">
       <div>
         <p class="greeting">{{ greeting() }}, 👋</p>
-        <h1 class="pt-name">Hello {{ patientName() || 'Priya' }}!</h1>
-        <span class="health-tag">Stay Healthy, Stay Active</span>
+        <h1 class="pt-name">Hello {{ patientName() || 'Patient' }}!</h1>
+        <span class="health-tag">Walk In Again Physiotherapy Clinic</span>
       </div>
       <button class="notif-btn" id="pt-notif-btn">🔔</button>
     </div>
@@ -22,8 +22,8 @@
           <div class="session-count">
             <span class="count-done">{{ completedSessions() }}</span>
             <span class="count-sep">/</span>
-            <span class="count-total">{{ totalSessions() }}</span>
-            <span class="count-label">Sessions</span>
+            <span class="count-total">{{ totalRecommendedSessions() }}</span>
+            <span class="count-label">Sessions Completed</span>
           </div>
         </div>
         <div class="progress-ring-wrap">
@@ -47,33 +47,43 @@
         <div class="progress-bar-track">
           <div class="progress-bar-fill" [style.width.%]="progressPercent()"></div>
         </div>
-        <span class="progress-text">{{ progressPercent() }}% Complete</span>
+        <span class="progress-text">{{ progressPercent() }}% of recommended course completed</span>
       </div>
     </div>
 
-    <!-- Upcoming Session -->
-    <div class="upcoming-card animate-fade-in-up" style="animation-delay:.1s">
-      <div class="upcoming-badge">
-        <span class="pulse-dot"></span>
-        Next Session
-      </div>
-      <div class="upcoming-details">
-        <div class="upcoming-time">
-          <span class="time-icon">📅</span>
-          <div>
-            <p class="time-date">{{ nextSession().date }}</p>
-            <p class="time-slot">{{ nextSession().time }}</p>
+    <!-- Active or Upcoming Session -->
+    @if (activeSession(); as active) {
+      <div class="upcoming-card animate-fade-in-up" style="animation-delay:.1s">
+        <div class="upcoming-badge">
+          <span class="pulse-dot"></span>
+          {{ active.status === 'active' ? 'Ongoing Session' : 'Scheduled Session' }}
+        </div>
+        <div class="upcoming-details">
+          <div class="upcoming-time">
+            <span class="time-icon">⏱</span>
+            <div>
+              <p class="time-date">{{ active.date | date:'mediumDate' }}</p>
+              <p class="time-slot">{{ active.timeSlot || 'Active Now' }}</p>
+            </div>
+          </div>
+          <div class="upcoming-worker">
+            <div class="worker-av">{{ (active.workerName || 'W').charAt(0).toUpperCase() }}</div>
+            <div>
+              <p class="worker-name-text">Dr. {{ active.workerName || 'Physiotherapist' }}</p>
+              <p class="worker-spec">Status: {{ active.status | uppercase }}</p>
+            </div>
           </div>
         </div>
-        <div class="upcoming-worker">
-          <div class="worker-av">{{ nextSession().workerName.charAt(0) }}</div>
-          <div>
-            <p class="worker-name-text">{{ nextSession().workerName }}</p>
-            <p class="worker-spec">{{ nextSession().workerSpecialization }}</p>
-          </div>
+      </div>
+    } @else {
+      <div class="no-session-card animate-fade-in-up" style="animation-delay:.1s">
+        <div class="no-session-icon">🏥</div>
+        <div class="no-session-body">
+          <h3 class="no-session-title">Walk-In Clinic Ready</h3>
+          <p class="no-session-text">No active session right now. You can visit the clinic anytime for your regular therapy session.</p>
         </div>
       </div>
-    </div>
+    }
 
     <!-- Quick Actions -->
     <div class="quick-actions-section animate-fade-in-up" style="animation-delay:.2s">
@@ -95,14 +105,16 @@
       </div>
     </div>
 
-    <!-- Promo Banner -->
+    <!-- Clinic Info Banner -->
     <div class="promo-banner animate-fade-in-up" style="animation-delay:.3s">
       <div class="promo-text">
-        <p class="promo-title">Move Better.</p>
-        <p class="promo-sub">Live Stronger.</p>
+        <span class="promo-pill">Direct Walk-In</span>
+        <h3 class="promo-title">Need specialized physiotherapy care?</h3>
+        <p class="promo-sub">Our expert physiotherapists are available during clinic hours. No prior appointment needed.</p>
       </div>
-      <div class="promo-emoji animate-float">🏃‍♀️</div>
+      <div class="promo-art">⚡</div>
     </div>
 
   </div>
+
 </div>

@@ -15,7 +15,7 @@
 
     <!-- Patient Info -->
     <div class="patient-banner animate-fade-in-up">
-      <div class="patient-av">{{ patientName().charAt(0) }}</div>
+      <div class="patient-av">{{ (patientName() || 'P').charAt(0).toUpperCase() }}</div>
       <div>
         <p class="pt-name">{{ patientName() }}</p>
         <p class="pt-condition">{{ patientCondition() }}</p>

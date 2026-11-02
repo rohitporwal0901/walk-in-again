@@ -1,6 +1,9 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Session, SessionStatus } from '../../core/models/session.model';
+import { SessionService } from '../../core/services/session.service';
+import { AuthService } from '../../core/services/auth.service';
+import { Unsubscribe } from '@angular/fire/firestore';
 
 type FilterTab = 'All' | 'Completed' | 'Pending';
 
@@ -11,33 +14,46 @@ type FilterTab = 'All' | 'Completed' | 'Pending';
   templateUrl: './my-sessions.component.html',
   styleUrl: './my-sessions.component.scss'
 })
-export class MySessionsComponent {
+export class MySessionsComponent implements OnInit, OnDestroy {
+  private sessionService = inject(SessionService);
+  private auth = inject(AuthService);
+
+  private sessionsUnsub: Unsubscribe | null = null;
+
   activeTab = signal<FilterTab>('All');
   tabs: FilterTab[] = ['All', 'Completed', 'Pending'];
 
-  allSessions: Session[] = [
-    { sessionId: 's1', patientId: 'p1', patientName: 'Priya', workerId: 'w1', workerName: 'Rahul Sharma',
-      date: new Date('2026-10-26'), timeSlot: '10:00 AM - 10:30 AM', duration: 30, status: 'completed',
-      therapies: [], notes: '', fee: 500, createdAt: new Date(), updatedAt: new Date() },
-    { sessionId: 's2', patientId: 'p1', patientName: 'Priya', workerId: 'w1', workerName: 'Neha Gupta',
-      date: new Date('2026-10-24'), timeSlot: '11:00 AM - 11:30 AM', duration: 30, status: 'completed',
-      therapies: [], notes: '', fee: 500, createdAt: new Date(), updatedAt: new Date() },
-    { sessionId: 's3', patientId: 'p1', patientName: 'Priya', workerId: 'w2', workerName: 'Amit Verma',
-      date: new Date('2026-10-22'), timeSlot: '09:00 AM - 09:30 AM', duration: 30, status: 'completed',
-      therapies: [], notes: '', fee: 500, createdAt: new Date(), updatedAt: new Date() },
-    { sessionId: 's4', patientId: 'p1', patientName: 'Priya', workerId: 'w1', workerName: 'Rahul Sharma',
-      date: new Date('2026-10-30'), timeSlot: '10:00 AM - 10:30 AM', duration: 0, status: 'pending',
-      therapies: [], notes: '', fee: 500, createdAt: new Date(), updatedAt: new Date() },
-  ];
+  allSessions = signal<Session[]>([]);
+  isLoading = signal<boolean>(true);
 
   filteredSessions = computed(() => {
     const tab = this.activeTab();
-    if (tab === 'All') return this.allSessions;
-    const statusMap: Record<FilterTab, SessionStatus> = {
-      'All': 'pending', 'Completed': 'completed', 'Pending': 'pending'
-    };
-    return this.allSessions.filter(s => s.status === statusMap[tab]);
+    const sessions = this.allSessions();
+    if (tab === 'All') return sessions;
+    if (tab === 'Completed') return sessions.filter(s => s.status === 'completed');
+    return sessions.filter(s => s.status === 'pending' || s.status === 'active');
   });
 
-  setTab(tab: FilterTab) { this.activeTab.set(tab); }
+  ngOnInit() {
+    const user = this.auth.currentUser();
+    if (user?.uid) {
+      this.sessionsUnsub = this.sessionService.listenToPatientSessions(user.uid, (list) => {
+        this.allSessions.set(list);
+        this.isLoading.set(false);
+      });
+    } else {
+      this.isLoading.set(false);
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.sessionsUnsub) {
+      this.sessionsUnsub();
+      this.sessionsUnsub = null;
+    }
+  }
+
+  setTab(tab: FilterTab) {
+    this.activeTab.set(tab);
+  }
 }

@@ -31,14 +31,24 @@
         </div>
       </div>
     }
+
+    @if (transactions().length === 0) {
+      <div class="empty-state" style="text-align:center; padding: 48px 16px; background: white; border-radius: 16px; margin: 0 16px; border: 1px dashed #CBD5E1;">
+        <span style="font-size: 40px; display: block; margin-bottom: 8px;">💳</span>
+        <h3 style="font-size: 16px; font-weight: 700; color: #0B2545; margin: 0 0 4px;">No Transactions Yet</h3>
+        <p style="font-size: 13px; color: #64748B; margin: 0;">Completed physiotherapy session payments will appear here.</p>
+      </div>
+    }
   </div>
 
-  <!-- Download Button -->
-  <div style="padding: 0 16px 100px;">
-    <button class="btn btn--outline btn--full" id="download-all-receipts">
-      📥 Download All Receipts
-    </button>
-  </div>
+  @if (transactions().length > 0) {
+    <!-- Download Button -->
+    <div style="padding: 0 16px 100px;">
+      <button class="btn btn--outline btn--full" id="download-all-receipts" (click)="downloadReceipt(transactions()[0])">
+        📥 Print / Save Receipts
+      </button>
+    </div>
+  }
 </div>
 
 <!-- Transaction Detail Modal -->

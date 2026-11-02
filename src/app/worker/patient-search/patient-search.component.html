@@ -37,20 +37,21 @@
       <div class="results-count">{{ searchResults().length }} patient(s) found</div>
       @for (patient of searchResults(); track patient.userId; let i = $index) {
         <div class="patient-result-card animate-fade-in-up stagger-{{ i + 1 }}" [id]="'patient-' + patient.userId">
-          <div class="result-avatar">{{ patient.name.charAt(0) }}</div>
+          <div class="result-avatar">{{ (patient.name || 'P').charAt(0).toUpperCase() }}</div>
           <div class="result-info">
             <p class="result-name">{{ patient.name }}</p>
             <p class="result-mobile">+91 {{ patient.mobileNumber }}</p>
-            @if (patient.condition) {
-              <span class="condition-tag">{{ patient.condition }}</span>
+            @if (patient.problemArea || patient.condition) {
+              <span class="condition-tag">{{ patient.problemArea || patient.condition }}</span>
             }
           </div>
           <button
             class="btn btn--accent btn--sm"
+            [disabled]="isCreatingSession()"
             (click)="startSessionForPatient(patient)"
             [id]="'start-' + patient.userId"
           >
-            Start
+            {{ isCreatingSession() ? 'Starting...' : 'Start Session' }}
           </button>
         </div>
       }

@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Firestore, collection, query, where, getDocs } from '@angular/fire/firestore';
 import { User, PatientProfile } from '../../core/models/user.model';
+import { AuthService } from '../../core/services/auth.service';
+import { SessionService } from '../../core/services/session.service';
 
 @Component({
   selector: 'app-patient-search',
@@ -14,12 +16,15 @@ import { User, PatientProfile } from '../../core/models/user.model';
 })
 export class PatientSearchComponent {
   private firestore = inject(Firestore);
+  private auth = inject(AuthService);
+  private sessionService = inject(SessionService);
   private router = inject(Router);
 
   searchQuery = signal<string>('');
   searchResults = signal<PatientProfile[]>([]);
   isSearching = signal<boolean>(false);
   hasSearched = signal<boolean>(false);
+  isCreatingSession = signal<boolean>(false);
 
   async onSearch(value: string) {
     this.searchQuery.set(value);
@@ -36,7 +41,6 @@ export class PatientSearchComponent {
 
     try {
       const usersRef = collection(this.firestore, 'users');
-      // Fetch patients from Firestore
       const q = query(usersRef, where('role', '==', 'patient'));
       const snap = await getDocs(q);
 
@@ -65,8 +69,30 @@ export class PatientSearchComponent {
     }
   }
 
-  startSessionForPatient(patient: PatientProfile) {
-    const id = patient.uid || patient.userId || patient.mobileNumber;
-    this.router.navigate(['/worker/session', `sess_${id}`]);
+  async startSessionForPatient(patient: PatientProfile) {
+    if (this.isCreatingSession()) return;
+    this.isCreatingSession.set(true);
+
+    try {
+      const worker = this.auth.currentUser();
+      const patientId = patient.uid || patient.userId || patient.mobileNumber;
+
+      const sessionId = await this.sessionService.createSession({
+        patientId,
+        patientName: patient.name || 'Walk-In Patient',
+        patientMobile: patient.mobileNumber,
+        workerId: worker?.uid || '',
+        workerName: worker?.name || 'Physiotherapist',
+        workerMobile: worker?.mobileNumber || '',
+        notes: patient.problemArea ? `Problem Area: ${patient.problemArea}` : ''
+      });
+
+      this.router.navigate(['/worker/session', sessionId]);
+    } catch (e) {
+      console.error('Failed to create session for patient:', e);
+      alert('Could not start session. Please try again.');
+    } finally {
+      this.isCreatingSession.set(false);
+    }
   }
 }

@@ -11,6 +11,7 @@ export interface User {
   age?: number;
   gender?: 'Male' | 'Female' | 'Other';
   condition?: string; // Primary area of pain
+  problemArea?: string; // Alias for condition
   totalSessions?: number;
   completedSessions?: number;
   // Worker details

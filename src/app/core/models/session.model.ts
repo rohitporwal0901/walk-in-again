@@ -10,9 +10,11 @@ export interface Session {
   sessionId: string;
   patientId: string;
   patientName: string;
+  patientMobile?: string;
   workerId: string;
   workerName: string;
-  date: Date;
+  workerMobile?: string;
+  date: any;
   timeSlot: string;         // e.g. "10:00 AM - 10:30 AM"
   duration: number;         // in minutes
   status: SessionStatus;
@@ -20,8 +22,8 @@ export interface Session {
   notes: string;
   fee: number;
   transactionId?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: any;
+  updatedAt: any;
 }
 
 export const DEFAULT_THERAPIES: TherapyItem[] = [
