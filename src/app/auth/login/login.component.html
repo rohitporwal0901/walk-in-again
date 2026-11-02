@@ -1,0 +1,162 @@
+<div class="login-page">
+  <!-- Animated Background -->
+  <div class="bg-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+  </div>
+
+  <!-- Logo Header -->
+  <header class="login-header animate-fade-in-up">
+    <div class="logo-wrap">
+      <div class="logo-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <path d="M16 4C9.37 4 4 9.37 4 16s5.37 12 12 12 12-5.37 12-12S22.63 4 16 4z" fill="rgba(255,255,255,0.2)"/>
+          <path d="M20 10c-2.2 0-4 1.8-4 4v8h-2v-6c0-1.1-.9-2-2-2s-2 .9-2 2v6H8v-8c0-4.42 3.58-8 8-8 1.48 0 2.87.41 4.05 1.12L20 10z" fill="white"/>
+          <circle cx="22" cy="12" r="3" fill="#F4A62A"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span class="logo-title">Walk In Again</span>
+        <span class="logo-sub">PHYSIOTHERAPY</span>
+      </div>
+    </div>
+    <p class="tagline">Move Better. Live Stronger.</p>
+  </header>
+
+  <!-- Card Container -->
+  <div class="login-card animate-fade-in-up" style="animation-delay: 0.1s">
+
+    <!-- ── Mobile Number Screen ── -->
+    @if (!showMpinScreen()) {
+      <div class="screen" id="mobile-screen">
+        <h1 class="screen-title">Welcome Back!</h1>
+        <p class="screen-sub">Sign in to continue</p>
+
+        <form [formGroup]="mobileForm" (ngSubmit)="onMobileSubmit()">
+          <div class="form-group">
+            <label class="form-label" for="mobile">Mobile Number</label>
+            <div class="input-wrap" [class.error]="mobile?.invalid && mobile?.touched">
+              <span class="input-prefix">🇮🇳 +91</span>
+              <input
+                id="mobile"
+                type="tel"
+                formControlName="mobileNumber"
+                placeholder="Enter 10-digit number"
+                maxlength="10"
+                autocomplete="tel"
+                class="mobile-input"
+              />
+            </div>
+            @if (mobile?.hasError('required') && mobile?.touched) {
+              <span class="form-error">Mobile number is required</span>
+            }
+            @if (mobile?.hasError('pattern') && mobile?.touched) {
+              <span class="form-error">Enter a valid 10-digit mobile number</span>
+            }
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn--primary btn--full btn--lg"
+            [disabled]="isLoading()"
+          >
+            @if (isLoading()) {
+              <span class="spinner spinner--white"></span>
+            } @else {
+              Continue
+            }
+          </button>
+        </form>
+
+        <div class="divider-text"><span>or</span></div>
+
+        <button class="btn btn--outline btn--full" (click)="navigateToRegister()">
+          Create Worker Account
+        </button>
+
+        <p class="login-footer">
+          Already have an account?
+          <a class="text-accent" href="#">Login as Patient</a>
+        </p>
+      </div>
+    }
+
+    <!-- ── M-PIN Screen ── -->
+    @if (showMpinScreen()) {
+      <div class="screen animate-scale-in" id="mpin-screen">
+        <button class="back-btn" (click)="goBack()">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M12 4L6 10L12 16" stroke="#0B2545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <div class="mpin-avatar">
+          <span class="avatar-initials">{{ mobile?.value?.slice(0,1) }}</span>
+        </div>
+        <h2 class="screen-title">Enter M-PIN</h2>
+        <p class="screen-sub">+91 {{ mobile?.value }}</p>
+
+        <!-- PIN Dots -->
+        <div class="pin-dots" id="pin-display">
+          @for (filled of mpinDots(); track $index) {
+            <div class="pin-dot" [class.filled]="filled" [class.active]="$index === mpin().length - 1 && filled"></div>
+          }
+        </div>
+
+        <!-- Error -->
+        @if (authError()) {
+          <div class="error-msg animate-fade-in-up">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7" stroke="#EF4444" stroke-width="1.5"/>
+              <path d="M8 5v4M8 11v.5" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            {{ authError() }}
+          </div>
+        }
+
+        <!-- Keypad -->
+        <div class="keypad" id="mpin-keypad">
+          @for (key of keypadKeys; track $index) {
+            <button
+              class="key-btn"
+              [class.empty]="key === ''"
+              [class.delete]="key === '⌫'"
+              (click)="onKeyPress(key)"
+              [disabled]="isLoading()"
+              [attr.aria-label]="key === '⌫' ? 'Backspace' : key === '' ? '' : 'Key ' + key"
+            >
+              @if (key === '⌫') {
+                <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
+                  <path d="M8 1L1 8L8 15M1 8H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              } @else {
+                {{ key }}
+              }
+            </button>
+          }
+        </div>
+
+        @if (isLoading()) {
+          <div class="verifying-wrap">
+            <span class="spinner"></span>
+            <span class="text-secondary">Verifying...</span>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Quick Login Badges -->
+  <div class="role-badges animate-fade-in" style="animation-delay: 0.3s">
+    <div class="role-badge">
+      <span>🏥</span> Patient
+    </div>
+    <div class="role-badge">
+      <span>👨‍⚕️</span> Physiotherapist
+    </div>
+    <div class="role-badge">
+      <span>📊</span> Admin
+    </div>
+  </div>
+</div>

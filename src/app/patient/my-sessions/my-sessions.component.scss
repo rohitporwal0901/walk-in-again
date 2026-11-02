@@ -1,0 +1,83 @@
+@use '../../../styles/mixins' as *;
+
+.sessions-page { min-height: 100vh; background: var(--bg); }
+
+.sessions-header {
+  @include navy-gradient;
+  padding: 52px 20px 24px;
+  h1 { font-size: 24px; font-weight: 800; color: white; margin-bottom: 4px; }
+  p  { font-size: 13px; color: rgba(255,255,255,0.7); }
+}
+
+.tabs-bar {
+  display: flex;
+  gap: 0;
+  background: white;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border-light);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 14px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+
+  &.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+}
+
+.sessions-list { padding: 16px; }
+
+.session-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-light);
+  transition: all var(--transition-fast);
+  &:hover { box-shadow: var(--shadow-md); transform: translateX(2px); }
+}
+
+.session-date-col {
+  @include flex-center;
+  flex-direction: column;
+  min-width: 40px;
+  background: rgba(33,150,243,0.08);
+  border-radius: var(--radius-sm);
+  padding: 6px;
+  .s-day { font-size: 20px; font-weight: 800; color: var(--accent); line-height: 1; }
+  .s-mon { font-size: 10px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; }
+}
+
+.session-info {
+  flex: 1;
+  .s-time   { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+  .s-worker { font-size: 12px; color: var(--text-secondary); }
+  .s-fee    { font-size: 14px; font-weight: 700; color: var(--gold); margin-top: 2px; }
+}
+
+.empty-sessions {
+  @include flex-center;
+  flex-direction: column;
+  gap: 8px;
+  padding: 60px 20px;
+  color: var(--text-muted);
+  font-size: 14px;
+  span { font-size: 40px; }
+}

@@ -1,0 +1,38 @@
+import { Component, signal, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
+
+interface NavItem {
+  id: string;
+  icon: string;
+  label: string;
+  route: string;
+}
+
+@Component({
+  selector: 'app-admin-shell',
+  standalone: true,
+  imports: [CommonModule, RouterModule, RouterLink, RouterLinkActive],
+  templateUrl: './admin-shell.component.html',
+  styleUrl: './admin-shell.component.scss'
+})
+export class AdminShellComponent {
+  private auth = inject(AuthService);
+
+  sidebarOpen = signal<boolean>(true);
+  searchQuery = signal<string>('');
+
+  navItems: NavItem[] = [
+    { id: 'nav-dashboard',     icon: '📊', label: 'Dashboard',    route: '/admin/dashboard'    },
+    { id: 'nav-patients',      icon: '👥', label: 'Patients',     route: '/admin/patients'     },
+    { id: 'nav-workers',       icon: '👨‍⚕️', label: 'Workers',      route: '/admin/dashboard'    },
+    { id: 'nav-sessions',      icon: '📋', label: 'Sessions',     route: '/admin/dashboard'    },
+    { id: 'nav-transactions',  icon: '💳', label: 'Transactions', route: '/admin/transactions' },
+    { id: 'nav-reports',       icon: '📈', label: 'Reports',      route: '/admin/dashboard'    },
+    { id: 'nav-settings',      icon: '⚙️', label: 'Settings',     route: '/admin/dashboard'    },
+  ];
+
+  toggleSidebar() { this.sidebarOpen.update(v => !v); }
+  logout() { this.auth.logout(); }
+}

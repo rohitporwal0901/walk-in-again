@@ -1,0 +1,354 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+// ─── Page Shell ───────────────────────────────────────────────────────────────
+.login-page {
+  min-height: 100vh;
+  background: linear-gradient(160deg, var(--navy) 0%, var(--navy-light) 50%, #1565C0 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+// ─── Animated Background Shapes ───────────────────────────────────────────────
+.bg-shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+
+  .shape {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+    animation: float 6s ease-in-out infinite;
+
+    &-1 {
+      width: 300px; height: 300px;
+      top: -80px; right: -80px;
+      animation-delay: 0s;
+    }
+    &-2 {
+      width: 200px; height: 200px;
+      bottom: 100px; left: -60px;
+      animation-delay: 2s;
+      background: rgba(244, 166, 42, 0.08);
+    }
+    &-3 {
+      width: 120px; height: 120px;
+      top: 40%; left: 20%;
+      animation-delay: 4s;
+    }
+  }
+}
+
+// ─── Logo Header ──────────────────────────────────────────────────────────────
+.login-header {
+  text-align: center;
+  margin-bottom: 32px;
+  z-index: 1;
+
+  .logo-wrap {
+    @include flex-center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .logo-icon {
+    width: 56px; height: 56px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    @include flex-center;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(8px);
+  }
+
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .logo-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .logo-sub {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .tagline {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+  }
+}
+
+// ─── Login Card ───────────────────────────────────────────────────────────────
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+  z-index: 1;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+// ─── Screen ───────────────────────────────────────────────────────────────────
+.screen {
+  position: relative;
+
+  .screen-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+  }
+
+  .screen-sub {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 28px;
+  }
+}
+
+// ─── Back Button ──────────────────────────────────────────────────────────────
+.back-btn {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: var(--bg);
+  @include flex-center;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  color: var(--text-primary);
+
+  &:hover { background: var(--border); }
+}
+
+// ─── Mobile Input ─────────────────────────────────────────────────────────────
+.input-wrap {
+  display: flex;
+  align-items: center;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
+  background: var(--bg);
+
+  &:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.15); }
+  &.error { border-color: var(--danger); }
+
+  .input-prefix {
+    padding: 14px 12px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    border-right: 2px solid var(--border);
+    white-space: nowrap;
+    background: white;
+  }
+
+  .mobile-input {
+    flex: 1;
+    padding: 14px 16px;
+    font-size: 16px;
+    color: var(--text-primary);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 100%;
+    font-family: var(--font-family);
+  }
+}
+
+// ─── Divider ──────────────────────────────────────────────────────────────────
+.divider-text {
+  position: relative;
+  text-align: center;
+  margin: 20px 0;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0; right: 0;
+    height: 1px;
+    background: var(--border);
+  }
+
+  span {
+    position: relative;
+    background: var(--card);
+    padding: 0 12px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  a { color: var(--accent); font-weight: 600; margin-left: 4px; }
+}
+
+// ─── M-PIN Avatar ────────────────────────────────────────────────────────────
+.mpin-avatar {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--navy-light));
+  @include flex-center;
+  margin: 0 auto 12px;
+  box-shadow: 0 8px 24px rgba(33, 150, 243, 0.35);
+
+  .avatar-initials {
+    font-size: 26px;
+    font-weight: 700;
+    color: white;
+  }
+}
+
+// ─── PIN Dots ─────────────────────────────────────────────────────────────────
+.pin-dots {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 24px 0 16px;
+
+  .pin-dot {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 2.5px solid var(--border);
+    background: transparent;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    &.filled {
+      background: var(--navy);
+      border-color: var(--navy);
+      transform: scale(1.15);
+    }
+    &.active {
+      box-shadow: 0 0 0 3px rgba(11, 37, 69, 0.2);
+    }
+  }
+}
+
+// ─── Error Message ────────────────────────────────────────────────────────────
+.error-msg {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--danger-bg);
+  color: var(--danger);
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+// ─── Keypad ───────────────────────────────────────────────────────────────────
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 8px;
+
+  .key-btn {
+    height: 60px;
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    color: var(--text-primary);
+    font-size: 22px;
+    font-weight: 600;
+    @include flex-center;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    border: 2px solid transparent;
+    font-family: var(--font-family);
+
+    &:hover:not(.empty) {
+      background: var(--navy);
+      color: white;
+      border-color: var(--navy);
+      transform: scale(1.04);
+    }
+
+    &:active:not(.empty) {
+      transform: scale(0.94);
+      background: var(--navy-dark);
+      color: white;
+    }
+
+    &.empty {
+      background: transparent;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    &.delete {
+      color: var(--text-secondary);
+      &:hover { background: var(--danger-bg); color: var(--danger); }
+    }
+  }
+}
+
+// ─── Verifying ────────────────────────────────────────────────────────────────
+.verifying-wrap {
+  @include flex-center;
+  gap: 10px;
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+// ─── Role Badges ──────────────────────────────────────────────────────────────
+.role-badges {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+  z-index: 1;
+
+  .role-badge {
+    @include flex-center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 8px 14px;
+    border-radius: var(--radius-full);
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+  }
+}

@@ -1,0 +1,50 @@
+<div class="sessions-page animate-fade-in">
+  <header class="sessions-header">
+    <h1>My Sessions</h1>
+    <p>Track all your physiotherapy sessions</p>
+  </header>
+
+  <!-- Filter Tabs -->
+  <div class="tabs-bar">
+    @for (tab of tabs; track tab) {
+      <button
+        class="tab-btn"
+        [class.active]="activeTab() === tab"
+        (click)="setTab(tab)"
+        [id]="'tab-' + tab.toLowerCase()"
+      >{{ tab }}</button>
+    }
+  </div>
+
+  <div class="sessions-list">
+    @for (session of filteredSessions(); track session.sessionId; let i = $index) {
+      <div class="session-item animate-fade-in-up stagger-{{ i + 1 }}" [id]="'session-' + session.sessionId">
+        <div class="session-date-col">
+          <span class="s-day">{{ session.date | date:'d' }}</span>
+          <span class="s-mon">{{ session.date | date:'MMM' }}</span>
+        </div>
+        <div class="session-info">
+          <p class="s-time">{{ session.timeSlot }}</p>
+          <p class="s-worker">{{ session.workerName }}</p>
+          <p class="s-fee">₹{{ session.fee }}</p>
+        </div>
+        <div class="session-badge-col">
+          @if (session.status === 'completed') {
+            <span class="badge badge--success">Completed</span>
+          } @else if (session.status === 'pending') {
+            <span class="badge badge--warning">Pending</span>
+          } @else {
+            <span class="badge badge--info">Active</span>
+          }
+        </div>
+      </div>
+    }
+
+    @if (filteredSessions().length === 0) {
+      <div class="empty-sessions">
+        <span>📭</span>
+        <p>No {{ activeTab().toLowerCase() }} sessions</p>
+      </div>
+    }
+  </div>
+</div>

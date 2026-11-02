@@ -1,0 +1,75 @@
+<div class="admin-layout" [class.sidebar-collapsed]="!sidebarOpen()">
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar" id="admin-sidebar">
+    <!-- Logo -->
+    <div class="sidebar-logo">
+      <div class="logo-icon-sm">🏥</div>
+      @if (sidebarOpen()) {
+        <div class="sidebar-logo-text animate-fade-in">
+          <span class="logo-t1">Walk In Again</span>
+          <span class="logo-t2">PHYSIOTHERAPY</span>
+        </div>
+      }
+    </div>
+
+    <!-- Nav Items -->
+    <nav class="sidebar-nav">
+      @for (item of navItems; track item.id) {
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          class="sidebar-item"
+          [id]="item.id"
+          [title]="item.label"
+        >
+          <span class="si-icon">{{ item.icon }}</span>
+          @if (sidebarOpen()) {
+            <span class="si-label animate-fade-in">{{ item.label }}</span>
+          }
+        </a>
+      }
+    </nav>
+
+    <!-- Logout -->
+    <button class="sidebar-logout" (click)="logout()" id="admin-logout">
+      <span class="si-icon">🚪</span>
+      @if (sidebarOpen()) {
+        <span class="si-label animate-fade-in">Logout</span>
+      }
+    </button>
+  </aside>
+
+  <!-- Main Area -->
+  <div class="admin-main">
+    <!-- Topbar -->
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" (click)="toggleSidebar()" id="sidebar-toggle">☰</button>
+        <div class="topbar-search">
+          <span>🔍</span>
+          <input
+            type="search"
+            placeholder="Search patients, workers..."
+            id="admin-search"
+            [value]="searchQuery()"
+            (input)="searchQuery.set($any($event.target).value)"
+          />
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-btn" id="admin-notifications">🔔</button>
+        <div class="admin-user-chip">
+          <div class="admin-av">A</div>
+          <span>Admin</span>
+          <span>▾</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="admin-content page-scroll">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

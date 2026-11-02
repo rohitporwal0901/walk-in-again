@@ -1,0 +1,108 @@
+<div class="patient-home">
+
+  <!-- Header -->
+  <header class="pt-header">
+    <div class="header-top">
+      <div>
+        <p class="greeting">{{ greeting() }}, 👋</p>
+        <h1 class="pt-name">Hello {{ patientName() || 'Priya' }}!</h1>
+        <span class="health-tag">Stay Healthy, Stay Active</span>
+      </div>
+      <button class="notif-btn" id="pt-notif-btn">🔔</button>
+    </div>
+  </header>
+
+  <div class="pt-content">
+
+    <!-- Treatment Progress -->
+    <div class="progress-card animate-fade-in-up">
+      <div class="progress-header">
+        <div>
+          <p class="progress-label">My Treatment Progress</p>
+          <div class="session-count">
+            <span class="count-done">{{ completedSessions() }}</span>
+            <span class="count-sep">/</span>
+            <span class="count-total">{{ totalSessions() }}</span>
+            <span class="count-label">Sessions</span>
+          </div>
+        </div>
+        <div class="progress-ring-wrap">
+          <!-- SVG Progress Ring -->
+          <svg class="progress-ring" width="80" height="80" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(33,150,243,0.15)" stroke-width="8"/>
+            <circle
+              cx="40" cy="40" r="34" fill="none" stroke="var(--accent)" stroke-width="8"
+              stroke-linecap="round"
+              stroke-dasharray="213.6"
+              [attr.stroke-dashoffset]="213.6 * (1 - progressPercent() / 100)"
+              transform="rotate(-90 40 40)"
+              style="transition: stroke-dashoffset 1s ease"
+            />
+          </svg>
+          <div class="ring-percent">{{ progressPercent() }}%</div>
+        </div>
+      </div>
+      <!-- Bar Progress -->
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" [style.width.%]="progressPercent()"></div>
+        </div>
+        <span class="progress-text">{{ progressPercent() }}% Complete</span>
+      </div>
+    </div>
+
+    <!-- Upcoming Session -->
+    <div class="upcoming-card animate-fade-in-up" style="animation-delay:.1s">
+      <div class="upcoming-badge">
+        <span class="pulse-dot"></span>
+        Next Session
+      </div>
+      <div class="upcoming-details">
+        <div class="upcoming-time">
+          <span class="time-icon">📅</span>
+          <div>
+            <p class="time-date">{{ nextSession().date }}</p>
+            <p class="time-slot">{{ nextSession().time }}</p>
+          </div>
+        </div>
+        <div class="upcoming-worker">
+          <div class="worker-av">{{ nextSession().workerName.charAt(0) }}</div>
+          <div>
+            <p class="worker-name-text">{{ nextSession().workerName }}</p>
+            <p class="worker-spec">{{ nextSession().workerSpecialization }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions-section animate-fade-in-up" style="animation-delay:.2s">
+      <h2 class="section-title">Quick Actions</h2>
+      <div class="actions-grid">
+        @for (action of quickActions; track action.id; let i = $index) {
+          <button
+            class="action-btn stagger-{{ i + 1 }}"
+            [id]="action.id"
+            [style.--action-color]="action.color"
+            [style.--action-bg]="action.bgColor"
+            (click)="navigate(action.route)"
+          >
+            <div class="action-icon">{{ action.icon }}</div>
+            <p class="action-label">{{ action.label }}</p>
+            <p class="action-sub">{{ action.sublabel }}</p>
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Promo Banner -->
+    <div class="promo-banner animate-fade-in-up" style="animation-delay:.3s">
+      <div class="promo-text">
+        <p class="promo-title">Move Better.</p>
+        <p class="promo-sub">Live Stronger.</p>
+      </div>
+      <div class="promo-emoji animate-float">🏃‍♀️</div>
+    </div>
+
+  </div>
+</div>

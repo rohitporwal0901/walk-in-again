@@ -1,0 +1,127 @@
+<div class="payments-page animate-fade-in">
+  <header class="payments-header">
+    <h1>Payment History</h1>
+    <p>All your transactions</p>
+  </header>
+
+  <div class="payments-list">
+    @for (txn of transactions(); track txn.transactionId; let i = $index) {
+      <div
+        class="txn-card animate-fade-in-up stagger-{{ i + 1 }}"
+        [id]="'txn-' + txn.transactionId"
+        (click)="openDetail(txn)"
+      >
+        <div class="txn-date-col">
+          <span class="txn-day">{{ txn.sessionDate | date:'d' }}</span>
+          <span class="txn-mon">{{ txn.sessionDate | date:'MMM' }}</span>
+          <span class="txn-year">{{ txn.sessionDate | date:'yyyy' }}</span>
+        </div>
+        <div class="txn-info">
+          <p class="txn-id">{{ txn.transactionId }}</p>
+          <p class="txn-worker">{{ txn.workerName }}</p>
+          <p class="txn-session">{{ txn.sessionTimeSlot }}</p>
+        </div>
+        <div class="txn-right">
+          <p class="txn-amount">₹{{ txn.amount }}</p>
+          @if (txn.status === 'Paid') {
+            <span class="badge badge--success">Paid</span>
+          } @else {
+            <span class="badge badge--warning">Pending</span>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Download Button -->
+  <div style="padding: 0 16px 100px;">
+    <button class="btn btn--outline btn--full" id="download-all-receipts">
+      📥 Download All Receipts
+    </button>
+  </div>
+</div>
+
+<!-- Transaction Detail Modal -->
+@if (selectedTransaction()) {
+  <div class="modal-overlay animate-fade-in" (click)="closeDetail()">
+    <div class="modal-sheet animate-fade-in-up" (click)="$event.stopPropagation()">
+      <div class="modal-handle"></div>
+
+      <!-- Success Header -->
+      <div class="modal-success-header">
+        <div class="success-ring">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <path d="M8 16L13 21L24 10" stroke="#22C55E" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <p class="modal-success-title">Payment Successful</p>
+          <p class="modal-success-sub">{{ selectedTransaction()!.transactionId }} · {{ selectedTransaction()!.timestamp | date:'d MMM yyyy, h:mm a' }}</p>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-grid">
+          <!-- Patient Details -->
+          <div class="detail-section">
+            <p class="detail-heading">Patient Details</p>
+            <p class="detail-name">{{ selectedTransaction()!.patientName }}</p>
+            <p class="detail-sub">+91 {{ selectedTransaction()!.patientMobile }}</p>
+          </div>
+          <!-- Worker Details -->
+          <div class="detail-section">
+            <p class="detail-heading">Worker Details</p>
+            <p class="detail-name">{{ selectedTransaction()!.workerName }}</p>
+            <p class="detail-sub">+91 {{ selectedTransaction()!.workerMobile }}</p>
+          </div>
+        </div>
+
+        <div class="detail-divider"></div>
+
+        <!-- Session Details -->
+        <p class="detail-heading">Session Details</p>
+        <div class="session-detail-rows">
+          <div class="sd-row">
+            <span class="sd-icon">📅</span>
+            <span>{{ selectedTransaction()!.sessionDate | date:'d MMM yyyy' }}</span>
+          </div>
+          <div class="sd-row">
+            <span class="sd-icon">⏰</span>
+            <span>{{ selectedTransaction()!.sessionTimeSlot }}</span>
+          </div>
+          <div class="sd-row">
+            <span class="sd-icon">⏱️</span>
+            <span>Duration: {{ selectedTransaction()!.sessionDuration }} min</span>
+          </div>
+          <div class="sd-row">
+            <span class="sd-icon">💰</span>
+            <span>Amount: <strong>₹{{ selectedTransaction()!.amount }}</strong></span>
+          </div>
+        </div>
+
+        <div class="detail-divider"></div>
+
+        <!-- Payment Details -->
+        <p class="detail-heading">Payment Details</p>
+        <div class="sd-row">
+          <span>Method: {{ selectedTransaction()!.paymentMethod }}</span>
+        </div>
+        @if (selectedTransaction()!.razorpayPaymentId) {
+          <div class="sd-row">
+            <span class="text-muted text-sm">{{ selectedTransaction()!.razorpayPaymentId }}</span>
+          </div>
+        }
+        <div class="paid-badge-wrap">
+          <span class="badge badge--success">✅ Fully Paid</span>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn--ghost btn--full" (click)="closeDetail()" id="modal-close">Close</button>
+        <button class="btn btn--primary btn--full" (click)="downloadReceipt(selectedTransaction()!)" id="modal-download">
+          📥 Download Receipt
+        </button>
+      </div>
+    </div>
+  </div>
+}

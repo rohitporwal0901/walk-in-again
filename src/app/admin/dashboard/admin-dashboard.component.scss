@@ -1,0 +1,295 @@
+@use '../../../styles/mixins' as *;
+
+.admin-dashboard { min-width: 0; }
+
+// ─── Page Header ──────────────────────────────────────────────────────────────
+.page-header {
+  @include flex-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  .page-title { font-size: 28px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; }
+  .page-sub   { font-size: 14px; color: var(--text-secondary); margin-top: 2px; }
+}
+
+.period-select {
+  padding: 8px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: white;
+  cursor: pointer;
+  outline: none;
+  font-family: var(--font-family);
+  &:focus { border-color: var(--accent); }
+}
+
+// ─── KPI Grid ─────────────────────────────────────────────────────────────────
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+
+  @include tablet { grid-template-columns: repeat(2, 1fr); }
+}
+
+.kpi-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-light);
+  transition: all var(--transition-base);
+  &:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+  .kpi-icon-wrap {
+    width: 48px; height: 48px;
+    border-radius: var(--radius-md);
+    background: var(--kpi-bg);
+    @include flex-center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .kpi-body { flex: 1; }
+  .kpi-value { font-size: 24px; font-weight: 800; color: var(--kpi-color); line-height: 1.1; letter-spacing: -0.02em; }
+  .kpi-label { font-size: 12px; color: var(--text-secondary); font-weight: 500; margin-top: 2px; }
+
+  .kpi-growth {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--success);
+    background: var(--success-bg);
+    padding: 3px 8px;
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+    &:not(.positive) { color: var(--danger); background: var(--danger-bg); }
+  }
+}
+
+// ─── Charts Row ───────────────────────────────────────────────────────────────
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 16px;
+  align-items: flex-start;
+
+  @include wide { grid-template-columns: 1fr 400px; }
+  @media (max-width: 1100px) { grid-template-columns: 1fr; }
+}
+
+// ─── Chart Card ───────────────────────────────────────────────────────────────
+.chart-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-light);
+
+  .chart-header {
+    @include flex-between;
+    margin-bottom: 20px;
+    h3 { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+  }
+
+  .chart-legend {
+    @include flex-center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  }
+}
+
+// ─── Bar Chart ────────────────────────────────────────────────────────────────
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  height: 180px;
+  position: relative;
+  padding-left: 40px;
+  padding-bottom: 24px;
+  border-left: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.y-axis {
+  position: absolute;
+  left: 0; top: 0; bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 36px;
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: right;
+  padding-right: 6px;
+}
+
+.bar-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  justify-content: flex-end;
+
+  .bars {
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+    height: 100%;
+    width: 100%;
+    max-width: 60px;
+  }
+
+  .bar-label { font-size: 11px; color: var(--text-muted); }
+}
+
+.bar {
+  flex: 1;
+  border-radius: 6px 6px 0 0;
+  min-height: 4px;
+  position: relative;
+  cursor: pointer;
+  transition: height 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  &-current { background: linear-gradient(180deg, var(--accent-light), var(--accent)); }
+  &-prev    { background: linear-gradient(180deg, var(--gold-light), var(--gold)); opacity: 0.75; }
+
+  &:hover .bar-tooltip { opacity: 1; transform: translateY(0); }
+}
+
+.bar-tooltip {
+  position: absolute;
+  top: -32px;
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: var(--navy);
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 6px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: all var(--transition-fast);
+  pointer-events: none;
+  z-index: 10;
+}
+
+// ─── Right Column ─────────────────────────────────────────────────────────────
+.right-col { display: flex; flex-direction: column; gap: 16px; }
+
+// ─── Table Card ───────────────────────────────────────────────────────────────
+.table-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-light);
+}
+
+.card-header-row {
+  @include flex-between;
+  margin-bottom: 16px;
+  h3 { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+  .view-all { font-size: 13px; color: var(--accent); font-weight: 600; }
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th {
+    text-align: left;
+    padding: 8px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  td {
+    padding: 10px;
+    border-bottom: 1px solid var(--border-light);
+    &:last-child { border-bottom: none; }
+  }
+
+  tr:last-child td { border-bottom: none; }
+  .td-name   { font-weight: 600; color: var(--text-primary); }
+  .td-muted  { color: var(--text-secondary); }
+  .td-amount { font-weight: 700; color: var(--navy); }
+}
+
+// ─── Bottom Cards ─────────────────────────────────────────────────────────────
+.bottom-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+// ─── Donut Card ───────────────────────────────────────────────────────────────
+.donut-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-light);
+
+  h3 { font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 14px; }
+}
+
+.donut-wrap {
+  @include flex-center;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.donut-legend { width: 100%; }
+.legend-row {
+  @include flex-between;
+  padding: 4px 0;
+  .l-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .l-label { flex: 1; font-size: 12px; color: var(--text-secondary); margin-left: 8px; }
+  .l-val   { font-size: 12px; font-weight: 700; color: var(--text-primary); }
+}
+
+// ─── Workers Card ─────────────────────────────────────────────────────────────
+.workers-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-light);
+}
+
+.worker-rank-item {
+  @include flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-light);
+  &:last-child { border-bottom: none; }
+
+  .rank-num { font-size: 13px; font-weight: 800; color: var(--text-muted); min-width: 20px; }
+  .rank-av {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    @include navy-gradient;
+    @include flex-center;
+    font-weight: 700;
+    font-size: 13px;
+    color: white;
+    flex-shrink: 0;
+  }
+  .rank-name     { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+  .rank-sessions { font-size: 11px; color: var(--text-secondary); }
+}

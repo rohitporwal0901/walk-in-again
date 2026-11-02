@@ -1,0 +1,226 @@
+@use '../../../styles/mixins' as *;
+
+.worker-dashboard {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+// ─── Header ───────────────────────────────────────────────────────────────────
+.dashboard-header {
+  @include navy-gradient;
+  padding: 52px 20px 24px;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -20px; left: 0; right: 0;
+    height: 40px;
+    background: var(--bg);
+    border-radius: 24px 24px 0 0;
+  }
+}
+
+.header-content {
+  @include flex-between;
+  position: relative;
+  z-index: 1;
+}
+
+.greeting-text {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 2px;
+}
+
+.worker-name {
+  font-size: 24px;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+
+.role-chip {
+  background: rgba(244, 166, 42, 0.25);
+  color: var(--gold-light);
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border: 1px solid rgba(244, 166, 42, 0.4);
+}
+
+.header-actions {
+  @include flex-center;
+  gap: 10px;
+}
+
+.icon-btn {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  @include glass;
+  @include flex-center;
+  font-size: 18px;
+  cursor: pointer;
+  position: relative;
+
+  .notif-dot {
+    position: absolute;
+    top: 8px; right: 8px;
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    border: 2px solid var(--navy);
+  }
+}
+
+.worker-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  @include flex-center;
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--navy-dark);
+  border: 2px solid rgba(255,255,255,0.3);
+  cursor: pointer;
+}
+
+// ─── Content ──────────────────────────────────────────────────────────────────
+.dashboard-content {
+  padding: 28px 16px 100px;
+}
+
+// ─── Metrics ──────────────────────────────────────────────────────────────────
+.metrics-section {
+  margin-bottom: 24px;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.metric-card {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-light);
+  transition: all var(--transition-base);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .metric-icon {
+    font-size: 22px;
+    width: 40px; height: 40px;
+    background: var(--accent-bg);
+    border-radius: 10px;
+    @include flex-center;
+    margin-bottom: 10px;
+  }
+
+  .metric-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--accent-color);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .metric-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: 2px;
+  }
+}
+
+// ─── Patients Section ─────────────────────────────────────────────────────────
+.patients-section {
+  margin-bottom: 20px;
+}
+
+.patient-card {
+  @include flex-between;
+  background: var(--card);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-light);
+  gap: 12px;
+  transition: all var(--transition-fast);
+
+  &:active { transform: scale(0.98); }
+
+  &.skeleton-card { gap: 12px; }
+}
+
+.patient-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--navy-light));
+  @include flex-center;
+  font-weight: 700;
+  font-size: 17px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.patient-info {
+  flex: 1;
+  min-width: 0;
+
+  .patient-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    @include truncate;
+  }
+
+  .patient-meta {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+}
+
+.start-btn {
+  white-space: nowrap;
+  min-width: 60px;
+}
+
+// ─── Empty State ──────────────────────────────────────────────────────────────
+.empty-state {
+  @include flex-center;
+  flex-direction: column;
+  gap: 8px;
+  padding: 40px 20px;
+  color: var(--text-muted);
+  font-size: 14px;
+
+  .empty-icon { font-size: 40px; }
+}
+
+// ─── Quick CTA ────────────────────────────────────────────────────────────────
+.quick-cta {
+  @include flex-between;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-top: 8px;
+
+  .cta-content {
+    .cta-title { font-size: 16px; font-weight: 700; color: white; }
+    .cta-sub   { font-size: 12px; color: rgba(255,255,255,0.65); margin-top: 2px; }
+  }
+}

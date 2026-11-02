@@ -1,0 +1,75 @@
+<div class="search-page animate-fade-in">
+
+  <!-- Header -->
+  <header class="search-header">
+    <h1>Patient Search</h1>
+    <p>Search by name or mobile number</p>
+  </header>
+
+  <div class="search-body">
+    <!-- Search Input -->
+    <div class="search-box">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <circle cx="8" cy="8" r="5.5" stroke="#94A3B8" stroke-width="1.8"/>
+        <path d="M12.5 12.5L16 16" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <input
+        id="patient-search-input"
+        type="search"
+        class="search-input"
+        placeholder="Search by name or mobile..."
+        [value]="searchQuery()"
+        (input)="onSearch($any($event.target).value)"
+        autocomplete="off"
+      />
+    </div>
+
+    <!-- Loading -->
+    @if (isSearching()) {
+      <div class="searching-state">
+        <span class="spinner"></span>
+        <span>Searching...</span>
+      </div>
+    }
+
+    <!-- Results -->
+    @if (!isSearching() && searchResults().length > 0) {
+      <div class="results-count">{{ searchResults().length }} patient(s) found</div>
+      @for (patient of searchResults(); track patient.userId; let i = $index) {
+        <div class="patient-result-card animate-fade-in-up stagger-{{ i + 1 }}" [id]="'patient-' + patient.userId">
+          <div class="result-avatar">{{ patient.name.charAt(0) }}</div>
+          <div class="result-info">
+            <p class="result-name">{{ patient.name }}</p>
+            <p class="result-mobile">+91 {{ patient.mobileNumber }}</p>
+            @if (patient.condition) {
+              <span class="condition-tag">{{ patient.condition }}</span>
+            }
+          </div>
+          <button
+            class="btn btn--accent btn--sm"
+            (click)="startSessionForPatient(patient)"
+            [id]="'start-' + patient.userId"
+          >
+            Start
+          </button>
+        </div>
+      }
+    }
+
+    @if (!isSearching() && hasSearched() && searchResults().length === 0) {
+      <div class="empty-search">
+        <span style="font-size:48px">🔍</span>
+        <p>No patients found</p>
+        <span class="text-muted text-sm">Try a different name or mobile number</span>
+      </div>
+    }
+
+    @if (!hasSearched()) {
+      <div class="search-hint">
+        <div class="hint-icon">👥</div>
+        <p>Type to search for patients</p>
+        <span class="text-muted text-sm">Search by name or mobile number</span>
+      </div>
+    }
+  </div>
+</div>

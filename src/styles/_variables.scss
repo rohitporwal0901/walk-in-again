@@ -1,0 +1,80 @@
+// ─── Design Tokens ────────────────────────────────────────────────────────────
+:root {
+  // Brand Colors
+  --navy:           #0B2545;
+  --navy-light:     #1a3a6b;
+  --navy-dark:      #071a33;
+  --accent:         #2196F3;
+  --accent-light:   #4AAEF5;
+  --accent-dark:    #1565C0;
+  --gold:           #F4A62A;
+  --gold-light:     #FFD166;
+
+  // Semantic Colors
+  --success:        #22C55E;
+  --success-bg:     #DCFCE7;
+  --warning:        #F59E0B;
+  --warning-bg:     #FEF3C7;
+  --danger:         #EF4444;
+  --danger-bg:      #FEE2E2;
+  --info:           #3B82F6;
+
+  // Neutrals
+  --bg:             #F0F4F8;
+  --bg-alt:         #E8EDF2;
+  --card:           #FFFFFF;
+  --card-hover:     #F8FAFC;
+  --border:         #E2E8F0;
+  --border-light:   #F1F5F9;
+
+  // Text
+  --text-primary:   #0B2545;
+  --text-secondary: #64748B;
+  --text-muted:     #94A3B8;
+  --text-white:     #FFFFFF;
+
+  // Shadows
+  --shadow-sm:      0 1px 3px rgba(11, 37, 69, 0.08);
+  --shadow-md:      0 4px 16px rgba(11, 37, 69, 0.12);
+  --shadow-lg:      0 8px 32px rgba(11, 37, 69, 0.16);
+  --shadow-xl:      0 16px 48px rgba(11, 37, 69, 0.20);
+
+  // Spacing Scale
+  --space-xs:   4px;
+  --space-sm:   8px;
+  --space-md:   16px;
+  --space-lg:   24px;
+  --space-xl:   32px;
+  --space-2xl:  48px;
+  --space-3xl:  64px;
+
+  // Border Radius
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+  --radius-xl:  24px;
+  --radius-full: 9999px;
+
+  // Typography
+  --font-family: 'Inter', 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-xs:    11px;
+  --font-sm:    13px;
+  --font-base:  15px;
+  --font-md:    17px;
+  --font-lg:    20px;
+  --font-xl:    24px;
+  --font-2xl:   28px;
+  --font-3xl:   32px;
+
+  // Transitions
+  --transition-fast:   0.15s ease;
+  --transition-base:   0.25s ease;
+  --transition-slow:   0.4s ease;
+
+  // Z-index
+  --z-modal:    1000;
+  --z-overlay:  900;
+  --z-sidebar:  800;
+  --z-header:   700;
+  --z-tooltip:  600;
+}
