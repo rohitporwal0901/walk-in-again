@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { Firestore, collection, query, where, getDocs, onSnapshot, orderBy, limit, DocumentData } from '@angular/fire/firestore';
 import { AuthService } from '../../core/services/auth.service';
 import { User } from '../../core/models/user.model';
-import { Session } from '../../core/models/session.model';
+import { Session, calculateSessionEarning } from '../../core/models/session.model';
 import { Transaction } from '../../core/models/transaction.model';
 
 interface ActiveSubscription {
@@ -44,6 +44,7 @@ interface RecentTransaction {
   date: string;
   time: string;
   method: string;
+  rawTimestamp?: number;
 }
 
 interface TopWorker {
@@ -145,6 +146,22 @@ export class AdminDashboardComponent implements OnInit {
     this.loadRealFirestoreData();
   }
 
+  rawWorkers = signal<TopWorker[]>([]);
+  workerStatsMap = signal<Record<string, { count: number; earnings: number }>>({});
+
+  private updateTopWorkers(): void {
+    const stats = this.workerStatsMap();
+    const updated = this.rawWorkers().map(w => {
+      const s = stats[w.uid] || (w.phone ? stats[w.phone] : null) || { count: w.sessions, earnings: w.earnings };
+      return {
+        ...w,
+        sessions: Math.max(w.sessions, s.count),
+        earnings: Math.max(w.earnings, s.earnings)
+      };
+    });
+    this.topWorkers.set(updated.sort((a, b) => b.sessions - a.sessions));
+  }
+
   // ─── Real Firestore Listener (KPIs + charts + lists) ──────────────────────────
   private loadRealFirestoreData(): void {
     // Listen to users collection for patient/worker counts
@@ -172,7 +189,8 @@ export class AdminDashboardComponent implements OnInit {
 
       this.patientCount.set(patients);
       this.workerCount.set(workers.length);
-      this.topWorkers.set(workers.sort((a, b) => b.sessions - a.sessions));
+      this.rawWorkers.set(workers);
+      this.updateTopWorkers();
 
       // Update KPI Cards
       this.kpis[0].value = patients.toString();
@@ -181,11 +199,25 @@ export class AdminDashboardComponent implements OnInit {
       console.warn('Users snapshot listener:', err);
     });
 
-    // Listen to sessions collection for session count
+    // Listen to sessions collection for session count & worker stats
     const sessionsRef = collection(this.firestore, 'sessions');
     const sessionsUnsub = onSnapshot(sessionsRef, (snapshot) => {
       this.sessionCount.set(snapshot.size);
       this.kpis[2].value = snapshot.size.toString();
+
+      const workerStats: Record<string, { count: number; earnings: number }> = {};
+      snapshot.forEach(docSnap => {
+        const s = docSnap.data() as Session;
+        if (s.status === 'completed' && s.workerId) {
+          if (!workerStats[s.workerId]) {
+            workerStats[s.workerId] = { count: 0, earnings: 0 };
+          }
+          workerStats[s.workerId].count++;
+          workerStats[s.workerId].earnings += calculateSessionEarning(s);
+        }
+      });
+      this.workerStatsMap.set(workerStats);
+      this.updateTopWorkers();
     }, (err) => {
       console.warn('Sessions snapshot listener:', err);
     });
@@ -199,8 +231,12 @@ export class AdminDashboardComponent implements OnInit {
       snapshot.forEach(docSnap => {
         const t = docSnap.data() as Transaction;
         if (t.status === 'Paid') {
-          totalRevenue += Number(t.amount) || 0;
+          // If transaction is a plan session, patient already paid in plan purchase
+          if (t.paymentMethod !== 'Subscription') {
+            totalRevenue += Number(t.amount) || 0;
+          }
         }
+        const rawTimestamp = new Date(t.timestamp || t.sessionDate || 0).getTime();
         txns.push({
           patient: t.patientName || 'Patient',
           worker: t.workerName || 'Walk In Clinic',
@@ -208,14 +244,13 @@ export class AdminDashboardComponent implements OnInit {
           status: (t.status === 'Paid' ? 'Paid' : 'Pending') as 'Paid' | 'Pending',
           date: new Date(t.timestamp || t.sessionDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
           time: new Date(t.timestamp || t.sessionDate).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
-          method: t.paymentMethod || 'UPI'
+          method: t.paymentMethod || 'UPI',
+          rawTimestamp
         });
       });
 
-      // Sort newest first
-      txns.sort((a, b) => {
-        return new Date(b.time).getTime() - new Date(a.time).getTime();
-      });
+      // Sort newest first by true timestamp
+      txns.sort((a, b) => (b.rawTimestamp || 0) - (a.rawTimestamp || 0));
 
       this.revenueTotal.set(totalRevenue);
       this.recentTransactions.set(txns.slice(0, 10));

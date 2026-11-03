@@ -25,6 +25,7 @@ export class AdminShellComponent {
 
   navItems: NavItem[] = [
     { id: 'nav-dashboard', icon: '📊', label: 'Dashboard', route: '/admin/dashboard' },
+    { id: 'nav-subscriptions', icon: '💎', label: 'Subscriptions', route: '/admin/subscriptions' },
     { id: 'nav-patients', icon: '👥', label: 'Patients', route: '/admin/patients' },
     { id: 'nav-workers', icon: '👨‍⚕️', label: 'Workers', route: '/admin/workers' },
     { id: 'nav-sessions', icon: '📋', label: 'Sessions', route: '/admin/sessions' },

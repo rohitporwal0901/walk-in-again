@@ -1,50 +1,179 @@
-import { Component, signal, inject, OnInit } from '@angular/core';
+import { Component, signal, computed, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Firestore, collection, query, where, onSnapshot } from '@angular/fire/firestore';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Firestore, collection, query, where, onSnapshot, Unsubscribe } from '@angular/fire/firestore';
 import { AuthService } from '../../core/services/auth.service';
 import { User } from '../../core/models/user.model';
+import { Session, calculateSessionEarning } from '../../core/models/session.model';
+
+interface WorkerRow {
+  uid: string;
+  name: string;
+  mobileNumber: string;
+  specialization: string;
+  experience: string;
+  completedSessions: number;
+  totalEarnings: number;
+}
 
 @Component({
   selector: 'app-admin-workers',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   template: `
     <div class="workers-page animate-fade-in">
+      <!-- Top Bar -->
       <div class="page-top-bar">
         <div>
           <h1 class="page-title">Workers & Physiotherapists</h1>
-          <p class="page-sub">Manage clinic physiotherapists and staff members</p>
+          <p class="page-sub">Manage clinic physiotherapists, track completed sessions, and monitor earnings</p>
         </div>
-        <button class="btn btn-primary" (click)="openAddWorkerModal()">
+        <button class="btn btn-primary" (click)="openAddWorkerModal()" id="register-worker-btn">
           ➕ Register New Worker
         </button>
       </div>
 
-      <!-- Workers Grid -->
-      <div class="workers-grid">
-        @for (worker of workers(); track worker.uid || worker.mobileNumber) {
-          <div class="worker-card animate-fade-in-up">
-            <div class="worker-avatar">
-              {{ (worker.name || 'W').charAt(0).toUpperCase() }}
-            </div>
-            <div class="worker-details">
-              <h3 class="worker-name">{{ worker.name }}</h3>
-              <p class="worker-spec">{{ worker.specialization || 'Physiotherapist' }}</p>
-              <div class="worker-chips">
-                <span class="chip-item">📱 +91 {{ worker.mobileNumber }}</span>
-                <span class="chip-item">⏱ {{ worker.experience || '3 Years' }}</span>
-              </div>
-            </div>
+      <!-- KPI Overview Cards -->
+      <section class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon-wrap" style="background: #EFF6FF; color: #2563EB;">👨‍⚕️</div>
+          <div class="kpi-content">
+            <span class="kpi-label">Total Physio Staff</span>
+            <span class="kpi-value">{{ workers().length }}</span>
           </div>
-        } @empty {
-          <div class="empty-state">
-            <div class="empty-icon">👨‍⚕️</div>
-            <h3>No Workers Registered Yet</h3>
-            <p>Admin can register clinic physiotherapists using the button below.</p>
-            <button class="btn btn-primary" (click)="openAddWorkerModal()">
-              Register First Worker
-            </button>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon-wrap" style="background: #DCFCE7; color: #16A34A;">📋</div>
+          <div class="kpi-content">
+            <span class="kpi-label">Sessions Completed</span>
+            <span class="kpi-value">{{ totalCompletedSessions() }}</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon-wrap" style="background: #FEF3C7; color: #D97706;">💰</div>
+          <div class="kpi-content">
+            <span class="kpi-label">Total Staff Earnings</span>
+            <span class="kpi-value">₹{{ totalStaffEarnings().toLocaleString('en-IN') }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Search & Filter Controls -->
+      <div class="controls-panel">
+        <div class="search-wrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input
+            type="search"
+            placeholder="Search worker name, specialization, phone..."
+            [value]="searchQuery()"
+            (input)="searchQuery.set($any($event.target).value)"
+            class="search-input"
+            id="worker-search-input"
+          />
+        </div>
+
+        <div class="filter-group">
+          <span class="filter-lbl">Specialization:</span>
+          <select [ngModel]="selectedSpec()" (ngModelChange)="selectedSpec.set($event)" class="spec-select">
+            <option value="All">All Specializations</option>
+            @for (spec of specializations; track spec) {
+              <option [value]="spec">{{ spec }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <!-- Workers Table View (Converted from Cards) -->
+      <div class="table-container-card">
+        @if (isLoading()) {
+          <div class="loading-state">
+            <div class="spinner-ring"></div>
+            <p>Loading physiotherapists...</p>
+          </div>
+        } @else {
+          <div class="table-responsive">
+            <table class="workers-table">
+              <thead>
+                <tr>
+                  <th>Physiotherapist</th>
+                  <th>Contact</th>
+                  <th>Specialization</th>
+                  <th>Experience</th>
+                  <th>Sessions Completed</th>
+                  <th>Total Earnings</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (worker of filteredWorkers(); track worker.uid || worker.mobileNumber) {
+                  <tr class="table-row" [id]="'worker-row-' + worker.uid">
+                    <!-- Physio Info -->
+                    <td class="col-physio">
+                      <div class="physio-cell">
+                        <div class="worker-avatar">
+                          {{ (worker.name || 'W').charAt(0).toUpperCase() }}
+                        </div>
+                        <div class="worker-name-block">
+                          <strong class="w-name">{{ worker.name }}</strong>
+                          <span class="w-id">ID: {{ worker.uid ? worker.uid.slice(0, 8) : 'staff' }}</span>
+                        </div>
+                      </div>
+                    </td>
+
+                    <!-- Contact -->
+                    <td class="col-contact">
+                      <span class="contact-pill">📱 +91 {{ worker.mobileNumber }}</span>
+                    </td>
+
+                    <!-- Specialization -->
+                    <td class="col-spec">
+                      <span class="spec-badge">{{ worker.specialization || 'Physiotherapist' }}</span>
+                    </td>
+
+                    <!-- Experience -->
+                    <td class="col-exp">
+                      <span class="exp-text">{{ worker.experience || '3 Years' }}</span>
+                    </td>
+
+                    <!-- Completed Sessions -->
+                    <td class="col-sessions">
+                      <span class="sess-count-badge">{{ worker.completedSessions }} Sessions</span>
+                    </td>
+
+                    <!-- Total Earnings -->
+                    <td class="col-earnings">
+                      <span class="earnings-val">₹{{ worker.totalEarnings.toLocaleString('en-IN') }}</span>
+                    </td>
+
+                    <!-- Status -->
+                    <td class="col-status">
+                      <span class="status-pill status-active">
+                        <span class="pulse-dot"></span>
+                        Active Staff
+                      </span>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="7" class="empty-table-cell">
+                      <div class="empty-workers-box">
+                        <div class="empty-icon">👨‍⚕️</div>
+                        <h3>No Physiotherapists Found</h3>
+                        <p>No workers match your current search or filter criteria.</p>
+                        <button class="btn btn-primary" (click)="openAddWorkerModal()" style="margin-top: 12px;">
+                          Register First Worker
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
           </div>
         }
       </div>
@@ -126,27 +255,70 @@ import { User } from '../../core/models/user.model';
     </div>
   `,
   styles: [`
-    .workers-page { padding: 0 4px; }
+    .workers-page { padding: 4px; }
     .page-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
-    .page-title { font-size: 24px; font-weight: 800; color: #0B2545; margin: 0 0 4px; }
-    .page-sub { font-size: 13px; color: #64748B; margin: 0; }
-    .btn { padding: 10px 18px; border-radius: 12px; font-weight: 700; font-size: 13.5px; cursor: pointer; border: none; }
-    .btn-primary { background: #0B2545; color: white; transition: all 0.2s; }
-    .btn-primary:hover { background: #1565C0; }
+    .page-title { font-size: 24px; font-weight: 800; color: #0F172A; margin: 0 0 4px; letter-spacing: -0.02em; }
+    .page-sub { font-size: 13.5px; color: #64748B; margin: 0; }
+    .btn { padding: 10px 20px; border-radius: 12px; font-weight: 700; font-size: 13.5px; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-primary { background: #0B2545; color: white; transition: all 0.2s; box-shadow: 0 4px 14px rgba(11, 37, 69, 0.2); }
+    .btn-primary:hover { background: #1565C0; transform: translateY(-1px); }
     .btn-secondary { background: #F1F5F9; color: #475569; }
-    .workers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; }
-    .worker-card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.04); border: 1px solid #E2E8F0; display: flex; gap: 16px; align-items: center; }
-    .worker-avatar { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #0B2545, #1565C0); color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; flex-shrink: 0; }
-    .worker-name { font-size: 16px; font-weight: 800; color: #0B2545; margin: 0 0 2px; }
-    .worker-spec { font-size: 13px; color: #1565C0; font-weight: 600; margin: 0 0 8px; }
-    .worker-chips { display: flex; gap: 6px; flex-wrap: wrap; }
-    .chip-item { background: #F8FAFC; border: 1px solid #E2E8F0; padding: 3px 8px; border-radius: 8px; font-size: 11.5px; color: #475569; }
-    .empty-state { grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: white; border-radius: 16px; border: 1px dashed #CBD5E1; }
-    .empty-icon { font-size: 48px; margin-bottom: 12px; }
-    .empty-state h3 { font-size: 18px; font-weight: 800; color: #0B2545; margin: 0 0 6px; }
-    .empty-state p { font-size: 13.5px; color: #64748B; margin: 0 0 18px; }
+
+    // KPI Cards
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .kpi-card { background: #FFFFFF; border-radius: 18px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03); border: 1px solid rgba(226, 232, 240, 0.8); }
+    .kpi-icon-wrap { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+    .kpi-content { display: flex; flex-direction: column; }
+    .kpi-label { font-size: 11.5px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 3px; }
+    .kpi-value { font-size: 22px; font-weight: 800; color: #0F172A; }
+
+    // Controls Panel
+    .controls-panel { background: #FFFFFF; border-radius: 16px; padding: 14px 18px; display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; border: 1px solid rgba(226, 232, 240, 0.8); }
+    .search-wrap { flex: 1; min-width: 240px; position: relative; display: flex; align-items: center; }
+    .search-wrap svg { position: absolute; left: 14px; pointer-events: none; }
+    .search-input { width: 100%; height: 40px; padding: 0 14px 0 40px; border: 1.5px solid #E2E8F0; border-radius: 10px; background: #F8FAFC; font-size: 13.5px; color: #0F172A; outline: none; }
+    .search-input:focus { background: #FFFFFF; border-color: #0284C7; }
+    .filter-group { display: flex; align-items: center; gap: 8px; }
+    .filter-lbl { font-size: 12.5px; font-weight: 700; color: #64748B; }
+    .spec-select { height: 38px; border-radius: 8px; border: 1.5px solid #E2E8F0; background: #F8FAFC; padding: 0 10px; font-size: 12.5px; font-weight: 600; color: #1E293B; outline: none; }
+
+    // Table
+    .table-container-card { background: #FFFFFF; border-radius: 20px; box-shadow: 0 3px 16px rgba(15, 23, 42, 0.04); border: 1px solid rgba(226, 232, 240, 0.8); overflow: hidden; }
+    .table-responsive { overflow-x: auto; }
+    .workers-table { width: 100%; border-collapse: collapse; text-align: left; }
+    .workers-table thead tr { background: #F8FAFC; border-bottom: 1.5px solid #E2E8F0; }
+    .workers-table th { padding: 14px 18px; font-size: 11.5px; font-weight: 700; text-transform: uppercase; color: #64748B; letter-spacing: 0.05em; white-space: nowrap; }
+    .workers-table tbody tr { border-bottom: 1px solid #F1F5F9; transition: background 0.1s ease; }
+    .workers-table tbody tr:hover { background: #F8FAFC; }
+    .workers-table td { padding: 16px 18px; font-size: 13.5px; color: #1E293B; vertical-align: middle; }
+
+    .col-physio .physio-cell { display: flex; align-items: center; gap: 12px; }
+    .worker-avatar { width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, #0B2545, #0284C7); color: white; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 800; flex-shrink: 0; box-shadow: 0 2px 8px rgba(11, 37, 69, 0.2); }
+    .worker-name-block { display: flex; flex-direction: column; }
+    .w-name { font-size: 14.5px; font-weight: 700; color: #0F172A; }
+    .w-id { font-size: 11px; color: #94A3B8; font-family: monospace; }
+
+    .contact-pill { background: #F8FAFC; border: 1px solid #E2E8F0; padding: 4px 10px; border-radius: 8px; font-size: 12.5px; font-weight: 600; color: #334155; }
+    .spec-badge { background: #E0F2FE; color: #0369A1; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 700; border: 1px solid #BAE6FD; white-space: nowrap; }
+    .exp-text { font-size: 13px; font-weight: 600; color: #475569; }
+    .sess-count-badge { background: #FEF3C7; color: #92400E; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 800; border: 1px solid #FDE68A; }
+    .earnings-val { font-size: 15px; font-weight: 800; color: #10B981; }
+
+    .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 700; background: #DCFCE7; color: #15803D; border: 1px solid rgba(22, 163, 74, 0.2); }
+    .pulse-dot { width: 6px; height: 6px; border-radius: 50%; background: #16A34A; animation: pulse 1.5s infinite; }
+
+    .empty-table-cell { padding: 48px 24px !important; text-align: center; }
+    .empty-workers-box { display: flex; flex-direction: column; align-items: center; }
+    .empty-icon { font-size: 40px; margin-bottom: 12px; }
+    .empty-workers-box h3 { font-size: 16px; font-weight: 700; color: #0F172A; margin: 0 0 4px; }
+    .empty-workers-box p { font-size: 13px; color: #64748B; margin: 0; }
+
+    .loading-state { display: flex; flex-direction: column; align-items: center; padding: 60px 24px; gap: 12px; color: #64748B; }
+    .spinner-ring { width: 32px; height: 32px; border: 3px solid #E2E8F0; border-top-color: #0284C7; border-radius: 50%; animation: spin 0.8s linear infinite; }
+
+    // Modal
     .modal-overlay { position: fixed; inset: 0; background: rgba(11, 37, 69, 0.65); backdrop-filter: blur(4px); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
-    .worker-modal { position: relative; width: 100%; max-width: 480px; max-height: calc(100vh - 40px); overflow-y: auto; background: white; border-radius: 20px; padding: 22px 24px; box-shadow: 0 25px 60px rgba(11,37,69,0.4); z-index: 10000; display: flex; flex-direction: column; box-sizing: border-box; }
+    .worker-modal { position: relative; width: 100%; max-width: 480px; max-height: calc(100vh - 40px); overflow-y: auto; background: white; border-radius: 20px; padding: 24px; box-shadow: 0 25px 60px rgba(11,37,69,0.4); z-index: 10000; display: flex; flex-direction: column; box-sizing: border-box; }
     .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
     .modal-title { font-size: 18px; font-weight: 800; color: #0B2545; margin: 0 0 2px; }
     .modal-sub { font-size: 12.5px; color: #64748B; margin: 0; }
@@ -165,14 +337,26 @@ import { User } from '../../core/models/user.model';
     .input-with-prefix .modal-input { border: none; padding: 0; background: transparent; }
     .field-hint { font-size: 11px; color: #64748B; }
     .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pulse { 0% { transform: scale(0.95); opacity: 0.8; } 50% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.8; } }
   `]
 })
-export class AdminWorkersComponent implements OnInit {
+export class AdminWorkersComponent implements OnInit, OnDestroy {
   private firestore = inject(Firestore);
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
 
+  private usersUnsub: Unsubscribe | null = null;
+  private sessionsUnsub: Unsubscribe | null = null;
+
   workers = signal<User[]>([]);
+  workerStatsMap = signal<Record<string, { count: number; earnings: number }>>({});
+  isLoading = signal<boolean>(true);
+
+  searchQuery = signal<string>('');
+  selectedSpec = signal<string>('All');
+
   showAddWorkerModal = signal<boolean>(false);
   isSubmittingWorker = signal<boolean>(false);
   workerModalError = signal<string>('');
@@ -195,15 +379,82 @@ export class AdminWorkersComponent implements OnInit {
     'Geriatric Physiotherapy'
   ];
 
+  workerRows = computed<WorkerRow[]>(() => {
+    const stats = this.workerStatsMap();
+    return this.workers().map(w => {
+      const s = stats[w.uid] || (w.mobileNumber ? stats[w.mobileNumber] : null) || { count: w.completedSessions || 0, earnings: Number(w.totalEarnings) || 0 };
+      return {
+        uid: w.uid,
+        name: w.name,
+        mobileNumber: w.mobileNumber,
+        specialization: w.specialization || 'Orthopedic Physiotherapy',
+        experience: w.experience || '3 Years',
+        completedSessions: Math.max(w.completedSessions || 0, s.count),
+        totalEarnings: Math.max(Number(w.totalEarnings) || 0, s.earnings)
+      };
+    });
+  });
+
+  totalCompletedSessions = computed(() =>
+    this.workerRows().reduce((sum, w) => sum + w.completedSessions, 0)
+  );
+
+  totalStaffEarnings = computed(() =>
+    this.workerRows().reduce((sum, w) => sum + w.totalEarnings, 0)
+  );
+
+  filteredWorkers = computed(() => {
+    const q = this.searchQuery().trim().toLowerCase();
+    const spec = this.selectedSpec();
+
+    return this.workerRows().filter(w => {
+      const nameMatch = (w.name || '').toLowerCase().includes(q);
+      const phoneMatch = (w.mobileNumber || '').includes(q);
+      const specMatchText = (w.specialization || '').toLowerCase().includes(q);
+      const matchesSearch = !q || nameMatch || phoneMatch || specMatchText;
+
+      const matchesSpec = spec === 'All' || w.specialization === spec;
+      return matchesSearch && matchesSpec;
+    });
+  });
+
   ngOnInit() {
+    this.listenToUsersAndSessions();
+  }
+
+  ngOnDestroy() {
+    this.usersUnsub?.();
+    this.sessionsUnsub?.();
+  }
+
+  private listenToUsersAndSessions() {
+    // 1. Listen to workers in users collection
     const usersRef = collection(this.firestore, 'users');
     const q = query(usersRef, where('role', '==', 'worker'));
-    onSnapshot(q, (snapshot) => {
+    this.usersUnsub = onSnapshot(q, (snapshot) => {
       const list: User[] = [];
       snapshot.forEach(docSnap => {
-        list.push(docSnap.data() as User);
+        list.push({ ...(docSnap.data() as User), uid: docSnap.id });
       });
       this.workers.set(list);
+      this.isLoading.set(false);
+    }, () => this.isLoading.set(false));
+
+    // 2. Listen to sessions collection to compute live completed sessions & earnings for each worker
+    const sessionsRef = collection(this.firestore, 'sessions');
+    this.sessionsUnsub = onSnapshot(sessionsRef, (snapshot) => {
+      const stats: Record<string, { count: number; earnings: number }> = {};
+      snapshot.forEach(docSnap => {
+        const s = docSnap.data() as Session;
+        if (s.status === 'completed' && s.workerId) {
+          if (!stats[s.workerId]) {
+            stats[s.workerId] = { count: 0, earnings: 0 };
+          }
+          stats[s.workerId].count++;
+          stats[s.workerId].earnings += calculateSessionEarning(s);
+        }
+      });
+      this.workerStatsMap.set(stats);
     });
   }
 

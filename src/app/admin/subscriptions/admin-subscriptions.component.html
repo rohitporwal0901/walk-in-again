@@ -1,0 +1,213 @@
+<div class="subscriptions-admin-page animate-fade-in">
+
+  <!-- Top Bar -->
+  <header class="page-top-bar">
+    <div>
+      <h1 class="page-title">Patient Subscription Plans</h1>
+      <p class="page-sub">Live management of patient treatment packages, sessions balance, and revenue</p>
+    </div>
+    <div class="top-status-badge">
+      <span class="live-dot"></span>
+      <span>Live Firestore Sync</span>
+    </div>
+  </header>
+
+  <!-- KPI Overview Cards -->
+  <section class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap" style="background: #EFF6FF; color: #2563EB;">💎</div>
+      <div class="kpi-content">
+        <span class="kpi-label">Active Subscriptions</span>
+        <span class="kpi-value">{{ totalActiveCount() }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap" style="background: #FEF3C7; color: #D97706;">🏆</div>
+      <div class="kpi-content">
+        <span class="kpi-label">Monthly Packages (30 Sess)</span>
+        <span class="kpi-value">{{ totalMonthlyCount() }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap" style="background: #DCFCE7; color: #16A34A;">⭐</div>
+      <div class="kpi-content">
+        <span class="kpi-label">15-Day Packages</span>
+        <span class="kpi-value">{{ total15DaysCount() }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap" style="background: #FEE2E2; color: #DC2626;">💰</div>
+      <div class="kpi-content">
+        <span class="kpi-label">Plan Revenue</span>
+        <span class="kpi-value">₹{{ totalSubRevenue().toLocaleString('en-IN') }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Controls Bar (Search + Filter Tabs) -->
+  <div class="controls-panel">
+    <!-- Search Box -->
+    <div class="search-wrap">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input
+        type="search"
+        placeholder="Search patient name, plan..."
+        [value]="searchQuery()"
+        (input)="searchQuery.set($any($event.target).value)"
+        class="search-input"
+        id="sub-search-input"
+      />
+    </div>
+
+    <!-- Filter Pills -->
+    <div class="filter-group">
+      <span class="filter-lbl">Plan:</span>
+      @for (plan of ['All', 'Monthly', '15 Days', 'Weekly']; track plan) {
+        <button
+          type="button"
+          class="filter-pill"
+          [class.active]="selectedPlanFilter() === plan"
+          (click)="selectedPlanFilter.set(plan)"
+        >
+          {{ plan }}
+        </button>
+      }
+    </div>
+
+    <div class="filter-group">
+      <span class="filter-lbl">Status:</span>
+      @for (st of ['All', 'active', 'expired']; track st) {
+        <button
+          type="button"
+          class="filter-pill"
+          [class.active]="selectedStatusFilter() === st"
+          (click)="selectedStatusFilter.set($any(st))"
+        >
+          {{ st === 'All' ? 'All' : (st | titlecase) }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Subscriptions Table Section -->
+  <div class="table-container-card">
+    @if (isLoading()) {
+      <div class="loading-state">
+        <div class="spinner-ring"></div>
+        <p>Loading patient subscriptions...</p>
+      </div>
+    } @else {
+      <div class="table-responsive">
+        <table class="subs-table">
+          <thead>
+            <tr>
+              <th>Patient</th>
+              <th>Plan</th>
+              <th>Sessions Balance</th>
+              <th>Price</th>
+              <th>Payment</th>
+              <th>Validity</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (sub of filteredSubscriptions(); track sub.subscriptionId) {
+              <tr class="table-row">
+                <!-- Patient -->
+                <td class="col-patient">
+                  <div class="patient-cell">
+                    <div class="avatar-bubble">
+                      {{ (sub.patientName || 'P').charAt(0).toUpperCase() }}
+                    </div>
+                    <div class="patient-text">
+                      <strong class="name">{{ sub.patientName }}</strong>
+                      <span class="sub-id">ID: {{ sub.subscriptionId.slice(0, 10) }}...</span>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Plan -->
+                <td class="col-plan">
+                  <span
+                    class="plan-pill"
+                    [style.background]="getPlanBadgeColor(sub.planName).bg"
+                    [style.color]="getPlanBadgeColor(sub.planName).text"
+                    [style.borderColor]="getPlanBadgeColor(sub.planName).border"
+                  >
+                    {{ sub.planName || 'Plan' }}
+                  </span>
+                </td>
+
+                <!-- Sessions Balance with Progress Bar -->
+                <td class="col-sessions">
+                  <div class="session-progress-wrap">
+                    <div class="progress-labels">
+                      <span class="remain-bold">{{ sub.remainingSessions }} left</span>
+                      <span class="used-text">{{ getUsedSessions(sub) }}/{{ sub.totalSessions }} used ({{ getProgressPercent(sub) }}%)</span>
+                    </div>
+                    <div class="progress-track">
+                      <div class="progress-fill" [style.width.%]="getProgressPercent(sub)"></div>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Price -->
+                <td class="col-price">
+                  <span class="price-val">₹{{ (sub.price || 0).toLocaleString('en-IN') }}</span>
+                </td>
+
+                <!-- Payment -->
+                <td class="col-payment">
+                  <span class="payment-badge">{{ sub.paymentMethod || 'UPI' }}</span>
+                </td>
+
+                <!-- Validity -->
+                <td class="col-validity">
+                  <div class="validity-wrap">
+                    <span class="exp-date">{{ sub.expiryDate | date:'d MMM, yyyy' }}</span>
+                    @if (getRemainingDays(sub) !== null) {
+                      <span class="days-left-tag" [class.days-low]="getRemainingDays(sub)! <= 5">
+                        {{ getRemainingDays(sub) }} days left
+                      </span>
+                    }
+                  </div>
+                </td>
+
+                <!-- Status -->
+                <td class="col-status">
+                  @if (sub.status === 'active' && (sub.remainingSessions ?? 0) > 0) {
+                    <span class="status-pill status-active">
+                      <span class="pulse-dot"></span>
+                      Active
+                    </span>
+                  } @else {
+                    <span class="status-pill status-expired">
+                      Expired
+                    </span>
+                  }
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="7" class="empty-table-cell">
+                  <div class="empty-subs-box">
+                    <div class="empty-icon">💎</div>
+                    <h3>No Subscription Plans Found</h3>
+                    <p>No subscriptions match your current search or filters.</p>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+
+</div>

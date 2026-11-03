@@ -13,6 +13,11 @@ export const ADMIN_ROUTES: Routes = [
           import('./dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent)
       },
       {
+        path: 'subscriptions',
+        loadComponent: () =>
+          import('./subscriptions/admin-subscriptions.component').then(m => m.AdminSubscriptionsComponent)
+      },
+      {
         path: 'patients',
         loadComponent: () =>
           import('./patients/admin-patients.component').then(m => m.AdminPatientsComponent)

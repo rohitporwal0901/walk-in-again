@@ -135,6 +135,23 @@ export class ActiveSessionComponent implements OnInit, OnDestroy {
       const isCovered = this.isCoveredByPlan();
       const fee = isCovered ? 0 : this.sessionFee();
 
+      if (isCovered) {
+        const user = this.authService.currentUser();
+        await this.sessionService.saveTransaction({
+          sessionId: this.sessionId(),
+          patientId: this.patientId() || this.patientMobile() || 'walkin',
+          patientName: this.patientName(),
+          patientMobile: this.patientMobile(),
+          workerId: user?.uid || '',
+          workerName: user?.name || 'Physiotherapist',
+          workerMobile: user?.mobileNumber || '',
+          amount: this.sessionValue(),
+          paymentMethod: 'Subscription',
+          razorpayPaymentId: `SUB_${this.planName() || 'Plan'}`,
+          durationMinutes: this.sessionDuration()
+        });
+      }
+
       await this.sessionService.endSession(
         this.sessionId(),
         this.sessionNotes(),

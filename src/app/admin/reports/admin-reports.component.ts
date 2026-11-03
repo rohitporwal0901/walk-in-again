@@ -1,21 +1,429 @@
-import { Component } from '@angular/core';
+import { Component, signal, computed, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Firestore, collection, onSnapshot, Unsubscribe } from '@angular/fire/firestore';
+import { Transaction } from '../../core/models/transaction.model';
+import { Session, calculateSessionEarning } from '../../core/models/session.model';
+import { User } from '../../core/models/user.model';
+
+interface WorkerPerformance {
+  name: string;
+  sessions: number;
+  earnings: number;
+}
 
 @Component({
   selector: 'app-admin-reports',
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="animate-fade-in" style="padding: 4px;">
-      <h1 style="font-size: 24px; font-weight: 800; color: #0B2545; margin: 0 0 4px;">Analytics & Reports</h1>
-      <p style="font-size: 13px; color: #64748B; margin: 0 0 24px;">Clinic revenue and patient recovery analytics</p>
+    <div class="reports-admin-page animate-fade-in">
+      <!-- Top Bar -->
+      <header class="page-top-bar">
+        <div>
+          <h1 class="page-title">Analytics & Clinic Reports</h1>
+          <p class="page-sub">Comprehensive clinical throughput, financial revenue breakdown, and staff productivity</p>
+        </div>
+        <div class="top-status-badge">
+          <span class="live-dot"></span>
+          <span>Live Analytics</span>
+        </div>
+      </header>
 
-      <div style="background: white; border-radius: 16px; padding: 40px 20px; text-align: center; border: 1px dashed #CBD5E1;">
-        <span style="font-size: 40px; display: block; margin-bottom: 8px;">📈</span>
-        <h3 style="font-size: 18px; font-weight: 700; color: #0B2545; margin: 0 0 6px;">Reports Dashboard</h3>
-        <p style="font-size: 13px; color: #64748B; margin: 0;">Weekly and monthly clinic financial summaries will be aggregated here.</p>
+      <!-- KPI Summary Cards -->
+      <section class="kpi-grid">
+        <div class="kpi-card highlight-card">
+          <div class="kpi-icon-wrap" style="background: rgba(255,255,255,0.2); color: white;">💰</div>
+          <div class="kpi-content">
+            <span class="kpi-label" style="color: rgba(255,255,255,0.8);">Total Net Revenue</span>
+            <span class="kpi-value" style="color: white;">₹{{ totalNetRevenue().toLocaleString('en-IN') }}</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon-wrap" style="background: #EFF6FF; color: #2563EB;">💎</div>
+          <div class="kpi-content">
+            <span class="kpi-label">Plan Revenue ({{ subscriptionShare() }}%)</span>
+            <span class="kpi-value">₹{{ subscriptionRevenue().toLocaleString('en-IN') }}</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon-wrap" style="background: #DCFCE7; color: #16A34A;">🚶</div>
+          <div class="kpi-content">
+            <span class="kpi-label">Walk-In Revenue ({{ walkInShare() }}%)</span>
+            <span class="kpi-value">₹{{ walkInRevenue().toLocaleString('en-IN') }}</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon-wrap" style="background: #FEF3C7; color: #D97706;">📋</div>
+          <div class="kpi-content">
+            <span class="kpi-label">Total Completed Sessions</span>
+            <span class="kpi-value">{{ totalCompletedSessions() }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Analytics Grid (Payment Modes & Revenue Distribution) -->
+      <div class="analytics-split-grid">
+        <!-- Payment Mode Breakdown -->
+        <div class="report-card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">Payment Mode Distribution</h3>
+              <p class="card-sub">Channels through which patient payments were received</p>
+            </div>
+            <span class="card-icon">💳</span>
+          </div>
+
+          <div class="breakdown-list">
+            <!-- UPI -->
+            <div class="breakdown-item">
+              <div class="b-head">
+                <span class="b-lbl">📱 UPI (GooglePay / PhonePe / Paytm)</span>
+                <span class="b-amt">₹{{ upiTotal().toLocaleString('en-IN') }} ({{ upiPercent() }}%)</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill fill-upi" [style.width.%]="upiPercent()"></div>
+              </div>
+            </div>
+
+            <!-- Card -->
+            <div class="breakdown-item">
+              <div class="b-head">
+                <span class="b-lbl">💳 Debit / Credit Card</span>
+                <span class="b-amt">₹{{ cardTotal().toLocaleString('en-IN') }} ({{ cardPercent() }}%)</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill fill-card" [style.width.%]="cardPercent()"></div>
+              </div>
+            </div>
+
+            <!-- Cash -->
+            <div class="breakdown-item">
+              <div class="b-head">
+                <span class="b-lbl">💵 Cash Counter Collection</span>
+                <span class="b-amt">₹{{ cashTotal().toLocaleString('en-IN') }} ({{ cashPercent() }}%)</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill fill-cash" [style.width.%]="cashPercent()"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Session Coverage Split -->
+        <div class="report-card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">Session Delivery Mix</h3>
+              <p class="card-sub">Ratio of subscription plan vs walk-in sessions</p>
+            </div>
+            <span class="card-icon">📊</span>
+          </div>
+
+          <div class="metric-stats-box">
+            <div class="stat-bubble">
+              <span class="bubble-val">{{ planSessionsCount() }}</span>
+              <span class="bubble-lbl">💎 Plan Covered Sessions</span>
+            </div>
+            <div class="stat-bubble">
+              <span class="bubble-val">{{ walkInSessionsCount() }}</span>
+              <span class="bubble-lbl">🚶 Direct Walk-Ins</span>
+            </div>
+          </div>
+
+          <div class="stacked-bar-wrap">
+            <div class="stacked-bar">
+              <div class="stack-seg seg-plan" [style.width.%]="planSessionPercent()" [title]="'Plan: ' + planSessionPercent() + '%'"></div>
+              <div class="stack-seg seg-walkin" [style.width.%]="walkInSessionPercent()" [title]="'Walk-in: ' + walkInSessionPercent() + '%'"></div>
+            </div>
+            <div class="stacked-legend">
+              <span class="legend-item"><span class="dot dot-plan"></span> Subscription ({{ planSessionPercent() }}%)</span>
+              <span class="legend-item"><span class="dot dot-walkin"></span> Walk-In ({{ walkInSessionPercent() }}%)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Physiotherapist Performance & Payout Summary Table -->
+      <div class="table-container-card">
+        <div class="table-top-bar">
+          <div>
+            <h3 class="card-title">Physiotherapist Productivity & Earnings</h3>
+            <p class="card-sub">Clinical sessions delivered by each physiotherapist and their earned share</p>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th>Physiotherapist</th>
+                <th>Sessions Completed</th>
+                <th>Total Earned (₹)</th>
+                <th>Avg / Session</th>
+                <th>Productivity</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (w of workerPerformances(); track w.name) {
+                <tr>
+                  <td>
+                    <div class="physio-cell">
+                      <div class="physio-avatar">{{ w.name.charAt(0) }}</div>
+                      <strong>{{ w.name }}</strong>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="sess-pill">{{ w.sessions }} Sessions</span>
+                  </td>
+                  <td>
+                    <strong class="earnings-val">₹{{ w.earnings.toLocaleString('en-IN') }}</strong>
+                  </td>
+                  <td>
+                    <span class="avg-val">₹{{ w.sessions > 0 ? Math.round(w.earnings / w.sessions) : 0 }}</span>
+                  </td>
+                  <td>
+                    <div class="progress-inline">
+                      <div class="progress-track" style="height: 6px; width: 120px;">
+                        <div class="progress-fill fill-upi" [style.width.%]="maxWorkerSessions() > 0 ? (w.sessions / maxWorkerSessions()) * 100 : 0"></div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="5" style="text-align: center; padding: 32px; color: #64748B;">
+                    No physiotherapist sessions recorded yet.
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  `
+  `,
+  styles: [`
+    .reports-admin-page { padding: 4px; }
+    .page-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+    .page-title { font-size: 24px; font-weight: 800; color: #0F172A; margin: 0 0 4px; letter-spacing: -0.02em; }
+    .page-sub { font-size: 13.5px; color: #64748B; margin: 0; }
+    .top-status-badge { display: flex; align-items: center; gap: 8px; background: #DCFCE7; color: #166534; padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; border: 1px solid #BBF7D0; }
+    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #16A34A; animation: pulse 1.5s infinite; }
+
+    // KPI Cards
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .kpi-card { background: #FFFFFF; border-radius: 18px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03); border: 1px solid rgba(226, 232, 240, 0.8); }
+    .kpi-card.highlight-card { background: linear-gradient(135deg, #0B2545 0%, #134074 100%); border: none; }
+    .kpi-icon-wrap { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+    .kpi-content { display: flex; flex-direction: column; }
+    .kpi-label { font-size: 11.5px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 3px; }
+    .kpi-value { font-size: 22px; font-weight: 800; color: #0F172A; }
+
+    // Analytics Split Grid
+    .analytics-split-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px; margin-bottom: 24px; }
+    .report-card { background: #FFFFFF; border-radius: 20px; padding: 22px; box-shadow: 0 3px 16px rgba(15, 23, 42, 0.04); border: 1px solid rgba(226, 232, 240, 0.8); display: flex; flex-direction: column; gap: 18px; }
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+    .card-title { font-size: 16px; font-weight: 800; color: #0F172A; margin: 0 0 3px; }
+    .card-sub { font-size: 12.5px; color: #64748B; margin: 0; }
+    .card-icon { font-size: 22px; }
+
+    // Breakdown
+    .breakdown-list { display: flex; flex-direction: column; gap: 14px; }
+    .breakdown-item { display: flex; flex-direction: column; gap: 6px; }
+    .b-head { display: flex; justify-content: space-between; font-size: 12.5px; font-weight: 700; color: #1E293B; }
+    .b-lbl { color: #334155; }
+    .b-amt { color: #0F172A; }
+    .progress-track { width: 100%; height: 8px; background: #F1F5F9; border-radius: 999px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 999px; transition: width 0.3s ease; }
+    .fill-upi { background: linear-gradient(90deg, #8B5CF6, #6D28D9); }
+    .fill-card { background: linear-gradient(90deg, #38BDF8, #0284C7); }
+    .fill-cash { background: linear-gradient(90deg, #4ADE80, #16A34A); }
+
+    // Delivery Mix
+    .metric-stats-box { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .stat-bubble { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .bubble-val { font-size: 24px; font-weight: 800; color: #0B2545; margin-bottom: 2px; }
+    .bubble-lbl { font-size: 11.5px; font-weight: 700; color: #64748B; }
+
+    .stacked-bar-wrap { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+    .stacked-bar { height: 12px; width: 100%; border-radius: 999px; overflow: hidden; display: flex; background: #F1F5F9; }
+    .stack-seg { height: 100%; }
+    .seg-plan { background: #0284C7; }
+    .seg-walkin { background: #10B981; }
+    .stacked-legend { display: flex; gap: 16px; font-size: 11.5px; font-weight: 600; color: #475569; }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-item .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .dot-plan { background: #0284C7; }
+    .dot-walkin { background: #10B981; }
+
+    // Table
+    .table-container-card { background: #FFFFFF; border-radius: 20px; box-shadow: 0 3px 16px rgba(15, 23, 42, 0.04); border: 1px solid rgba(226, 232, 240, 0.8); overflow: hidden; }
+    .table-top-bar { padding: 18px 22px; border-bottom: 1.5px solid #F1F5F9; }
+    .table-responsive { overflow-x: auto; }
+    .report-table { width: 100%; border-collapse: collapse; text-align: left; }
+    .report-table thead tr { background: #F8FAFC; border-bottom: 1.5px solid #E2E8F0; }
+    .report-table th { padding: 14px 18px; font-size: 11.5px; font-weight: 700; text-transform: uppercase; color: #64748B; letter-spacing: 0.05em; white-space: nowrap; }
+    .report-table tbody tr { border-bottom: 1px solid #F1F5F9; }
+    .report-table td { padding: 16px 18px; font-size: 13.5px; color: #1E293B; vertical-align: middle; }
+
+    .physio-cell { display: flex; align-items: center; gap: 10px; }
+    .physio-avatar { width: 34px; height: 34px; border-radius: 10px; background: #0B2545; color: white; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; }
+    .sess-pill { background: #FEF3C7; color: #92400E; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 800; border: 1px solid #FDE68A; }
+    .earnings-val { font-size: 15px; font-weight: 800; color: #10B981; }
+    .avg-val { font-size: 13px; font-weight: 700; color: #475569; }
+
+    @keyframes pulse { 0% { transform: scale(0.95); opacity: 0.8; } 50% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.8; } }
+  `]
 })
-export class AdminReportsComponent {}
+export class AdminReportsComponent implements OnInit, OnDestroy {
+  protected readonly Math = Math;
+  private firestore = inject(Firestore);
+
+  private txnsUnsub: Unsubscribe | null = null;
+  private sessionsUnsub: Unsubscribe | null = null;
+  private workersUnsub: Unsubscribe | null = null;
+
+  transactions = signal<Transaction[]>([]);
+  sessions = signal<Session[]>([]);
+  workers = signal<User[]>([]);
+
+  ngOnInit() {
+    this.listenData();
+  }
+
+  ngOnDestroy() {
+    if (this.txnsUnsub) this.txnsUnsub();
+    if (this.sessionsUnsub) this.sessionsUnsub();
+    if (this.workersUnsub) this.workersUnsub();
+  }
+
+  private listenData() {
+    this.txnsUnsub = onSnapshot(collection(this.firestore, 'transactions'), (snap) => {
+      const list: Transaction[] = [];
+      snap.forEach(d => list.push(d.data() as Transaction));
+      this.transactions.set(list);
+    });
+
+    this.sessionsUnsub = onSnapshot(collection(this.firestore, 'sessions'), (snap) => {
+      const list: Session[] = [];
+      snap.forEach(d => list.push(d.data() as Session));
+      this.sessions.set(list);
+    });
+
+    this.workersUnsub = onSnapshot(collection(this.firestore, 'users'), (snap) => {
+      const list: User[] = [];
+      snap.forEach(d => {
+        const u = d.data() as User;
+        if (u.role === 'worker') list.push(u);
+      });
+      this.workers.set(list);
+    });
+  }
+
+  // Double-counting prevention
+  totalNetRevenue = computed(() =>
+    this.transactions()
+      .filter(t => t.paymentMethod !== 'Subscription')
+      .reduce((sum, t) => sum + (Number(t.amount) || 0), 0)
+  );
+
+  subscriptionRevenue = computed(() =>
+    this.transactions()
+      .filter(t => (t.type === 'subscription' || t.planName) && t.paymentMethod !== 'Subscription')
+      .reduce((sum, t) => sum + (Number(t.amount) || 0), 0)
+  );
+
+  walkInRevenue = computed(() =>
+    this.transactions()
+      .filter(t => t.type !== 'subscription' && !t.planName && t.paymentMethod !== 'Subscription')
+      .reduce((sum, t) => sum + (Number(t.amount) || 0), 0)
+  );
+
+  subscriptionShare = computed(() => {
+    const tot = this.totalNetRevenue();
+    return tot > 0 ? Math.round((this.subscriptionRevenue() / tot) * 100) : 0;
+  });
+
+  walkInShare = computed(() => {
+    const tot = this.totalNetRevenue();
+    return tot > 0 ? Math.round((this.walkInRevenue() / tot) * 100) : 0;
+  });
+
+  totalCompletedSessions = computed(() =>
+    this.sessions().filter(s => s.status === 'completed').length
+  );
+
+  // Payment Breakdown
+  upiTotal = computed(() =>
+    this.transactions().filter(t => t.paymentMethod === 'UPI').reduce((s, t) => s + (Number(t.amount) || 0), 0)
+  );
+  cardTotal = computed(() =>
+    this.transactions().filter(t => t.paymentMethod === 'Card').reduce((s, t) => s + (Number(t.amount) || 0), 0)
+  );
+  cashTotal = computed(() =>
+    this.transactions().filter(t => t.paymentMethod === 'Cash').reduce((s, t) => s + (Number(t.amount) || 0), 0)
+  );
+
+  upiPercent = computed(() => {
+    const tot = this.totalNetRevenue();
+    return tot > 0 ? Math.round((this.upiTotal() / tot) * 100) : 0;
+  });
+  cardPercent = computed(() => {
+    const tot = this.totalNetRevenue();
+    return tot > 0 ? Math.round((this.cardTotal() / tot) * 100) : 0;
+  });
+  cashPercent = computed(() => {
+    const tot = this.totalNetRevenue();
+    return tot > 0 ? Math.round((this.cashTotal() / tot) * 100) : 0;
+  });
+
+  // Sessions Breakdown
+  planSessionsCount = computed(() =>
+    this.sessions().filter(s => s.status === 'completed' && s.isCoveredBySubscription).length
+  );
+  walkInSessionsCount = computed(() =>
+    this.sessions().filter(s => s.status === 'completed' && !s.isCoveredBySubscription).length
+  );
+  planSessionPercent = computed(() => {
+    const tot = this.totalCompletedSessions();
+    return tot > 0 ? Math.round((this.planSessionsCount() / tot) * 100) : 50;
+  });
+  walkInSessionPercent = computed(() => {
+    const tot = this.totalCompletedSessions();
+    return tot > 0 ? Math.round((this.walkInSessionsCount() / tot) * 100) : 50;
+  });
+
+  // Worker Performances
+  workerPerformances = computed<WorkerPerformance[]>(() => {
+    const map: Record<string, WorkerPerformance> = {};
+
+    // Initialize with registered staff
+    this.workers().forEach(w => {
+      map[w.name] = { name: w.name, sessions: 0, earnings: 0 };
+    });
+
+    // Accumulate from completed sessions
+    this.sessions().forEach(s => {
+      if (s.status === 'completed' && s.workerName) {
+        if (!map[s.workerName]) {
+          map[s.workerName] = { name: s.workerName, sessions: 0, earnings: 0 };
+        }
+        map[s.workerName].sessions++;
+        const earn = s.sessionValue !== undefined && s.sessionValue !== null
+          ? Number(s.sessionValue)
+          : calculateSessionEarning(s);
+        map[s.workerName].earnings += earn;
+      }
+    });
+
+    return Object.values(map).sort((a, b) => b.sessions - a.sessions);
+  });
+
+  maxWorkerSessions = computed(() => {
+    const list = this.workerPerformances();
+    return list.length ? Math.max(...list.map(w => w.sessions)) : 1;
+  });
+}
