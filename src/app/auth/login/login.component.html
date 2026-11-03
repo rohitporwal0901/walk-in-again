@@ -3,25 +3,21 @@
   <!-- Mobile Phone Container -->
   <div class="phone-frame">
 
-    <!-- ─── Top Hero Section with Wave Divider (Mockup Style) ─────────────── -->
+    <!-- ─── Top Hero Section with Cinematic Image Overlay ───────────────── -->
     <div class="hero-top-section">
       <img
         src="/assets/images/splash-hero.jpg"
         alt="Physiotherapy stretching session"
         class="hero-bg-img"
       />
-      <!-- Curved Wave Transition overlay into the dark bottom -->
-      <div class="hero-wave-overlay">
-        <svg viewBox="0 0 375 110" fill="none" preserveAspectRatio="none" class="hero-wave-svg">
-          <path d="M0,45 C90,85 180,15 270,60 C320,85 355,75 375,70 L375,110 L0,110 Z" fill="#0D9488" opacity="0.4" />
-          <path d="M0,65 C100,30 200,95 300,55 C340,40 365,50 375,55 L375,110 L0,110 Z" fill="#06B6D4" opacity="0.3" />
-          <path d="M0,75 C110,48 220,105 375,70 L375,110 L0,110 Z" fill="#071F36" />
-        </svg>
-      </div>
+      <!-- Smooth Vignette Gradient Fade on the bottom edge -->
+      <div class="hero-image-gradient"></div>
     </div>
 
-    <!-- ─── Bottom Dark Content Section ───────────────────────────────────── -->
+    <!-- ─── Bottom Dark Content Section (Modern Curved Mobile Card) ───────── -->
     <div class="dark-content-section">
+      <!-- Minimalist Card Top Accent Pill -->
+      <div class="card-accent-pill"></div>
 
       <!-- Brand Typography (White & Teal) -->
       <div class="brand-text-block">
@@ -121,10 +117,11 @@
             <div class="pin-boxes-wrap">
               @for (idx of [0, 1, 2, 3]; track idx) {
                 <input
-                  [id]="'login-pin-' + idx"
+                  [id]="'login-' + idx"
                   type="password"
                   maxlength="1"
                   inputmode="numeric"
+                  autocomplete="one-time-code"
                   class="pin-single-box"
                   [class.pin-box-filled]="loginPinDigits()[idx] !== ''"
                   [value]="loginPinDigits()[idx]"
@@ -259,6 +256,7 @@
                       type="password"
                       maxlength="1"
                       inputmode="numeric"
+                      autocomplete="one-time-code"
                       class="pin-single-box pin-box-sm"
                       [class.pin-box-filled]="registerPinDigits()[idx] !== ''"
                       [value]="registerPinDigits()[idx]"
@@ -279,6 +277,7 @@
                       type="password"
                       maxlength="1"
                       inputmode="numeric"
+                      autocomplete="one-time-code"
                       class="pin-single-box pin-box-sm"
                       [class.pin-box-filled]="registerConfirmPinDigits()[idx] !== ''"
                       [value]="registerConfirmPinDigits()[idx]"
@@ -338,6 +337,7 @@
                       type="password"
                       maxlength="1"
                       inputmode="numeric"
+                      autocomplete="one-time-code"
                       class="pin-single-box pin-box-sm"
                       [class.pin-box-filled]="forgotPinDigits()[idx] !== ''"
                       [value]="forgotPinDigits()[idx]"
@@ -358,6 +358,7 @@
                       type="password"
                       maxlength="1"
                       inputmode="numeric"
+                      autocomplete="one-time-code"
                       class="pin-single-box pin-box-sm"
                       [class.pin-box-filled]="forgotConfirmPinDigits()[idx] !== ''"
                       [value]="forgotConfirmPinDigits()[idx]"

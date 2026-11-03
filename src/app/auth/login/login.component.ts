@@ -103,7 +103,7 @@ export class LoginComponent implements OnInit {
         this.existingUser.set(user);
         this.loginPinDigits.set(['', '', '', '']);
         this.sheetMode.set('login-pin');
-        setTimeout(() => this.focusId('login-pin-0'), 200);
+        setTimeout(() => this.focusId('login-0'), 200);
       } else {
         // Account does NOT exist -> Open Patient Registration Action Sheet
         this.existingUser.set(null);
@@ -134,12 +134,12 @@ export class LoginComponent implements OnInit {
     this.setPinArray(type, arr);
     this.errorMsg.set('');
 
-    // Advance to next box
+    // Advance to next box immediately
     if (val && index < 3) {
       this.focusId(`${type}-${index + 1}`);
     }
 
-    // Auto-actions
+    // Auto-actions when 4th digit is filled
     if (index === 3 && val) {
       const allFilled = arr.every(d => d !== '');
       if (allFilled) {
@@ -188,8 +188,13 @@ export class LoginComponent implements OnInit {
   }
 
   private focusId(id: string): void {
-    const el = document.getElementById(id) as HTMLInputElement | null;
-    if (el) el.focus();
+    setTimeout(() => {
+      const el = document.getElementById(id) as HTMLInputElement | null;
+      if (el) {
+        el.focus();
+        el.select();
+      }
+    }, 15);
   }
 
   // ─── 3. Submit Login (M-PIN) ────────────────────────────────────────────────
@@ -209,7 +214,7 @@ export class LoginComponent implements OnInit {
       this.isLoading.set(false);
       this.errorMsg.set(e.message || 'Login failed. Please check your M-PIN.');
       this.loginPinDigits.set(['', '', '', '']);
-      this.focusId('login-pin-0');
+      this.focusId('login-0');
     }
   }
 
