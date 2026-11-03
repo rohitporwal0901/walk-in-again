@@ -15,7 +15,12 @@ import { FormsModule } from '@angular/forms';
           <p class="page-sub">Configure clinic details, session pricing, payment gateway options, and notifications</p>
         </div>
         <button class="btn btn-primary" (click)="saveSettings()" id="save-settings-btn">
-          💾 Save Changes
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+            <polyline points="7 3 7 8 15 8"></polyline>
+          </svg>
+          <span>Save Changes</span>
         </button>
       </header>
 
@@ -33,7 +38,12 @@ import { FormsModule } from '@angular/forms';
               <h3 class="card-title">Clinic Profile</h3>
               <p class="card-sub">General clinic contact information</p>
             </div>
-            <span class="card-icon">🏥</span>
+            <div class="card-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0B2545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+            </div>
           </div>
 
           <div class="form-body">
@@ -66,7 +76,11 @@ import { FormsModule } from '@angular/forms';
               <h3 class="card-title">Session Pricing</h3>
               <p class="card-sub">Standard walk-in rates & duration</p>
             </div>
-            <span class="card-icon">💰</span>
+            <div class="card-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0B2545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+              </svg>
+            </div>
           </div>
 
           <div class="form-body">
@@ -106,7 +120,12 @@ import { FormsModule } from '@angular/forms';
               <h3 class="card-title">Payment Gateways</h3>
               <p class="card-sub">Enable or disable payment acceptance channels</p>
             </div>
-            <span class="card-icon">💳</span>
+            <div class="card-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0B2545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                <line x1="2" y1="10" x2="22" y2="10"></line>
+              </svg>
+            </div>
           </div>
 
           <div class="toggle-list">
@@ -143,7 +162,12 @@ import { FormsModule } from '@angular/forms';
               <h3 class="card-title">Alerts & Messaging</h3>
               <p class="card-sub">Patient communication channel toggles</p>
             </div>
-            <span class="card-icon">🔔</span>
+            <div class="card-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0B2545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+            </div>
           </div>
 
           <div class="toggle-list">
@@ -168,8 +192,8 @@ import { FormsModule } from '@angular/forms';
     </div>
   `,
   styles: [`
-    .settings-admin-page { padding: 4px; }
-    .page-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+    .settings-admin-page { padding: 0; }
+    .page-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
     .page-title { font-size: 24px; font-weight: 800; color: #0F172A; margin: 0 0 4px; letter-spacing: -0.02em; }
     .page-sub { font-size: 13.5px; color: #64748B; margin: 0; }
     .btn { padding: 10px 20px; border-radius: 12px; font-weight: 700; font-size: 13.5px; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; }
@@ -179,11 +203,11 @@ import { FormsModule } from '@angular/forms';
     .alert-success { background: #DCFCE7; color: #166534; padding: 12px 18px; border-radius: 12px; font-size: 13.5px; font-weight: 700; margin-bottom: 20px; border: 1px solid #BBF7D0; }
 
     .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px; }
-    .settings-card { background: #FFFFFF; border-radius: 20px; padding: 22px; box-shadow: 0 3px 16px rgba(15, 23, 42, 0.04); border: 1px solid rgba(226, 232, 240, 0.8); display: flex; flex-direction: column; gap: 18px; }
+    .settings-card { background: #FFFFFF; border-radius: 20px; padding: 24px; box-shadow: 0 3px 16px rgba(15, 23, 42, 0.04); border: 1px solid rgba(226, 232, 240, 0.85); display: flex; flex-direction: column; gap: 18px; }
     .card-header { display: flex; justify-content: space-between; align-items: flex-start; }
     .card-title { font-size: 16px; font-weight: 800; color: #0F172A; margin: 0 0 3px; }
     .card-sub { font-size: 12.5px; color: #64748B; margin: 0; }
-    .card-icon { font-size: 22px; }
+    .card-icon-wrap { width: 44px; height: 44px; border-radius: 12px; background: #F1F5F9; display: flex; align-items: center; justify-content: center; }
 
     .form-body { display: flex; flex-direction: column; gap: 14px; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }

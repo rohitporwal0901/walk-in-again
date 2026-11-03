@@ -5,7 +5,7 @@ import { AuthService } from '../../core/services/auth.service';
 
 interface NavItem {
   id: string;
-  icon: string;
+  iconType: 'dashboard' | 'subscriptions' | 'patients' | 'workers' | 'sessions' | 'transactions' | 'reports' | 'settings';
   label: string;
   route: string;
 }
@@ -24,14 +24,14 @@ export class AdminShellComponent {
   searchQuery = signal<string>('');
 
   navItems: NavItem[] = [
-    { id: 'nav-dashboard', icon: '📊', label: 'Dashboard', route: '/admin/dashboard' },
-    { id: 'nav-subscriptions', icon: '💎', label: 'Subscriptions', route: '/admin/subscriptions' },
-    { id: 'nav-patients', icon: '👥', label: 'Patients', route: '/admin/patients' },
-    { id: 'nav-workers', icon: '👨‍⚕️', label: 'Workers', route: '/admin/workers' },
-    { id: 'nav-sessions', icon: '📋', label: 'Sessions', route: '/admin/sessions' },
-    { id: 'nav-transactions', icon: '💳', label: 'Transactions', route: '/admin/transactions' },
-    { id: 'nav-reports', icon: '📈', label: 'Reports', route: '/admin/reports' },
-    { id: 'nav-settings', icon: '⚙️', label: 'Settings', route: '/admin/settings' },
+    { id: 'nav-dashboard', iconType: 'dashboard', label: 'Dashboard', route: '/admin/dashboard' },
+    { id: 'nav-subscriptions', iconType: 'subscriptions', label: 'Subscriptions', route: '/admin/subscriptions' },
+    { id: 'nav-patients', iconType: 'patients', label: 'Patients', route: '/admin/patients' },
+    { id: 'nav-workers', iconType: 'workers', label: 'Workers', route: '/admin/workers' },
+    { id: 'nav-sessions', iconType: 'sessions', label: 'Sessions', route: '/admin/sessions' },
+    { id: 'nav-transactions', iconType: 'transactions', label: 'Transactions', route: '/admin/transactions' },
+    { id: 'nav-reports', iconType: 'reports', label: 'Reports', route: '/admin/reports' },
+    { id: 'nav-settings', iconType: 'settings', label: 'Settings', route: '/admin/settings' },
   ];
 
   showLogoutConfirm = signal<boolean>(false);

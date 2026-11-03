@@ -44,35 +44,57 @@ interface FormattedSession {
 
       <!-- KPI Summary Cards -->
       <section class="kpi-grid">
-        <div class="kpi-card">
-          <div class="kpi-icon-wrap" style="background: #EFF6FF; color: #2563EB;">📋</div>
+        <div class="kpi-card highlight-card">
+          <div class="kpi-icon-wrap icon-primary">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            </svg>
+          </div>
           <div class="kpi-content">
-            <span class="kpi-label">Total Sessions</span>
-            <span class="kpi-value">{{ sessions().length }}</span>
+            <span class="kpi-label label-light">Total Sessions</span>
+            <span class="kpi-value val-light">{{ sessions().length }}</span>
+            <span class="kpi-sub-text sub-light">All-time clinic sessions</span>
           </div>
         </div>
 
         <div class="kpi-card">
-          <div class="kpi-icon-wrap" style="background: #E0F2FE; color: #0284C7;">⚡</div>
+          <div class="kpi-icon-wrap icon-active">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+          </div>
           <div class="kpi-content">
             <span class="kpi-label">Active In Clinic</span>
             <span class="kpi-value">{{ activeSessionsCount() }}</span>
+            <span class="kpi-sub-text">Currently ongoing</span>
           </div>
         </div>
 
         <div class="kpi-card">
-          <div class="kpi-icon-wrap" style="background: #DCFCE7; color: #16A34A;">✅</div>
+          <div class="kpi-icon-wrap icon-completed">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
           <div class="kpi-content">
             <span class="kpi-label">Completed Sessions</span>
             <span class="kpi-value">{{ completedSessionsCount() }}</span>
+            <span class="kpi-sub-text">Successfully finished</span>
           </div>
         </div>
 
         <div class="kpi-card">
-          <div class="kpi-icon-wrap" style="background: #FEF3C7; color: #D97706;">💰</div>
+          <div class="kpi-icon-wrap icon-value">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+          </div>
           <div class="kpi-content">
             <span class="kpi-label">Total Session Value</span>
             <span class="kpi-value">₹{{ totalSessionValue().toLocaleString('en-IN') }}</span>
+            <span class="kpi-sub-text">Calculated staff value</span>
           </div>
         </div>
       </section>
@@ -164,7 +186,7 @@ interface FormattedSession {
                         </div>
                         <div class="patient-info">
                           <strong class="p-name">{{ sess.patientName }}</strong>
-                          <span class="p-phone">📱 {{ sess.patientPhone }}</span>
+                          <span class="p-phone">{{ sess.patientPhone }}</span>
                         </div>
                       </div>
                     </td>
@@ -172,7 +194,7 @@ interface FormattedSession {
                     <!-- Worker -->
                     <td class="col-worker">
                       <div class="worker-pill">
-                        <span class="doc-icon">👨‍⚕️</span>
+                        <span class="worker-dot"></span>
                         <span>{{ sess.workerName }}</span>
                       </div>
                     </td>
@@ -181,11 +203,11 @@ interface FormattedSession {
                     <td class="col-type">
                       @if (sess.isCoveredBySubscription) {
                         <span class="plan-badge">
-                          💎 {{ sess.planName || 'Active Plan' }}
+                          {{ sess.planName || 'Active Plan' }}
                         </span>
                       } @else {
                         <span class="walkin-badge">
-                          🚶 Walk-In Session
+                          Walk-In Session
                         </span>
                       }
                     </td>
@@ -246,7 +268,12 @@ interface FormattedSession {
                   <tr>
                     <td colspan="8" class="empty-table-cell">
                       <div class="empty-box">
-                        <div class="empty-icon">📋</div>
+                        <div class="empty-icon-wrap">
+                          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                          </svg>
+                        </div>
                         <h3>No Sessions Found</h3>
                         <p>No clinical sessions match your selected filters.</p>
                       </div>
@@ -261,92 +288,576 @@ interface FormattedSession {
     </div>
   `,
   styles: [`
-    .sessions-admin-page { padding: 4px; }
-    .page-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
-    .page-title { font-size: 24px; font-weight: 800; color: #0F172A; margin: 0 0 4px; letter-spacing: -0.02em; }
-    .page-sub { font-size: 13.5px; color: #64748B; margin: 0; }
-    .top-status-badge { display: flex; align-items: center; gap: 8px; background: #DCFCE7; color: #166534; padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; border: 1px solid #BBF7D0; }
-    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #16A34A; animation: pulse 1.5s infinite; }
+    .sessions-admin-page {
+      padding: 0;
+    }
 
-    // KPI Cards
-    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 24px; }
-    .kpi-card { background: #FFFFFF; border-radius: 18px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03); border: 1px solid rgba(226, 232, 240, 0.8); }
-    .kpi-icon-wrap { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
-    .kpi-content { display: flex; flex-direction: column; }
-    .kpi-label { font-size: 11.5px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 3px; }
-    .kpi-value { font-size: 22px; font-weight: 800; color: #0F172A; }
+    .page-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .page-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: #0F172A;
+      margin: 0 0 4px;
+      letter-spacing: -0.02em;
+    }
+
+    .page-sub {
+      font-size: 13.5px;
+      color: #64748B;
+      margin: 0;
+    }
+
+    .top-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #DCFCE7;
+      color: #166534;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid #BBF7D0;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #16A34A;
+      animation: pulse 1.5s infinite;
+    }
+
+    // KPI Cards Grid
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 18px;
+      margin-bottom: 26px;
+    }
+
+    .kpi-card {
+      background: #FFFFFF;
+      border-radius: 18px;
+      padding: 22px 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+      border: 1px solid rgba(226, 232, 240, 0.85);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      min-height: 108px;
+      box-sizing: border-box;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+      }
+    }
+
+    .kpi-card.highlight-card {
+      background: linear-gradient(135deg, #0B2545 0%, #134074 100%);
+      border: none;
+      box-shadow: 0 8px 24px rgba(11, 37, 69, 0.2);
+    }
+
+    .kpi-icon-wrap {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      &.icon-primary {
+        background: rgba(255, 255, 255, 0.18);
+        color: #FFFFFF;
+      }
+
+      &.icon-active {
+        background: #E0F2FE;
+        color: #0284C7;
+        border: 1px solid #BAE6FD;
+      }
+
+      &.icon-completed {
+        background: #DCFCE7;
+        color: #16A34A;
+        border: 1px solid #BBF7D0;
+      }
+
+      &.icon-value {
+        background: #FEF3C7;
+        color: #D97706;
+        border: 1px solid #FDE68A;
+      }
+    }
+
+    .kpi-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .kpi-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      line-height: 1.3;
+    }
+
+    .label-light {
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .kpi-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: #0F172A;
+      line-height: 1.2;
+    }
+
+    .val-light {
+      color: #FFFFFF;
+    }
+
+    .kpi-sub-text {
+      font-size: 11.5px;
+      color: #94A3B8;
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    .sub-light {
+      color: rgba(255, 255, 255, 0.7);
+    }
 
     // Controls Panel
-    .controls-panel { background: #FFFFFF; border-radius: 16px; padding: 14px 18px; display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; border: 1px solid rgba(226, 232, 240, 0.8); }
-    .search-wrap { flex: 1; min-width: 240px; position: relative; display: flex; align-items: center; }
-    .search-wrap svg { position: absolute; left: 14px; pointer-events: none; }
-    .search-input { width: 100%; height: 40px; padding: 0 14px 0 40px; border: 1.5px solid #E2E8F0; border-radius: 10px; background: #F8FAFC; font-size: 13.5px; color: #0F172A; outline: none; }
-    .search-input:focus { background: #FFFFFF; border-color: #0284C7; }
+    .controls-panel {
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 22px;
+      border: 1px solid rgba(226, 232, 240, 0.85);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.02);
+    }
 
-    .filter-group { display: flex; align-items: center; gap: 6px; }
-    .filter-lbl { font-size: 12px; font-weight: 700; color: #64748B; margin-right: 2px; }
-    .filter-pill { background: #F1F5F9; border: 1px solid #E2E8F0; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; color: #475569; cursor: pointer; transition: all 0.15s; }
-    .filter-pill.active { background: #0B2545; color: white; border-color: #0B2545; font-weight: 700; }
+    .search-wrap {
+      flex: 1;
+      min-width: 260px;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 14px;
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 42px;
+      padding: 0 14px 0 42px;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 10px;
+      background: #F8FAFC;
+      font-size: 13.5px;
+      color: #0F172A;
+      outline: none;
+      transition: all 0.15s ease;
+
+      &:focus {
+        background: #FFFFFF;
+        border-color: #0284C7;
+        box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+      }
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .filter-lbl {
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748B;
+      margin-right: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .filter-pill {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.15s ease;
+
+      &:hover {
+        background: #F1F5F9;
+        color: #0F172A;
+      }
+
+      &.active {
+        background: #0B2545;
+        color: #FFFFFF;
+        border-color: #0B2545;
+        font-weight: 700;
+        box-shadow: 0 2px 8px rgba(11, 37, 69, 0.2);
+      }
+    }
 
     // Table
-    .table-container-card { background: #FFFFFF; border-radius: 20px; box-shadow: 0 3px 16px rgba(15, 23, 42, 0.04); border: 1px solid rgba(226, 232, 240, 0.8); overflow: hidden; }
-    .table-responsive { overflow-x: auto; }
-    .sessions-table { width: 100%; border-collapse: collapse; text-align: left; }
-    .sessions-table thead tr { background: #F8FAFC; border-bottom: 1.5px solid #E2E8F0; }
-    .sessions-table th { padding: 14px 18px; font-size: 11.5px; font-weight: 700; text-transform: uppercase; color: #64748B; letter-spacing: 0.05em; white-space: nowrap; }
-    .sessions-table tbody tr { border-bottom: 1px solid #F1F5F9; transition: background 0.1s ease; }
-    .sessions-table tbody tr:hover { background: #F8FAFC; }
-    .sessions-table td { padding: 16px 18px; font-size: 13.5px; color: #1E293B; vertical-align: middle; }
+    .table-container-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      box-shadow: 0 3px 16px rgba(15, 23, 42, 0.04);
+      border: 1px solid rgba(226, 232, 240, 0.85);
+      overflow: hidden;
+    }
 
-    .id-cell { display: flex; flex-direction: column; }
-    .session-id { font-family: monospace; font-size: 13px; color: #0B2545; font-weight: 800; }
-    .session-date { font-size: 11.5px; color: #64748B; margin-top: 2px; }
+    .table-responsive {
+      overflow-x: auto;
+    }
 
-    .patient-cell { display: flex; align-items: center; gap: 10px; }
-    .patient-avatar { width: 36px; height: 36px; border-radius: 10px; background: #0B2545; color: white; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
-    .patient-info { display: flex; flex-direction: column; }
-    .p-name { font-size: 13.5px; font-weight: 700; color: #0F172A; }
-    .p-phone { font-size: 11.5px; color: #64748B; }
+    .sessions-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
 
-    .worker-pill { display: inline-flex; align-items: center; gap: 6px; background: #F8FAFC; border: 1px solid #E2E8F0; padding: 4px 10px; border-radius: 8px; font-size: 12.5px; font-weight: 600; color: #1E293B; }
-    .doc-icon { font-size: 14px; }
+    .sessions-table thead tr {
+      background: #F8FAFC;
+      border-bottom: 1.5px solid #E2E8F0;
+    }
 
-    .plan-badge { background: #EFF6FF; color: #1D4ED8; padding: 4px 8px; border-radius: 6px; font-size: 11.5px; font-weight: 700; border: 1px solid #BFDBFE; white-space: nowrap; }
-    .walkin-badge { background: #F1F5F9; color: #475569; padding: 4px 8px; border-radius: 6px; font-size: 11.5px; font-weight: 600; border: 1px solid #E2E8F0; white-space: nowrap; }
+    .sessions-table th {
+      padding: 14px 20px;
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #64748B;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
 
-    .therapies-chips { display: flex; flex-wrap: wrap; gap: 4px; max-width: 200px; }
-    .therapy-tag { background: #F8FAFC; border: 1px solid #E2E8F0; font-size: 11px; padding: 2px 6px; border-radius: 4px; color: #334155; }
-    .therapy-more { background: #E2E8F0; font-size: 10.5px; padding: 2px 5px; border-radius: 4px; color: #475569; font-weight: 700; }
-    .therapy-empty { font-size: 11.5px; color: #94A3B8; font-style: italic; }
+    .sessions-table tbody tr {
+      border-bottom: 1px solid #F1F5F9;
+      transition: background 0.1s ease;
 
-    .fee-text { font-size: 14.5px; font-weight: 800; color: #0F172A; }
+      &:hover {
+        background: #F8FAFC;
+      }
+    }
 
-    .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 700; white-space: nowrap; }
-    .status-badge .dot { width: 6px; height: 6px; border-radius: 50%; }
-    .status-completed { background: #DCFCE7; color: #166534; border: 1px solid #BBF7D0; }
-    .status-completed .dot { background: #16A34A; }
-    .status-active { background: #E0F2FE; color: #0369A1; border: 1px solid #BAE6FD; }
-    .status-active .dot { background: #0284C7; }
-    .status-pending { background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
-    .status-pending .dot { background: #D97706; }
-    .status-cancelled { background: #FEE2E2; color: #991B1B; border: 1px solid #FECACA; }
+    .sessions-table td {
+      padding: 16px 20px;
+      font-size: 13.5px;
+      color: #1E293B;
+      vertical-align: middle;
+    }
 
-    .pay-badge { padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; white-space: nowrap; }
-    .pay-plan { background: #F3E8FF; color: #7E22CE; border: 1px solid #E9D5FF; }
-    .pay-paid { background: #DCFCE7; color: #166534; border: 1px solid #BBF7D0; }
-    .pay-unpaid { background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
+    .id-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
 
-    .empty-table-cell { padding: 48px 24px !important; text-align: center; }
-    .empty-box { display: flex; flex-direction: column; align-items: center; }
-    .empty-icon { font-size: 40px; margin-bottom: 10px; }
-    .empty-box h3 { font-size: 16px; font-weight: 700; color: #0F172A; margin: 0 0 4px; }
-    .empty-box p { font-size: 13px; color: #64748B; margin: 0; }
+    .session-id {
+      font-family: monospace;
+      font-size: 13px;
+      color: #0B2545;
+      font-weight: 800;
+    }
 
-    .loading-state { display: flex; flex-direction: column; align-items: center; padding: 60px 24px; gap: 12px; color: #64748B; }
-    .spinner-ring { width: 32px; height: 32px; border: 3px solid #E2E8F0; border-top-color: #0284C7; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    .session-date {
+      font-size: 11.5px;
+      color: #64748B;
+    }
 
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes pulse { 0% { transform: scale(0.95); opacity: 0.8; } 50% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.8; } }
+    .patient-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .patient-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #0B2545;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .patient-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .p-name {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #0F172A;
+    }
+
+    .p-phone {
+      font-size: 11.5px;
+      color: #64748B;
+    }
+
+    .worker-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #1E293B;
+    }
+
+    .worker-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #0284C7;
+    }
+
+    .plan-badge {
+      background: #EDE9FE;
+      color: #6D28D9;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 700;
+      border: 1px solid #DDD6FE;
+      white-space: nowrap;
+    }
+
+    .walkin-badge {
+      background: #F1F5F9;
+      color: #475569;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      border: 1px solid #E2E8F0;
+      white-space: nowrap;
+    }
+
+    .therapies-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      max-width: 220px;
+    }
+
+    .therapy-tag {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      color: #334155;
+      font-weight: 500;
+    }
+
+    .therapy-more {
+      background: #E2E8F0;
+      font-size: 10.5px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #475569;
+      font-weight: 700;
+    }
+
+    .therapy-empty {
+      font-size: 11.5px;
+      color: #94A3B8;
+      font-style: italic;
+    }
+
+    .fee-text {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: #0F172A;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .status-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .status-completed {
+      background: #DCFCE7;
+      color: #166534;
+      border: 1px solid #BBF7D0;
+    }
+
+    .status-completed .dot {
+      background: #16A34A;
+    }
+
+    .status-active {
+      background: #E0F2FE;
+      color: #0369A1;
+      border: 1px solid #BAE6FD;
+    }
+
+    .status-active .dot {
+      background: #0284C7;
+    }
+
+    .status-pending {
+      background: #FEF3C7;
+      color: #92400E;
+      border: 1px solid #FDE68A;
+    }
+
+    .status-pending .dot {
+      background: #D97706;
+    }
+
+    .status-cancelled {
+      background: #FEE2E2;
+      color: #991B1B;
+      border: 1px solid #FECACA;
+    }
+
+    .pay-badge {
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .pay-plan {
+      background: #EDE9FE;
+      color: #6D28D9;
+      border: 1px solid #DDD6FE;
+    }
+
+    .pay-paid {
+      background: #DCFCE7;
+      color: #166534;
+      border: 1px solid #BBF7D0;
+    }
+
+    .pay-unpaid {
+      background: #FEF3C7;
+      color: #92400E;
+      border: 1px solid #FDE68A;
+    }
+
+    .empty-table-cell {
+      padding: 56px 24px !important;
+      text-align: center;
+    }
+
+    .empty-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .empty-icon-wrap {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: #F1F5F9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .empty-box h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0F172A;
+      margin: 0 0 6px;
+    }
+
+    .empty-box p {
+      font-size: 13.5px;
+      color: #64748B;
+      margin: 0;
+    }
+
+    .loading-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 24px;
+      gap: 12px;
+      color: #64748B;
+    }
+
+    .spinner-ring {
+      width: 32px;
+      height: 32px;
+      border: 3px solid #E2E8F0;
+      border-top-color: #0284C7;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
   `]
 })
 export class AdminSessionsComponent implements OnInit, OnDestroy {

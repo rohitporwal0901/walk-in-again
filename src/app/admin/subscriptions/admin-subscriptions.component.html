@@ -14,35 +14,59 @@
 
   <!-- KPI Overview Cards -->
   <section class="kpi-grid">
-    <div class="kpi-card">
-      <div class="kpi-icon-wrap" style="background: #EFF6FF; color: #2563EB;">💎</div>
+    <div class="kpi-card highlight-card">
+      <div class="kpi-icon-wrap icon-primary">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 3h12l4 6-10 12L2 9z"></path>
+        </svg>
+      </div>
       <div class="kpi-content">
-        <span class="kpi-label">Active Subscriptions</span>
-        <span class="kpi-value">{{ totalActiveCount() }}</span>
+        <span class="kpi-label label-light">Active Subscriptions</span>
+        <span class="kpi-value val-light">{{ totalActiveCount() }}</span>
+        <span class="kpi-sub-text sub-light">Current enrolled patients</span>
       </div>
     </div>
 
     <div class="kpi-card">
-      <div class="kpi-icon-wrap" style="background: #FEF3C7; color: #D97706;">🏆</div>
+      <div class="kpi-icon-wrap icon-monthly">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+      </div>
       <div class="kpi-content">
-        <span class="kpi-label">Monthly Packages (30 Sess)</span>
+        <span class="kpi-label">Monthly Plans (30 Sess)</span>
         <span class="kpi-value">{{ totalMonthlyCount() }}</span>
+        <span class="kpi-sub-text">₹10,000 package</span>
       </div>
     </div>
 
     <div class="kpi-card">
-      <div class="kpi-icon-wrap" style="background: #DCFCE7; color: #16A34A;">⭐</div>
+      <div class="kpi-icon-wrap icon-biweekly">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+      </div>
       <div class="kpi-content">
         <span class="kpi-label">15-Day Packages</span>
         <span class="kpi-value">{{ total15DaysCount() }}</span>
+        <span class="kpi-sub-text">₹6,000 package</span>
       </div>
     </div>
 
     <div class="kpi-card">
-      <div class="kpi-icon-wrap" style="background: #FEE2E2; color: #DC2626;">💰</div>
+      <div class="kpi-icon-wrap icon-revenue">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+      </div>
       <div class="kpi-content">
         <span class="kpi-label">Plan Revenue</span>
         <span class="kpi-value">₹{{ totalSubRevenue().toLocaleString('en-IN') }}</span>
+        <span class="kpi-sub-text">Cumulative subscription yield</span>
       </div>
     </div>
   </section>
@@ -57,7 +81,7 @@
       </svg>
       <input
         type="search"
-        placeholder="Search patient name, plan..."
+        placeholder="Search patient name, subscription ID..."
         [value]="searchQuery()"
         (input)="searchQuery.set($any($event.target).value)"
         class="search-input"
@@ -127,7 +151,7 @@
                     </div>
                     <div class="patient-text">
                       <strong class="name">{{ sub.patientName }}</strong>
-                      <span class="sub-id">ID: {{ sub.subscriptionId.slice(0, 10) }}...</span>
+                      <span class="sub-id">ID: {{ sub.subscriptionId.slice(0, 10) }}</span>
                     </div>
                   </div>
                 </td>
@@ -148,7 +172,7 @@
                 <td class="col-sessions">
                   <div class="session-progress-wrap">
                     <div class="progress-labels">
-                      <span class="remain-bold">{{ sub.remainingSessions }} left</span>
+                      <span class="remain-bold">{{ sub.remainingSessions }} remaining</span>
                       <span class="used-text">{{ getUsedSessions(sub) }}/{{ sub.totalSessions }} used ({{ getProgressPercent(sub) }}%)</span>
                     </div>
                     <div class="progress-track">
@@ -197,7 +221,11 @@
               <tr>
                 <td colspan="7" class="empty-table-cell">
                   <div class="empty-subs-box">
-                    <div class="empty-icon">💎</div>
+                    <div class="empty-icon-wrap">
+                      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 3h12l4 6-10 12L2 9z"></path>
+                      </svg>
+                    </div>
                     <h3>No Subscription Plans Found</h3>
                     <p>No subscriptions match your current search or filters.</p>
                   </div>

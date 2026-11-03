@@ -31,7 +31,7 @@ export class AdminSubscriptionsComponent implements OnInit, OnDestroy {
   totalMonthlyCount = computed(() =>
     this.subscriptions().filter(s =>
       s.status === 'active' &&
-      (s.planName || '').toLowerCase().includes('month')
+      ((s.planName || '').toLowerCase().includes('month') || (s.planName || '').toLowerCase().includes('30'))
     ).length
   );
 
@@ -64,7 +64,16 @@ export class AdminSubscriptionsComponent implements OnInit, OnDestroy {
       // Plan match
       let matchesPlan = true;
       if (plan !== 'All') {
-        matchesPlan = (s.planName || '').toLowerCase().includes(plan.toLowerCase());
+        const p = (s.planName || '').toLowerCase();
+        if (plan === 'Monthly') {
+          matchesPlan = p.includes('month') || p.includes('30');
+        } else if (plan === '15 Days') {
+          matchesPlan = p.includes('15') || p.includes('biweekly');
+        } else if (plan === 'Weekly') {
+          matchesPlan = p.includes('week') || p.includes('7');
+        } else {
+          matchesPlan = p.includes(plan.toLowerCase());
+        }
       }
 
       // Status match
@@ -141,6 +150,6 @@ export class AdminSubscriptionsComponent implements OnInit, OnDestroy {
     if (p.includes('15') || p.includes('biweekly')) {
       return { bg: '#E0F2FE', text: '#0369A1', border: '#BAE6FD' };
     }
-    return { bg: '#F1F5F9', text: '#334155', border: '#E2E8F0' };
+    return { bg: '#F3E8FF', text: '#7E22CE', border: '#E9D5FF' };
   }
 }
