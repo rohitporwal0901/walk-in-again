@@ -647,3 +647,156 @@
 .stagger-2 { animation-delay: 0.1s; }
 .stagger-3 { animation-delay: 0.15s; }
 .stagger-4 { animation-delay: 0.2s; }
+
+// ─── Section Row (Active Subscriptions + Plan Distribution) ──────────────────
+.section-row {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+  }
+}
+
+// ─── Active Subscriptions List ────────────────────────────────────────────────
+.sub-admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sub-admin-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #F8FAFC;
+  border-radius: 10px;
+  border: 1px solid #E2E8F0;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: #EFF6FF;
+  }
+}
+
+.sub-av {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1CB5E0, #0B2545);
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sub-info {
+  flex: 1;
+  min-width: 0;
+
+  .sub-name {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #0B2545;
+    margin: 0 0 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sub-meta {
+    font-size: 11.5px;
+    color: #64748B;
+    margin: 0;
+  }
+}
+
+.sub-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.sub-sessions-pill {
+  background: #DCFCE7;
+  color: #16A34A;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.sub-expiry {
+  font-size: 11px;
+  color: #94A3B8;
+  margin: 0;
+}
+
+// ─── Plan Distribution ────────────────────────────────────────────────────────
+.plan-dist-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 4px;
+}
+
+.plan-dist-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.plan-dist-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100px;
+  flex-shrink: 0;
+
+  .plan-dist-icon {
+    font-size: 18px;
+  }
+
+  .plan-dist-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+  }
+}
+
+.plan-dist-bar-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .plan-dist-bar {
+    flex: 1;
+    height: 8px;
+    background: #E2E8F0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .plan-dist-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.8s ease;
+  }
+
+  .plan-dist-count {
+    font-size: 12px;
+    font-weight: 700;
+    color: #475569;
+    min-width: 20px;
+    text-align: right;
+  }
+}

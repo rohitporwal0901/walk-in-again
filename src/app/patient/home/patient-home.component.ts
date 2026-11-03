@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { SessionService } from '../../core/services/session.service';
+import { SubscriptionService } from '../../core/services/subscription.service';
 import { Session } from '../../core/models/session.model';
+import { UserSubscription } from '../../core/models/subscription.model';
 import { Unsubscribe } from '@angular/fire/firestore';
 
 interface QuickAction {
@@ -26,9 +28,11 @@ interface QuickAction {
 export class PatientHomeComponent implements OnInit, OnDestroy {
   private auth = inject(AuthService);
   private sessionService = inject(SessionService);
+  private subscriptionService = inject(SubscriptionService);
   private router = inject(Router);
 
   private sessionsUnsub: Unsubscribe | null = null;
+  private subUnsub: Unsubscribe | null = null;
 
   readonly patientName = this.auth.userName;
   readonly greeting = computed(() => {
@@ -41,6 +45,7 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
   // Real Firestore sessions for current patient
   patientSessions = signal<Session[]>([]);
   isLoadingSessions = signal<boolean>(true);
+  activePlanSub = signal<UserSubscription | null>(null);
 
   // Real computed counts
   completedSessions = computed(() =>
@@ -64,6 +69,7 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
   quickActions: QuickAction[] = [
     { id: 'track-sessions', icon: '📈', label: 'My Sessions', sublabel: 'History & Notes', route: '/patient/sessions', color: '#22C55E', bgColor: '#DCFCE7' },
     { id: 'payments', icon: '💳', label: 'Payments', sublabel: 'Razorpay Receipts', route: '/patient/payments', color: '#F4A62A', bgColor: '#FFF8E7' },
+    { id: 'subscription', icon: '🎁', label: 'Plans', sublabel: 'Session Packages', route: '/patient/subscription', color: '#F4A62A', bgColor: '#FFF8E7' },
   ];
 
   ngOnInit() {
@@ -72,6 +78,9 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
       this.sessionsUnsub = this.sessionService.listenToPatientSessions(user.uid, (sessions) => {
         this.patientSessions.set(sessions);
         this.isLoadingSessions.set(false);
+      });
+      this.subUnsub = this.subscriptionService.watchPatientSubscription(user.uid, (sub) => {
+        this.activePlanSub.set(sub);
       });
     } else {
       this.isLoadingSessions.set(false);
@@ -82,6 +91,10 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
     if (this.sessionsUnsub) {
       this.sessionsUnsub();
       this.sessionsUnsub = null;
+    }
+    if (this.subUnsub) {
+      this.subUnsub();
+      this.subUnsub = null;
     }
   }
 

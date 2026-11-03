@@ -21,6 +21,11 @@ export const PATIENT_ROUTES: Routes = [
         path: 'payments',
         loadComponent: () =>
           import('./payment-history/payment-history.component').then(m => m.PaymentHistoryComponent)
+      },
+      {
+        path: 'subscription',
+        loadComponent: () =>
+          import('./subscription/subscription.component').then(m => m.SubscriptionComponent)
       }
     ]
   }

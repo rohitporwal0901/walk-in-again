@@ -24,6 +24,12 @@ export interface User {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  // Subscription
+  subscriptionPlanId?: string;      // e.g. 'plan_daily', 'plan_weekly', 'plan_monthly'
+  subscriptionPlanName?: string;    // e.g. 'Daily', 'Weekly', 'Monthly'
+  remainingSessions?: number;       // sessions left in current plan
+  subscriptionExpiry?: string;      // ISO date
+  subscriptionStatus?: 'active' | 'expired' | 'none';
 }
 
 export type PatientProfile = User;

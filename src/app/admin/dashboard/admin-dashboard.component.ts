@@ -1,11 +1,30 @@
 import { Component, signal, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { Firestore, collection, query, where, getDocs, onSnapshot, orderBy, limit, DocumentData } from '@angular/fire/firestore';
 import { AuthService } from '../../core/services/auth.service';
 import { User } from '../../core/models/user.model';
 import { Session } from '../../core/models/session.model';
 import { Transaction } from '../../core/models/transaction.model';
+
+interface ActiveSubscription {
+  subscriptionId: string;
+  patientName: string;
+  planName: string;
+  price: number;
+  remainingSessions: number;
+  totalSessions: number;
+  expiryDate: string;
+}
+
+interface PlanDistribution {
+  name: string;
+  icon: string;
+  count: number;
+  percent: number;
+  color: string;
+}
 
 interface KpiCard {
   label: string;
@@ -48,7 +67,7 @@ interface DonutSegment {
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss'
 })
@@ -72,6 +91,8 @@ export class AdminDashboardComponent implements OnInit {
   // Real-time lists
   recentTransactions = signal<RecentTransaction[]>([]);
   topWorkers = signal<TopWorker[]>([]);
+  activeSubscriptions = signal<ActiveSubscription[]>([]);
+  planDistribution = signal<PlanDistribution[]>([]);
 
   // Add Worker Form (Admin registers worker)
   workerForm: FormGroup = this.fb.group({
@@ -205,6 +226,55 @@ export class AdminDashboardComponent implements OnInit {
 
     // Store unsubscribers so they can be cleaned up if needed
     (this as any)._unsubs = [usersUnsub, sessionsUnsub, txnUnsub];
+
+    // Listen to active subscriptions
+    const subRef = collection(this.firestore, 'subscriptions');
+    const subQuery = query(subRef, where('status', '==', 'active'));
+    const subUnsub = onSnapshot(subQuery, (snapshot) => {
+      const subs: ActiveSubscription[] = [];
+      const planCounts: Record<string, { name: string; icon: string; count: number; color: string }> = {};
+
+      snapshot.forEach(docSnap => {
+        const s = docSnap.data() as any;
+        subs.push({
+          subscriptionId: s.subscriptionId || docSnap.id,
+          patientName: s.patientName || 'Patient',
+          planName: s.planName || 'Plan',
+          price: s.price || 0,
+          remainingSessions: s.remainingSessions || 0,
+          totalSessions: s.totalSessions || 1,
+          expiryDate: s.expiryDate || new Date().toISOString()
+        });
+
+        // Count plan distribution
+        const planId = s.planId || 'unknown';
+        if (!planCounts[planId]) {
+          const planMeta: Record<string, { icon: string; color: string; name: string }> = {
+            plan_weekly:   { icon: '📅', color: '#2196F3', name: 'Weekly' },
+            plan_biweekly: { icon: '⭐', color: '#1CB5E0', name: '15 Days' },
+            plan_monthly:  { icon: '🏆', color: '#F4A62A', name: 'Monthly' }
+          };
+          const meta = planMeta[planId] || { icon: '📋', color: '#94A3B8', name: s.planName || planId };
+          planCounts[planId] = { name: meta.name, icon: meta.icon, count: 0, color: meta.color };
+        }
+        planCounts[planId].count++;
+      });
+
+      const total = subs.length || 1;
+      const dist: PlanDistribution[] = Object.values(planCounts).map(p => ({
+        ...p,
+        percent: Math.round((p.count / total) * 100)
+      }));
+
+      this.activeSubscriptions.set(subs.sort((a, b) =>
+        new Date(a.expiryDate).getTime() - new Date(b.expiryDate).getTime()
+      ));
+      this.planDistribution.set(dist);
+    }, (err) => {
+      console.warn('Subscriptions snapshot listener:', err);
+    });
+
+    (this as any)._unsubs = [...((this as any)._unsubs || []), subUnsub];
   }
 
   getBarHeight(value: number): number {

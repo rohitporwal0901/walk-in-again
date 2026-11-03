@@ -22,6 +22,9 @@ import { AuthService } from '../../core/services/auth.service';
         <a routerLink="payments" routerLinkActive="active" class="nav-item" id="pt-nav-payments">
           <span class="nav-icon">💳</span><span>Payments</span>
         </a>
+        <a routerLink="subscription" routerLinkActive="active" class="nav-item" id="pt-nav-plans">
+          <span class="nav-icon">🎁</span><span>Plans</span>
+        </a>
         <button class="nav-item" (click)="logout()" id="pt-nav-logout">
           <span class="nav-icon">🚪</span><span>Logout</span>
         </button>

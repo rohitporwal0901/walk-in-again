@@ -1,0 +1,578 @@
+// ─── Design Tokens ───────────────────────────────────────────────────────────
+:host {
+  --primary: #0B2545;
+  --primary-light: #1a3a6b;
+  --accent: #1CB5E0;
+  --gold: #F4A62A;
+  --gold-dark: #d4861a;
+  --success: #22C55E;
+  --danger: #EF4444;
+  --bg: #F0F4F8;
+  --card-bg: #ffffff;
+  --text-primary: #0B2545;
+  --text-muted: #64748B;
+  --border: #E2E8F0;
+  --radius: 16px;
+  --shadow: 0 2px 12px rgba(11, 37, 69, 0.08);
+  --shadow-md: 0 4px 24px rgba(11, 37, 69, 0.14);
+}
+
+// ─── Animations ──────────────────────────────────────────────────────────────
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.animate-fade-in-up { animation: fadeInUp 0.4s ease both; }
+.animate-slide-up   { animation: slideUp 0.35s cubic-bezier(0.32,0.72,0,1) both; }
+
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.12s; }
+.stagger-3 { animation-delay: 0.19s; }
+
+// ─── Page Shell ──────────────────────────────────────────────────────────────
+.subscription-page {
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  position: relative;
+}
+
+// ─── Header ──────────────────────────────────────────────────────────────────
+.sub-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 52px 20px 22px;
+  background: linear-gradient(135deg, #0B2545 0%, #1a3a6b 100%);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.back-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s;
+
+  &:hover { background: rgba(255,255,255,0.25); }
+}
+
+.header-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 2px;
+  letter-spacing: -0.3px;
+}
+
+.header-sub {
+  font-size: 13px;
+  margin: 0;
+  opacity: 0.75;
+}
+
+// ─── Content Area ────────────────────────────────────────────────────────────
+.sub-content {
+  padding: 20px 16px 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin: 4px 0 -4px;
+}
+
+.section-note {
+  font-size: 12.5px;
+  color: #64748B;
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin: 4px 0 0;
+  line-height: 1.5;
+}
+
+// ─── Active Subscription Banner ──────────────────────────────────────────────
+.active-sub-banner {
+  background: linear-gradient(135deg, #1CB5E0 0%, #0B2545 100%);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: white;
+  box-shadow: 0 4px 20px rgba(28, 181, 224, 0.35);
+}
+
+.active-sub-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.active-sub-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.active-sub-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  opacity: 0.8;
+  margin: 0 0 4px;
+}
+
+.active-sub-name {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.active-sub-stats {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.stat-chip {
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(255,255,255,0.2);
+  border-radius: 20px;
+  padding: 3px 10px;
+
+  &--warn { background: rgba(244, 166, 42, 0.35); }
+}
+
+.active-sub-ring {
+  position: relative;
+  flex-shrink: 0;
+
+  svg { display: block; }
+}
+
+.ring-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+  white-space: nowrap;
+}
+
+// ─── Plan Cards ──────────────────────────────────────────────────────────────
+.plan-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  border-left: 4px solid var(--plan-color, var(--accent));
+  position: relative;
+  overflow: hidden;
+
+  &--popular {
+    border: 2px solid var(--gold);
+    border-left: 4px solid var(--gold);
+    box-shadow: 0 4px 24px rgba(244, 166, 42, 0.2);
+  }
+}
+
+.popular-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: linear-gradient(135deg, var(--gold), #e89c20);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.3px;
+}
+
+.plan-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.plan-icon {
+  font-size: 36px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.plan-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.plan-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+}
+
+.plan-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.plan-price-wrap {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.plan-price {
+  display: block;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--plan-color, var(--primary));
+  line-height: 1;
+}
+
+.plan-per {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.plan-sessions-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: color-mix(in srgb, var(--plan-color, var(--accent)) 10%, transparent);
+  color: color-mix(in srgb, var(--plan-color, var(--accent)) 90%, #000);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+
+.sessions-icon { font-size: 14px; }
+
+// ─── Features List ───────────────────────────────────────────────────────────
+.plan-features {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.feature-check {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--plan-color, var(--success)) 15%, transparent);
+  color: var(--plan-color, var(--success));
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+// ─── Choose Button ───────────────────────────────────────────────────────────
+.choose-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: var(--primary);
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+  letter-spacing: 0.2px;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(11, 37, 69, 0.3);
+  }
+
+  &:active { transform: translateY(0); }
+
+  &--popular {
+    background: linear-gradient(135deg, var(--gold), #e89c20);
+    box-shadow: 0 4px 16px rgba(244, 166, 42, 0.4);
+
+    &:hover { box-shadow: 0 6px 20px rgba(244, 166, 42, 0.5); }
+  }
+}
+
+// ─── Skeleton Loading ────────────────────────────────────────────────────────
+.skeleton-card { pointer-events: none; }
+
+.skeleton {
+  border-radius: 8px;
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 400px 100%;
+  animation: shimmer 1.4s infinite;
+  display: block;
+  height: 16px;
+  margin-bottom: 10px;
+
+  &--title { height: 22px; }
+  &--text  { height: 14px; }
+}
+
+// ─── Payment Bottom Sheet ─────────────────────────────────────────────────────
+.sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 80;
+  backdrop-filter: blur(2px);
+}
+
+.payment-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 24px 24px 0 0;
+  padding: 12px 20px 40px;
+  z-index: 90;
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.18);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.sheet-handle {
+  width: 40px;
+  height: 4px;
+  background: #CBD5E1;
+  border-radius: 2px;
+  margin: 0 auto 20px;
+}
+
+.sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.sheet-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0;
+}
+
+.sheet-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #F1F5F9;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+
+  &:hover { background: #E2E8F0; }
+}
+
+.sheet-plan-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #F8FAFC;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 24px;
+}
+
+.summary-icon { font-size: 28px; }
+
+.summary-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0 0 3px;
+}
+
+.summary-detail {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.summary-price {
+  margin-left: auto;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+// ─── Payment Method ───────────────────────────────────────────────────────────
+.method-section { margin-bottom: 20px; }
+
+.method-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin: 0 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.method-grid {
+  display: flex;
+  gap: 10px;
+}
+
+.method-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 8px;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  background: white;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &--active {
+    border-color: var(--accent);
+    background: #EDF9FD;
+    color: var(--accent);
+  }
+
+  &:hover:not(.method-btn--active) { border-color: #94A3B8; }
+}
+
+.method-icon { font-size: 22px; }
+
+// ─── Error Message ────────────────────────────────────────────────────────────
+.error-msg {
+  background: #FEF2F2;
+  color: var(--danger);
+  border: 1px solid #FECACA;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+// ─── Confirm Button ───────────────────────────────────────────────────────────
+.confirm-btn {
+  width: 100%;
+  padding: 16px;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg, #1CB5E0, #0B81A8);
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.15s, box-shadow 0.15s;
+  letter-spacing: 0.3px;
+
+  &:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(28, 181, 224, 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+// ─── Success Toast ────────────────────────────────────────────────────────────
+.success-toast {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  background: #0F4C2F;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  white-space: nowrap;
+}

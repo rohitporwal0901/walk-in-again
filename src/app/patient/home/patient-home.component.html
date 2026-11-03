@@ -51,6 +51,23 @@
       </div>
     </div>
 
+    <!-- Subscription Summary Card -->
+    @if (activePlanSub(); as sub) {
+      <div class="sub-summary-card animate-fade-in-up" style="animation-delay:.05s" (click)="navigate('/patient/subscription')">
+        <div class="sub-summary-left">
+          <span class="sub-summary-icon">🎁</span>
+          <div>
+            <p class="sub-summary-label">Active Plan</p>
+            <h4 class="sub-summary-name">{{ sub.planName }} Plan</h4>
+          </div>
+        </div>
+        <div class="sub-summary-right">
+          <span class="sub-sessions-badge">{{ sub.remainingSessions }} sessions left</span>
+          <p class="sub-expiry">Expires {{ sub.expiryDate | date:'d MMM' }}</p>
+        </div>
+      </div>
+    }
+
     <!-- Active or Upcoming Session -->
     @if (activeSession(); as active) {
       <div class="upcoming-card animate-fade-in-up" style="animation-delay:.1s">

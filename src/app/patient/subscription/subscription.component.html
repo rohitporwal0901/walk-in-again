@@ -1,0 +1,178 @@
+<div class="subscription-page">
+
+  <!-- Header -->
+  <header class="sub-header">
+    <button class="back-btn" (click)="goBack()" id="sub-back-btn">
+      <span>←</span>
+    </button>
+    <div class="header-text">
+      <h1 class="header-title">Choose Your Plan</h1>
+      <p class="header-sub">Flexible sessions for your recovery</p>
+    </div>
+  </header>
+
+  <!-- Success Toast -->
+  @if (purchaseSuccess()) {
+    <div class="success-toast animate-fade-in-up">
+      <span>✅</span>
+      <span>Plan purchased successfully! Sessions unlocked.</span>
+    </div>
+  }
+
+  <div class="sub-content">
+
+    <!-- Active Subscription Banner -->
+    @if (activeSub(); as sub) {
+      <div class="active-sub-banner animate-fade-in-up">
+        <div class="active-sub-icon">🎯</div>
+        <div class="active-sub-info">
+          <p class="active-sub-label">Current Plan</p>
+          <h3 class="active-sub-name">{{ sub.planName }} Plan</h3>
+          <div class="active-sub-stats">
+            <span class="stat-chip">{{ sub.remainingSessions }} sessions left</span>
+            <span class="stat-chip stat-chip--warn">Expires {{ sub.expiryDate | date:'d MMM' }}</span>
+          </div>
+        </div>
+        <div class="active-sub-ring">
+          <svg width="56" height="56" viewBox="0 0 56 56">
+            <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="5"/>
+            <circle cx="28" cy="28" r="22" fill="none" stroke="white" stroke-width="5"
+              stroke-linecap="round"
+              stroke-dasharray="138.2"
+              [attr.stroke-dashoffset]="138.2 * (1 - sub.remainingSessions / sub.totalSessions)"
+              transform="rotate(-90 28 28)"
+              style="transition: stroke-dashoffset 1s ease"
+            />
+          </svg>
+          <div class="ring-label">{{ sub.remainingSessions }}/{{ sub.totalSessions }}</div>
+        </div>
+      </div>
+    }
+
+    <!-- Section Title -->
+    <h2 class="section-label">Choose a Session Package</h2>
+    <p class="section-note">💡 Walk-in daily sessions are handled by your physiotherapist directly. These plans pre-book multiple sessions for your recovery course.</p>
+
+    <!-- Loading Skeletons -->
+    @if (isLoading()) {
+      @for (i of [1,2,3]; track i) {
+        <div class="plan-card skeleton-card">
+          <div class="skeleton skeleton--title" style="width:60%;height:24px;margin-bottom:8px"></div>
+          <div class="skeleton skeleton--text" style="width:40%;height:40px;margin-bottom:12px"></div>
+          <div class="skeleton skeleton--text" style="width:80%"></div>
+          <div class="skeleton skeleton--text" style="width:70%"></div>
+        </div>
+      }
+    } @else {
+      <!-- Plan Cards -->
+      @for (plan of plans(); track plan.id; let i = $index) {
+        <div class="plan-card animate-fade-in-up stagger-{{ i + 1 }}"
+             [class.plan-card--popular]="plan.isPopular"
+             [style.--plan-color]="plan.color">
+
+          @if (plan.isPopular) {
+            <div class="popular-badge">⭐ Most Popular</div>
+          }
+
+          <div class="plan-top">
+            <div class="plan-icon">{{ plan.icon }}</div>
+            <div class="plan-info">
+              <h3 class="plan-name">{{ plan.name }}</h3>
+              <p class="plan-desc">{{ plan.description }}</p>
+            </div>
+            <div class="plan-price-wrap">
+              <span class="plan-price">₹{{ plan.price | number }}</span>
+              <span class="plan-per">/ plan</span>
+            </div>
+          </div>
+
+          <div class="plan-sessions-badge">
+            <span class="sessions-icon">🗓</span>
+            <span>{{ plan.sessions }} {{ plan.sessions === 1 ? 'Session' : 'Sessions' }} · {{ plan.durationDays }} {{ plan.durationDays === 1 ? 'Day' : 'Days' }}</span>
+          </div>
+
+          <ul class="plan-features">
+            @for (feature of plan.features; track feature) {
+              <li class="feature-item">
+                <span class="feature-check">✓</span>
+                {{ feature }}
+              </li>
+            }
+          </ul>
+
+          <button
+            class="choose-btn"
+            [class.choose-btn--popular]="plan.isPopular"
+            (click)="selectPlan(plan)"
+            [id]="'choose-' + plan.id"
+          >
+            Choose {{ plan.name }} Plan
+          </button>
+        </div>
+      }
+    }
+
+  </div>
+
+  <!-- Payment Bottom Sheet -->
+  @if (showPaymentSheet()) {
+    <div class="sheet-overlay" (click)="closeSheet()"></div>
+    <div class="payment-sheet animate-slide-up">
+      <div class="sheet-handle"></div>
+
+      @if (selectedPlan(); as plan) {
+        <div class="sheet-header">
+          <h2 class="sheet-title">Confirm Purchase</h2>
+          <button class="sheet-close" (click)="closeSheet()">✕</button>
+        </div>
+
+        <div class="sheet-plan-summary">
+          <div class="summary-icon">{{ plan.icon }}</div>
+          <div>
+            <h3 class="summary-name">{{ plan.name }} Plan</h3>
+            <p class="summary-detail">{{ plan.sessions }} sessions · {{ plan.durationDays }} days validity</p>
+          </div>
+          <div class="summary-price">₹{{ plan.price | number }}</div>
+        </div>
+
+        <div class="method-section">
+          <p class="method-label">Select Payment Method</p>
+          <div class="method-grid">
+            @for (m of ['UPI', 'Card', 'Cash']; track m) {
+              <button
+                class="method-btn"
+                [class.method-btn--active]="selectedMethod() === m"
+                (click)="selectedMethod.set($any(m))"
+                [id]="'method-' + m"
+              >
+                <span class="method-icon">
+                  {{ m === 'UPI' ? '📱' : m === 'Card' ? '💳' : '💵' }}
+                </span>
+                <span>{{ m }}</span>
+              </button>
+            }
+          </div>
+        </div>
+
+        @if (errorMsg()) {
+          <div class="error-msg">⚠️ {{ errorMsg() }}</div>
+        }
+
+        <button
+          class="confirm-btn"
+          (click)="confirmPurchase()"
+          [disabled]="isPurchasing()"
+          id="confirm-purchase-btn"
+        >
+          @if (isPurchasing()) {
+            <span class="spinner"></span>
+            Processing...
+          } @else {
+            Pay ₹{{ plan.price | number }} · {{ selectedMethod() }}
+          }
+        </button>
+      }
+    </div>
+  }
+
+</div>

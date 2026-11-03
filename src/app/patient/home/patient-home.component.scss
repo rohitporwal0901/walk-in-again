@@ -228,3 +228,63 @@
   .promo-sub   { font-size: 14px; font-weight: 500; color: var(--navy); opacity: 0.8; }
   .promo-emoji { font-size: 48px; }
 }
+
+// ─── Subscription Summary Card ────────────────────────────────────────────────
+.sub-summary-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #0B2545 0%, #1a3a6b 100%);
+  border-radius: 16px;
+  padding: 14px 18px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(11,37,69,0.2);
+  transition: transform 0.15s;
+
+  &:hover { transform: translateY(-1px); }
+}
+
+.sub-summary-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sub-summary-icon { font-size: 24px; }
+
+.sub-summary-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.7);
+  margin: 0 0 2px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sub-summary-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+}
+
+.sub-summary-right {
+  text-align: right;
+}
+
+.sub-sessions-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 4px;
+}
+
+.sub-expiry {
+  font-size: 11px;
+  color: rgba(255,255,255,0.65);
+  margin: 0;
+}
