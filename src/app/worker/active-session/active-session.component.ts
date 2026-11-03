@@ -43,6 +43,7 @@ export class ActiveSessionComponent implements OnInit, OnDestroy {
 
   isCoveredByPlan = signal<boolean>(false);
   planName = signal<string>('');
+  showDirectPay = signal<boolean>(false);
 
   sessionDuration = computed(() => Math.max(1, Math.ceil(this.sessionService.timerSeconds() / 60)));
   sessionFee = computed(() => this.isCoveredByPlan() ? 0 : this.sessionService.getSessionFee(this.sessionDuration()));
@@ -120,16 +121,46 @@ export class ActiveSessionComponent implements OnInit, OnDestroy {
     this.sessionService.startTimer();
   }
 
-  async proceedToPayment() {
+  /**
+   * Primary Action: Worker ends session.
+   * If covered by plan: session completes as paid, 1 session is deducted from plan.
+   * If not covered: session ends as 'pending' so patient can pay from their own phone!
+   */
+  async endSessionAndBillPatient() {
     this.isEndingSession.set(true);
     try {
       const isCovered = this.isCoveredByPlan();
       const fee = isCovered ? 0 : this.sessionFee();
+
+      await this.sessionService.endSession(
+        this.sessionId(),
+        this.sessionNotes(),
+        this.therapies(),
+        fee,
+        this.sessionDuration(),
+        isCovered ? 'paid' : 'pending'
+      );
+
+      this.router.navigate(['/worker/dashboard']);
+    } catch (err: any) {
+      console.error('Session completion error:', err);
+      alert(err?.message || 'Error ending session.');
+      this.isEndingSession.set(false);
+    }
+  }
+
+  /**
+   * Secondary Action: If patient pays cash or direct to the worker on the spot.
+   */
+  async collectPaymentDirectly() {
+    this.isEndingSession.set(true);
+    try {
+      const fee = this.sessionFee();
       const user = this.authService.currentUser();
-      const method = isCovered ? 'Subscription' : this.selectedPaymentMethod();
+      const method = this.selectedPaymentMethod();
       let razorpayPaymentId = '';
 
-      if (!isCovered && (method === 'UPI' || method === 'Card')) {
+      if (method === 'UPI' || method === 'Card') {
         try {
           const response = await this.paymentService.openPayment({
             amount: fee,
@@ -139,7 +170,9 @@ export class ActiveSessionComponent implements OnInit, OnDestroy {
           });
           razorpayPaymentId = response.razorpay_payment_id || '';
         } catch (paymentErr) {
-          console.warn('Direct worker payment dismissed, recording session for patient checkout:', paymentErr);
+          console.warn('Direct worker payment cancelled:', paymentErr);
+          this.isEndingSession.set(false);
+          return;
         }
       }
 
@@ -154,17 +187,18 @@ export class ActiveSessionComponent implements OnInit, OnDestroy {
         workerMobile: user?.mobileNumber || '',
         amount: fee,
         paymentMethod: method,
-        razorpayPaymentId: isCovered ? `SUB_${Date.now()}` : razorpayPaymentId,
+        razorpayPaymentId,
         durationMinutes: this.sessionDuration()
       });
 
-      // Complete session document in Firestore (auto-decrements subscription if covered)
+      // Complete session document as 'paid'
       await this.sessionService.endSession(
         this.sessionId(),
         this.sessionNotes(),
         this.therapies(),
         fee,
-        this.sessionDuration()
+        this.sessionDuration(),
+        'paid'
       );
 
       this.router.navigate(['/worker/dashboard']);
@@ -173,6 +207,11 @@ export class ActiveSessionComponent implements OnInit, OnDestroy {
       alert(err?.message || 'Error completing session.');
       this.isEndingSession.set(false);
     }
+  }
+
+  /** Alias for backward compatibility */
+  async proceedToPayment() {
+    return this.endSessionAndBillPatient();
   }
 
   goBack() {

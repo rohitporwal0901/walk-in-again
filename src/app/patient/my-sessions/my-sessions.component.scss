@@ -202,6 +202,12 @@
         border: 1px solid rgba(34, 197, 94, 0.2);
       }
 
+      &.badge-pending {
+        background: #FEF3C7;
+        color: #B45309;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+      }
+
       &.badge-active {
         background: #E0F2FE;
         color: #0284C7;

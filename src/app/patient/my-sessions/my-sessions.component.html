@@ -80,7 +80,9 @@
 
             <!-- Status Pill Badge -->
             <div class="card-badge-wrap">
-              @if (session.status === 'completed') {
+              @if (session.status === 'completed' && session.paymentStatus === 'pending') {
+                <span class="status-badge badge-pending">Payment Due</span>
+              } @else if (session.status === 'completed') {
                 <span class="status-badge badge-completed">Completed</span>
               } @else if (session.status === 'active') {
                 <span class="status-badge badge-active">Active</span>

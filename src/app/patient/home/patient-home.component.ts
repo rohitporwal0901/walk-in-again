@@ -64,7 +64,7 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
   );
 
   completedSessions = computed(() =>
-    this.patientSessions().filter(s => s.status === 'completed').length
+    this.patientSessions().filter(s => s.status === 'completed' && s.paymentStatus === 'paid').length
   );
 
   totalRecommendedSessions = computed(() => {
@@ -179,6 +179,13 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
         razorpayPaymentId: response.razorpay_payment_id || '',
         durationMinutes: session.duration || 30
       });
+
+      // Mark session as paid in Firestore (advances progress bar and clears due prompt)
+      await this.sessionService.markSessionAsPaid(
+        session.sessionId,
+        'UPI',
+        response.razorpay_payment_id
+      );
 
       this.isPaying.set(false);
       this.router.navigate(['/patient/payments']);

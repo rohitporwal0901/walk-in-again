@@ -287,7 +287,8 @@ export class SessionService {
     notes: string,
     therapies: TherapyItem[],
     fee: number,
-    durationMinutes: number
+    durationMinutes: number,
+    forcedPaymentStatus?: 'paid' | 'pending'
   ): Promise<void> {
     this.resetTimer();
     this._activeSession.set(null);
@@ -303,6 +304,8 @@ export class SessionService {
       await this.subscriptionService.decrementSession(sessData.patientId);
     }
 
+    const paymentStatus = forcedPaymentStatus ? forcedPaymentStatus : (isCovered ? 'paid' : 'pending');
+
     const now = new Date().toISOString();
     await updateDoc(sessionRef, {
       status: 'completed' as SessionStatus,
@@ -311,7 +314,19 @@ export class SessionService {
       therapies,
       fee: isCovered ? 0 : fee,
       endedAt: now,
-      paymentStatus: isCovered ? 'paid' : 'pending',
+      paymentStatus,
+      updatedAt: now
+    });
+  }
+
+  /** Mark a completed session as paid (when patient pays directly from app) */
+  async markSessionAsPaid(sessionId: string, paymentMethod: string = 'UPI', razorpayPaymentId?: string): Promise<void> {
+    const sessionRef = doc(this.firestore, 'sessions', sessionId);
+    const now = new Date().toISOString();
+    await updateDoc(sessionRef, {
+      paymentStatus: 'paid',
+      paymentMethod,
+      razorpayPaymentId: razorpayPaymentId || '',
       updatedAt: now
     });
   }
