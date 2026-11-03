@@ -1,13 +1,15 @@
 import { Component, signal, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Firestore, collection, query, where, getDocs, onSnapshot } from '@angular/fire/firestore';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Firestore, collection, query, where, getDocs, onSnapshot, orderBy, limit, DocumentData } from '@angular/fire/firestore';
 import { AuthService } from '../../core/services/auth.service';
 import { User } from '../../core/models/user.model';
+import { Session } from '../../core/models/session.model';
+import { Transaction } from '../../core/models/transaction.model';
 
 interface KpiCard {
   label: string;
-  value: string;
+  value: string | number;
   icon: string;
   growth: string;
   growthPositive: boolean;
@@ -20,11 +22,16 @@ interface RecentTransaction {
   worker: string;
   amount: string;
   status: 'Paid' | 'Pending';
+  date: string;
+  time: string;
+  method: string;
 }
 
 interface TopWorker {
+  uid: string;
   name: string;
   sessions: number;
+  earnings: number;
   initial: string;
   phone?: string;
   specialization?: string;
@@ -41,7 +48,7 @@ interface DonutSegment {
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss'
 })
@@ -56,13 +63,14 @@ export class AdminDashboardComponent implements OnInit {
   workerModalError = signal<string>('');
   workerModalSuccess = signal<string>('');
 
-  // Real Counts
+  // Real KPI Counts (live from Firestore)
   patientCount = signal<number>(0);
   workerCount = signal<number>(0);
   sessionCount = signal<number>(0);
   revenueTotal = signal<number>(0);
 
-  // Workers List from Firestore
+  // Real-time lists
+  recentTransactions = signal<RecentTransaction[]>([]);
   topWorkers = signal<TopWorker[]>([]);
 
   // Add Worker Form (Admin registers worker)
@@ -84,18 +92,16 @@ export class AdminDashboardComponent implements OnInit {
   ];
 
   kpis: KpiCard[] = [
-    { label: 'Total Patients', value: '0', icon: '👥', growth: '+100%', growthPositive: true, color: '#2196F3', bgColor: '#EFF6FF' },
-    { label: 'Workers (Staff)', value: '0', icon: '👨‍⚕️', growth: '+100%', growthPositive: true, color: '#22C55E', bgColor: '#DCFCE7' },
-    { label: 'Sessions', value: '0', icon: '📋', growth: '+18%', growthPositive: true, color: '#F4A62A', bgColor: '#FFF8E7' },
-    { label: 'Total Revenue', value: '₹0', icon: '💰', growth: '+20%', growthPositive: true, color: '#EF4444', bgColor: '#FEE2E2' },
+    { label: 'Total Patients', value: '0', icon: '👥', growth: '+0%', growthPositive: true, color: '#2196F3', bgColor: '#EFF6FF' },
+    { label: 'Workers (Staff)', value: '0', icon: '👨‍⚕️', growth: '+0%', growthPositive: true, color: '#22C55E', bgColor: '#DCFCE7' },
+    { label: 'Sessions', value: '0', icon: '📋', growth: '+0%', growthPositive: true, color: '#F4A62A', bgColor: '#FFF8E7' },
+    { label: 'Total Revenue', value: '₹0', icon: '💰', growth: '+0%', growthPositive: true, color: '#EF4444', bgColor: '#FEE2E2' },
   ];
-
-  recentTransactions: RecentTransaction[] = [];
 
   // Pre-computed donut segments
   donutSegments: DonutSegment[] = [];
 
-  // Chart data
+  // Chart data (sample, can be replaced with real aggregated data)
   chartData = [
     { week: 'Week 1', thisMonth: 1200, lastMonth: 900 },
     { week: 'Week 2', thisMonth: 1800, lastMonth: 1400 },
@@ -118,12 +124,11 @@ export class AdminDashboardComponent implements OnInit {
     this.loadRealFirestoreData();
   }
 
-  // ─── Real Firestore Listener ────────────────────────────────────────────────
+  // ─── Real Firestore Listener (KPIs + charts + lists) ──────────────────────────
   private loadRealFirestoreData(): void {
+    // Listen to users collection for patient/worker counts
     const usersRef = collection(this.firestore, 'users');
-
-    // Live listener for users collection
-    onSnapshot(usersRef, (snapshot) => {
+    const usersUnsub = onSnapshot(usersRef, (snapshot) => {
       let patients = 0;
       const workers: TopWorker[] = [];
 
@@ -133,8 +138,10 @@ export class AdminDashboardComponent implements OnInit {
           patients++;
         } else if (u.role === 'worker') {
           workers.push({
+            uid: docSnap.id,
             name: u.name,
             sessions: u.completedSessions || 0,
+            earnings: Number(u.totalEarnings) || 0,
             initial: (u.name || 'W').charAt(0).toUpperCase(),
             phone: u.mobileNumber,
             specialization: u.specialization
@@ -144,13 +151,80 @@ export class AdminDashboardComponent implements OnInit {
 
       this.patientCount.set(patients);
       this.workerCount.set(workers.length);
-      this.topWorkers.set(workers);
+      this.topWorkers.set(workers.sort((a, b) => b.sessions - a.sessions));
 
       // Update KPI Cards
       this.kpis[0].value = patients.toString();
       this.kpis[1].value = workers.length.toString();
     }, (err) => {
-      console.warn('Realtime snapshot listener note:', err);
+      console.warn('Users snapshot listener:', err);
+    });
+
+    // Listen to sessions collection for session count
+    const sessionsRef = collection(this.firestore, 'sessions');
+    const sessionsUnsub = onSnapshot(sessionsRef, (snapshot) => {
+      this.sessionCount.set(snapshot.size);
+      this.kpis[2].value = snapshot.size.toString();
+    }, (err) => {
+      console.warn('Sessions snapshot listener:', err);
+    });
+
+    // Listen to transactions collection for revenue + recent transactions
+    const transactionsRef = collection(this.firestore, 'transactions');
+    const txnUnsub = onSnapshot(transactionsRef, (snapshot) => {
+      let totalRevenue = 0;
+      const txns: RecentTransaction[] = [];
+
+      snapshot.forEach(docSnap => {
+        const t = docSnap.data() as Transaction;
+        if (t.status === 'Paid') {
+          totalRevenue += Number(t.amount) || 0;
+        }
+        txns.push({
+          patient: t.patientName,
+          worker: t.workerName,
+          amount: `₹${t.amount}`,
+          status: t.status as 'Paid' | 'Pending',
+          date: new Date(t.timestamp || t.sessionDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
+          time: new Date(t.timestamp || t.sessionDate).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+          method: t.paymentMethod || 'UPI'
+        });
+      });
+
+      // Sort newest first
+      txns.sort((a, b) => {
+        return new Date(b.time).getTime() - new Date(a.time).getTime();
+      });
+
+      this.revenueTotal.set(totalRevenue);
+      this.recentTransactions.set(txns.slice(0, 10));
+      this.kpis[3].value = `₹${totalRevenue.toLocaleString('en-IN')}`;
+    }, (err) => {
+      console.warn('Transactions snapshot listener:', err);
+    });
+
+    // Store unsubscribers so they can be cleaned up if needed
+    (this as any)._unsubs = [usersUnsub, sessionsUnsub, txnUnsub];
+  }
+
+  getBarHeight(value: number): number {
+    return (value / this.chartMax) * 100;
+  }
+
+  private buildDonutSegments(): void {
+    const circumference = 2 * Math.PI * 45;
+    let accumulated = 0;
+    this.donutSegments = this.paymentData.map(method => {
+      const dash = (method.percent / 100) * circumference;
+      const offset = -(accumulated / 100) * circumference + circumference / 4;
+      accumulated += method.percent;
+      return {
+        label: method.label,
+        percent: method.percent,
+        color: method.color,
+        dashArray: `${dash} ${circumference - dash}`,
+        dashOffset: offset
+      };
     });
   }
 
@@ -202,26 +276,5 @@ export class AdminDashboardComponent implements OnInit {
       this.isSubmittingWorker.set(false);
       this.workerModalError.set(e.message || 'Failed to create worker account. Please try again.');
     }
-  }
-
-  private buildDonutSegments(): void {
-    const circumference = 2 * Math.PI * 45;
-    let accumulated = 0;
-    this.donutSegments = this.paymentData.map(method => {
-      const dash = (method.percent / 100) * circumference;
-      const offset = -(accumulated / 100) * circumference + circumference / 4;
-      accumulated += method.percent;
-      return {
-        label: method.label,
-        percent: method.percent,
-        color: method.color,
-        dashArray: `${dash} ${circumference - dash}`,
-        dashOffset: offset
-      };
-    });
-  }
-
-  getBarHeight(value: number): number {
-    return (value / this.chartMax) * 100;
   }
 }

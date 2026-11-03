@@ -234,6 +234,12 @@
   gap: 16px;
 }
 
+.side-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .donut-card {
   background: white;
   border-radius: var(--radius-lg);
@@ -319,6 +325,107 @@
     cursor: pointer;
     &:hover { background: #0B2545; color: white; }
   }
+}
+
+// ─── Recent Transactions Card ────────────────────────────────────────
+.transactions-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-light);
+}
+
+.card-header-row {
+  @include flex-between;
+  margin-bottom: 14px;
+  h3 { font-size: 14px; font-weight: 700; color: var(--text-primary); margin: 0; }
+  .view-all {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1565C0;
+    text-decoration: none;
+    cursor: pointer;
+    &:hover { text-decoration: underline; }
+  }
+}
+
+.txn-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.txn-row {
+  @include flex-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-light);
+  &:last-child { border-bottom: none; }
+  align-items: center;
+}
+
+.txn-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.txn-patient {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.txn-meta {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.txn-amount {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.txn-val {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.empty-txn {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge--success {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.badge--warning {
+  background: var(--warning-bg);
+  color: var(--warning);
 }
 
 // ─── Modal ────────────────────────────────────────────────────────────────────
@@ -520,3 +627,23 @@
     }
   }
 }
+
+// Animations
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out both;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }

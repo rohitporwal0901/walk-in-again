@@ -10,10 +10,9 @@
       <button class="btn btn-primary-sm" (click)="openAddWorkerModal()" id="btn-add-worker">
         ➕ Register Worker / Physio
       </button>
-      <select class="period-select" id="period-selector">
-        <option>This Month</option>
-        <option>This Week</option>
-        <option>Last Month</option>
+      <select class="period-select" id="period-selector" [(ngModel)]="selectedPeriod">
+        <option value="Month">This Month</option>
+        <option value="Week">This Week</option>
       </select>
     </div>
   </div>
@@ -69,63 +68,89 @@
 
     <!-- Table + Donut + Workers Side Column -->
     <div class="side-column">
-      <div class="side-widgets">
 
-        <!-- Donut Chart -->
-        <div class="donut-card animate-fade-in-up" style="animation-delay:.2s">
-          <h3>Payment Methods</h3>
-          <div class="donut-wrap">
-            <svg width="120" height="120" viewBox="0 0 100 100" id="payment-donut">
-              @for (segment of donutSegments; track segment.label) {
-                <circle
-                  cx="50" cy="50" r="45"
-                  fill="none"
-                  [attr.stroke]="segment.color"
-                  stroke-width="10"
-                  [attr.stroke-dasharray]="segment.dashArray"
-                  [attr.stroke-dashoffset]="segment.dashOffset"
-                  stroke-linecap="butt"
-                  style="transition: stroke-dashoffset 0.5s ease"
-                />
-              }
-              <text x="50" y="55" text-anchor="middle" font-size="18" font-weight="800" fill="#0B2545">60%</text>
-            </svg>
-            <div class="donut-legend">
-              @for (method of paymentMethods; track method.label) {
-                <div class="legend-row">
-                  <span class="l-dot" [style.background]="method.color"></span>
-                  <span class="l-label">{{ method.label }}</span>
-                  <span class="l-val">{{ method.percent }}%</span>
-                </div>
-              }
-            </div>
-          </div>
+      <!-- Recent Transactions -->
+      <div class="transactions-card animate-fade-in-up" style="animation-delay:.15s">
+        <div class="card-header-row">
+          <h3>Recent Transactions</h3>
+          <a class="view-all" routerLink="/admin/transactions">View All →</a>
         </div>
-
-        <!-- Registered Workers / Staff (Real data from Firestore) -->
-        <div class="workers-card animate-fade-in-up" style="animation-delay:.25s">
-          <div class="card-header-row">
-            <h3>Staff & Physiotherapists</h3>
-            <button class="add-link-btn" (click)="openAddWorkerModal()">+ Add New</button>
-          </div>
-          @for (worker of topWorkers(); track worker.name; let i = $index) {
-            <div class="worker-rank-item">
-              <span class="rank-num">#{{ i + 1 }}</span>
-              <div class="rank-av">{{ worker.initial }}</div>
-              <div class="rank-info">
-                <p class="rank-name">{{ worker.name }}</p>
-                <p class="rank-sessions">{{ worker.specialization || 'Physiotherapist' }}</p>
+        <div class="txn-list">
+          @for (txn of recentTransactions(); track txn.patient + txn.time; let i = $index) {
+            <div class="txn-row">
+              <div class="txn-info">
+                <p class="txn-patient">{{ txn.patient }}</p>
+                <p class="txn-meta">{{ txn.worker }} · {{ txn.method }} · {{ txn.date }}, {{ txn.time }}</p>
+              </div>
+              <div class="txn-amount">
+                <p class="txn-val">{{ txn.amount }}</p>
+                <span class="badge" [class.badge--success]="txn.status === 'Paid'" [class.badge--warning]="txn.status !== 'Paid'">
+                  {{ txn.status }}
+                </span>
               </div>
             </div>
           } @empty {
-            <div class="empty-workers-box">
-              <p>No workers registered yet.</p>
-              <button class="btn btn-outline-sm" (click)="openAddWorkerModal()">Register First Worker</button>
+            <div class="empty-txn">
+              <p>No transactions yet.</p>
             </div>
           }
         </div>
-
       </div>
+
+      <!-- Donut Chart -->
+      <div class="donut-card animate-fade-in-up" style="animation-delay:.2s">
+        <h3>Payment Methods</h3>
+        <div class="donut-wrap">
+          <svg width="120" height="120" viewBox="0 0 100 100" id="payment-donut">
+            @for (segment of donutSegments; track segment.label) {
+              <circle
+                cx="50" cy="50" r="45"
+                fill="none"
+                [attr.stroke]="segment.color"
+                stroke-width="10"
+                [attr.stroke-dasharray]="segment.dashArray"
+                [attr.stroke-dashoffset]="segment.dashOffset"
+                stroke-linecap="butt"
+                style="transition: stroke-dashoffset 0.5s ease"
+              />
+            }
+            <text x="50" y="55" text-anchor="middle" font-size="18" font-weight="800" fill="#0B2545">60%</text>
+          </svg>
+          <div class="donut-legend">
+            @for (method of paymentMethods; track method.label) {
+              <div class="legend-row">
+                <span class="l-dot" [style.background]="method.color"></span>
+                <span class="l-label">{{ method.label }}</span>
+                <span class="l-val">{{ method.percent }}%</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Registered Workers / Staff (Real data from Firestore) -->
+      <div class="workers-card animate-fade-in-up" style="animation-delay:.25s">
+        <div class="card-header-row">
+          <h3>Staff & Physiotherapists</h3>
+          <button class="add-link-btn" (click)="openAddWorkerModal()">+ Add New</button>
+        </div>
+        @for (worker of topWorkers(); track worker.name; let i = $index) {
+          <div class="worker-rank-item">
+            <span class="rank-num">#{{ i + 1 }}</span>
+            <div class="rank-av">{{ worker.initial }}</div>
+            <div class="rank-info">
+              <p class="rank-name">{{ worker.name }}</p>
+              <p class="rank-sessions">{{ worker.sessions }} sessions · {{ worker.specialization || 'Physiotherapist' }}</p>
+            </div>
+          </div>
+        } @empty {
+          <div class="empty-workers-box">
+            <p>No workers registered yet.</p>
+            <button class="btn btn-outline-sm" (click)="openAddWorkerModal()">Register First Worker</button>
+          </div>
+        }
+      </div>
+
     </div>
   </div>
 
