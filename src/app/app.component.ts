@@ -7,7 +7,9 @@ import { RouterOutlet } from '@angular/router';
   imports: [RouterOutlet],
   template: '<router-outlet></router-outlet>',
   styles: [`
-    :host { display: block; height: 100vh; }
+    :host { display: block; min-height: 100vh; min-height: 100dvh; }
   `]
 })
-export class AppComponent {}
+export class AppComponent {
+  title = 'walkin-physio';
+}

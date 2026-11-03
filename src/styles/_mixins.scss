@@ -34,15 +34,31 @@
 }
 
 @mixin navy-gradient {
-  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  background: linear-gradient(145deg, #071F36 0%, #0B3B60 100%);
+}
+
+@mixin teal-gradient {
+  background: linear-gradient(135deg, #0EA5E9 0%, #0D9488 50%, #10B981 100%);
+}
+
+@mixin ocean-gradient {
+  background: linear-gradient(145deg, #071F36 0%, #093B57 50%, #0D5C75 100%);
 }
 
 @mixin accent-gradient {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+  background: linear-gradient(135deg, #0284C7 0%, #0D9488 100%);
 }
 
 @mixin gold-gradient {
-  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+  background: linear-gradient(135deg, #0EA5E9 0%, #38BDF8 100%);
+}
+
+@mixin safe-area-top {
+  padding-top: max(16px, env(safe-area-inset-top));
+}
+
+@mixin safe-area-bottom {
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
 }
 
 @mixin glass {

@@ -3,27 +3,28 @@
 // ─── Main Viewport & Phone Frame ─────────────────────────────────────────────
 .auth-viewport {
   min-height: 100vh;
-  background: #E8EEF4;
+  min-height: 100dvh;
+  background: #041221;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 20px;
   font-family: inherit;
 
   @media (max-width: 480px) {
     padding: 0;
-    background: white;
+    align-items: stretch;
   }
 }
 
 .phone-frame {
   width: 100%;
-  max-width: 390px;
-  min-height: 780px;
-  max-height: 880px;
-  background: #FFFFFF;
-  border-radius: 40px;
-  box-shadow: 0 25px 60px -15px rgba(11, 37, 69, 0.25), 0 0 0 1px rgba(11, 37, 69, 0.06);
+  max-width: 400px;
+  height: 840px;
+  max-height: 92vh;
+  background: #071F36;
+  border-radius: 44px;
+  box-shadow: 0 25px 70px -15px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08);
   position: relative;
   overflow: hidden;
   display: flex;
@@ -32,172 +33,173 @@
   @media (max-width: 480px) {
     max-width: 100%;
     min-height: 100vh;
+    min-height: 100dvh;
+    height: 100dvh;
     max-height: none;
     border-radius: 0;
     box-shadow: none;
   }
 }
 
-// ─── Status Bar ───────────────────────────────────────────────────────────────
-.mobile-status-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 24px 8px;
-  color: #0B2545;
-  font-size: 14px;
-  font-weight: 600;
-  z-index: 10;
+// ─── Top Hero Section with Organic Wave (Matching Reference Image) ────────────
+.hero-top-section {
+  width: 100%;
+  height: 52%;
+  position: relative;
+  overflow: hidden;
+  background: #0B2545;
   flex-shrink: 0;
 
-  .status-icons {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .battery-icon {
-    width: 22px;
-    height: 11px;
-    border: 1.5px solid currentColor;
-    border-radius: 3px;
-    padding: 1.5px;
-    position: relative;
-
-    &::after {
-      content: '';
-      position: absolute;
-      right: -3.5px;
-      top: 2.5px;
-      width: 2px;
-      height: 4px;
-      background: currentColor;
-      border-radius: 0 1px 1px 0;
-    }
-
-    .battery-fill {
-      width: 80%;
-      height: 100%;
-      background: currentColor;
-      border-radius: 1px;
-    }
-  }
-}
-
-// ─── Main Content ─────────────────────────────────────────────────────────────
-.main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 4px 24px 24px;
-  position: relative;
-  z-index: 1;
-  overflow-y: auto;
-}
-
-.brand-header {
-  text-align: center;
-  margin-top: 4px;
-
-  .brand-logo-icon {
-    width: 48px;
-    height: 48px;
-    margin: 0 auto 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .brand-title {
-    font-size: 23px;
-    font-weight: 800;
-    color: #0B2545;
-    margin: 0;
-    letter-spacing: -0.3px;
-  }
-
-  .brand-subtitle {
-    font-size: 12.5px;
-    font-weight: 800;
-    color: #0B2545;
-    letter-spacing: 2px;
-    margin: 2px 0 3px;
-  }
-
-  .brand-tagline {
-    font-size: 12px;
-    color: #1976D2;
-    font-style: italic;
-    font-weight: 500;
-    margin: 0;
-  }
-}
-
-.hero-image-wrap {
-  width: 100%;
-  max-width: 310px;
-  margin: 12px auto;
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 14px 30px -10px rgba(11, 37, 69, 0.16);
-
-  .hero-image {
+  .hero-bg-img {
     width: 100%;
-    height: 230px;
+    height: 100%;
     object-fit: cover;
     object-position: center 20%;
     display: block;
   }
+
+  .hero-wave-overlay {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 110px;
+    pointer-events: none;
+    z-index: 2;
+
+    .hero-wave-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  }
 }
 
-// ─── Phone Entry Section ──────────────────────────────────────────────────────
+// ─── Bottom Dark Content Section (Compact & Well-Balanced) ────────────────────
+.dark-content-section {
+  flex: 1;
+  background: #071F36;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  padding: 8px 24px max(24px, env(safe-area-inset-bottom, 24px));
+  position: relative;
+  z-index: 3;
+  margin-top: -16px;
+}
+
+// ─── Brand Typography Block (Larger, Gradient & Animated) ───────────────────
+.brand-text-block {
+  text-align: center;
+  padding-top: 0;
+  animation: heroTitleEntrance 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+  .brand-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin: 0;
+    letter-spacing: -0.6px;
+    line-height: 1.15;
+    text-shadow: 0 4px 24px rgba(6, 182, 212, 0.3);
+    background: linear-gradient(180deg, #FFFFFF 40%, #E0F2FE 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .brand-subtitle {
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 4.5px;
+    margin: 6px 0 5px;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #38BDF8 0%, #2DD4BF 50%, #38BDF8 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textGradientFlow 4s linear infinite;
+  }
+
+  .brand-tagline {
+    font-size: 14px;
+    color: #94A3B8;
+    font-weight: 500;
+    margin: 0;
+    letter-spacing: 0.4px;
+  }
+}
+
+@keyframes heroTitleEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes textGradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+// ─── Phone Input Section ──────────────────────────────────────────────────────
 .phone-entry-section {
   position: relative;
   z-index: 2;
-  margin-top: auto;
-  padding-bottom: 8px;
+  margin-top: 0;
+  padding-bottom: 0;
 
   .input-label {
     display: block;
     font-size: 13px;
-    font-weight: 700;
-    color: #0B2545;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
     margin-bottom: 8px;
-    padding-left: 4px;
+    padding-left: 6px;
+    letter-spacing: 0.02em;
   }
 }
 
 .phone-input-card {
   display: flex;
   align-items: center;
-  background: #F8FAFC;
-  border: 1.5px solid #E2E8F0;
+  background: #FFFFFF;
+  border: 2px solid transparent;
   border-radius: 30px;
-  padding: 0 16px;
-  height: 52px;
-  transition: all 0.2s ease;
+  padding: 0 18px;
+  height: 54px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 
   &:focus-within,
   &.input-card-active {
-    border-color: #0B2545;
+    border-color: #0D9488;
     background: #FFFFFF;
-    box-shadow: 0 4px 16px rgba(11, 37, 69, 0.08);
-  }
-
-  .phone-icon {
-    font-size: 18px;
-    margin-right: 8px;
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
   }
 
   .country-code {
     font-size: 14.5px;
     font-weight: 700;
-    color: #0B2545;
-    margin-right: 8px;
-    padding-right: 8px;
-    border-right: 1.5px solid #CBD5E1;
+    color: #071F36;
+    margin-right: 10px;
+    padding-right: 10px;
+    border-right: 1.5px solid #E2E8F0;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
 
   .phone-input {
@@ -206,7 +208,7 @@
     background: transparent;
     font-size: 16px;
     font-weight: 600;
-    color: #0B2545;
+    color: #071F36;
     outline: none;
     letter-spacing: 0.5px;
 
@@ -218,10 +220,10 @@
   }
 
   .inline-spinner {
-    width: 18px;
-    height: 18px;
-    border: 2px solid #CBD5E1;
-    border-top-color: #0B2545;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #CCFBF1;
+    border-top-color: #0D9488;
     border-radius: 50%;
     animation: spin 0.7s linear infinite;
     flex-shrink: 0;
@@ -231,7 +233,7 @@
 .input-inline-error {
   display: block;
   font-size: 12px;
-  color: #DC2626;
+  color: #F87171;
   font-weight: 600;
   margin-top: 6px;
   padding-left: 12px;
@@ -239,54 +241,59 @@
 
 .auto-proceed-hint {
   font-size: 12px;
-  color: #64748B;
+  color: rgba(255, 255, 255, 0.75);
   text-align: center;
-  margin: 10px 0 14px;
+  margin: 8px 0 12px;
   min-height: 18px;
 
   .text-success {
-    color: #16A34A;
+    color: #2DD4BF;
     font-weight: 600;
   }
 }
 
-.btn-pill-navy {
+// ─── Glowing Teal/Emerald Gradient Button (Mockup Exact Match) ────────────────
+.btn-pill-teal {
   width: 100%;
   height: 52px;
-  background: #0B2545;
+  background: linear-gradient(135deg, #0284C7 0%, #0D9488 40%, #10B981 100%);
   color: #FFFFFF;
   border: none;
   border-radius: 30px;
-  font-size: 15.5px;
+  font-size: 16.5px;
   font-weight: 700;
+  letter-spacing: 0.02em;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-shadow: 0 10px 22px rgba(11, 37, 69, 0.22);
-  transition: all 0.2s ease;
+  box-shadow: 0 10px 26px rgba(13, 148, 136, 0.45);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 
   &:hover:not(:disabled) {
-    background: #10325C;
-    transform: translateY(-1px);
-    box-shadow: 0 12px 26px rgba(11, 37, 69, 0.28);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px rgba(16, 185, 129, 0.55);
+    filter: brightness(1.05);
   }
 
   &:active:not(:disabled) {
     transform: translateY(1px);
+    box-shadow: 0 6px 16px rgba(13, 148, 136, 0.35);
   }
 
   &:disabled {
-    opacity: 0.65;
+    opacity: 0.55;
     cursor: not-allowed;
+    box-shadow: none;
+    filter: grayscale(0.25);
   }
 }
 
 .btn-spinner {
   width: 18px;
   height: 18px;
-  border: 2.5px solid rgba(255, 255, 255, 0.3);
+  border: 2.5px solid rgba(255, 255, 255, 0.35);
   border-top-color: white;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
@@ -296,29 +303,13 @@
   to { transform: rotate(360deg); }
 }
 
-// ─── Waves ────────────────────────────────────────────────────────────────────
-.wave-background {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 120px;
-  pointer-events: none;
-  z-index: 0;
-
-  .wave-svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
-}
-
 // ─── ACTION SHEET (BOTTOM SHEET) ──────────────────────────────────────────────
 .sheet-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(11, 37, 69, 0.55);
-  backdrop-filter: blur(4px);
+  background: rgba(4, 18, 33, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 20;
 }
 
@@ -327,16 +318,17 @@
   bottom: 0;
   left: 0;
   right: 0;
-  max-height: 88%;
+  max-height: 90%;
   background: #FFFFFF;
   border-radius: 32px 32px 0 0;
-  box-shadow: 0 -10px 40px rgba(11, 37, 69, 0.25);
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.4);
   z-index: 25;
   display: flex;
   flex-direction: column;
-  padding: 12px 24px 32px;
+  padding: 12px 24px max(28px, env(safe-area-inset-bottom, 28px));
   overflow-y: auto;
-  animation: slideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  -webkit-overflow-scrolling: touch;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes slideUp {
@@ -351,7 +343,7 @@
 .sheet-handle-bar {
   display: flex;
   justify-content: center;
-  padding-bottom: 8px;
+  padding-bottom: 10px;
 
   .sheet-handle {
     width: 44px;
@@ -371,21 +363,22 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    background: #F1F5F9;
-    padding: 6px 12px;
+    background: #F0FDFA;
+    border: 1px solid #CCFBF1;
+    padding: 6px 14px;
     border-radius: 20px;
     font-size: 13px;
     font-weight: 700;
-    color: #0B2545;
+    color: #0F766E;
 
     .chip-change-btn {
       background: none;
       border: none;
-      color: #1565C0;
+      color: #0284C7;
       font-size: 12px;
       font-weight: 700;
       cursor: pointer;
-      padding-left: 4px;
+      padding-left: 6px;
 
       &:hover {
         text-decoration: underline;
@@ -406,10 +399,11 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    transition: all 0.2s ease;
 
     &:hover {
       background: #E2E8F0;
-      color: #0B2545;
+      color: #071F36;
     }
   }
 }
@@ -421,35 +415,37 @@
 
 .role-badge {
   display: inline-block;
-  padding: 4px 12px;
+  padding: 5px 14px;
   border-radius: 20px;
   font-size: 12px;
   font-weight: 700;
   margin-bottom: 8px;
-  background: #EFF6FF;
-  color: #1D4ED8;
+  background: #E6FFFA;
+  color: #0D9488;
+  letter-spacing: 0.02em;
 
   &.badge-admin {
-    background: #FEE2E2;
+    background: #FEF2F2;
     color: #991B1B;
   }
 
   &.badge-worker {
-    background: #DCFCE7;
-    color: #166534;
+    background: #EFF6FF;
+    color: #1D4ED8;
   }
 
   &.badge-patient {
-    background: #EFF6FF;
-    color: #1D4ED8;
+    background: #E6FFFA;
+    color: #0D9488;
   }
 }
 
 .sheet-title {
   font-size: 20px;
   font-weight: 800;
-  color: #0B2545;
+  color: #071F36;
   margin: 0 0 4px;
+  letter-spacing: -0.3px;
 }
 
 .sheet-subtitle {
@@ -473,21 +469,21 @@
     background: #F8FAFC;
     font-size: 26px;
     font-weight: 800;
-    color: #0B2545;
+    color: #071F36;
     text-align: center;
     outline: none;
     transition: all 0.2s ease;
 
     &:focus {
-      border-color: #0B2545;
+      border-color: #0D9488;
       background: #FFFFFF;
-      box-shadow: 0 4px 16px rgba(11, 37, 69, 0.15);
+      box-shadow: 0 4px 18px rgba(13, 148, 136, 0.2);
       transform: translateY(-2px);
     }
 
     &.pin-box-filled {
-      border-color: #0B2545;
-      background: #EFF6FF;
+      border-color: #0D9488;
+      background: #F0FDFA;
     }
   }
 }
@@ -507,11 +503,14 @@
   font-weight: 600;
   padding: 10px 14px;
   border-radius: 14px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   margin-bottom: 14px;
 }
 
-// ─── Sheet Registration Form ──────────────────────────────────────────────────
+// ─── Sheet Registration Form (Clean Minimalist without emojis) ───────────────
 .sheet-form {
   display: flex;
   flex-direction: column;
@@ -537,7 +536,7 @@
 .form-label {
   font-size: 12px;
   font-weight: 700;
-  color: #0B2545;
+  color: #071F36;
   padding-left: 4px;
 }
 
@@ -547,14 +546,18 @@
   background: #F8FAFC;
   border: 1.5px solid #E2E8F0;
   border-radius: 24px;
-  padding: 0 14px;
+  padding: 0 16px;
   height: 48px;
   transition: all 0.2s ease;
 
   &:focus-within {
-    border-color: #0B2545;
+    border-color: #0D9488;
     background: #FFFFFF;
-    box-shadow: 0 4px 12px rgba(11, 37, 69, 0.08);
+    box-shadow: 0 4px 14px rgba(13, 148, 136, 0.12);
+
+    .input-svg-icon {
+      stroke: #0D9488;
+    }
   }
 
   &.input-error {
@@ -562,9 +565,11 @@
     background: #FEF2F2;
   }
 
-  .input-ico {
-    font-size: 16px;
-    margin-right: 8px;
+  .input-svg-icon {
+    stroke: #64748B;
+    margin-right: 10px;
+    flex-shrink: 0;
+    transition: stroke 0.2s ease;
   }
 
   .inner-input {
@@ -573,7 +578,7 @@
     background: transparent;
     font-size: 14px;
     font-weight: 500;
-    color: #0B2545;
+    color: #071F36;
     outline: none;
 
     &::placeholder {
@@ -587,7 +592,7 @@
     background: transparent;
     font-size: 13.5px;
     font-weight: 600;
-    color: #0B2545;
+    color: #071F36;
     outline: none;
     cursor: pointer;
   }
@@ -628,7 +633,7 @@
   .link-btn-forgot {
     background: none;
     border: none;
-    color: #1565C0;
+    color: #0284C7;
     font-size: 12.5px;
     font-weight: 700;
     cursor: pointer;
@@ -651,7 +656,7 @@
   margin-top: 14px;
 
   &:hover {
-    color: #0B2545;
+    color: #071F36;
     text-decoration: underline;
   }
 }
