@@ -8,16 +8,6 @@ import { Session } from '../../core/models/session.model';
 import { UserSubscription } from '../../core/models/subscription.model';
 import { Unsubscribe } from '@angular/fire/firestore';
 
-interface QuickAction {
-  id: string;
-  icon: string;
-  label: string;
-  sublabel: string;
-  route: string;
-  color: string;
-  bgColor: string;
-}
-
 @Component({
   selector: 'app-patient-home',
   standalone: true,
@@ -33,6 +23,10 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
 
   private sessionsUnsub: Unsubscribe | null = null;
   private subUnsub: Unsubscribe | null = null;
+  private loadTimeout: any = null;
+
+  private sessionsLoaded = false;
+  private subLoaded = false;
 
   readonly patientName = this.auth.userName;
   readonly greeting = computed(() => {
@@ -42,23 +36,46 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
     return 'Good Evening';
   });
 
+  // Loading state prevents dummy data flash
+  isLoading = signal<boolean>(true);
+
   // Real Firestore sessions for current patient
   patientSessions = signal<Session[]>([]);
-  isLoadingSessions = signal<boolean>(true);
   activePlanSub = signal<UserSubscription | null>(null);
 
   // Real computed counts
   completedSessions = computed(() =>
     this.patientSessions().filter(s => s.status === 'completed').length
   );
+
   totalRecommendedSessions = computed(() => {
+    const sub = this.activePlanSub();
+    if (sub && sub.totalSessions) {
+      return sub.totalSessions;
+    }
     const done = this.completedSessions();
     return Math.max(10, done + 2);
   });
+
   progressPercent = computed(() => {
     const total = this.totalRecommendedSessions();
     if (total === 0) return 0;
     return Math.min(100, Math.round((this.completedSessions() / total) * 100));
+  });
+
+  isSubscriber = computed(() => !!this.activePlanSub());
+
+  planRemainingDays = computed(() => {
+    const sub = this.activePlanSub();
+    if (!sub?.expiryDate) return null;
+    try {
+      const exp = new Date(sub.expiryDate).getTime();
+      const now = new Date().getTime();
+      const diff = Math.ceil((exp - now) / (1000 * 60 * 60 * 24));
+      return Math.max(0, diff);
+    } catch {
+      return null;
+    }
   });
 
   // Active or most recent pending session
@@ -66,28 +83,50 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
     this.patientSessions().find(s => s.status === 'active' || s.status === 'pending') || null
   );
 
-  quickActions: QuickAction[] = [
-    { id: 'track-sessions', icon: '📈', label: 'My Sessions', sublabel: 'History & Notes', route: '/patient/sessions', color: '#22C55E', bgColor: '#DCFCE7' },
-    { id: 'payments', icon: '💳', label: 'Payments', sublabel: 'Razorpay Receipts', route: '/patient/payments', color: '#F4A62A', bgColor: '#FFF8E7' },
-    { id: 'subscription', icon: '🎁', label: 'Plans', sublabel: 'Session Packages', route: '/patient/subscription', color: '#F4A62A', bgColor: '#FFF8E7' },
+  quickActions = [
+    { id: 'action-sessions', label: 'Sessions', route: '/patient/sessions', bg: '#FEF9C3', iconBg: '#FEF08A', color: '#854D0E', type: 'sessions' },
+    { id: 'action-payments', label: 'Payments', route: '/patient/payments', bg: '#F3E8FF', iconBg: '#E9D5FF', color: '#6B21A8', type: 'payments' },
+    { id: 'action-plans', label: 'Plans', route: '/patient/subscription', bg: '#FFEDD5', iconBg: '#FED7AA', color: '#9A3412', type: 'plans' },
+    { id: 'action-homecare', label: 'Home Care', route: '/patient/sessions', bg: '#DCFCE7', iconBg: '#BBF7D0', color: '#166534', type: 'homecare' },
   ];
+
+  private checkLoaded() {
+    if (this.sessionsLoaded && this.subLoaded) {
+      this.isLoading.set(false);
+      if (this.loadTimeout) {
+        clearTimeout(this.loadTimeout);
+        this.loadTimeout = null;
+      }
+    }
+  }
 
   ngOnInit() {
     const user = this.auth.currentUser();
     if (user?.uid) {
       this.sessionsUnsub = this.sessionService.listenToPatientSessions(user.uid, (sessions) => {
         this.patientSessions.set(sessions);
-        this.isLoadingSessions.set(false);
+        this.sessionsLoaded = true;
+        this.checkLoaded();
       });
       this.subUnsub = this.subscriptionService.watchPatientSubscription(user.uid, (sub) => {
         this.activePlanSub.set(sub);
+        this.subLoaded = true;
+        this.checkLoaded();
       });
+
+      // Safety timeout so user is never permanently stuck in skeleton
+      this.loadTimeout = setTimeout(() => {
+        this.isLoading.set(false);
+      }, 1200);
     } else {
-      this.isLoadingSessions.set(false);
+      this.isLoading.set(false);
     }
   }
 
   ngOnDestroy() {
+    if (this.loadTimeout) {
+      clearTimeout(this.loadTimeout);
+    }
     if (this.sessionsUnsub) {
       this.sessionsUnsub();
       this.sessionsUnsub = null;

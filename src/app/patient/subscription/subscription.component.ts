@@ -1,5 +1,5 @@
-import { Component, signal, inject, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, signal, computed, inject, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { SubscriptionService } from '../../core/services/subscription.service';
 import { PaymentService } from '../../core/services/payment.service';
@@ -19,6 +19,7 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   private paymentService = inject(PaymentService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private location = inject(Location);
 
   plans = signal<SubscriptionPlan[]>([]);
   activeSub = signal<UserSubscription | null>(null);
@@ -32,9 +33,27 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
 
   private subUnsub: Unsubscribe | null = null;
 
+  planRemainingDays = computed(() => {
+    const sub = this.activeSub();
+    if (!sub?.expiryDate) return null;
+    try {
+      const exp = new Date(sub.expiryDate).getTime();
+      const now = new Date().getTime();
+      const diff = Math.ceil((exp - now) / (1000 * 60 * 60 * 24));
+      return Math.max(0, diff);
+    } catch {
+      return null;
+    }
+  });
+
+  planProgressPercent = computed(() => {
+    const sub = this.activeSub();
+    if (!sub || !sub.totalSessions) return 0;
+    const completed = sub.totalSessions - sub.remainingSessions;
+    return Math.min(100, Math.round((completed / sub.totalSessions) * 100));
+  });
+
   async ngOnInit() {
-    // Seed default plans to Firestore if not already there
-    await this.subService.seedDefaultPlans();
     const plans = await this.subService.getPlans();
     this.plans.set(plans);
     this.isLoading.set(false);
@@ -103,6 +122,10 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.router.navigate(['/patient/home']);
+    if (window.history.length > 1) {
+      this.location.back();
+    } else {
+      this.router.navigate(['/patient/home']);
+    }
   }
 }

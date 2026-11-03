@@ -2,134 +2,247 @@
 
   <!-- Header -->
   <header class="pt-header">
-    <div class="header-top">
-      <div>
-        <p class="greeting">{{ greeting() }}, 👋</p>
-        <h1 class="pt-name">Hello {{ patientName() || 'Patient' }}!</h1>
-        <span class="health-tag">Walk In Again Physiotherapy Clinic</span>
-      </div>
-      <button class="notif-btn" id="pt-notif-btn">🔔</button>
+    <div class="user-greeting-wrap">
+      <h1 class="pt-name">Hello {{ patientName() || 'Priya' }}</h1>
+      <p class="pt-subtitle">Stay Healthy, Stay Strong</p>
     </div>
+    <button class="notif-btn" id="pt-notif-btn" aria-label="Notifications">
+      <svg class="bell-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+      </svg>
+      <span class="notif-dot"></span>
+    </button>
   </header>
 
   <div class="pt-content">
 
-    <!-- Treatment Progress -->
-    <div class="progress-card animate-fade-in-up">
-      <div class="progress-header">
-        <div>
-          <p class="progress-label">My Treatment Progress</p>
-          <div class="session-count">
-            <span class="count-done">{{ completedSessions() }}</span>
-            <span class="count-sep">/</span>
-            <span class="count-total">{{ totalRecommendedSessions() }}</span>
-            <span class="count-label">Sessions Completed</span>
-          </div>
-        </div>
-        <div class="progress-ring-wrap">
-          <!-- SVG Progress Ring -->
-          <svg class="progress-ring" width="80" height="80" viewBox="0 0 80 80">
-            <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(33,150,243,0.15)" stroke-width="8"/>
-            <circle
-              cx="40" cy="40" r="34" fill="none" stroke="var(--accent)" stroke-width="8"
-              stroke-linecap="round"
-              stroke-dasharray="213.6"
-              [attr.stroke-dashoffset]="213.6 * (1 - progressPercent() / 100)"
-              transform="rotate(-90 40 40)"
-              style="transition: stroke-dashoffset 1s ease"
-            />
-          </svg>
-          <div class="ring-percent">{{ progressPercent() }}%</div>
-        </div>
-      </div>
-      <!-- Bar Progress -->
-      <div class="progress-bar-wrap">
-        <div class="progress-bar-track">
-          <div class="progress-bar-fill" [style.width.%]="progressPercent()"></div>
-        </div>
-        <span class="progress-text">{{ progressPercent() }}% of recommended course completed</span>
-      </div>
-    </div>
+    <!-- Skeleton Loading State (Prevents dummy data flash) -->
+    @if (isLoading()) {
 
-    <!-- Subscription Summary Card -->
-    @if (activePlanSub(); as sub) {
-      <div class="sub-summary-card animate-fade-in-up" style="animation-delay:.05s" (click)="navigate('/patient/subscription')">
-        <div class="sub-summary-left">
-          <span class="sub-summary-icon">🎁</span>
-          <div>
-            <p class="sub-summary-label">Active Plan</p>
-            <h4 class="sub-summary-name">{{ sub.planName }} Plan</h4>
-          </div>
+      <!-- Hero Shimmer Card -->
+      <div class="treatment-hero-card skeleton-card">
+        <div class="hero-info">
+          <div class="skeleton-line shimmer" style="width: 130px; height: 13px; margin-bottom: 10px;"></div>
+          <div class="skeleton-line shimmer" style="width: 100px; height: 32px; margin-bottom: 8px;"></div>
+          <div class="skeleton-line shimmer" style="width: 110px; height: 12px; margin-bottom: 14px;"></div>
+          <div class="skeleton-line shimmer" style="width: 140px; height: 8px; border-radius: 999px;"></div>
         </div>
-        <div class="sub-summary-right">
-          <span class="sub-sessions-badge">{{ sub.remainingSessions }} sessions left</span>
-          <p class="sub-expiry">Expires {{ sub.expiryDate | date:'d MMM' }}</p>
-        </div>
+        <div class="hero-illustration skeleton-shimmer-box shimmer"></div>
       </div>
-    }
 
-    <!-- Active or Upcoming Session -->
-    @if (activeSession(); as active) {
-      <div class="upcoming-card animate-fade-in-up" style="animation-delay:.1s">
-        <div class="upcoming-badge">
-          <span class="pulse-dot"></span>
-          {{ active.status === 'active' ? 'Ongoing Session' : 'Scheduled Session' }}
-        </div>
-        <div class="upcoming-details">
-          <div class="upcoming-time">
-            <span class="time-icon">⏱</span>
-            <div>
-              <p class="time-date">{{ active.date | date:'mediumDate' }}</p>
-              <p class="time-slot">{{ active.timeSlot || 'Active Now' }}</p>
-            </div>
+      <!-- 2 Metric Cards Shimmer -->
+      <div class="metrics-grid">
+        <div class="metric-card skeleton-metric-card">
+          <div class="metric-top-row">
+            <div class="skeleton-bubble shimmer"></div>
+            <div class="skeleton-line shimmer" style="width: 44px; height: 18px; border-radius: 999px;"></div>
           </div>
-          <div class="upcoming-worker">
-            <div class="worker-av">{{ (active.workerName || 'W').charAt(0).toUpperCase() }}</div>
-            <div>
-              <p class="worker-name-text">Dr. {{ active.workerName || 'Physiotherapist' }}</p>
-              <p class="worker-spec">Status: {{ active.status | uppercase }}</p>
-            </div>
+          <div class="metric-body">
+            <div class="skeleton-line shimmer" style="width: 70px; height: 11px; margin-bottom: 6px;"></div>
+            <div class="skeleton-line shimmer" style="width: 110px; height: 16px; margin-bottom: 6px;"></div>
+            <div class="skeleton-line shimmer" style="width: 85px; height: 11px;"></div>
+          </div>
+        </div>
+        <div class="metric-card skeleton-metric-card">
+          <div class="metric-top-row">
+            <div class="skeleton-bubble shimmer"></div>
+            <div class="skeleton-line shimmer" style="width: 44px; height: 18px; border-radius: 999px;"></div>
+          </div>
+          <div class="metric-body">
+            <div class="skeleton-line shimmer" style="width: 70px; height: 11px; margin-bottom: 6px;"></div>
+            <div class="skeleton-line shimmer" style="width: 110px; height: 16px; margin-bottom: 6px;"></div>
+            <div class="skeleton-line shimmer" style="width: 85px; height: 11px;"></div>
           </div>
         </div>
       </div>
+
     } @else {
-      <div class="no-session-card animate-fade-in-up" style="animation-delay:.1s">
-        <div class="no-session-icon">🏥</div>
-        <div class="no-session-body">
-          <h3 class="no-session-title">Walk-In Clinic Ready</h3>
-          <p class="no-session-text">No active session right now. You can visit the clinic anytime for your regular therapy session.</p>
+
+      <!-- Real Treatment Progress Card -->
+      <div class="treatment-hero-card">
+        <div class="hero-info">
+          <span class="hero-label">My Treatment Progress</span>
+          <div class="hero-count-row">
+            <span class="count-numbers">{{ completedSessions() }} / {{ totalRecommendedSessions() }}</span>
+          </div>
+          <p class="count-sublabel">Sessions Completed</p>
+
+          <!-- Rounded Progress Bar -->
+          <div class="progress-bar-container">
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill" [style.width.%]="progressPercent()"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generated Vector Physio Art -->
+        <div class="hero-illustration" aria-hidden="true">
+          <img
+            src="assets/images/hero-physio-progress.jpg"
+            alt="Physiotherapy Exercise"
+            class="hero-img"
+          />
         </div>
       </div>
+
+      <!-- Active Ongoing / Scheduled Session Banner (if any) -->
+      @if (activeSession(); as active) {
+        <div class="active-session-banner">
+          <div class="session-badge-row">
+            <span class="live-dot"></span>
+            <span class="session-badge-title">{{ active.status === 'active' ? 'Session In Progress' : 'Upcoming Therapy' }}</span>
+          </div>
+          <div class="session-banner-content">
+            <div class="session-time-col">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <div>
+                <p class="sess-date">{{ active.date | date:'mediumDate' }}</p>
+                <p class="sess-time">{{ active.timeSlot || 'Active Now' }}</p>
+              </div>
+            </div>
+            <div class="session-dr-col">
+              <div class="dr-avatar">{{ (active.workerName || 'P').charAt(0).toUpperCase() }}</div>
+              <div>
+                <p class="dr-title">Dr. {{ active.workerName || 'Physiotherapist' }}</p>
+                <p class="dr-sub">{{ active.timeSlot || 'Walk-In Session' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- 2 White Metric Cards (Walk-In Status & Plan/Visit Summary) -->
+      <div class="metrics-grid">
+
+        <!-- Card 1: Walk-In Clinic & Home Visit Status -->
+        <div class="metric-card" (click)="navigate('/patient/sessions')">
+          <div class="metric-top-row">
+            <div class="icon-bubble icon-teal">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 21h18"></path>
+                <path d="M5 21V7l8-4v18"></path>
+                <path d="M19 21V11l-6-4"></path>
+                <line x1="9" y1="9" x2="10" y2="9"></line>
+                <line x1="9" y1="13" x2="10" y2="13"></line>
+                <line x1="9" y1="17" x2="10" y2="17"></line>
+              </svg>
+            </div>
+            <span class="status-pill open-pill">
+              <span class="green-dot"></span>
+              Open
+            </span>
+          </div>
+          <div class="metric-body">
+            <h3 class="metric-title">Walk-In Status</h3>
+            <p class="metric-value">9:00 AM - 8:00 PM</p>
+            <p class="metric-caption">Clinic & Home Visits</p>
+          </div>
+        </div>
+
+        <!-- Card 2: Subscription or Daily Visit Details -->
+        @if (activePlanSub(); as sub) {
+          <div class="metric-card" (click)="navigate('/patient/subscription')">
+            <div class="metric-top-row">
+              <div class="icon-bubble icon-blue">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+              </div>
+              <span class="status-pill sub-pill">Active</span>
+            </div>
+            <div class="metric-body">
+              <h3 class="metric-title">{{ sub.planName }} Plan</h3>
+              <p class="metric-value">{{ sub.remainingSessions }} Left</p>
+              <p class="metric-caption">{{ planRemainingDays() !== null ? planRemainingDays() + ' Days Left' : 'Monthly Member' }}</p>
+            </div>
+          </div>
+        } @else {
+          <div class="metric-card" (click)="navigate('/patient/subscription')">
+            <div class="metric-top-row">
+              <div class="icon-bubble icon-blue">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                </svg>
+              </div>
+              <span class="status-pill payg-pill">Daily</span>
+            </div>
+            <div class="metric-body">
+              <h3 class="metric-title">Daily Visit</h3>
+              <p class="metric-value">{{ completedSessions() }} Visited</p>
+              <p class="metric-caption highlight-link">Save with Plan →</p>
+            </div>
+          </div>
+        }
+
+      </div>
+
     }
 
-    <!-- Quick Actions -->
-    <div class="quick-actions-section animate-fade-in-up" style="animation-delay:.2s">
+    <!-- Quick Actions Section -->
+    <div class="quick-actions-section">
       <h2 class="section-title">Quick Actions</h2>
       <div class="actions-grid">
-        @for (action of quickActions; track action.id; let i = $index) {
+        @for (action of quickActions; track action.id) {
           <button
-            class="action-btn stagger-{{ i + 1 }}"
+            class="action-item"
             [id]="action.id"
-            [style.--action-color]="action.color"
-            [style.--action-bg]="action.bgColor"
+            [style.--btn-bg]="action.bg"
+            [style.--btn-icon-bg]="action.iconBg"
+            [style.--btn-color]="action.color"
             (click)="navigate(action.route)"
           >
-            <div class="action-icon">{{ action.icon }}</div>
-            <p class="action-label">{{ action.label }}</p>
-            <p class="action-sub">{{ action.sublabel }}</p>
+            <div class="action-icon-box">
+              @if (action.type === 'sessions') {
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              } @else if (action.type === 'payments') {
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                  <line x1="1" y1="10" x2="23" y2="10"></line>
+                </svg>
+              } @else if (action.type === 'plans') {
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 12 20 22 4 22 4 12"></polyline>
+                  <rect x="2" y="7" width="20" height="5"></rect>
+                  <line x1="12" y1="22" x2="12" y2="7"></line>
+                  <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+                  <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+                </svg>
+              } @else if (action.type === 'homecare') {
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+              }
+            </div>
+            <span class="action-title">{{ action.label }}</span>
           </button>
         }
       </div>
     </div>
 
-    <!-- Clinic Info Banner -->
-    <div class="promo-banner animate-fade-in-up" style="animation-delay:.3s">
-      <div class="promo-text">
-        <span class="promo-pill">Direct Walk-In</span>
-        <h3 class="promo-title">Need specialized physiotherapy care?</h3>
-        <p class="promo-sub">Our expert physiotherapists are available during clinic hours. No prior appointment needed.</p>
+    <!-- Move Better. Live Stronger. Promo Banner -->
+    <div class="promo-banner" (click)="navigate('/patient/sessions')">
+      <div class="promo-text-wrap">
+        <h3 class="promo-heading">Move Better.<br>Live Stronger.</h3>
+        <p class="promo-subtext">Certified physiotherapy care for your complete and pain-free recovery.</p>
       </div>
-      <div class="promo-art">⚡</div>
+      <div class="promo-art-wrap" aria-hidden="true">
+        <img
+          src="assets/images/promo-wellness.jpg"
+          alt="Move Better Live Stronger"
+          class="promo-img"
+        />
+      </div>
     </div>
 
   </div>

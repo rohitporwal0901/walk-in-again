@@ -275,13 +275,25 @@ input, textarea, select {
     transition: all var(--transition-fast);
     cursor: pointer;
 
-    .nav-icon { font-size: 22px; }
+    .nav-icon {
+      font-size: 22px;
+      stroke: currentColor;
+      transition: stroke var(--transition-fast), transform var(--transition-fast);
+    }
 
     &.active {
       color: var(--accent);
-      .nav-icon { color: var(--accent); }
+      font-weight: 700;
+      .nav-icon {
+        color: var(--accent);
+        stroke: var(--accent);
+        transform: translateY(-1px);
+      }
     }
-    &:hover { color: var(--accent); }
+    &:hover {
+      color: var(--accent);
+      .nav-icon { stroke: var(--accent); }
+    }
   }
 }
 

@@ -3,15 +3,15 @@ export type PaymentMethod = 'UPI' | 'Card' | 'Cash' | 'NetBanking';
 
 export interface Transaction {
   transactionId: string;
-  sessionId: string;
+  sessionId?: string;
   patientId: string;
   patientName: string;
-  patientMobile: string;
+  patientMobile?: string;
   patientEmail?: string;
   patientAddress?: string;
-  workerId: string;
-  workerName: string;
-  workerMobile: string;
+  workerId?: string;
+  workerName?: string;
+  workerMobile?: string;
   workerSpecialization?: string;
   workerExperience?: string;
   amount: number;
@@ -19,11 +19,14 @@ export interface Transaction {
   razorpayPaymentId?: string;
   razorpayOrderId?: string;
   status: PaymentStatus;
-  sessionDate: Date;
-  sessionTimeSlot: string;
-  sessionDuration: number;
+  sessionDate?: any;
+  sessionTimeSlot?: string;
+  sessionDuration?: number;
   receiptUrl?: string;
-  timestamp: Date;
+  timestamp: any;
+  planName?: string;
+  description?: string;
+  type?: 'session' | 'subscription';
 }
 
 export interface PaymentBreakdown {

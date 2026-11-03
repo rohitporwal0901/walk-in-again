@@ -2,114 +2,196 @@
 
   <!-- Header -->
   <header class="sub-header">
-    <button class="back-btn" (click)="goBack()" id="sub-back-btn">
-      <span>←</span>
+    <button class="back-btn" (click)="goBack()" aria-label="Go Back" id="sub-back-btn">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
     </button>
     <div class="header-text">
       <h1 class="header-title">Choose Your Plan</h1>
-      <p class="header-sub">Flexible sessions for your recovery</p>
+      <p class="header-sub">Flexible packages for your complete recovery</p>
     </div>
   </header>
 
   <!-- Success Toast -->
   @if (purchaseSuccess()) {
     <div class="success-toast animate-fade-in-up">
-      <span>✅</span>
-      <span>Plan purchased successfully! Sessions unlocked.</span>
+      <div class="toast-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <div class="toast-text">
+        <strong>Plan Activated Successfully!</strong>
+        <span>Your therapy sessions are unlocked.</span>
+      </div>
     </div>
   }
 
   <div class="sub-content">
 
-    <!-- Active Subscription Banner -->
+    <!-- Active Subscription Hero Card (Prominently Highlighted) -->
     @if (activeSub(); as sub) {
-      <div class="active-sub-banner animate-fade-in-up">
-        <div class="active-sub-icon">🎯</div>
-        <div class="active-sub-info">
-          <p class="active-sub-label">Current Plan</p>
-          <h3 class="active-sub-name">{{ sub.planName }} Plan</h3>
-          <div class="active-sub-stats">
-            <span class="stat-chip">{{ sub.remainingSessions }} sessions left</span>
-            <span class="stat-chip stat-chip--warn">Expires {{ sub.expiryDate | date:'d MMM' }}</span>
+      <div class="active-plan-hero-card animate-fade-in-up">
+        <div class="active-card-top">
+          <span class="active-status-badge">
+            <span class="live-pulse-dot"></span>
+            Active Plan
+          </span>
+          <span class="active-days-tag">
+            {{ planRemainingDays() !== null ? planRemainingDays() + ' Days Left' : 'Active' }}
+          </span>
+        </div>
+
+        <div class="active-card-body">
+          <div class="active-plan-left">
+            <h2 class="active-plan-title">{{ sub.planName }} Plan</h2>
+            <p class="active-expiry-text">Valid till {{ sub.expiryDate | date:'d MMMM, yyyy' }}</p>
+          </div>
+
+          <div class="active-sessions-stat">
+            <span class="stat-big-num">{{ sub.remainingSessions }}</span>
+            <span class="stat-small-label">/ {{ sub.totalSessions }} Sessions Left</span>
           </div>
         </div>
-        <div class="active-sub-ring">
-          <svg width="56" height="56" viewBox="0 0 56 56">
-            <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="5"/>
-            <circle cx="28" cy="28" r="22" fill="none" stroke="white" stroke-width="5"
-              stroke-linecap="round"
-              stroke-dasharray="138.2"
-              [attr.stroke-dashoffset]="138.2 * (1 - sub.remainingSessions / sub.totalSessions)"
-              transform="rotate(-90 28 28)"
-              style="transition: stroke-dashoffset 1s ease"
-            />
-          </svg>
-          <div class="ring-label">{{ sub.remainingSessions }}/{{ sub.totalSessions }}</div>
+
+        <!-- Progress Bar -->
+        <div class="active-progress-container">
+          <div class="active-progress-bar">
+            <div class="active-progress-fill" [style.width.%]="planProgressPercent()"></div>
+          </div>
+          <div class="active-progress-info">
+            <span>{{ sub.totalSessions - sub.remainingSessions }} of {{ sub.totalSessions }} sessions used</span>
+            <span>{{ planProgressPercent() }}% completed</span>
+          </div>
         </div>
       </div>
     }
 
-    <!-- Section Title -->
-    <h2 class="section-label">Choose a Session Package</h2>
-    <p class="section-note">💡 Walk-in daily sessions are handled by your physiotherapist directly. These plans pre-book multiple sessions for your recovery course.</p>
+    <!-- Packages Section Heading -->
+    <div class="section-heading-wrap">
+      <h2 class="section-title">Available Session Packages</h2>
+      <p class="section-subtitle">Select a package to pre-book multiple therapy visits and save.</p>
+    </div>
 
     <!-- Loading Skeletons -->
     @if (isLoading()) {
-      @for (i of [1,2,3]; track i) {
-        <div class="plan-card skeleton-card">
-          <div class="skeleton skeleton--title" style="width:60%;height:24px;margin-bottom:8px"></div>
-          <div class="skeleton skeleton--text" style="width:40%;height:40px;margin-bottom:12px"></div>
-          <div class="skeleton skeleton--text" style="width:80%"></div>
-          <div class="skeleton skeleton--text" style="width:70%"></div>
-        </div>
-      }
+      <div class="plans-list">
+        @for (i of [1, 2, 3]; track i) {
+          <div class="plan-card skeleton-plan-card">
+            <div class="skeleton-line shimmer" style="width: 40px; height: 40px; border-radius: 12px; margin-bottom: 12px;"></div>
+            <div class="skeleton-line shimmer" style="width: 130px; height: 20px; margin-bottom: 6px;"></div>
+            <div class="skeleton-line shimmer" style="width: 80%; height: 14px; margin-bottom: 16px;"></div>
+            <div class="skeleton-line shimmer" style="width: 100%; height: 44px; border-radius: 14px;"></div>
+          </div>
+        }
+      </div>
     } @else {
-      <!-- Plan Cards -->
-      @for (plan of plans(); track plan.id; let i = $index) {
-        <div class="plan-card animate-fade-in-up stagger-{{ i + 1 }}"
-             [class.plan-card--popular]="plan.isPopular"
-             [style.--plan-color]="plan.color">
 
-          @if (plan.isPopular) {
-            <div class="popular-badge">⭐ Most Popular</div>
-          }
-
-          <div class="plan-top">
-            <div class="plan-icon">{{ plan.icon }}</div>
-            <div class="plan-info">
-              <h3 class="plan-name">{{ plan.name }}</h3>
-              <p class="plan-desc">{{ plan.description }}</p>
-            </div>
-            <div class="plan-price-wrap">
-              <span class="plan-price">₹{{ plan.price | number }}</span>
-              <span class="plan-per">/ plan</span>
-            </div>
-          </div>
-
-          <div class="plan-sessions-badge">
-            <span class="sessions-icon">🗓</span>
-            <span>{{ plan.sessions }} {{ plan.sessions === 1 ? 'Session' : 'Sessions' }} · {{ plan.durationDays }} {{ plan.durationDays === 1 ? 'Day' : 'Days' }}</span>
-          </div>
-
-          <ul class="plan-features">
-            @for (feature of plan.features; track feature) {
-              <li class="feature-item">
-                <span class="feature-check">✓</span>
-                {{ feature }}
-              </li>
-            }
-          </ul>
-
-          <button
-            class="choose-btn"
-            [class.choose-btn--popular]="plan.isPopular"
-            (click)="selectPlan(plan)"
-            [id]="'choose-' + plan.id"
+      <!-- Clean Plan Cards (No Features List) -->
+      <div class="plans-list">
+        @for (plan of plans(); track plan.id; let i = $index) {
+          <div
+            class="plan-card"
+            [class.popular-plan]="plan.isPopular"
+            [class.active-user-plan]="activeSub()?.planId === plan.id"
+            [id]="'plan-card-' + plan.id"
           >
-            Choose {{ plan.name }} Plan
-          </button>
-        </div>
-      }
+            <div class="plan-top-row">
+              <!-- Plan Icon & Name -->
+              <div class="plan-identity">
+                <div class="plan-icon-box" [style.color]="plan.color" [style.background]="plan.color + '18'">
+                  @if (plan.id === 'plan_weekly') {
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                  } @else if (plan.id === 'plan_biweekly') {
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                  } @else {
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                      <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                      <path d="M4 22h16"></path>
+                      <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                      <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                      <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                    </svg>
+                  }
+                </div>
+                <div>
+                  <h3 class="plan-title-text">{{ plan.name }} Plan</h3>
+                </div>
+              </div>
+
+              <!-- Price & Optional Most Popular Badge (Stacked vertically) -->
+              <div class="plan-price-group">
+                @if (plan.isPopular) {
+                  <span class="popular-ribbon">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                    Most Popular
+                  </span>
+                }
+                <div class="price-val-row">
+                  <span class="plan-price-currency">₹{{ plan.price | number }}</span>
+                  <span class="plan-price-per">/ plan</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div class="plan-info-group">
+              <p class="plan-desc-text">{{ plan.description }}</p>
+            </div>
+
+            <!-- Sessions & Validity Tags -->
+            <div class="plan-tags-row">
+              <span class="plan-badge-pill">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                {{ plan.sessions }} Sessions
+              </span>
+              <span class="plan-badge-pill">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                {{ plan.durationDays }} Days Validity
+              </span>
+            </div>
+
+            <!-- Action Button -->
+            @if (activeSub()?.planId === plan.id) {
+              <button class="plan-btn current-active-btn" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Current Active Plan
+              </button>
+            } @else {
+              <button
+                class="plan-btn"
+                [class.btn-popular]="plan.isPopular"
+                (click)="selectPlan(plan)"
+                [id]="'choose-' + plan.id"
+              >
+                Choose {{ plan.name }} Plan
+              </button>
+            }
+          </div>
+        }
+      </div>
+
     }
 
   </div>
@@ -122,13 +204,17 @@
 
       @if (selectedPlan(); as plan) {
         <div class="sheet-header">
-          <h2 class="sheet-title">Confirm Purchase</h2>
-          <button class="sheet-close" (click)="closeSheet()">✕</button>
+          <h2 class="sheet-title">Confirm Subscription</h2>
+          <button class="sheet-close" (click)="closeSheet()" aria-label="Close">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
         </div>
 
         <div class="sheet-plan-summary">
-          <div class="summary-icon">{{ plan.icon }}</div>
-          <div>
+          <div class="summary-left">
             <h3 class="summary-name">{{ plan.name }} Plan</h3>
             <p class="summary-detail">{{ plan.sessions }} sessions · {{ plan.durationDays }} days validity</p>
           </div>
@@ -144,18 +230,28 @@
                 [class.method-btn--active]="selectedMethod() === m"
                 (click)="selectedMethod.set($any(m))"
                 [id]="'method-' + m"
+                type="button"
               >
-                <span class="method-icon">
-                  {{ m === 'UPI' ? '📱' : m === 'Card' ? '💳' : '💵' }}
+                <span class="method-icon-wrap">
+                  @if (m === 'UPI') {
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+                  } @else if (m === 'Card') {
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                  } @else {
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>
+                  }
                 </span>
-                <span>{{ m }}</span>
+                <span class="method-name">{{ m }}</span>
               </button>
             }
           </div>
         </div>
 
         @if (errorMsg()) {
-          <div class="error-msg">⚠️ {{ errorMsg() }}</div>
+          <div class="error-msg">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            {{ errorMsg() }}
+          </div>
         }
 
         <button
@@ -166,9 +262,9 @@
         >
           @if (isPurchasing()) {
             <span class="spinner"></span>
-            Processing...
+            Processing Payment...
           } @else {
-            Pay ₹{{ plan.price | number }} · {{ selectedMethod() }}
+            Pay ₹{{ plan.price | number }} via {{ selectedMethod() }}
           }
         </button>
       }

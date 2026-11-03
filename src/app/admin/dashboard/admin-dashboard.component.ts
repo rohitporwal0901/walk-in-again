@@ -202,10 +202,10 @@ export class AdminDashboardComponent implements OnInit {
           totalRevenue += Number(t.amount) || 0;
         }
         txns.push({
-          patient: t.patientName,
-          worker: t.workerName,
-          amount: `₹${t.amount}`,
-          status: t.status as 'Paid' | 'Pending',
+          patient: t.patientName || 'Patient',
+          worker: t.workerName || 'Walk In Clinic',
+          amount: `₹${t.amount || 0}`,
+          status: (t.status === 'Paid' ? 'Paid' : 'Pending') as 'Paid' | 'Pending',
           date: new Date(t.timestamp || t.sessionDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
           time: new Date(t.timestamp || t.sessionDate).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
           method: t.paymentMethod || 'UPI'

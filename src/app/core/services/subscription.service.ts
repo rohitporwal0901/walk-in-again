@@ -24,9 +24,12 @@ export class SubscriptionService {
       if (planDoc.exists()) {
         const data = planDoc.data();
         const plans: SubscriptionPlan[] = data['plans'] || [];
-        return plans.sort((a, b) => a.order - b.order);
+        if (plans.length > 0) {
+          return plans.sort((a, b) => a.order - b.order);
+        }
       }
-      // Fallback defaults if config not set up yet
+      // If config not set up yet, seed once
+      await this.seedDefaultPlans();
       return this.getDefaultPlans();
     } catch (e) {
       console.error('Error fetching plans:', e);
@@ -34,14 +37,20 @@ export class SubscriptionService {
     }
   }
 
-  /** Seed default plans into Firestore config collection.
-   *  Always overwrites to keep plans in sync with code defaults. */
+  /** Seed default plans into Firestore config collection only if missing */
   async seedDefaultPlans(): Promise<void> {
-    const ref = doc(this.firestore, 'config', 'subscription_plans');
-    await setDoc(ref, {
-      plans: this.getDefaultPlans(),
-      updatedAt: new Date().toISOString()
-    });
+    try {
+      const ref = doc(this.firestore, 'config', 'subscription_plans');
+      const snap = await getDoc(ref);
+      if (!snap.exists()) {
+        await setDoc(ref, {
+          plans: this.getDefaultPlans(),
+          updatedAt: new Date().toISOString()
+        });
+      }
+    } catch (e) {
+      console.warn('Error seeding plans:', e);
+    }
   }
 
   /** Force update plans in config (admin use) */
@@ -86,6 +95,30 @@ export class SubscriptionService {
 
     // Save to subscriptions collection
     await setDoc(doc(this.firestore, 'subscriptions', subscriptionId), newSub);
+
+    // Record in transactions collection so it appears in Payment History
+    const txnId = `txn_${Date.now()}`;
+    await setDoc(doc(this.firestore, 'transactions', txnId), {
+      transactionId: txnId,
+      sessionId: subscriptionId,
+      patientId: data.patientId,
+      patientName: data.patientName,
+      patientMobile: '',
+      workerId: 'clinic_admin',
+      workerName: 'Walk In Physio Clinic',
+      workerMobile: '',
+      amount: data.plan.price,
+      paymentMethod: data.paymentMethod,
+      razorpayPaymentId: data.razorpayPaymentId || '',
+      status: 'Paid',
+      sessionDate: now.toISOString(),
+      sessionTimeSlot: `${data.plan.name} Plan (${data.plan.sessions} Sessions)`,
+      sessionDuration: data.plan.durationDays,
+      timestamp: now.toISOString(),
+      planName: data.plan.name,
+      description: `${data.plan.name} Plan (${data.plan.sessions} Sessions)`,
+      type: 'subscription'
+    });
 
     // Update user profile with subscription info
     await updateDoc(doc(this.firestore, 'users', data.patientId), {
