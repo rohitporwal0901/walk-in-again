@@ -4,6 +4,7 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
   setDoc,
   updateDoc,
   onSnapshot,
@@ -62,7 +63,53 @@ export class SubscriptionService {
     });
   }
 
-  /** Buy a subscription plan for a patient */
+  /**
+   * Fetch active subscription for a patient (checks remainingSessions > 0 and not expired)
+   */
+  async getActiveSubscription(patientId: string): Promise<UserSubscription | null> {
+    try {
+      const subRef = collection(this.firestore, 'subscriptions');
+      const q = query(
+        subRef,
+        where('patientId', '==', patientId),
+        where('status', '==', 'active')
+      );
+      const snap = await getDocs(q);
+
+      if (!snap.empty) {
+        for (const docSnap of snap.docs) {
+          const sub = docSnap.data() as UserSubscription;
+          // Verify remaining sessions and expiry
+          if ((sub.remainingSessions ?? 0) > 0) {
+            if (sub.expiryDate) {
+              const isExpired = new Date(sub.expiryDate).getTime() < new Date().getTime();
+              if (isExpired) {
+                // Auto-mark expired
+                await updateDoc(doc(this.firestore, 'subscriptions', docSnap.id), {
+                  status: 'expired',
+                  updatedAt: new Date().toISOString()
+                });
+                continue;
+              }
+            }
+            return { ...sub, subscriptionId: docSnap.id };
+          } else {
+            // No sessions left -> mark expired
+            await updateDoc(doc(this.firestore, 'subscriptions', docSnap.id), {
+              status: 'expired',
+              updatedAt: new Date().toISOString()
+            });
+          }
+        }
+      }
+      return null;
+    } catch (e) {
+      console.warn('Error checking active subscription:', e);
+      return null;
+    }
+  }
+
+  /** Buy a subscription plan for a patient (Generates standard Firestore Doc IDs) */
   async purchaseSubscription(data: {
     patientId: string;
     patientName: string;
@@ -70,7 +117,10 @@ export class SubscriptionService {
     paymentMethod: 'UPI' | 'Card' | 'Cash';
     razorpayPaymentId?: string;
   }): Promise<string> {
-    const subscriptionId = `sub_${Date.now()}`;
+    // 1. Standard Firestore Auto-Generated Document ID
+    const subRef = doc(collection(this.firestore, 'subscriptions'));
+    const subscriptionId = subRef.id;
+
     const now = new Date();
     const expiryDate = new Date(now);
     expiryDate.setDate(expiryDate.getDate() + data.plan.durationDays);
@@ -94,11 +144,13 @@ export class SubscriptionService {
     };
 
     // Save to subscriptions collection
-    await setDoc(doc(this.firestore, 'subscriptions', subscriptionId), newSub);
+    await setDoc(subRef, newSub);
 
-    // Record in transactions collection so it appears in Payment History
-    const txnId = `txn_${Date.now()}`;
-    await setDoc(doc(this.firestore, 'transactions', txnId), {
+    // 2. Standard Firestore Auto-Generated Transaction Document ID
+    const txnRef = doc(collection(this.firestore, 'transactions'));
+    const txnId = txnRef.id;
+
+    await setDoc(txnRef, {
       transactionId: txnId,
       sessionId: subscriptionId,
       patientId: data.patientId,
@@ -120,7 +172,7 @@ export class SubscriptionService {
       type: 'subscription'
     });
 
-    // Update user profile with subscription info
+    // 3. Update user profile with subscription info
     await updateDoc(doc(this.firestore, 'users', data.patientId), {
       subscriptionPlanId: data.plan.id,
       subscriptionPlanName: data.plan.name,
@@ -133,30 +185,78 @@ export class SubscriptionService {
     return subscriptionId;
   }
 
-  /** Decrement patient's remaining sessions after a session completes */
-  async decrementSession(patientId: string): Promise<void> {
+  /**
+   * Decrement patient's remaining sessions after a session completes.
+   * Decrements in BOTH 'subscriptions' collection AND 'users' collection.
+   * If remainingSessions reaches 0, automatically marks the subscription as 'expired'!
+   */
+  async decrementSession(patientId: string): Promise<{ remainingSessions: number; isExpired: boolean }> {
     try {
+      let newRemaining = 0;
+      let isExpired = false;
+
+      // 1. Decrement in 'subscriptions' collection
+      const subRef = collection(this.firestore, 'subscriptions');
+      const q = query(subRef, where('patientId', '==', patientId), where('status', '==', 'active'));
+      const snap = await getDocs(q);
+
+      if (!snap.empty) {
+        const subDoc = snap.docs[0];
+        const subData = subDoc.data() as UserSubscription;
+        newRemaining = Math.max(0, (subData.remainingSessions ?? 1) - 1);
+        isExpired = newRemaining <= 0;
+
+        await updateDoc(doc(this.firestore, 'subscriptions', subDoc.id), {
+          remainingSessions: newRemaining,
+          status: isExpired ? 'expired' : 'active',
+          updatedAt: new Date().toISOString()
+        });
+      }
+
+      // 2. Decrement in 'users' collection
       const userRef = doc(this.firestore, 'users', patientId);
-      const snap = await getDoc(userRef);
-      if (!snap.exists()) return;
-      const data = snap.data();
-      const remaining = (data['remainingSessions'] || 0) - 1;
-      await updateDoc(userRef, {
-        remainingSessions: Math.max(0, remaining),
-        updatedAt: new Date().toISOString()
-      });
+      const userSnap = await getDoc(userRef);
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        if (snap.empty) {
+          newRemaining = Math.max(0, (userData['remainingSessions'] ?? 1) - 1);
+          isExpired = newRemaining <= 0;
+        }
+
+        await updateDoc(userRef, {
+          remainingSessions: newRemaining,
+          subscriptionStatus: isExpired ? 'expired' : 'active',
+          updatedAt: new Date().toISOString()
+        });
+      }
+
+      return { remainingSessions: newRemaining, isExpired };
     } catch (e) {
       console.warn('Could not decrement sessions:', e);
+      return { remainingSessions: 0, isExpired: false };
     }
   }
 
-  /** Watch patient's active subscription */
+  /** Watch patient's active subscription in real-time */
   watchPatientSubscription(patientId: string, cb: (sub: UserSubscription | null) => void): Unsubscribe {
     const subRef = collection(this.firestore, 'subscriptions');
     const q = query(subRef, where('patientId', '==', patientId), where('status', '==', 'active'));
     return onSnapshot(q, snap => {
-      if (snap.empty) { cb(null); return; }
-      cb(snap.docs[0].data() as UserSubscription);
+      if (snap.empty) {
+        cb(null);
+        return;
+      }
+      const sub = snap.docs[0].data() as UserSubscription;
+      // If remaining sessions is 0, auto-expire
+      if ((sub.remainingSessions ?? 0) <= 0) {
+        updateDoc(doc(this.firestore, 'subscriptions', snap.docs[0].id), {
+          status: 'expired',
+          updatedAt: new Date().toISOString()
+        }).catch(() => {});
+        cb(null);
+        return;
+      }
+      cb({ ...sub, subscriptionId: snap.docs[0].id });
     });
   }
 

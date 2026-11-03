@@ -46,7 +46,7 @@ export class PaymentHistoryComponent implements OnInit, OnDestroy {
           if (!hasSubTxn && sub.price) {
             // Include existing subscription in the view
             const subTxn: Transaction = {
-              transactionId: `txn_${sub.subscriptionId}`,
+              transactionId: sub.subscriptionId,
               sessionId: sub.subscriptionId,
               patientId: sub.patientId,
               patientName: sub.patientName,

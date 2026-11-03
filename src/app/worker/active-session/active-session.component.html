@@ -1,5 +1,5 @@
 @if (!showSummary()) {
-  <!-- Active Session Screen -->
+  <!-- Active Session Screen (Exact Image 1 Left Phone Mockup) -->
   <div class="session-screen animate-fade-in">
 
     <!-- Top Nav Header -->
@@ -14,187 +14,256 @@
       <div class="header-placeholder"></div>
     </header>
 
-    <!-- Patient Banner Card -->
-    <div class="patient-banner animate-fade-in-up">
-      <div class="patient-av">{{ (patientName() || 'P').charAt(0).toUpperCase() }}</div>
-      <div class="patient-info">
-        <p class="pt-name">{{ patientName() }}</p>
-        <p class="pt-condition">{{ patientCondition() }}</p>
+    <!-- Patient Profile Header -->
+    <div class="patient-header-card animate-fade-in-up">
+      <div class="patient-avatar-circle">
+        {{ (patientName() || 'P').charAt(0).toUpperCase() }}
       </div>
+      <h2 class="patient-title">{{ patientName() }}</h2>
+      <p class="patient-plan-tag">{{ patientCondition() || 'Walk-In Patient' }}</p>
     </div>
 
-    <div class="session-body">
+    <!-- Circular Timer Widget (Exact Image 1 Style) -->
+    <div class="timer-widget-container animate-scale-in">
+      <div class="circular-timer-ring" [class.paused]="!timerRunning()">
+        <svg class="ring-svg" viewBox="0 0 220 220">
+          <!-- Background track -->
+          <circle cx="110" cy="110" r="92" stroke="#E0F2FE" stroke-width="8" fill="none" />
+          <!-- Animated Progress Arc -->
+          <circle
+            cx="110" cy="110" r="92"
+            stroke="url(#timerGrad)"
+            stroke-width="9"
+            stroke-linecap="round"
+            fill="none"
+            stroke-dasharray="578"
+            [attr.stroke-dashoffset]="getTimerDashOffset()"
+            class="progress-circle"
+          />
+          <defs>
+            <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#0284C7"/>
+              <stop offset="100%" stop-color="#06B6D4"/>
+            </linearGradient>
+          </defs>
+        </svg>
 
-      <!-- Timer Card -->
-      <div class="timer-card animate-scale-in">
-        <div class="timer-ring" [class.paused]="!timerRunning()">
-          <div class="timer-display" id="session-timer">{{ timerDisplay() }}</div>
-          <div class="timer-label">{{ timerRunning() ? 'Time Elapsed' : 'Paused' }}</div>
-        </div>
-
-        <button
-          type="button"
-          class="pause-btn"
-          (click)="togglePause()"
-          id="pause-resume-btn"
-          [class.paused]="!timerRunning()"
-          [attr.aria-label]="timerRunning() ? 'Pause Timer' : 'Resume Timer'"
-        >
-          @if (timerRunning()) {
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <rect x="6" y="4" width="4" height="16" rx="2"/>
-              <rect x="14" y="4" width="4" height="16" rx="2"/>
-            </svg>
-          } @else {
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="5 3 19 12 5 21 5 3"/>
-            </svg>
-          }
-        </button>
-      </div>
-
-      <!-- Therapy Checklist -->
-      <div class="checklist-card animate-fade-in-up" style="animation-delay:.1s">
-        <h3 class="card-title">Therapies Performed</h3>
-        <div class="therapy-list">
-          @for (therapy of therapies(); track therapy.id; let i = $index) {
-            <label
-              class="therapy-item"
-              [class.checked]="therapy.checked"
-              [for]="'therapy-' + i"
-            >
-              <input
-                type="checkbox"
-                [id]="'therapy-' + i"
-                [checked]="therapy.checked"
-                (change)="toggleTherapy(i)"
-                class="therapy-checkbox"
-              />
-              <div class="checkmark">
-                @if (therapy.checked) {
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                }
-              </div>
-              <span class="therapy-label">{{ therapy.label }}</span>
-            </label>
-          }
+        <div class="timer-center-content">
+          <div class="time-elapsed-val" id="session-timer">{{ timerDisplay() }}</div>
+          <span class="time-elapsed-lbl">{{ timerRunning() ? 'Time Elapsed' : 'Paused' }}</span>
         </div>
       </div>
 
-      <!-- Notes -->
-      <div class="notes-card animate-fade-in-up" style="animation-delay:.2s">
-        <h3 class="card-title">Session Notes</h3>
-        <textarea
-          class="notes-area"
-          id="session-notes"
-          placeholder="Add clinical notes, observations..."
-          rows="3"
-          [value]="sessionNotes()"
-          (input)="updateNotes($any($event.target).value)"
-        ></textarea>
-      </div>
-
-      <!-- End Session Button -->
+      <!-- Quick Pause / Resume Action -->
       <button
         type="button"
-        class="end-btn animate-fade-in-up"
-        id="end-session-btn"
-        (click)="endSession()"
+        class="pause-chip-btn"
+        (click)="togglePause()"
+        id="pause-resume-btn"
+        [class.paused]="!timerRunning()"
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-          <rect x="5" y="5" width="14" height="14" rx="2"/>
-        </svg>
-        End Session
+        @if (timerRunning()) {
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="6" y="4" width="4" height="16" rx="1.5"/>
+            <rect x="14" y="4" width="4" height="16" rx="1.5"/>
+          </svg>
+          <span>Pause</span>
+        } @else {
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          <span>Resume</span>
+        }
       </button>
-
     </div>
+
+    <!-- Therapy Trackers List (Exact Image 1 Design with Green Checkmarks & Chevrons) -->
+    <div class="therapy-trackers-card animate-fade-in-up">
+      <div class="trackers-list">
+        @for (therapy of therapies(); track therapy.id; let i = $index) {
+          <div
+            class="tracker-row"
+            [class.checked]="therapy.checked"
+            (click)="toggleTherapy(i)"
+            [id]="'therapy-row-' + i"
+          >
+            <div class="tracker-check-bubble" [class.is-checked]="therapy.checked">
+              @if (therapy.checked) {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              }
+            </div>
+            <span class="tracker-label">{{ therapy.label }}</span>
+            <svg class="tracker-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Clinical Notes Input Box -->
+    <div class="clinical-notes-card animate-fade-in-up">
+      <textarea
+        class="notes-input"
+        id="session-notes"
+        placeholder="Add clinical observations, pain level, comments..."
+        rows="2"
+        [value]="sessionNotes()"
+        (input)="updateNotes($any($event.target).value)"
+      ></textarea>
+    </div>
+
+    <!-- Big Gradient End Session Button (Image 1 Style) -->
+    <button
+      type="button"
+      class="btn-end-session animate-fade-in-up"
+      id="end-session-btn"
+      (click)="endSession()"
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+        <line x1="12" y1="2" x2="12" y2="12"></line>
+      </svg>
+      <span>End Session</span>
+    </button>
+
   </div>
 }
 
 @if (showSummary()) {
-  <!-- Session Summary Screen -->
-  <div class="summary-screen animate-scale-in">
+  <!-- Session Summary Screen (Exact Image 1 Right Phone Mockup) -->
+  <div class="session-screen animate-fade-in">
 
-    <!-- Success Header -->
-    <div class="success-header">
-      <div class="success-icon animate-scale-in">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Top Nav Header -->
+    <header class="top-nav-bar">
+      <button type="button" class="back-btn" (click)="resumeSession()" aria-label="Back to Session" id="summary-back-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </button>
+      <h1 class="page-title">Session Summary</h1>
+      <div class="header-placeholder"></div>
+    </header>
+
+    <!-- Green Checkmark Header (Exact Image 1 Right Phone) -->
+    <div class="summary-success-header animate-scale-in">
+      <div class="success-icon-bubble">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="20 6 9 17 4 12"></polyline>
         </svg>
       </div>
-      <h2>Session Completed!</h2>
-      <p>{{ patientName() }}</p>
+      <h2 class="summary-success-title">Session Completed!</h2>
+      <p class="summary-patient-name">{{ patientName() }}</p>
     </div>
 
-    <!-- Summary Details Card -->
-    <div class="summary-details">
-      <div class="summary-row">
-        <span class="summary-label">Duration</span>
-        <span class="summary-value">{{ timerDisplay() }}</span>
-      </div>
-      <div class="summary-row">
-        <span class="summary-label">Session Fee</span>
-        <span class="summary-value text-accent font-bold">₹{{ sessionFee() }}</span>
+    <!-- Patient Details Card with Duration & Fee -->
+    <div class="summary-card animate-fade-in-up">
+      <div class="summary-pt-row">
+        <div class="summary-pt-av">
+          {{ (patientName() || 'P').charAt(0).toUpperCase() }}
+        </div>
+        <div class="summary-pt-info">
+          <h3 class="pt-name-heading">{{ patientName() }}</h3>
+          <p class="pt-meta-time">+91 {{ patientMobile() || 'Walk-In' }} · {{ timeDisplayNow() }}</p>
+        </div>
       </div>
 
-      <div class="divider"></div>
-
-      <p class="payment-heading">Payment Method</p>
-      <div class="payment-methods">
-        @for (method of ['UPI', 'Card', 'Cash']; track method) {
-          <label class="method-chip" [class.active]="selectedPaymentMethod() === method" [for]="'pay-' + method">
-            <input
-              type="radio"
-              [id]="'pay-' + method"
-              name="paymentMethod"
-              [value]="method"
-              [checked]="selectedPaymentMethod() === method"
-              (change)="selectedPaymentMethod.set($any(method))"
-            />
-            @if (method === 'UPI') {
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-                <line x1="12" y1="18" x2="12.01" y2="18"></line>
-              </svg>
-            }
-            @if (method === 'Card') {
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                <line x1="1" y1="10" x2="23" y2="10"></line>
-              </svg>
-            }
-            @if (method === 'Cash') {
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="6" width="20" height="12" rx="2"></rect>
-                <circle cx="12" cy="12" r="2"></circle>
-              </svg>
-            }
-            <span>{{ method }}</span>
-          </label>
-        }
+      <div class="summary-stats-grid">
+        <div class="stat-col">
+          <span class="stat-label">Duration</span>
+          <span class="stat-val">{{ timerDisplay() }}</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-col">
+          <span class="stat-label">Session Fee</span>
+          @if (isCoveredByPlan()) {
+            <span class="stat-val fee-free">₹0 <span class="covered-tag">{{ planName() || 'Plan' }}</span></span>
+          } @else {
+            <span class="stat-val fee-accent">₹{{ sessionFee() }}</span>
+          }
+        </div>
       </div>
     </div>
 
-    <!-- Summary Actions -->
-    <div class="summary-actions">
-      <button type="button" class="btn-resume" (click)="resumeSession()" id="resume-session-btn">Resume</button>
-      <button
-        type="button"
-        class="btn-proceed"
-        (click)="proceedToPayment()"
-        [disabled]="isEndingSession()"
-        id="proceed-payment-btn"
-      >
-        @if (isEndingSession()) {
-          <span class="spinner-sm"></span>
-          <span>Processing...</span>
-        } @else {
-          Proceed to Payment (₹{{ sessionFee() }})
-        }
-      </button>
-    </div>
+    <!-- Payment Method Section OR Subscription Coverage Info -->
+    @if (isCoveredByPlan()) {
+      <div class="sub-coverage-card animate-fade-in-up">
+        <div class="sub-badge-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <polyline points="9 12 11 14 15 10"></polyline>
+          </svg>
+        </div>
+        <div class="sub-coverage-content">
+          <h4 class="sub-cov-title">Active Subscription Package</h4>
+          <p class="sub-cov-desc">Session covered under <strong>{{ planName() || 'Subscription Plan' }}</strong>.</p>
+          <span class="sub-cov-badge">1 session will be deducted from patient's plan balance.</span>
+        </div>
+      </div>
+    } @else {
+      <div class="payment-method-card animate-fade-in-up">
+        <h4 class="payment-method-title">Payment Method</h4>
+        <div class="payment-options-list">
+          @for (method of ['UPI', 'Card', 'Cash']; track method) {
+            <div
+              class="payment-option-row"
+              [class.selected]="selectedPaymentMethod() === method"
+              (click)="selectedPaymentMethod.set($any(method))"
+              [id]="'pay-opt-' + method"
+            >
+              <div class="method-left">
+                <div class="method-icon-wrap" [class.method-active]="selectedPaymentMethod() === method">
+                  @if (method === 'UPI') {
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="12" y1="1" x2="12" y2="23"></line>
+                      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                  }
+                  @if (method === 'Card') {
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                      <line x1="1" y1="10" x2="23" y2="10"></line>
+                    </svg>
+                  }
+                  @if (method === 'Cash') {
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                      <circle cx="12" cy="12" r="2"></circle>
+                    </svg>
+                  }
+                </div>
+                <span class="method-text">{{ method }}</span>
+              </div>
+
+              <svg class="method-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Proceed to Payment / Complete Session Action Button -->
+    <button
+      type="button"
+      class="btn-proceed-payment animate-fade-in-up"
+      (click)="proceedToPayment()"
+      [disabled]="isEndingSession()"
+      id="proceed-payment-btn"
+    >
+      @if (isEndingSession()) {
+        <span class="spinner-sm"></span>
+        <span>Completing Session...</span>
+      } @else if (isCoveredByPlan()) {
+        <span>Complete Session (Deduct from Plan)</span>
+      } @else {
+        <span>Proceed to Payment</span>
+      }
+    </button>
 
   </div>
 }

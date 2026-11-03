@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { SessionService } from '../../core/services/session.service';
 import { SubscriptionService } from '../../core/services/subscription.service';
+import { PaymentService } from '../../core/services/payment.service';
 import { Session } from '../../core/models/session.model';
 import { UserSubscription } from '../../core/models/subscription.model';
 import { Unsubscribe } from '@angular/fire/firestore';
@@ -19,6 +20,7 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
   private auth = inject(AuthService);
   private sessionService = inject(SessionService);
   private subscriptionService = inject(SubscriptionService);
+  private paymentService = inject(PaymentService);
   private router = inject(Router);
 
   private sessionsUnsub: Unsubscribe | null = null;
@@ -36,14 +38,31 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
     return 'Good Evening';
   });
 
-  // Loading state prevents dummy data flash
   isLoading = signal<boolean>(true);
+  isPaying = signal<boolean>(false);
 
   // Real Firestore sessions for current patient
   patientSessions = signal<Session[]>([]);
   activePlanSub = signal<UserSubscription | null>(null);
 
-  // Real computed counts
+  // Computed Session States
+  pendingOtpSession = computed(() =>
+    this.patientSessions().find(s => s.status === 'pending_otp') || null
+  );
+
+  activeSession = computed(() =>
+    this.patientSessions().find(s => s.status === 'active') || null
+  );
+
+  unpaidCompletedSession = computed(() =>
+    this.patientSessions().find(s =>
+      s.status === 'completed' &&
+      s.paymentStatus === 'pending' &&
+      (s.fee ?? 0) > 0 &&
+      !s.isCoveredBySubscription
+    ) || null
+  );
+
   completedSessions = computed(() =>
     this.patientSessions().filter(s => s.status === 'completed').length
   );
@@ -78,11 +97,6 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
     }
   });
 
-  // Active or most recent pending session
-  activeSession = computed(() =>
-    this.patientSessions().find(s => s.status === 'active' || s.status === 'pending') || null
-  );
-
   quickActions = [
     { id: 'action-sessions', label: 'Sessions', route: '/patient/sessions', bg: '#FEF9C3', iconBg: '#FEF08A', color: '#854D0E', type: 'sessions' },
     { id: 'action-payments', label: 'Payments', route: '/patient/payments', bg: '#F3E8FF', iconBg: '#E9D5FF', color: '#6B21A8', type: 'payments' },
@@ -114,7 +128,6 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
         this.checkLoaded();
       });
 
-      // Safety timeout so user is never permanently stuck in skeleton
       this.loadTimeout = setTimeout(() => {
         this.isLoading.set(false);
       }, 1200);
@@ -134,6 +147,44 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
     if (this.subUnsub) {
       this.subUnsub();
       this.subUnsub = null;
+    }
+  }
+
+  /** Patient pays for completed session */
+  async payForSession(session: Session) {
+    if (this.isPaying()) return;
+    this.isPaying.set(true);
+
+    try {
+      const user = this.auth.currentUser();
+      const fee = session.fee || 500;
+
+      const response = await this.paymentService.openPayment({
+        amount: fee,
+        patientName: user?.name || session.patientName,
+        patientMobile: user?.mobileNumber || session.patientMobile || '9876543210',
+        description: `Physiotherapy Care Session Fee — Dr. ${session.workerName}`
+      });
+
+      await this.sessionService.saveTransaction({
+        sessionId: session.sessionId,
+        patientId: user?.uid || session.patientId,
+        patientName: user?.name || session.patientName,
+        patientMobile: user?.mobileNumber || session.patientMobile || '',
+        workerId: session.workerId,
+        workerName: session.workerName,
+        workerMobile: session.workerMobile,
+        amount: fee,
+        paymentMethod: 'UPI',
+        razorpayPaymentId: response.razorpay_payment_id || '',
+        durationMinutes: session.duration || 30
+      });
+
+      this.isPaying.set(false);
+      this.router.navigate(['/patient/payments']);
+    } catch (err: any) {
+      console.warn('Patient payment cancelled:', err);
+      this.isPaying.set(false);
     }
   }
 

@@ -1,5 +1,5 @@
 export type PaymentStatus = 'Paid' | 'Pending' | 'Failed' | 'Refunded';
-export type PaymentMethod = 'UPI' | 'Card' | 'Cash' | 'NetBanking';
+export type PaymentMethod = 'UPI' | 'Card' | 'Cash' | 'NetBanking' | 'Subscription';
 
 export interface Transaction {
   transactionId: string;

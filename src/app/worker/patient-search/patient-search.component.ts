@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Firestore, collection, query, where, onSnapshot, Unsubscribe } from '@angular/fire/firestore';
 import { User, PatientProfile } from '../../core/models/user.model';
+import { Session } from '../../core/models/session.model';
 import { AuthService } from '../../core/services/auth.service';
 import { SessionService } from '../../core/services/session.service';
 
@@ -22,11 +23,21 @@ export class PatientSearchComponent implements OnInit, OnDestroy {
 
   searchQuery = signal<string>('');
   allPatients = signal<PatientProfile[]>([]);
+  activeSessions = signal<Session[]>([]);
   isLoading = signal<boolean>(true);
-  isCreatingSession = signal<boolean>(false);
-  creatingPatientId = signal<string | null>(null);
+
+  // Modal State
+  showModal = signal<boolean>(false);
+  modalStep = signal<'confirm' | 'otp'>('confirm');
+  selectedPatient = signal<PatientProfile | null>(null);
+  activeSessionId = signal<string>('');
+  isCreating = signal<boolean>(false);
+  isVerifying = signal<boolean>(false);
+  otpError = signal<string>('');
+  otpDigits = signal<string[]>(['', '', '', '']);
 
   private usersUnsub: Unsubscribe | null = null;
+  private activeSessionsUnsub: Unsubscribe | null = null;
 
   filteredPatients = computed(() => {
     const queryTerm = this.searchQuery().trim().toLowerCase();
@@ -45,7 +56,7 @@ export class PatientSearchComponent implements OnInit, OnDestroy {
   });
 
   ngOnInit() {
-    // Listen to all registered patients in real-time
+    // 1. Listen to all registered patients in real-time
     try {
       const usersRef = collection(this.firestore, 'users');
       const q = query(usersRef, where('role', '==', 'patient'));
@@ -58,7 +69,6 @@ export class PatientSearchComponent implements OnInit, OnDestroy {
             userId: u.uid || docSnap.id
           });
         });
-        // Sort alphabetically by name
         patients.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
         this.allPatients.set(patients);
         this.isLoading.set(false);
@@ -70,6 +80,15 @@ export class PatientSearchComponent implements OnInit, OnDestroy {
       console.error('Failed to setup patients query:', e);
       this.isLoading.set(false);
     }
+
+    // 2. Listen to active / pending sessions across clinic in real-time (prevents duplicate sessions)
+    try {
+      this.activeSessionsUnsub = this.sessionService.listenToActiveClinicSessions(activeList => {
+        this.activeSessions.set(activeList);
+      });
+    } catch (e) {
+      console.warn('Could not listen to active clinic sessions:', e);
+    }
   }
 
   ngOnDestroy() {
@@ -77,20 +96,33 @@ export class PatientSearchComponent implements OnInit, OnDestroy {
       this.usersUnsub();
       this.usersUnsub = null;
     }
+    if (this.activeSessionsUnsub) {
+      this.activeSessionsUnsub();
+      this.activeSessionsUnsub = null;
+    }
   }
 
   onSearch(value: string) {
     this.searchQuery.set(value);
   }
 
+  /** Check if a patient already has an ongoing session */
+  getActiveSession(patient: PatientProfile): Session | undefined {
+    const pid = patient.uid || patient.userId || patient.mobileNumber;
+    return this.activeSessions().find(
+      s => (s.patientId === pid || s.patientMobile === patient.mobileNumber) &&
+           (s.status === 'active' || s.status === 'pending_otp')
+    );
+  }
+
   getAvatarColor(name: string): { bg: string; text: string } {
     const palette = [
-      { bg: '#FED7AA', text: '#9A3412' }, // warm amber
-      { bg: '#E0F2FE', text: '#0369A1' }, // sky blue
-      { bg: '#FCE7F3', text: '#BE185D' }, // rose pink
-      { bg: '#DCFCE7', text: '#15803D' }, // emerald green
-      { bg: '#EDE9FE', text: '#6D28D9' }, // violet
-      { bg: '#FEF08A', text: '#854D0E' }, // sunny yellow
+      { bg: '#FED7AA', text: '#9A3412' },
+      { bg: '#E0F2FE', text: '#0369A1' },
+      { bg: '#FCE7F3', text: '#BE185D' },
+      { bg: '#DCFCE7', text: '#15803D' },
+      { bg: '#EDE9FE', text: '#6D28D9' },
+      { bg: '#FEF08A', text: '#854D0E' },
     ];
     let hash = 0;
     for (let i = 0; i < (name || '').length; i++) {
@@ -100,19 +132,60 @@ export class PatientSearchComponent implements OnInit, OnDestroy {
     return palette[index];
   }
 
-  async startSessionForPatient(patient: PatientProfile) {
-    const pid = patient.uid || patient.userId || patient.mobileNumber;
-    if (this.isCreatingSession()) return;
+  /** Worker clicks Action button on Patient Row */
+  onPatientAction(patient: PatientProfile) {
+    const active = this.getActiveSession(patient);
 
-    this.isCreatingSession.set(true);
-    this.creatingPatientId.set(pid);
+    if (active) {
+      if (active.status === 'active') {
+        // Patient is already in session -> Resume active session directly
+        this.router.navigate(['/worker/session', active.sessionId]);
+        return;
+      } else if (active.status === 'pending_otp') {
+        // Patient session is waiting for OTP -> Open OTP input modal directly
+        this.selectedPatient.set(patient);
+        this.activeSessionId.set(active.sessionId);
+        this.otpDigits.set(['', '', '', '']);
+        this.otpError.set('');
+        this.modalStep.set('otp');
+        this.showModal.set(true);
+        setTimeout(() => this.focusId('otp-0'), 200);
+        return;
+      }
+    }
+
+    // Patient has no active session -> Open Confirmation Modal
+    this.selectedPatient.set(patient);
+    this.otpError.set('');
+    this.otpDigits.set(['', '', '', '']);
+    this.modalStep.set('confirm');
+    this.showModal.set(true);
+  }
+
+  closeModal() {
+    this.showModal.set(false);
+    this.selectedPatient.set(null);
+    this.activeSessionId.set('');
+    this.otpDigits.set(['', '', '', '']);
+    this.otpError.set('');
+    this.isCreating.set(false);
+    this.isVerifying.set(false);
+  }
+
+  /** Worker confirms start in Step 1 */
+  async confirmStartSession() {
+    const patient = this.selectedPatient();
+    if (!patient) return;
+
+    this.isCreating.set(true);
+    this.otpError.set('');
 
     try {
       const worker = this.auth.currentUser();
-      const patientId = pid;
+      const pid = patient.uid || patient.userId || patient.mobileNumber;
 
-      const sessionId = await this.sessionService.createSession({
-        patientId,
+      const res = await this.sessionService.createSessionWithOtp({
+        patientId: pid,
         patientName: patient.name || 'Walk-In Patient',
         patientMobile: patient.mobileNumber,
         workerId: worker?.uid || '',
@@ -121,13 +194,89 @@ export class PatientSearchComponent implements OnInit, OnDestroy {
         notes: patient.problemArea ? `Problem Area: ${patient.problemArea}` : (patient.condition || '')
       });
 
-      this.router.navigate(['/worker/session', sessionId]);
-    } catch (e) {
-      console.error('Failed to create session for patient:', e);
-      alert('Could not start session. Please try again.');
-    } finally {
-      this.isCreatingSession.set(false);
-      this.creatingPatientId.set(null);
+      this.activeSessionId.set(res.sessionId);
+      this.isCreating.set(false);
+      this.modalStep.set('otp');
+      this.otpDigits.set(['', '', '', '']);
+      setTimeout(() => this.focusId('otp-0'), 200);
+    } catch (err: any) {
+      this.isCreating.set(false);
+      this.otpError.set(err?.message || 'Could not start session. Please try again.');
+    }
+  }
+
+  // ─── 4-Box OTP Input Controls ───────────────────────────────────────────────
+  onOtpInput(event: Event, index: number) {
+    const input = event.target as HTMLInputElement;
+    const val = input.value.replace(/\D/g, '').slice(-1);
+    input.value = val;
+
+    const arr = [...this.otpDigits()];
+    arr[index] = val;
+    this.otpDigits.set(arr);
+    this.otpError.set('');
+
+    if (val && index < 3) {
+      this.focusId(`otp-${index + 1}`);
+    }
+
+    if (index === 3 && val) {
+      const allFilled = arr.every(d => d !== '');
+      if (allFilled) {
+        setTimeout(() => this.submitVerifyOtp(), 150);
+      }
+    }
+  }
+
+  onOtpBackspace(event: Event, index: number) {
+    const arr = [...this.otpDigits()];
+    if (!arr[index] && index > 0) {
+      arr[index - 1] = '';
+      this.otpDigits.set(arr);
+      this.focusId(`otp-${index - 1}`);
+    } else {
+      arr[index] = '';
+      this.otpDigits.set(arr);
+    }
+  }
+
+  private focusId(id: string) {
+    setTimeout(() => {
+      const el = document.getElementById(id) as HTMLInputElement | null;
+      if (el) {
+        el.focus();
+        el.select();
+      }
+    }, 20);
+  }
+
+  /** Worker submits OTP entered from Patient */
+  async submitVerifyOtp() {
+    const code = this.otpDigits().join('');
+    if (code.length !== 4) {
+      this.otpError.set('Please enter complete 4-digit OTP.');
+      return;
+    }
+
+    this.isVerifying.set(true);
+    this.otpError.set('');
+
+    try {
+      const res = await this.sessionService.verifyAndStartSession(this.activeSessionId(), code);
+      this.isVerifying.set(false);
+
+      if (res.success) {
+        const sessId = this.activeSessionId();
+        this.closeModal();
+        this.router.navigate(['/worker/session', sessId]);
+      } else {
+        this.otpError.set(res.message || 'Incorrect OTP. Please check with patient.');
+        this.otpDigits.set(['', '', '', '']);
+        this.focusId('otp-0');
+      }
+    } catch (e: any) {
+      this.isVerifying.set(false);
+      this.otpError.set('Verification failed. Please try again.');
     }
   }
 

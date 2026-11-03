@@ -1,9 +1,11 @@
-// ─── Active Session Screen ──────────────────────────────────────────────────
+// ─── Active Session Screen (Exact Image 1 Mockup) ───────────────────────────
 .session-screen {
   min-height: 100vh;
   background: #EBF5F9;
   padding: 20px 18px 100px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 // ─── Top Nav Bar ─────────────────────────────────────────────────────────────
@@ -11,7 +13,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 
   .back-btn {
     width: 40px;
@@ -36,6 +38,7 @@
     font-weight: 800;
     color: #0F172A;
     margin: 0;
+    letter-spacing: -0.01em;
   }
 
   .header-placeholder {
@@ -43,255 +46,249 @@
   }
 }
 
-// ─── Patient Banner Card ─────────────────────────────────────────────────────
-.patient-banner {
-  background: #FFFFFF;
-  border-radius: 18px;
-  padding: 14px 16px;
+// ─── Patient Header Card (Image 1 Style) ─────────────────────────────────────
+.patient-header-card {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
-  border: 1px solid rgba(226, 232, 240, 0.7);
+  text-align: center;
   margin-bottom: 16px;
 
-  .patient-av {
-    width: 46px;
-    height: 46px;
+  .patient-avatar-circle {
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     background: #E0F2FE;
     color: #0284C7;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.15);
+  }
+
+  .patient-title {
     font-size: 18px;
     font-weight: 800;
-    flex-shrink: 0;
-  }
-
-  .patient-info {
-    flex: 1;
-    min-width: 0;
-
-    .pt-name {
-      font-size: 16px;
-      font-weight: 800;
-      color: #0F172A;
-      margin: 0 0 2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .pt-condition {
-      font-size: 12.5px;
-      color: #64748B;
-      margin: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
-}
-
-.session-body {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-// ─── Timer Card ──────────────────────────────────────────────────────────────
-.timer-card {
-  background: #FFFFFF;
-  border-radius: 22px;
-  padding: 24px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
-  border: 1px solid rgba(226, 232, 240, 0.7);
-}
-
-.timer-ring {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  border: 4px solid #0284C7;
-  box-shadow: 0 0 0 8px rgba(2, 132, 199, 0.1);
-  background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-
-  &.paused {
-    border-color: #F59E0B;
-    box-shadow: 0 0 0 8px rgba(245, 158, 11, 0.12);
-    background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
-  }
-
-  .timer-display {
-    font-size: 32px;
-    font-weight: 800;
     color: #0F172A;
-    letter-spacing: -0.02em;
-    font-variant-numeric: tabular-nums;
+    margin: 0 0 3px;
+    letter-spacing: -0.01em;
   }
 
-  .timer-label {
-    font-size: 11px;
+  .patient-plan-tag {
+    font-size: 12px;
     font-weight: 600;
     color: #64748B;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-top: 2px;
+    margin: 0;
   }
 }
 
-.pause-btn {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: #F1F5F9;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #334155;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: #0284C7;
-    color: #FFFFFF;
-    transform: scale(1.06);
-  }
-
-  &.paused {
-    background: #16A34A;
-    color: #FFFFFF;
-  }
-}
-
-// ─── Checklist & Notes ───────────────────────────────────────────────────────
-.checklist-card, .notes-card {
-  background: #FFFFFF;
-  border-radius: 18px;
-  padding: 16px;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
-  border: 1px solid rgba(226, 232, 240, 0.7);
-
-  .card-title {
-    font-size: 13px;
-    font-weight: 700;
-    color: #64748B;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin: 0 0 12px;
-  }
-}
-
-.therapy-list {
+// ─── Circular Timer Widget ───────────────────────────────────────────────────
+.timer-widget-container {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-}
-
-.therapy-item {
-  display: flex;
   align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1.5px solid #E2E8F0;
-  background: #F8FAFC;
-  transition: all 0.15s ease;
+  margin-bottom: 18px;
+  position: relative;
 
-  input[type="checkbox"] {
-    display: none;
-  }
-
-  &.checked {
-    border-color: #16A34A;
-    background: #F0FDF4;
-
-    .checkmark {
-      background: #16A34A;
-      border-color: #16A34A;
-    }
-
-    .therapy-label {
-      color: #0F172A;
-      font-weight: 600;
-    }
-  }
-
-  .checkmark {
-    width: 20px;
-    height: 20px;
-    border-radius: 6px;
-    border: 1.5px solid #CBD5E1;
-    background: #FFFFFF;
+  .circular-timer-ring {
+    width: 200px;
+    height: 200px;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.15s ease;
+
+    .ring-svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+
+      .progress-circle {
+        transition: stroke-dashoffset 0.8s ease, stroke 0.3s ease;
+      }
+    }
+
+    &.paused .progress-circle {
+      stroke: #F59E0B;
+    }
+
+    .timer-center-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+
+      .time-elapsed-val {
+        font-size: 34px;
+        font-weight: 800;
+        color: #0F172A;
+        letter-spacing: -0.02em;
+        line-height: 1;
+        margin-bottom: 4px;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .time-elapsed-lbl {
+        font-size: 11.5px;
+        font-weight: 600;
+        color: #64748B;
+        letter-spacing: 0.02em;
+      }
+    }
   }
 
-  .therapy-label {
-    font-size: 13.5px;
-    color: #334155;
-  }
-}
-
-.notes-area {
-  width: 100%;
-  border: 1.5px solid #E2E8F0;
-  border-radius: 12px;
-  padding: 12px;
-  font-size: 13.5px;
-  color: #0F172A;
-  font-family: inherit;
-  resize: none;
-  background: #F8FAFC;
-  outline: none;
-  box-sizing: border-box;
-  transition: border-color 0.15s ease;
-
-  &:focus {
-    border-color: #0284C7;
+  .pause-chip-btn {
+    margin-top: 10px;
     background: #FFFFFF;
-  }
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 9999px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #334155;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+    transition: all 0.15s ease;
 
-  &::placeholder {
-    color: #94A3B8;
+    &:hover {
+      background: #F8FAFC;
+    }
+
+    &.paused {
+      background: #FEF3C7;
+      color: #B45309;
+      border-color: #FDE68A;
+    }
   }
 }
 
-.end-btn {
-  background: #DC2626;
+// ─── Therapy Trackers Card (Image 1 List Design) ─────────────────────────────
+.therapy-trackers-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  box-shadow: 0 3px 14px rgba(15, 23, 42, 0.03);
+  border: 1px solid rgba(226, 232, 240, 0.75);
+  margin-bottom: 14px;
+  overflow: hidden;
+
+  .trackers-list {
+    display: flex;
+    flex-direction: column;
+
+    .tracker-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 16px;
+      border-bottom: 1px solid #F1F5F9;
+      cursor: pointer;
+      transition: background 0.15s ease;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background: #F8FAFC;
+      }
+
+      &:active {
+        background: #F1F5F9;
+      }
+
+      .tracker-check-bubble {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: 2px solid #CBD5E1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+        &.is-checked {
+          background: #10B981;
+          border-color: #10B981;
+          box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+        }
+      }
+
+      .tracker-label {
+        flex: 1;
+        font-size: 14px;
+        font-weight: 600;
+        color: #1E293B;
+      }
+
+      &.checked .tracker-label {
+        font-weight: 700;
+        color: #0F172A;
+      }
+
+      .tracker-chevron {
+        flex-shrink: 0;
+      }
+    }
+  }
+}
+
+// ─── Clinical Notes Box ──────────────────────────────────────────────────────
+.clinical-notes-card {
+  background: #FFFFFF;
+  border-radius: 18px;
+  padding: 12px 14px;
+  box-shadow: 0 3px 14px rgba(15, 23, 42, 0.03);
+  border: 1px solid rgba(226, 232, 240, 0.75);
+  margin-bottom: 20px;
+
+  .notes-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 13px;
+    font-family: inherit;
+    color: #0F172A;
+    resize: none;
+    line-height: 1.4;
+
+    &::placeholder {
+      color: #94A3B8;
+    }
+  }
+}
+
+// ─── Big Bottom Action Button: End Session ───────────────────────────────────
+.btn-end-session {
+  margin-top: auto;
+  background: linear-gradient(135deg, #0B2545 0%, #0369A1 100%);
   color: #FFFFFF;
+  border: none;
+  border-radius: 9999px;
+  padding: 15px 24px;
   font-size: 15px;
   font-weight: 700;
-  border-radius: 14px;
-  padding: 14px 20px;
-  border: none;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.28);
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(11, 37, 69, 0.25);
   transition: all 0.2s ease;
 
   &:hover {
-    background: #B91C1C;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(11, 37, 69, 0.3);
   }
 
   &:active {
@@ -299,173 +296,309 @@
   }
 }
 
-// ─── Summary Screen ──────────────────────────────────────────────────────────
-.summary-screen {
-  min-height: 100vh;
-  background: #EBF5F9;
-  padding: 40px 18px 100px;
-  box-sizing: border-box;
-}
-
-.success-header {
+// ─── Session Summary Screen Styles (Image 1 Right Phone) ─────────────────────
+.summary-success-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  margin-bottom: 24px;
+  margin: 10px 0 22px;
 
-  .success-icon {
-    width: 72px;
-    height: 72px;
+  .success-icon-bubble {
+    width: 68px;
+    height: 68px;
     border-radius: 50%;
-    background: #DCFCE7;
+    background: #10B981;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 14px;
-    box-shadow: 0 4px 14px rgba(22, 163, 74, 0.18);
+    margin-bottom: 14px;
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
   }
 
-  h2 {
-    font-size: 22px;
+  .summary-success-title {
+    font-size: 20px;
     font-weight: 800;
     color: #0F172A;
     margin: 0 0 4px;
+    letter-spacing: -0.01em;
   }
 
-  p {
+  .summary-patient-name {
     font-size: 14px;
+    font-weight: 600;
     color: #64748B;
     margin: 0;
   }
 }
 
-.summary-details {
+.summary-card {
   background: #FFFFFF;
   border-radius: 20px;
-  padding: 20px;
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
-  border: 1px solid rgba(226, 232, 240, 0.7);
-  margin-bottom: 20px;
+  padding: 18px 20px;
+  box-shadow: 0 3px 16px rgba(15, 23, 42, 0.04);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  margin-bottom: 18px;
 
-  .summary-row {
+  .summary-pt-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 10px 0;
+    gap: 12px;
+    padding-bottom: 14px;
     border-bottom: 1px solid #F1F5F9;
+    margin-bottom: 14px;
 
-    &:last-of-type {
-      border-bottom: none;
+    .summary-pt-av {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #E0F2FE;
+      color: #0284C7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      font-weight: 800;
+      flex-shrink: 0;
     }
 
-    .summary-label {
-      font-size: 14px;
-      color: #64748B;
-    }
+    .summary-pt-info {
+      flex: 1;
+      min-width: 0;
 
-    .summary-value {
-      font-size: 16px;
-      font-weight: 700;
-      color: #0F172A;
+      .pt-name-heading {
+        font-size: 15px;
+        font-weight: 700;
+        color: #0F172A;
+        margin: 0 0 2px;
+      }
 
-      &.text-accent {
-        color: #0284C7;
+      .pt-meta-time {
+        font-size: 12px;
+        color: #64748B;
+        margin: 0;
       }
     }
   }
 
-  .divider {
-    height: 1px;
-    background: #E2E8F0;
-    margin: 14px 0;
-  }
-
-  .payment-heading {
-    font-size: 11px;
-    font-weight: 700;
-    color: #64748B;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin: 0 0 10px;
-  }
-
-  .payment-methods {
+  .summary-stats-grid {
     display: flex;
-    gap: 8px;
-  }
-
-  .method-chip {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 6px;
-    padding: 12px 6px;
-    border: 1.5px solid #E2E8F0;
-    border-radius: 12px;
-    font-size: 12.5px;
-    font-weight: 700;
-    color: #475569;
-    background: #F8FAFC;
-    cursor: pointer;
-    transition: all 0.15s ease;
+    justify-content: space-around;
 
-    input {
-      display: none;
+    .stat-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+
+      .stat-label {
+        font-size: 11.5px;
+        font-weight: 600;
+        color: #64748B;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      .stat-val {
+        font-size: 18px;
+        font-weight: 800;
+        color: #0F172A;
+
+        &.fee-accent {
+          color: #0F172A;
+        }
+
+        &.fee-free {
+          color: #10B981;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+
+          .covered-tag {
+            font-size: 11px;
+            font-weight: 700;
+            background: #DCFCE7;
+            color: #15803D;
+            padding: 2px 7px;
+            border-radius: 6px;
+            letter-spacing: normal;
+          }
+        }
+      }
     }
 
-    &.active {
-      border-color: #0284C7;
-      background: #E0F2FE;
-      color: #0284C7;
+    .stat-divider {
+      width: 1px;
+      height: 34px;
+      background: #E2E8F0;
     }
   }
 }
 
-.summary-actions {
+.sub-coverage-card {
+  background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+  border: 1.5px solid #BAE6FD;
+  border-radius: 20px;
+  padding: 16px 18px;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 22px;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.08);
 
-  .btn-resume {
+  .sub-badge-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
     background: #FFFFFF;
-    color: #334155;
-    border: 1.5px solid #CBD5E1;
-    border-radius: 14px;
-    padding: 12px;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-
-    &:hover {
-      background: #F8FAFC;
-    }
-  }
-
-  .btn-proceed {
-    background: #0284C7;
-    color: #FFFFFF;
-    border: none;
-    border-radius: 14px;
-    padding: 14px;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.28);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(2, 132, 199, 0.15);
+  }
 
-    &:hover {
-      background: #0369A1;
+  .sub-coverage-content {
+    flex: 1;
+
+    .sub-cov-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #0369A1;
+      margin: 0 0 3px;
     }
 
-    &:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
+    .sub-cov-desc {
+      font-size: 13px;
+      color: #0F172A;
+      margin: 0 0 6px;
+    }
+
+    .sub-cov-badge {
+      display: inline-block;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #0284C7;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 3px 8px;
+      border-radius: 6px;
     }
   }
 }
 
+.payment-method-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 16px 18px;
+  box-shadow: 0 3px 16px rgba(15, 23, 42, 0.04);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  margin-bottom: 22px;
+
+  .payment-method-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #64748B;
+    margin: 0 0 12px;
+  }
+
+  .payment-options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .payment-option-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1.5px solid #F1F5F9;
+      background: #F8FAFC;
+      cursor: pointer;
+      transition: all 0.15s ease;
+
+      &:hover {
+        background: #F1F5F9;
+      }
+
+      &.selected {
+        border-color: #0284C7;
+        background: #F0F9FF;
+      }
+
+      .method-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .method-icon-wrap {
+          width: 34px;
+          height: 34px;
+          border-radius: 10px;
+          background: #FFFFFF;
+          color: #475569;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid #E2E8F0;
+          transition: all 0.15s ease;
+
+          &.method-active {
+            background: #0284C7;
+            color: #FFFFFF;
+            border-color: #0284C7;
+          }
+        }
+
+        .method-text {
+          font-size: 14px;
+          font-weight: 700;
+          color: #0F172A;
+        }
+      }
+
+      .method-chevron {
+        flex-shrink: 0;
+      }
+    }
+  }
+}
+
+.btn-proceed-payment {
+  background: linear-gradient(135deg, #0B2545 0%, #0369A1 100%);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 9999px;
+  padding: 15px 24px;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(11, 37, 69, 0.25);
+  transition: all 0.2s ease;
+  width: 100%;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(11, 37, 69, 0.3);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+}
+
+// ─── Animations & Spinner ────────────────────────────────────────────────────
 .spinner-sm {
   width: 16px;
   height: 16px;
@@ -478,4 +611,14 @@
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.93); }
+  to { opacity: 1; transform: scale(1); }
 }

@@ -145,6 +145,15 @@
                 >
                   Resume
                 </button>
+              } @else if (session.status === 'pending_otp') {
+                <button
+                  type="button"
+                  class="btn-start btn-active"
+                  routerLink="/worker/search"
+                  [id]="'start-' + session.sessionId"
+                >
+                  Enter OTP
+                </button>
               } @else {
                 <button
                   type="button"

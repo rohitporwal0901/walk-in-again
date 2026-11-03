@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Transaction, PaymentMethod } from '../models/transaction.model';
 import { FirestoreService } from './firestore.service';
 import { environment } from '../../../environments/environment';
+import { Firestore, collection, doc } from '@angular/fire/firestore';
 import { Observable, from } from 'rxjs';
 
 declare var Razorpay: any;
@@ -31,7 +32,10 @@ export interface RazorpayResponse {
 
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
-  constructor(private firestoreService: FirestoreService) {}
+  constructor(
+    private firestoreService: FirestoreService,
+    private firestore: Firestore
+  ) {}
 
   /** Load Razorpay script dynamically */
   loadRazorpayScript(): Promise<boolean> {
@@ -77,7 +81,8 @@ export class PaymentService {
 
   /** Save transaction to Firestore */
   saveTransaction(transaction: Omit<Transaction, 'transactionId'>): Observable<void> {
-    const id = `txn_${Date.now()}`;
+    const docRef = doc(collection(this.firestore, 'transactions'));
+    const id = docRef.id;
     return this.firestoreService.setDoc<Transaction>(
       'transactions',
       id,

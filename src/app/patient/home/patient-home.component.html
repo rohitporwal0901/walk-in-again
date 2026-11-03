@@ -86,12 +86,31 @@
         </div>
       </div>
 
-      <!-- Active Ongoing / Scheduled Session Banner (if any) -->
+      <!-- 1. Real-Time OTP Verification Banner for Patient -->
+      @if (pendingOtpSession(); as pendingSess) {
+        <div class="patient-otp-banner animate-scale-in">
+          <div class="otp-banner-head">
+            <span class="live-otp-dot"></span>
+            <span class="otp-badge-title">Session Verification Code</span>
+          </div>
+          <p class="otp-sub-prompt">
+            Dr. <strong>{{ pendingSess.workerName }}</strong> has requested to start your session. Share this 4-digit code:
+          </p>
+          <div class="otp-display-cards">
+            @for (digit of (pendingSess.otp || '1234').split(''); track $index) {
+              <div class="otp-card-digit">{{ digit }}</div>
+            }
+          </div>
+          <p class="otp-wait-hint">Your therapy session begins as soon as the doctor enters this code.</p>
+        </div>
+      }
+
+      <!-- 2. Active Session In Progress Banner -->
       @if (activeSession(); as active) {
-        <div class="active-session-banner">
+        <div class="active-session-banner animate-fade-in">
           <div class="session-badge-row">
             <span class="live-dot"></span>
-            <span class="session-badge-title">{{ active.status === 'active' ? 'Session In Progress' : 'Upcoming Therapy' }}</span>
+            <span class="session-badge-title">Session In Progress</span>
           </div>
           <div class="session-banner-content">
             <div class="session-time-col">
@@ -105,10 +124,37 @@
               <div class="dr-avatar">{{ (active.workerName || 'P').charAt(0).toUpperCase() }}</div>
               <div>
                 <p class="dr-title">Dr. {{ active.workerName || 'Physiotherapist' }}</p>
-                <p class="dr-sub">{{ active.timeSlot || 'Walk-In Session' }}</p>
+                <p class="dr-sub">{{ active.notes || 'Therapy in Progress' }}</p>
               </div>
             </div>
           </div>
+        </div>
+      }
+
+      <!-- 3. Unpaid Completed Session Payment Due Banner -->
+      @if (unpaidCompletedSession(); as completedSess) {
+        <div class="payment-due-banner animate-scale-in">
+          <div class="due-banner-head">
+            <span class="due-badge">Session Completed</span>
+            <span class="due-amount">₹{{ completedSess.fee || 500 }}</span>
+          </div>
+          <div class="due-details">
+            <p class="due-desc">Dr. {{ completedSess.workerName }} has completed your physiotherapy session ({{ completedSess.duration || 30 }} mins).</p>
+          </div>
+          <button
+            type="button"
+            class="btn-pay-now"
+            (click)="payForSession(completedSess)"
+            [disabled]="isPaying()"
+            id="pay-session-btn"
+          >
+            @if (isPaying()) {
+              <span class="spinner-sm"></span>
+              <span>Opening Payment...</span>
+            } @else {
+              <span>Pay ₹{{ completedSess.fee || 500 }} (UPI / Card)</span>
+            }
+          </button>
         </div>
       }
 

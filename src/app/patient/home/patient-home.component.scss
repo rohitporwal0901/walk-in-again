@@ -158,6 +158,146 @@
   }
 }
 
+// ─── Real-Time OTP Banner for Patient ─────────────────────────────────────────
+.patient-otp-banner {
+  background: linear-gradient(135deg, #0B2545 0%, #0369A1 100%);
+  border-radius: 20px;
+  padding: 18px 20px;
+  margin-top: 14px;
+  color: #FFFFFF;
+  box-shadow: 0 8px 24px rgba(11, 37, 69, 0.22);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+
+  .otp-banner-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+
+    .live-otp-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 10px #10B981;
+      animation: pulseDot 1.4s infinite;
+    }
+
+    .otp-badge-title {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #38BDF8;
+    }
+  }
+
+  .otp-sub-prompt {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0 0 14px;
+    line-height: 1.4;
+
+    strong {
+      color: #FFFFFF;
+    }
+  }
+
+  .otp-display-cards {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 12px;
+
+    .otp-card-digit {
+      width: 50px;
+      height: 56px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      border: 1.5px solid rgba(255, 255, 255, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 800;
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .otp-wait-hint {
+    font-size: 11.5px;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+    text-align: center;
+  }
+}
+
+// ─── Payment Due Banner ──────────────────────────────────────────────────────
+.payment-due-banner {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 16px 18px;
+  margin-top: 14px;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+  border: 1.5px solid #FDE68A;
+
+  .due-banner-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+
+    .due-badge {
+      font-size: 11.5px;
+      font-weight: 700;
+      background: #FEF3C7;
+      color: #92400E;
+      padding: 3px 10px;
+      border-radius: 9999px;
+    }
+
+    .due-amount {
+      font-size: 19px;
+      font-weight: 800;
+      color: #0F172A;
+    }
+  }
+
+  .due-details {
+    .due-desc {
+      font-size: 13px;
+      color: #64748B;
+      margin: 0 0 14px;
+      line-height: 1.4;
+    }
+  }
+
+  .btn-pay-now {
+    width: 100%;
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 12px;
+    padding: 13px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: #047857;
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
 // ─── Active Ongoing / Scheduled Session Banner ────────────────────────────────
 .active-session-banner {
   background: linear-gradient(135deg, #071F36 0%, #0F375E 100%);
