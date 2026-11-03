@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <!-- Background Gradient: Deep Navy to Medical Blue -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B2545" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+
+    <!-- Cross Gradient -->
+    <linearGradient id="crossGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#F0F9FF" />
+    </linearGradient>
+
+    <!-- Emerald Vitality Gradient -->
+    <linearGradient id="vitalityGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+  </defs>
+
+  <!-- Squircle Base -->
+  <rect x="4" y="4" width="120" height="120" rx="32" fill="url(#bgGrad)" stroke="#38BDF8" stroke-width="3" stroke-opacity="0.6"/>
+
+  <!-- Vertical Cross Bar -->
+  <rect x="49" y="24" width="30" height="80" rx="9" fill="url(#crossGrad)"/>
+
+  <!-- Horizontal Cross Bar -->
+  <rect x="24" y="49" width="80" height="30" rx="9" fill="url(#crossGrad)"/>
+
+  <!-- Center Physiotherapy Healing Eye / Badge -->
+  <!-- Outer Blue Ring -->
+  <circle cx="64" cy="64" r="14" fill="#0284C7"/>
+
+  <!-- Inner Emerald Vitality Dot -->
+  <circle cx="64" cy="64" r="8.5" fill="url(#vitalityGrad)"/>
+
+  <!-- Glass / Specular Highlight -->
+  <circle cx="61.5" cy="61.5" r="2.8" fill="#FFFFFF" opacity="0.85"/>
+</svg>

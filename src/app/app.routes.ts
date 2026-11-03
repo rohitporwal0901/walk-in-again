@@ -1,19 +1,22 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
+import { guestGuard } from './core/guards/guest.guard';
 
 export const routes: Routes = [
   // Default redirect
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 
-  // Auth
+  // Auth (Protected by guestGuard: logged-in users won't see login/register)
   {
     path: 'login',
+    canActivate: [guestGuard],
     loadComponent: () =>
       import('./auth/login/login.component').then(m => m.LoginComponent)
   },
   {
     path: 'register',
+    canActivate: [guestGuard],
     loadComponent: () =>
       import('./auth/register/register.component').then(m => m.RegisterComponent)
   },
