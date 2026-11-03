@@ -1,76 +1,116 @@
-<div class="search-page animate-fade-in">
+<!-- Patient Search Page (Image 2 Modern Redesign) -->
+<div class="patient-search-container">
 
-  <!-- Header -->
-  <header class="search-header">
-    <h1>Patient Search</h1>
-    <p>Search by name or mobile number</p>
+  <!-- Top Navigation Header -->
+  <header class="top-nav-bar">
+    <button type="button" class="back-btn" (click)="goBack()" aria-label="Go Back" id="search-back-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </button>
+    <h1 class="page-title">Patient Search</h1>
+    <div class="header-placeholder"></div>
   </header>
 
-  <div class="search-body">
-    <!-- Search Input -->
-    <div class="search-box">
-      <svg class="search-icon" width="18" height="18" viewBox="0 0 18 18" fill="none">
-        <circle cx="8" cy="8" r="5.5" stroke="#94A3B8" stroke-width="1.8"/>
-        <path d="M12.5 12.5L16 16" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round"/>
-      </svg>
-      <input
-        id="patient-search-input"
-        type="search"
-        class="search-input"
-        placeholder="Search by name or mobile..."
-        [value]="searchQuery()"
-        (input)="onSearch($any($event.target).value)"
-        autocomplete="off"
-      />
-    </div>
-
-    <!-- Loading -->
-    @if (isSearching()) {
-      <div class="searching-state">
-        <span class="spinner"></span>
-        <span>Searching...</span>
-      </div>
-    }
-
-    <!-- Results -->
-    @if (!isSearching() && searchResults().length > 0) {
-      <div class="results-count">{{ searchResults().length }} patient(s) found</div>
-      @for (patient of searchResults(); track patient.userId; let i = $index) {
-        <div class="patient-result-card animate-fade-in-up stagger-{{ i + 1 }}" [id]="'patient-' + patient.userId">
-          <div class="result-avatar">{{ (patient.name || 'P').charAt(0).toUpperCase() }}</div>
-          <div class="result-info">
-            <p class="result-name">{{ patient.name }}</p>
-            <p class="result-mobile">+91 {{ patient.mobileNumber }}</p>
-            @if (patient.problemArea || patient.condition) {
-              <span class="condition-tag">{{ patient.problemArea || patient.condition }}</span>
-            }
-          </div>
-          <button
-            class="btn btn--accent btn--sm"
-            [disabled]="isCreatingSession()"
-            (click)="startSessionForPatient(patient)"
-            [id]="'start-' + patient.userId"
-          >
-            {{ isCreatingSession() ? 'Starting...' : 'Start Session' }}
-          </button>
-        </div>
-      }
-    }
-
-    @if (!isSearching() && hasSearched() && searchResults().length === 0) {
-      <div class="empty-search">
-        <span style="font-size:48px">🔍</span>
-        <p>No patients found</p>
-        <span class="text-muted text-sm">Try a different name or mobile number</span>
-      </div>
-    }
-
-    @if (!hasSearched()) {
-      <div class="search-hint">
-        <div class="hint-icon">👥</div>
-        <p>Type to search for patients</p>
-        <span class="text-muted text-sm">Search by name or mobile number</span>
-      </div>
+  <!-- Search Input Bar -->
+  <div class="search-input-wrapper">
+    <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+    <input
+      id="patient-search-input"
+      type="search"
+      class="search-field"
+      placeholder="Search by name or mobile..."
+      [value]="searchQuery()"
+      (input)="onSearch($any($event.target).value)"
+      autocomplete="off"
+    />
+    @if (searchQuery()) {
+      <button type="button" class="clear-btn" (click)="onSearch('')" aria-label="Clear search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
     }
   </div>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="patients-card-list">
+      @for (i of [1, 2, 3, 4]; track i) {
+        <div class="patient-list-row skeleton-row">
+          <div class="skeleton-avatar"></div>
+          <div class="skeleton-info">
+            <div class="skeleton-line skeleton-title"></div>
+            <div class="skeleton-line skeleton-sub"></div>
+            <div class="skeleton-line skeleton-meta"></div>
+          </div>
+          <div class="skeleton-arrow"></div>
+        </div>
+      }
+    </div>
+  } @else {
+    <!-- Patients List (Unified White Card Matching Image 2) -->
+    @if (filteredPatients().length > 0) {
+      <div class="patients-card-list">
+        @for (patient of filteredPatients(); track patient.userId; let i = $index) {
+          <div
+            class="patient-list-row"
+            (click)="startSessionForPatient(patient)"
+            [id]="'patient-row-' + patient.userId"
+          >
+            <!-- Patient Avatar -->
+            <div
+              class="patient-avatar"
+              [style.background]="getAvatarColor(patient.name).bg"
+              [style.color]="getAvatarColor(patient.name).text"
+            >
+              {{ (patient.name || 'P').charAt(0).toUpperCase() }}
+            </div>
+
+            <!-- Patient Details -->
+            <div class="patient-info">
+              <h3 class="patient-name">{{ patient.name }}</h3>
+              <p class="patient-mobile">+91 {{ patient.mobileNumber }}</p>
+              <p class="patient-sub">{{ patient.condition || patient.problemArea || (patient.subscriptionStatus === 'active' ? 'Active Plan' : 'Walk-In Patient') }}</p>
+            </div>
+
+            <!-- Chevron Action -->
+            <div class="patient-action">
+              @if (isCreatingSession() && creatingPatientId() === (patient.uid || patient.userId || patient.mobileNumber)) {
+                <span class="spinner-sm"></span>
+              } @else {
+                <svg class="chevron-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <!-- Empty Results State -->
+      <div class="empty-results-centered">
+        <div class="empty-icon-wrap">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
+        <h3 class="empty-title">No Patients Found</h3>
+        <p class="empty-subtitle">
+          @if (searchQuery()) {
+            No registered patient matches "{{ searchQuery() }}".
+          } @else {
+            No registered patients found in clinic records.
+          }
+        </p>
+      </div>
+    }
+  }
+
 </div>

@@ -149,11 +149,13 @@ export class SessionService {
   /** Real-time listener for all sessions for a specific worker */
   listenToWorkerSessions(workerIdentifier: string, callback: (sessions: Session[]) => void): Unsubscribe {
     const colRef = collection(this.firestore, 'sessions');
-    const q = query(colRef, where('workerId', '==', workerIdentifier));
-    return onSnapshot(q, snap => {
+    return onSnapshot(colRef, snap => {
       const list: Session[] = [];
       snap.forEach(d => {
-        list.push(d.data() as Session);
+        const s = d.data() as Session;
+        if (!workerIdentifier || !s.workerId || s.workerId === workerIdentifier || s.workerMobile === workerIdentifier) {
+          list.push(s);
+        }
       });
       // Sort newest first
       list.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
