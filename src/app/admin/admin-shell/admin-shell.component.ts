@@ -33,6 +33,20 @@ export class AdminShellComponent {
     { id: 'nav-settings', icon: '⚙️', label: 'Settings', route: '/admin/settings' },
   ];
 
+  showLogoutConfirm = signal<boolean>(false);
+
   toggleSidebar() { this.sidebarOpen.update(v => !v); }
-  logout() { this.auth.logout(); }
+
+  openLogoutConfirm() {
+    this.showLogoutConfirm.set(true);
+  }
+
+  closeLogoutConfirm() {
+    this.showLogoutConfirm.set(false);
+  }
+
+  confirmLogout() {
+    this.showLogoutConfirm.set(false);
+    this.auth.logout();
+  }
 }

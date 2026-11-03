@@ -1,4 +1,4 @@
-<!-- Worker Dashboard (Image 2 Modern Redesign) -->
+<!-- Worker Dashboard (Matching Image 2 Clean Layout) -->
 <div class="worker-dashboard-container">
 
   <!-- Top Bar Header -->
@@ -59,28 +59,34 @@
     </div>
   </section>
 
-  <!-- Metrics Grid: Row 2 (2 Cards) -->
+  <!-- Metrics Grid: Row 2 (2 Symmetrical Cards Matching Image 2) -->
   <section class="stats-row-2">
-    <!-- Left Card: Top Completed -->
+    <!-- Left Card: Top Rate -->
     <div class="stat-wide-card">
-      <span class="top-tag">Top</span>
-      <span class="wide-label">Completed</span>
+      <div class="wide-top">
+        <span class="top-tag">Top</span>
+        <span class="rate-sub">{{ completionRate() }}</span>
+      </div>
+      <div class="wide-title">Completed</div>
     </div>
 
     <!-- Right Card: Earnings -->
     <div class="stat-wide-card earnings-card">
-      <div class="earnings-val">
+      <div class="wide-top">
         <span class="teal-dot"></span>
-        <span class="amount">₹{{ totalEarnings().toLocaleString('en-IN') }}</span>
+        <span class="revenue-val">₹{{ totalEarnings().toLocaleString('en-IN') }}</span>
       </div>
-      <span class="wide-label">Earnings</span>
+      <div class="wide-title">Earnings</div>
     </div>
   </section>
 
   <!-- Today's Patients Section -->
   <section class="queue-section">
     <div class="section-top">
-      <h2 class="section-title">Today's Patients</h2>
+      <div class="section-title-wrap">
+        <h2 class="section-title">Today's Patients</h2>
+        <span class="queue-count-badge">{{ todaySessions().length }} in Queue</span>
+      </div>
       <a routerLink="/worker/history" class="view-all-link">View All &rsaquo;</a>
     </div>
 
@@ -99,10 +105,11 @@
         }
       </div>
     } @else {
-      <!-- Patients List -->
+      <!-- Patients List (Single Clean Row Exactly Like Image 2) -->
       <div class="patient-list">
         @for (session of todaySessions(); track session.sessionId) {
-          <div class="patient-row-card">
+          <div class="patient-row-card" [id]="'patient-card-' + session.sessionId">
+            <!-- Left: Avatar -->
             <div
               class="patient-avatar"
               [style.background]="getAvatarColor(session.patientName).bg"
@@ -111,17 +118,21 @@
               {{ (session.patientName || 'P').charAt(0).toUpperCase() }}
             </div>
 
+            <!-- Middle: Name & Status Time -->
             <div class="patient-details">
               <h3 class="patient-name">{{ session.patientName }}</h3>
-              <p class="patient-time">
+              <p class="patient-meta">
                 @if (session.status === 'completed') {
                   <span>Ended at {{ getEndTime(session) }} ({{ session.duration || 1 }}m)</span>
+                } @else if (session.status === 'active') {
+                  <span class="active-badge-text">In Progress</span>
                 } @else {
                   <span>{{ session.timeSlot || '10:30 AM' }}</span>
                 }
               </p>
             </div>
 
+            <!-- Right: Pill Action (Completed or Start) -->
             <div class="patient-action">
               @if (session.status === 'completed') {
                 <span class="status-badge status-completed">Completed</span>
@@ -180,7 +191,7 @@
       <p>Search registered patients by Mobile or Name</p>
     </div>
     <button class="banner-search-btn" routerLink="/worker/search" id="quick-search" type="button">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>

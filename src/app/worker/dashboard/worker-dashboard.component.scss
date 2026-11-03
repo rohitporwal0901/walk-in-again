@@ -78,10 +78,11 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
     transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.06);
   }
 
   .stat-icon-bubble {
@@ -91,7 +92,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 
     &.stat-icon-blue {
       background: #E0F2FE;
@@ -114,7 +115,7 @@
     font-weight: 800;
     color: #0F172A;
     line-height: 1.1;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
   }
 
   .stat-lbl {
@@ -124,7 +125,7 @@
   }
 }
 
-// ─── Row 2: 2 Stat Cards ─────────────────────────────────────────────────────
+// ─── Row 2: 2 Symmetrical Cards (Matching Image 2) ───────────────────────────
 .stats-row-2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -140,8 +141,23 @@
   border: 1px solid rgba(226, 232, 240, 0.7);
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  min-height: 74px;
+  justify-content: space-between;
+  min-height: 76px;
+  box-sizing: border-box;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.06);
+  }
+
+  .wide-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
 
   .top-tag {
     background: #E0F2FE;
@@ -150,22 +166,25 @@
     font-weight: 700;
     padding: 2px 8px;
     border-radius: 9999px;
-    align-self: flex-start;
-    margin-bottom: 6px;
   }
 
-  .wide-label {
+  .rate-sub {
     font-size: 13px;
-    font-weight: 700;
-    color: #334155;
+    font-weight: 800;
+    color: #0F172A;
+  }
+
+  .wide-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: #1E293B;
+    letter-spacing: -0.01em;
   }
 
   &.earnings-card {
-    .earnings-val {
-      display: flex;
-      align-items: center;
+    .wide-top {
+      justify-content: flex-start;
       gap: 7px;
-      margin-bottom: 4px;
 
       .teal-dot {
         width: 7px;
@@ -175,10 +194,11 @@
         display: inline-block;
       }
 
-      .amount {
-        font-size: 18px;
+      .revenue-val {
+        font-size: 17px;
         font-weight: 800;
         color: #0F172A;
+        letter-spacing: -0.01em;
       }
     }
   }
@@ -195,11 +215,26 @@
   justify-content: space-between;
   margin-bottom: 14px;
 
+  .section-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
   .section-title {
     font-size: 17px;
     font-weight: 800;
     color: #0F172A;
     margin: 0;
+  }
+
+  .queue-count-badge {
+    background: #E0F2FE;
+    color: #0284C7;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 9999px;
   }
 
   .view-all-link {
@@ -221,16 +256,18 @@
   gap: 10px;
 }
 
+// Single clean horizontal row (Exact Image 2 Mockup style)
 .patient-row-card {
   background: #FFFFFF;
   border-radius: 18px;
-  padding: 12px 16px;
+  padding: 14px 16px;
   box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
   border: 1px solid rgba(226, 232, 240, 0.7);
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 
   &:active {
     transform: scale(0.99);
@@ -263,16 +300,38 @@
       text-overflow: ellipsis;
     }
 
-    .patient-time {
+    .patient-meta {
       font-size: 12px;
       font-weight: 500;
       color: #64748B;
       margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      .active-badge-text {
+        color: #0284C7;
+        font-weight: 700;
+      }
     }
   }
 
   .patient-action {
     flex-shrink: 0;
+
+    .status-badge {
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 9999px;
+      padding: 6px 16px;
+      display: inline-block;
+
+      &.status-completed {
+        background: #DCFCE7;
+        color: #15803D;
+        border: 1px solid rgba(22, 163, 74, 0.2);
+      }
+    }
 
     .btn-start {
       background: #0284C7;
@@ -295,23 +354,10 @@
         box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.25);
       }
     }
-
-    .status-badge {
-      font-size: 12px;
-      font-weight: 700;
-      border-radius: 9999px;
-      padding: 6px 14px;
-      display: inline-block;
-
-      &.status-completed {
-        background: #DCFCE7;
-        color: #15803D;
-      }
-    }
   }
 }
 
-// ─── Empty Queue Centered State (Clean & Open) ──────────────────────────────
+// ─── Empty Queue Card ────────────────────────────────────────────────────────
 .empty-queue-centered {
   display: flex;
   flex-direction: column;
@@ -377,27 +423,27 @@
 
 // ─── Walk-In Intake Banner ───────────────────────────────────────────────────
 .intake-banner {
-  background: linear-gradient(135deg, #0B2545 0%, #173861 100%);
-  border-radius: 18px;
+  background: linear-gradient(135deg, #0B2545 0%, #153E75 100%);
+  border-radius: 20px;
   padding: 18px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-top: 14px;
   gap: 12px;
-  box-shadow: 0 6px 18px rgba(11, 37, 69, 0.15);
+  box-shadow: 0 8px 22px rgba(11, 37, 69, 0.18);
 
   .banner-text {
     h4 {
       font-size: 15px;
-      font-weight: 700;
+      font-weight: 800;
       color: #FFFFFF;
       margin: 0 0 3px;
     }
 
     p {
       font-size: 11.5px;
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(255, 255, 255, 0.72);
       margin: 0;
     }
   }

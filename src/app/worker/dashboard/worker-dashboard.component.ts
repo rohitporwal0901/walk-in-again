@@ -74,6 +74,20 @@ export class WorkerDashboardComponent implements OnDestroy {
     return this.todaySessions().filter(s => s.status === 'completed').length;
   });
 
+  completionRate = computed(() => {
+    const total = this.todaySessions().length;
+    if (total === 0) return '100%';
+    const done = this.completedTodayCount();
+    return `${Math.round((done / total) * 100)}%`;
+  });
+
+  completionPercentageNumber = computed(() => {
+    const total = this.todaySessions().length;
+    if (total === 0) return 100;
+    const done = this.completedTodayCount();
+    return Math.min(100, Math.round((done / total) * 100));
+  });
+
   totalEarnings = computed(() => {
     return this.allWorkerSessions()
       .filter(s => s.status === 'completed')
