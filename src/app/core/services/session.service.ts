@@ -12,7 +12,7 @@ import {
   getDocs,
   Unsubscribe
 } from '@angular/fire/firestore';
-import { Session, SessionStatus, TherapyItem, DEFAULT_THERAPIES } from '../models/session.model';
+import { Session, SessionStatus, TherapyItem, DEFAULT_THERAPIES, calculateSessionEarning } from '../models/session.model';
 import { Transaction } from '../models/transaction.model';
 import { SubscriptionService } from './subscription.service';
 
@@ -142,6 +142,14 @@ export class SessionService {
     const activeSub = await this.subscriptionService.getActiveSubscription(data.patientId);
     const isCovered = !!(activeSub && (activeSub.remainingSessions ?? 0) > 0);
     const fee = isCovered ? 0 : 500;
+    // Calculate session earning value for worker according to plan package (e.g. Monthly 10000/30 = ₹333)
+    const sessionValue = isCovered
+      ? calculateSessionEarning({
+          isCoveredBySubscription: true,
+          planName: activeSub?.planName,
+          sessionValue: activeSub?.price && activeSub?.totalSessions ? Math.round(activeSub.price / activeSub.totalSessions) : undefined
+        })
+      : 500;
     const paymentStatus: 'paid' | 'pending' = isCovered ? 'paid' : 'pending';
 
     // 4. Generate 4-digit OTP for patient verification
@@ -169,6 +177,7 @@ export class SessionService {
       therapies: this.getDefaultTherapies(),
       notes: data.notes || '',
       fee,
+      sessionValue,
       createdAt: now.toISOString(),
       updatedAt: now.toISOString()
     };
@@ -305,6 +314,11 @@ export class SessionService {
     }
 
     const paymentStatus = forcedPaymentStatus ? forcedPaymentStatus : (isCovered ? 'paid' : 'pending');
+    const sessionValue = sessData?.sessionValue || calculateSessionEarning({
+      isCoveredBySubscription: isCovered,
+      planName: sessData?.planName,
+      fee
+    });
 
     const now = new Date().toISOString();
     await updateDoc(sessionRef, {
@@ -313,6 +327,7 @@ export class SessionService {
       notes,
       therapies,
       fee: isCovered ? 0 : fee,
+      sessionValue,
       endedAt: now,
       paymentStatus,
       updatedAt: now

@@ -178,9 +178,9 @@
         </div>
         <div class="stat-divider"></div>
         <div class="stat-col">
-          <span class="stat-label">Session Fee</span>
+          <span class="stat-label">{{ isCoveredByPlan() ? 'Your Earning' : 'Session Fee' }}</span>
           @if (isCoveredByPlan()) {
-            <span class="stat-val fee-free">₹0 <span class="covered-tag">{{ planName() || 'Plan' }}</span></span>
+            <span class="stat-val fee-free">₹{{ sessionValue() }} <span class="covered-tag">{{ planName() || 'Plan' }}</span></span>
           } @else {
             <span class="stat-val fee-accent">₹{{ sessionFee() }}</span>
           }
@@ -198,8 +198,8 @@
           </svg>
         </div>
         <div class="sub-coverage-content">
-          <h4 class="sub-cov-title">Active Subscription Package</h4>
-          <p class="sub-cov-desc">Session covered under <strong>{{ planName() || 'Subscription Plan' }}</strong>.</p>
+          <h4 class="sub-cov-title">Covered by {{ planName() || 'Subscription Plan' }}</h4>
+          <p class="sub-cov-desc">Earning credited to your dashboard: <strong>+₹{{ sessionValue() }}</strong></p>
           <span class="sub-cov-badge">1 session will be deducted from patient's plan balance.</span>
         </div>
       </div>

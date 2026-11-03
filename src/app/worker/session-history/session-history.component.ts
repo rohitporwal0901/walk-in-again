@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { SessionService } from '../../core/services/session.service';
 import { AuthService } from '../../core/services/auth.service';
-import { Session } from '../../core/models/session.model';
+import { Session, calculateSessionEarning } from '../../core/models/session.model';
 import { Unsubscribe } from '@angular/fire/firestore';
 
 @Component({
@@ -17,6 +17,8 @@ export class SessionHistoryComponent implements OnDestroy {
   private sessionService = inject(SessionService);
   private auth = inject(AuthService);
   private router = inject(Router);
+
+  calculateSessionEarning = calculateSessionEarning;
 
   private sessionsUnsub: Unsubscribe | null = null;
   allSessions = signal<Session[]>([]);
@@ -33,7 +35,7 @@ export class SessionHistoryComponent implements OnDestroy {
   });
 
   totalEarnings = computed(() => {
-    return this.completedSessions().reduce((sum, s) => sum + (Number(s.fee) || 0), 0);
+    return this.completedSessions().reduce((sum, s) => sum + calculateSessionEarning(s), 0);
   });
 
   constructor() {

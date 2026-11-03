@@ -209,11 +209,25 @@
 
   .fee-wrap {
     flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+
     .fee-badge {
       font-size: 18px;
       font-weight: 800;
       color: #0F172A;
       letter-spacing: -0.02em;
+    }
+
+    .plan-tag-mini {
+      font-size: 10.5px;
+      font-weight: 700;
+      background: #E0F2FE;
+      color: #0284C7;
+      padding: 2px 7px;
+      border-radius: 6px;
     }
   }
 

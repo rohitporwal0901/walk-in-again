@@ -63,9 +63,19 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
     ) || null
   );
 
-  completedSessions = computed(() =>
-    this.patientSessions().filter(s => s.status === 'completed' && s.paymentStatus === 'paid').length
-  );
+  completedSessions = computed(() => {
+    const sub = this.activePlanSub();
+    if (sub && sub.totalSessions) {
+      // Isolate current active plan: only sessions used in this plan count!
+      return Math.max(0, sub.totalSessions - (sub.remainingSessions ?? sub.totalSessions));
+    }
+    // If NO active subscription, count regular walk-in completed & paid sessions
+    return this.patientSessions().filter(s =>
+      s.status === 'completed' &&
+      s.paymentStatus === 'paid' &&
+      !s.isCoveredBySubscription
+    ).length;
+  });
 
   totalRecommendedSessions = computed(() => {
     const sub = this.activePlanSub();

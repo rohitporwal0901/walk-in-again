@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SessionService } from '../../core/services/session.service';
 import { PaymentService } from '../../core/services/payment.service';
 import { AuthService } from '../../core/services/auth.service';
-import { TherapyItem, Session } from '../../core/models/session.model';
+import { TherapyItem, Session, calculateSessionEarning } from '../../core/models/session.model';
 import { Unsubscribe } from '@angular/fire/firestore';
 
 @Component({
@@ -43,6 +43,7 @@ export class ActiveSessionComponent implements OnInit, OnDestroy {
 
   isCoveredByPlan = signal<boolean>(false);
   planName = signal<string>('');
+  sessionValue = signal<number>(500);
   showDirectPay = signal<boolean>(false);
 
   sessionDuration = computed(() => Math.max(1, Math.ceil(this.sessionService.timerSeconds() / 60)));
@@ -64,6 +65,8 @@ export class ActiveSessionComponent implements OnInit, OnDestroy {
             this.isCoveredByPlan.set(true);
             if (sess.planName) this.planName.set(sess.planName);
           }
+          const earningVal = calculateSessionEarning(sess);
+          this.sessionValue.set(earningVal);
           if (sess.therapies && sess.therapies.length > 0) {
             this.therapies.set(sess.therapies);
           }

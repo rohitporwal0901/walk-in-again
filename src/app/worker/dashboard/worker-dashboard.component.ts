@@ -4,7 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { Firestore, collection, query, where, onSnapshot, Unsubscribe } from '@angular/fire/firestore';
 import { AuthService } from '../../core/services/auth.service';
 import { SessionService } from '../../core/services/session.service';
-import { Session } from '../../core/models/session.model';
+import { Session, calculateSessionEarning } from '../../core/models/session.model';
 
 @Component({
   selector: 'app-worker-dashboard',
@@ -91,7 +91,7 @@ export class WorkerDashboardComponent implements OnDestroy {
   totalEarnings = computed(() => {
     return this.allWorkerSessions()
       .filter(s => s.status === 'completed')
-      .reduce((sum, s) => sum + (Number(s.fee) || 0), 0);
+      .reduce((sum, s) => sum + calculateSessionEarning(s), 0);
   });
 
   constructor() {

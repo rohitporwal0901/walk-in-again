@@ -88,7 +88,10 @@
                 </div>
 
                 <div class="fee-wrap">
-                  <span class="fee-badge">₹{{ session.fee || 500 }}</span>
+                  <span class="fee-badge">₹{{ calculateSessionEarning(session) }}</span>
+                  @if (session.isCoveredBySubscription) {
+                    <span class="plan-tag-mini">{{ session.planName || 'Plan' }}</span>
+                  }
                 </div>
               </div>
 
