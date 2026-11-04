@@ -205,7 +205,7 @@
 
                 <!-- Status -->
                 <td class="col-status">
-                  @if (sub.status === 'active' && (sub.remainingSessions ?? 0) > 0) {
+                  @if (sub.status === 'active' && sub.remainingSessions > 0) {
                     <span class="status-pill status-active">
                       <span class="pulse-dot"></span>
                       Active

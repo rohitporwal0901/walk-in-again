@@ -25,7 +25,7 @@ export class AdminSubscriptionsComponent implements OnInit, OnDestroy {
 
   // Computed Metrics
   totalActiveCount = computed(() =>
-    this.subscriptions().filter(s => s.status === 'active' && (s.remainingSessions ?? 0) > 0).length
+    this.subscriptions().filter(s => s.status === 'active' && s.remainingSessions > 0).length
   );
 
   totalMonthlyCount = computed(() =>

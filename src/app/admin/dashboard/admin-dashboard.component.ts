@@ -1,4 +1,4 @@
-import { Component, signal, OnInit, inject } from '@angular/core';
+import { Component, signal, computed, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -113,12 +113,12 @@ export class AdminDashboardComponent implements OnInit {
     'Geriatric Physiotherapy'
   ];
 
-  kpis: KpiCard[] = [
-    { label: 'Total Patients', value: '0', icon: '👥', growth: '+0%', growthPositive: true, color: '#2196F3', bgColor: '#EFF6FF' },
-    { label: 'Workers (Staff)', value: '0', icon: '👨‍⚕️', growth: '+0%', growthPositive: true, color: '#22C55E', bgColor: '#DCFCE7' },
-    { label: 'Sessions', value: '0', icon: '📋', growth: '+0%', growthPositive: true, color: '#F4A62A', bgColor: '#FFF8E7' },
-    { label: 'Total Revenue', value: '₹0', icon: '💰', growth: '+0%', growthPositive: true, color: '#EF4444', bgColor: '#FEE2E2' },
-  ];
+  kpis = computed<KpiCard[]>(() => [
+    { label: 'Total Patients', value: this.patientCount().toString(), icon: '', growth: '+0%', growthPositive: true, color: '#0284C7', bgColor: '#EFF6FF' },
+    { label: 'Workers (Staff)', value: this.workerCount().toString(), icon: '', growth: '+0%', growthPositive: true, color: '#16A34A', bgColor: '#DCFCE7' },
+    { label: 'Sessions', value: this.sessionCount().toString(), icon: '', growth: '+0%', growthPositive: true, color: '#D97706', bgColor: '#FEF3C7' },
+    { label: 'Total Revenue', value: '₹' + this.revenueTotal().toLocaleString('en-IN'), icon: '', growth: '+0%', growthPositive: true, color: '#E11D48', bgColor: '#FFE4E6' },
+  ]);
 
   // Pre-computed donut segments
   donutSegments: DonutSegment[] = [];
@@ -191,10 +191,6 @@ export class AdminDashboardComponent implements OnInit {
       this.workerCount.set(workers.length);
       this.rawWorkers.set(workers);
       this.updateTopWorkers();
-
-      // Update KPI Cards
-      this.kpis[0].value = patients.toString();
-      this.kpis[1].value = workers.length.toString();
     }, (err) => {
       console.warn('Users snapshot listener:', err);
     });
@@ -203,7 +199,6 @@ export class AdminDashboardComponent implements OnInit {
     const sessionsRef = collection(this.firestore, 'sessions');
     const sessionsUnsub = onSnapshot(sessionsRef, (snapshot) => {
       this.sessionCount.set(snapshot.size);
-      this.kpis[2].value = snapshot.size.toString();
 
       const workerStats: Record<string, { count: number; earnings: number }> = {};
       snapshot.forEach(docSnap => {
@@ -254,7 +249,6 @@ export class AdminDashboardComponent implements OnInit {
 
       this.revenueTotal.set(totalRevenue);
       this.recentTransactions.set(txns.slice(0, 10));
-      this.kpis[3].value = `₹${totalRevenue.toLocaleString('en-IN')}`;
     }, (err) => {
       console.warn('Transactions snapshot listener:', err);
     });

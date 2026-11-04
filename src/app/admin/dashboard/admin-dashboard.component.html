@@ -23,7 +23,7 @@
 
   <!-- KPI Cards -->
   <div class="kpi-grid">
-    @for (kpi of kpis; track kpi.label; let i = $index) {
+    @for (kpi of kpis(); track kpi.label; let i = $index) {
       <div class="kpi-card animate-fade-in-up stagger-{{ i + 1 }}" [style.--kpi-color]="kpi.color" [style.--kpi-bg]="kpi.bgColor">
         <div class="kpi-icon-wrap">
           @if (kpi.label.includes('Patient')) {
