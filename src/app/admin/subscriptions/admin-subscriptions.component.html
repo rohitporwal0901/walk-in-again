@@ -136,7 +136,7 @@
               <th>Sessions Balance</th>
               <th>Price</th>
               <th>Payment</th>
-              <th>Validity</th>
+              <th>Enrolled Date</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -191,16 +191,9 @@
                   <span class="payment-badge">{{ sub.paymentMethod || 'UPI' }}</span>
                 </td>
 
-                <!-- Validity -->
+                <!-- Enrolled Date -->
                 <td class="col-validity">
-                  <div class="validity-wrap">
-                    <span class="exp-date">{{ sub.expiryDate | date:'d MMM, yyyy' }}</span>
-                    @if (getRemainingDays(sub) !== null) {
-                      <span class="days-left-tag" [class.days-low]="getRemainingDays(sub)! <= 5">
-                        {{ getRemainingDays(sub) }} days left
-                      </span>
-                    }
-                  </div>
+                  <span class="exp-date">{{ (sub.createdAt || sub.startDate) | date:'d MMM, yyyy' }}</span>
                 </td>
 
                 <!-- Status -->

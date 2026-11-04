@@ -39,14 +39,14 @@
             Active Plan
           </span>
           <span class="active-days-tag">
-            {{ planRemainingDays() !== null ? planRemainingDays() + ' Days Left' : 'Active' }}
+            {{ sub.remainingSessions }} Sessions Left
           </span>
         </div>
 
         <div class="active-card-body">
           <div class="active-plan-left">
             <h2 class="active-plan-title">{{ sub.planName }} Plan</h2>
-            <p class="active-expiry-text">Valid till {{ sub.expiryDate | date:'d MMMM, yyyy' }}</p>
+            <p class="active-expiry-text">Expires when all {{ sub.totalSessions }} sessions completed</p>
           </div>
 
           <div class="active-sessions-stat">
@@ -163,10 +163,10 @@
               </span>
               <span class="plan-badge-pill">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <polyline points="12 6 12 12 16 14"></polyline>
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
                 </svg>
-                {{ plan.durationDays }} Days Validity
+                Session Based Pack
               </span>
             </div>
 
@@ -216,7 +216,7 @@
           <div class="sheet-plan-summary">
             <div class="summary-left">
               <h3 class="summary-name">{{ plan.name }} Plan</h3>
-              <p class="summary-detail">{{ plan.sessions }} sessions · {{ plan.durationDays }} days validity</p>
+              <p class="summary-detail">{{ plan.sessions }} sessions · Session Based Package</p>
             </div>
             <div class="summary-price">₹{{ plan.price | number }}</div>
           </div>
