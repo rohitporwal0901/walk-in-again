@@ -63,6 +63,25 @@ export class SubscriptionService {
     });
   }
 
+  /** Watch subscription plans in real-time */
+  watchPlans(cb: (plans: SubscriptionPlan[]) => void): Unsubscribe {
+    const ref = doc(this.firestore, 'config', 'subscription_plans');
+    return onSnapshot(ref, (snap) => {
+      if (snap.exists()) {
+        const data = snap.data();
+        const plans: SubscriptionPlan[] = data['plans'] || [];
+        if (plans.length > 0) {
+          cb(plans.sort((a, b) => a.order - b.order));
+          return;
+        }
+      }
+      cb(this.getDefaultPlans());
+    }, (err) => {
+      console.warn('watchPlans error:', err);
+      cb(this.getDefaultPlans());
+    });
+  }
+
   /**
    * Fetch active subscription for a patient (checks remainingSessions > 0 and not expired)
    */

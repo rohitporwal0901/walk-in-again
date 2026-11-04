@@ -15,11 +15,13 @@ import {
 import { Session, SessionStatus, TherapyItem, DEFAULT_THERAPIES, calculateSessionEarning } from '../models/session.model';
 import { Transaction } from '../models/transaction.model';
 import { SubscriptionService } from './subscription.service';
+import { PricingService } from './pricing.service';
 
 @Injectable({ providedIn: 'root' })
 export class SessionService {
   private firestore = inject(Firestore);
   private subscriptionService = inject(SubscriptionService);
+  public pricingService = inject(PricingService);
 
   // Timer Signals
   private _timerSeconds = signal<number>(0);
@@ -141,7 +143,8 @@ export class SessionService {
     // 3. Check if patient has an active subscription plan
     const activeSub = await this.subscriptionService.getActiveSubscription(data.patientId);
     const isCovered = !!(activeSub && (activeSub.remainingSessions ?? 0) > 0);
-    const fee = isCovered ? 0 : 500;
+    const walkInRate = await this.pricingService.getWalkInFee();
+    const fee = isCovered ? 0 : walkInRate;
     // Calculate session earning value for worker according to plan package (e.g. Monthly 10000/30 = ₹333)
     const sessionValue = isCovered
       ? calculateSessionEarning({
@@ -149,7 +152,7 @@ export class SessionService {
           planName: activeSub?.planName,
           sessionValue: activeSub?.price && activeSub?.totalSessions ? Math.round(activeSub.price / activeSub.totalSessions) : undefined
         })
-      : 500;
+      : walkInRate;
     const paymentStatus: 'paid' | 'pending' = isCovered ? 'paid' : 'pending';
 
     // 4. Generate 4-digit OTP for patient verification
@@ -424,7 +427,7 @@ export class SessionService {
   }
 
   getSessionFee(durationMinutes: number): number {
-    const baseRate = 500;
+    const baseRate = this.pricingService.walkInFee();
     const multiplier = Math.max(1, Math.ceil(durationMinutes / 30));
     return baseRate * multiplier;
   }

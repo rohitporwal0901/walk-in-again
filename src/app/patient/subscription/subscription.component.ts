@@ -32,6 +32,7 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   errorMsg = signal('');
 
   private subUnsub: Unsubscribe | null = null;
+  private plansUnsub: Unsubscribe | null = null;
 
   planRemainingDays = computed(() => {
     const sub = this.activeSub();
@@ -54,9 +55,10 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   });
 
   async ngOnInit() {
-    const plans = await this.subService.getPlans();
-    this.plans.set(plans);
-    this.isLoading.set(false);
+    this.plansUnsub = this.subService.watchPlans((plans) => {
+      this.plans.set(plans);
+      this.isLoading.set(false);
+    });
 
     const user = this.authService.currentUser();
     if (user?.uid) {
@@ -68,6 +70,7 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subUnsub?.();
+    this.plansUnsub?.();
   }
 
   selectPlan(plan: SubscriptionPlan) {

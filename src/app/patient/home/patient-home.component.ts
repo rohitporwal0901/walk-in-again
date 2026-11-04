@@ -5,6 +5,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { SessionService } from '../../core/services/session.service';
 import { SubscriptionService } from '../../core/services/subscription.service';
 import { PaymentService } from '../../core/services/payment.service';
+import { PricingService } from '../../core/services/pricing.service';
 import { Session } from '../../core/models/session.model';
 import { UserSubscription } from '../../core/models/subscription.model';
 import { Unsubscribe } from '@angular/fire/firestore';
@@ -21,7 +22,10 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
   private sessionService = inject(SessionService);
   private subscriptionService = inject(SubscriptionService);
   private paymentService = inject(PaymentService);
+  public pricingService = inject(PricingService);
   private router = inject(Router);
+
+  readonly defaultWalkInFee = this.pricingService.walkInFee;
 
   private sessionsUnsub: Unsubscribe | null = null;
   private subUnsub: Unsubscribe | null = null;
@@ -167,7 +171,7 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
 
     try {
       const user = this.auth.currentUser();
-      const fee = session.fee || 500;
+      const fee = session.fee || this.pricingService.walkInFee();
 
       const response = await this.paymentService.openPayment({
         amount: fee,

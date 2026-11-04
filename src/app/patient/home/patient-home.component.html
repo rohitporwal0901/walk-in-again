@@ -136,7 +136,7 @@
         <div class="payment-due-banner animate-scale-in">
           <div class="due-banner-head">
             <span class="due-badge">Session Completed</span>
-            <span class="due-amount">₹{{ completedSess.fee || 500 }}</span>
+            <span class="due-amount">₹{{ completedSess.fee || defaultWalkInFee() }}</span>
           </div>
           <div class="due-details">
             <p class="due-desc">Dr. {{ completedSess.workerName }} has completed your physiotherapy session ({{ completedSess.duration || 30 }} mins).</p>
@@ -152,7 +152,7 @@
               <span class="spinner-sm"></span>
               <span>Opening Payment...</span>
             } @else {
-              <span>Pay ₹{{ completedSess.fee || 500 }} (UPI / Card)</span>
+              <span>Pay ₹{{ completedSess.fee || defaultWalkInFee() }} (UPI / Card)</span>
             }
           </button>
         </div>
