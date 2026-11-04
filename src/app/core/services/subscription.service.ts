@@ -98,19 +98,8 @@ export class SubscriptionService {
       if (!snap.empty) {
         for (const docSnap of snap.docs) {
           const sub = docSnap.data() as UserSubscription;
-          // Verify remaining sessions and expiry
+          // Verify remaining sessions: Plan stays active until sessions reach 0
           if ((sub.remainingSessions ?? 0) > 0) {
-            if (sub.expiryDate) {
-              const isExpired = new Date(sub.expiryDate).getTime() < new Date().getTime();
-              if (isExpired) {
-                // Auto-mark expired
-                await updateDoc(doc(this.firestore, 'subscriptions', docSnap.id), {
-                  status: 'expired',
-                  updatedAt: new Date().toISOString()
-                });
-                continue;
-              }
-            }
             return { ...sub, subscriptionId: docSnap.id };
           } else {
             // No sessions left -> mark expired
