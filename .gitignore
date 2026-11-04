@@ -40,3 +40,14 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+.firebase/
+
+# Android & APK
+*.apk
+*.aab
+/android/.gradle
+/android/app/build
+/android/build
+/android/capacitor-cordova-android-plugins/build
+.gradle/
+local.properties

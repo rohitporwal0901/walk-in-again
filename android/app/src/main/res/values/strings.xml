@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Walk In Again</string>
+    <string name="title_activity_main">Walk In Again</string>
+    <string name="package_name">com.walkinagain.physio</string>
+    <string name="custom_url_scheme">com.walkinagain.physio</string>
+</resources>

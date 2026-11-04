@@ -126,7 +126,8 @@
 - [x] Dev server verification on port 4200
 - [ ] PWA Manifest & Service Worker for offline mobile app installation
 - [ ] Unit & Component Tests for core services
-- [ ] Firebase Hosting deployment (`firebase deploy --only hosting`)
+- [x] Firebase Hosting deployment (`https://walkin-physio.web.app`)
+- [x] Capacitor Android native project setup & standalone Debug APK generation (`walkin-physio.apk`)
 
 ---
 
