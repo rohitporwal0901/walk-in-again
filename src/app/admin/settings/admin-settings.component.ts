@@ -336,22 +336,22 @@ import { Unsubscribe } from '@angular/fire/firestore';
 
     .page-title {
       font-size: 20px;
-      font-weight: 800;
+      font-weight: 700;
       color: #0F172A;
-      margin: 0 0 3px;
+      margin: 0 0 2px;
       letter-spacing: -0.01em;
     }
 
     .page-sub {
-      font-size: 12px;
+      font-size: 12.5px;
       color: #64748B;
       margin: 0;
     }
 
     .btn {
-      padding: 8px 16px;
-      border-radius: 10px;
-      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-weight: 600;
       font-size: 12.5px;
       cursor: pointer;
       border: none;
@@ -364,7 +364,7 @@ import { Unsubscribe } from '@angular/fire/firestore';
     .btn-primary {
       background: #0284C7;
       color: white;
-      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
+      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
     }
 
     .btn-primary:hover:not(:disabled) {
@@ -378,8 +378,8 @@ import { Unsubscribe } from '@angular/fire/firestore';
     }
 
     .spinner-sm {
-      width: 13px;
-      height: 13px;
+      width: 14px;
+      height: 14px;
       border: 2px solid rgba(255, 255, 255, 0.3);
       border-top-color: #FFFFFF;
       border-radius: 50%;
@@ -394,23 +394,23 @@ import { Unsubscribe } from '@angular/fire/firestore';
       background: #F0FDF4;
       border: 1px solid #86EFAC;
       color: #166534;
-      padding: 9px 14px;
-      border-radius: 10px;
-      font-size: 12.5px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12px;
       font-weight: 600;
       margin-bottom: 14px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .alert-error {
       background: #FEF2F2;
       border: 1px solid #FCA5A5;
       color: #991B1B;
-      padding: 9px 14px;
-      border-radius: 10px;
-      font-size: 12.5px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12px;
       font-weight: 600;
       margin-bottom: 14px;
     }
@@ -418,18 +418,18 @@ import { Unsubscribe } from '@angular/fire/firestore';
     .content-grid {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
 
     .section-card {
       background: #FFFFFF;
-      border-radius: 16px;
-      padding: 18px 20px;
-      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+      border-radius: 12px;
+      padding: 16px 18px;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03);
       border: 1px solid #E2E8F0;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
 
     .card-head {
@@ -437,21 +437,21 @@ import { Unsubscribe } from '@angular/fire/firestore';
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
-      padding-bottom: 12px;
+      gap: 8px;
+      padding-bottom: 10px;
       border-bottom: 1px solid #F1F5F9;
     }
 
     .ch-left {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     .head-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 9px;
+      width: 30px;
+      height: 30px;
+      border-radius: 7px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -467,15 +467,15 @@ import { Unsubscribe } from '@angular/fire/firestore';
     }
 
     .head-title {
-      font-size: 15px;
-      font-weight: 800;
+      font-size: 14.5px;
+      font-weight: 700;
       color: #0F172A;
       margin: 0;
       letter-spacing: -0.01em;
     }
 
     .head-sub {
-      font-size: 11.5px;
+      font-size: 12px;
       color: #64748B;
     }
 

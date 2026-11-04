@@ -30,7 +30,7 @@ export class AdminShellComponent {
     { id: 'nav-workers', iconType: 'workers', label: 'Workers', route: '/admin/workers' },
     { id: 'nav-sessions', iconType: 'sessions', label: 'Sessions', route: '/admin/sessions' },
     { id: 'nav-transactions', iconType: 'transactions', label: 'Transactions', route: '/admin/transactions' },
-    { id: 'nav-reports', iconType: 'reports', label: 'Reports', route: '/admin/reports' },
+    // { id: 'nav-reports', iconType: 'reports', label: 'Reports', route: '/admin/reports' },
     { id: 'nav-settings', iconType: 'settings', label: 'Settings', route: '/admin/settings' },
   ];
 

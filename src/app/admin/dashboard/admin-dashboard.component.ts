@@ -114,10 +114,10 @@ export class AdminDashboardComponent implements OnInit {
   ];
 
   kpis = computed<KpiCard[]>(() => [
-    { label: 'Total Patients', value: this.patientCount().toString(), icon: '', growth: '+0%', growthPositive: true, color: '#0284C7', bgColor: '#EFF6FF' },
-    { label: 'Workers (Staff)', value: this.workerCount().toString(), icon: '', growth: '+0%', growthPositive: true, color: '#16A34A', bgColor: '#DCFCE7' },
-    { label: 'Sessions', value: this.sessionCount().toString(), icon: '', growth: '+0%', growthPositive: true, color: '#D97706', bgColor: '#FEF3C7' },
-    { label: 'Total Revenue', value: '₹' + this.revenueTotal().toLocaleString('en-IN'), icon: '', growth: '+0%', growthPositive: true, color: '#E11D48', bgColor: '#FFE4E6' },
+    { label: 'Total Patients', value: this.patientCount().toString(), icon: '', growth: '', growthPositive: true, color: '#0284C7', bgColor: '#EFF6FF' },
+    { label: 'Workers (Staff)', value: this.workerCount().toString(), icon: '', growth: '', growthPositive: true, color: '#16A34A', bgColor: '#DCFCE7' },
+    { label: 'Sessions', value: this.sessionCount().toString(), icon: '', growth: '', growthPositive: true, color: '#D97706', bgColor: '#FEF3C7' },
+    { label: 'Total Revenue', value: '₹' + this.revenueTotal().toLocaleString('en-IN'), icon: '', growth: '', growthPositive: true, color: '#E11D48', bgColor: '#FFE4E6' },
   ]);
 
   // Pre-computed donut segments

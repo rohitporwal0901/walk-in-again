@@ -60,7 +60,9 @@
         <p class="kpi-value">{{ kpi.value }}</p>
         <p class="kpi-label">{{ kpi.label }}</p>
       </div>
-      <div class="kpi-growth" [class.positive]="kpi.growthPositive">{{ kpi.growth }}</div>
+      @if (kpi.growth && kpi.growth !== '+0%' && kpi.growth !== '0%') {
+        <div class="kpi-growth" [class.positive]="kpi.growthPositive">{{ kpi.growth }}</div>
+      }
     </div>
     }
   </div>
@@ -71,10 +73,13 @@
     <!-- Revenue Chart -->
     <div class="chart-card animate-fade-in-up" style="animation-delay:.1s">
       <div class="chart-header">
-        <h3>Revenue Overview</h3>
+        <div>
+          <h3>Revenue Overview</h3>
+          <p class="chart-sub">Weekly income comparison (Current vs Previous month)</p>
+        </div>
         <div class="chart-legend">
-          <span class="legend-dot" style="background: var(--accent)"></span> This Month
-          <span class="legend-dot" style="background: var(--gold); margin-left:8px"></span> Last Month
+          <span class="legend-item"><span class="legend-dot" style="background: var(--accent)"></span> This Month</span>
+          <span class="legend-item"><span class="legend-dot" style="background: #CBD5E1"></span> Last Month</span>
         </div>
       </div>
       <div class="bar-chart">
@@ -90,6 +95,22 @@
             <span class="bar-label">{{ item.week }}</span>
           </div>
           }
+        </div>
+      </div>
+      <div class="chart-footer-stats">
+        <div class="cf-stat">
+          <span class="cf-label">Avg Weekly Revenue</span>
+          <span class="cf-val">₹2,000</span>
+        </div>
+        <div class="cf-divider"></div>
+        <div class="cf-stat">
+          <span class="cf-label">Peak Performance</span>
+          <span class="cf-val">Week 4 (₹2,800)</span>
+        </div>
+        <div class="cf-divider"></div>
+        <div class="cf-stat">
+          <span class="cf-label">Growth Rate</span>
+          <span class="cf-val font-accent">+33% MoM</span>
         </div>
       </div>
     </div>

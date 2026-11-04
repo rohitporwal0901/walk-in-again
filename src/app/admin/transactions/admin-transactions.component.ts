@@ -273,21 +273,21 @@ interface FormattedTransaction {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 24px;
+      margin-bottom: 14px;
       flex-wrap: wrap;
-      gap: 16px;
+      gap: 10px;
     }
 
     .page-title {
-      font-size: 24px;
-      font-weight: 800;
+      font-size: 20px;
+      font-weight: 700;
       color: #0F172A;
-      margin: 0 0 4px;
-      letter-spacing: -0.02em;
+      margin: 0 0 2px;
+      letter-spacing: -0.01em;
     }
 
     .page-sub {
-      font-size: 13.5px;
+      font-size: 12.5px;
       color: #64748B;
       margin: 0;
     }
@@ -295,19 +295,19 @@ interface FormattedTransaction {
     .top-status-badge {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       background: #DCFCE7;
       color: #166534;
-      padding: 6px 14px;
+      padding: 4px 10px;
       border-radius: 999px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       border: 1px solid #BBF7D0;
     }
 
     .live-dot {
-      width: 7px;
-      height: 7px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: #16A34A;
       animation: pulse 1.5s infinite;
@@ -316,44 +316,49 @@ interface FormattedTransaction {
     // KPI Cards Grid
     .kpi-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 18px;
-      margin-bottom: 26px;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
     }
 
     .kpi-card {
       background: #FFFFFF;
-      border-radius: 18px;
-      padding: 22px 24px;
+      border-radius: 12px;
+      padding: 16px 18px;
       display: flex;
       align-items: flex-start;
-      gap: 16px;
-      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+      gap: 14px;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03);
       border: 1px solid rgba(226, 232, 240, 0.85);
       transition: transform 0.15s ease, box-shadow 0.15s ease;
-      min-height: 108px;
+      min-height: 82px;
       box-sizing: border-box;
 
       &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
       }
     }
 
     .kpi-card.highlight-card {
       background: linear-gradient(135deg, #0B2545 0%, #134074 100%);
       border: none;
-      box-shadow: 0 8px 24px rgba(11, 37, 69, 0.2);
+      box-shadow: 0 4px 14px rgba(11, 37, 69, 0.2);
     }
 
     .kpi-icon-wrap {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
     }
 
     .icon-revenue {
@@ -382,17 +387,17 @@ interface FormattedTransaction {
     .kpi-content {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
       min-width: 0;
     }
 
     .kpi-label {
-      font-size: 11.5px;
-      font-weight: 700;
+      font-size: 12px;
+      font-weight: 600;
       color: #64748B;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      line-height: 1.3;
+      letter-spacing: 0.03em;
+      line-height: 1.25;
     }
 
     .label-light {
@@ -400,10 +405,10 @@ interface FormattedTransaction {
     }
 
     .kpi-value {
-      font-size: 24px;
-      font-weight: 800;
+      font-size: 22px;
+      font-weight: 750;
       color: #0F172A;
-      line-height: 1.2;
+      line-height: 1.15;
     }
 
     .val-light {
@@ -411,10 +416,10 @@ interface FormattedTransaction {
     }
 
     .kpi-sub-text {
-      font-size: 11.5px;
+      font-size: 11px;
       color: #94A3B8;
       font-weight: 500;
-      margin-top: 2px;
+      margin-top: 1px;
     }
 
     .sub-light {
@@ -424,20 +429,20 @@ interface FormattedTransaction {
     // Controls Panel
     .controls-panel {
       background: #FFFFFF;
-      border-radius: 16px;
-      padding: 16px 20px;
+      border-radius: 12px;
+      padding: 12px 16px;
       display: flex;
       align-items: center;
       flex-wrap: wrap;
-      gap: 16px;
-      margin-bottom: 22px;
+      gap: 14px;
+      margin-bottom: 16px;
       border: 1px solid rgba(226, 232, 240, 0.85);
-      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.02);
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.02);
     }
 
     .search-wrap {
       flex: 1;
-      min-width: 260px;
+      min-width: 240px;
       position: relative;
       display: flex;
       align-items: center;
@@ -445,18 +450,20 @@ interface FormattedTransaction {
 
     .search-wrap svg {
       position: absolute;
-      left: 14px;
+      left: 12px;
+      width: 16px;
+      height: 16px;
       pointer-events: none;
     }
 
     .search-input {
       width: 100%;
-      height: 42px;
-      padding: 0 14px 0 42px;
+      height: 38px;
+      padding: 0 12px 0 36px;
       border: 1.5px solid #E2E8F0;
-      border-radius: 10px;
+      border-radius: 8px;
       background: #F8FAFC;
-      font-size: 13.5px;
+      font-size: 13px;
       color: #0F172A;
       outline: none;
       transition: all 0.15s ease;
@@ -464,7 +471,7 @@ interface FormattedTransaction {
       &:focus {
         background: #FFFFFF;
         border-color: #0284C7;
-        box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+        box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.1);
       }
     }
 
@@ -477,19 +484,19 @@ interface FormattedTransaction {
 
     .filter-lbl {
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 600;
       color: #64748B;
-      margin-right: 4px;
+      margin-right: 2px;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
     }
 
     .filter-pill {
       background: #F8FAFC;
       border: 1px solid #E2E8F0;
-      padding: 7px 14px;
-      border-radius: 8px;
-      font-size: 12.5px;
+      padding: 6px 13px;
+      border-radius: 7px;
+      font-size: 12px;
       font-weight: 600;
       color: #475569;
       cursor: pointer;
@@ -505,15 +512,15 @@ interface FormattedTransaction {
         color: #FFFFFF;
         border-color: #0B2545;
         font-weight: 700;
-        box-shadow: 0 2px 8px rgba(11, 37, 69, 0.2);
+        box-shadow: 0 1px 4px rgba(11, 37, 69, 0.2);
       }
     }
 
     // Table Container
     .table-container-card {
       background: #FFFFFF;
-      border-radius: 20px;
-      box-shadow: 0 3px 16px rgba(15, 23, 42, 0.04);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
       border: 1px solid rgba(226, 232, 240, 0.85);
       overflow: hidden;
     }
@@ -534,12 +541,12 @@ interface FormattedTransaction {
     }
 
     .txns-table th {
-      padding: 14px 20px;
+      padding: 11px 14px;
       font-size: 11.5px;
-      font-weight: 700;
+      font-weight: 600;
       text-transform: uppercase;
       color: #64748B;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.03em;
       white-space: nowrap;
     }
 
@@ -553,8 +560,8 @@ interface FormattedTransaction {
     }
 
     .txns-table td {
-      padding: 16px 20px;
-      font-size: 13.5px;
+      padding: 11px 14px;
+      font-size: 12.5px;
       color: #1E293B;
       vertical-align: middle;
     }
@@ -562,37 +569,37 @@ interface FormattedTransaction {
     .id-cell {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 1px;
     }
 
     .txn-id {
       font-family: monospace;
-      font-size: 13px;
+      font-size: 12px;
       color: #0B2545;
-      font-weight: 800;
+      font-weight: 700;
     }
 
     .txn-date {
-      font-size: 11.5px;
+      font-size: 11px;
       color: #64748B;
     }
 
     .patient-cell {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .patient-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
       background: #0B2545;
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 700;
       flex-shrink: 0;
     }
@@ -600,28 +607,28 @@ interface FormattedTransaction {
     .patient-info {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 1px;
     }
 
     .p-name {
-      font-size: 13.5px;
-      font-weight: 700;
+      font-size: 13px;
+      font-weight: 600;
       color: #0F172A;
     }
 
     .p-phone {
-      font-size: 11.5px;
+      font-size: 11px;
       color: #64748B;
     }
 
     .desc-cell {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 2px;
     }
 
     .desc-title {
-      font-size: 13.5px;
+      font-size: 12.5px;
       color: #0F172A;
       font-weight: 600;
     }
@@ -629,27 +636,27 @@ interface FormattedTransaction {
     .plan-tag {
       display: inline-block;
       font-size: 11px;
-      font-weight: 700;
+      font-weight: 600;
       color: #6D28D9;
       background: #EDE9FE;
-      padding: 2px 8px;
-      border-radius: 6px;
+      padding: 2px 7px;
+      border-radius: 5px;
       width: fit-content;
       border: 1px solid #DDD6FE;
     }
 
     .amount-val {
-      font-size: 15px;
-      font-weight: 800;
+      font-size: 13.5px;
+      font-weight: 700;
       color: #059669;
     }
 
     .method-pill {
       display: inline-block;
-      padding: 4px 10px;
-      border-radius: 8px;
-      font-size: 11.5px;
-      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 600;
       white-space: nowrap;
     }
 
@@ -683,13 +690,13 @@ interface FormattedTransaction {
     }
 
     .worker-pill {
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 600;
       color: #334155;
     }
 
     .clinic-pill {
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       color: #64748B;
     }
@@ -697,11 +704,11 @@ interface FormattedTransaction {
     .status-badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       padding: 4px 10px;
       border-radius: 999px;
-      font-size: 11.5px;
-      font-weight: 700;
+      font-size: 11px;
+      font-weight: 600;
       white-space: nowrap;
     }
 
@@ -722,7 +729,7 @@ interface FormattedTransaction {
     }
 
     .empty-table-cell {
-      padding: 56px 24px !important;
+      padding: 32px 16px !important;
       text-align: center;
     }
 
@@ -733,25 +740,30 @@ interface FormattedTransaction {
     }
 
     .empty-icon-wrap {
-      width: 64px;
-      height: 64px;
-      border-radius: 16px;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
       background: #F1F5F9;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
+
+      svg {
+        width: 24px;
+        height: 24px;
+      }
     }
 
     .empty-box h3 {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 700;
       color: #0F172A;
-      margin: 0 0 6px;
+      margin: 0 0 4px;
     }
 
     .empty-box p {
-      font-size: 13.5px;
+      font-size: 12px;
       color: #64748B;
       margin: 0;
     }
@@ -760,15 +772,15 @@ interface FormattedTransaction {
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 60px 24px;
-      gap: 12px;
+      padding: 40px 16px;
+      gap: 10px;
       color: #64748B;
     }
 
     .spinner-ring {
-      width: 32px;
-      height: 32px;
-      border: 3px solid #E2E8F0;
+      width: 26px;
+      height: 26px;
+      border: 2.5px solid #E2E8F0;
       border-top-color: #0284C7;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
