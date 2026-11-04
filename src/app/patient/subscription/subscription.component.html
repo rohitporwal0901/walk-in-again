@@ -13,17 +13,45 @@
     </div>
   </header>
 
-  <!-- Success Toast -->
+  <!-- Fullscreen Confetti Canvas (Classic App Multi-Color Physics) -->
+  <canvas #confettiCanvas class="confetti-canvas" [class.canvas-active]="purchaseSuccess()"></canvas>
+
+  <!-- Celebration Success Modal -->
   @if (purchaseSuccess()) {
-    <div class="success-toast animate-fade-in-up">
-      <div class="toast-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-      </div>
-      <div class="toast-text">
-        <strong>Plan Activated Successfully!</strong>
-        <span>Your therapy sessions are unlocked.</span>
+    <div class="celebration-backdrop" (click)="closeCelebration()">
+      <div class="celebration-card" (click)="$event.stopPropagation()">
+        <!-- Decorative Glow Orb -->
+        <div class="celebration-glow" aria-hidden="true"></div>
+
+        <!-- Animated Success Checkmark Bubble -->
+        <div class="celebration-icon-bubble">
+          <div class="icon-pulse-ring"></div>
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+
+        <h2 class="celebration-title">Plan Activated!</h2>
+        <p class="celebration-subtitle">Your subscription has been successfully unlocked.</p>
+
+        <!-- Plan Summary Highlight Pill -->
+        @if (lastPurchasedPlan(); as p) {
+          <div class="celebration-plan-pill">
+            <div class="plan-pill-left">
+              <span class="plan-pill-name">{{ p.name }} Plan</span>
+              <span class="plan-pill-sessions">{{ p.sessions }} Sessions Credited</span>
+            </div>
+            <span class="plan-pill-badge">Active</span>
+          </div>
+        }
+
+        <p class="celebration-note">
+          You can now attend therapy sessions without paying per visit.
+        </p>
+
+        <button type="button" class="btn-celebration-done" (click)="closeCelebration()" id="btn-celebration-done">
+          Awesome, Let's Go!
+        </button>
       </div>
     </div>
   }
