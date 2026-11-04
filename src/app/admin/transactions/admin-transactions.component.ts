@@ -94,7 +94,7 @@ interface FormattedTransaction {
           </div>
           <div class="kpi-content">
             <span class="kpi-label">Total Transactions</span>
-            <span class="kpi-value">{{ transactions().length }}</span>
+            <span class="kpi-value">{{ filteredTransactions().length }}</span>
             <span class="kpi-sub-text">Average: ₹{{ averageTxnValue() }}</span>
           </div>
         </div>
@@ -932,6 +932,6 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy {
       list = list.filter(t => t.paymentMethod === method);
     }
 
-    return list;
+    return list.filter(t => t.paymentMethod !== 'Subscription');
   });
 }

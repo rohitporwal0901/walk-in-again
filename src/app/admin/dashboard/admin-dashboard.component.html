@@ -8,7 +8,8 @@
     </div>
     <div class="header-actions">
       <button class="btn btn-primary-sm" (click)="openAddWorkerModal()" id="btn-add-worker">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
           <line x1="12" y1="5" x2="12" y2="19"></line>
           <line x1="5" y1="12" x2="19" y2="12"></line>
         </svg>
@@ -24,38 +25,43 @@
   <!-- KPI Cards -->
   <div class="kpi-grid">
     @for (kpi of kpis(); track kpi.label; let i = $index) {
-      <div class="kpi-card animate-fade-in-up stagger-{{ i + 1 }}" [style.--kpi-color]="kpi.color" [style.--kpi-bg]="kpi.bgColor">
-        <div class="kpi-icon-wrap">
-          @if (kpi.label.includes('Patient')) {
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="9" cy="7" r="4"></circle>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-            </svg>
-          } @else if (kpi.label.includes('Worker')) {
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="8.5" cy="7" r="4"></circle>
-              <polyline points="17 11 19 13 23 9"></polyline>
-            </svg>
-          } @else if (kpi.label.includes('Session')) {
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-              <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-            </svg>
-          } @else {
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-            </svg>
-          }
-        </div>
-        <div class="kpi-body">
-          <p class="kpi-value">{{ kpi.value }}</p>
-          <p class="kpi-label">{{ kpi.label }}</p>
-        </div>
-        <div class="kpi-growth" [class.positive]="kpi.growthPositive">{{ kpi.growth }}</div>
+    <div class="kpi-card animate-fade-in-up stagger-{{ i + 1 }}" [style.--kpi-color]="kpi.color"
+      [style.--kpi-bg]="kpi.bgColor">
+      <div class="kpi-icon-wrap">
+        @if (kpi.label.includes('Patient')) {
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        } @else if (kpi.label.includes('Worker')) {
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="8.5" cy="7" r="4"></circle>
+          <polyline points="17 11 19 13 23 9"></polyline>
+        </svg>
+        } @else if (kpi.label.includes('Session')) {
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+          <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+        </svg>
+        } @else {
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+        }
       </div>
+      <div class="kpi-body">
+        <p class="kpi-value">{{ kpi.value }}</p>
+        <p class="kpi-label">{{ kpi.label }}</p>
+      </div>
+      <div class="kpi-growth" [class.positive]="kpi.growthPositive">{{ kpi.growth }}</div>
+    </div>
     }
   </div>
 
@@ -74,21 +80,15 @@
       <div class="bar-chart">
         <div class="bars-container">
           @for (item of chartData; track item.week) {
-            <div class="bar-group">
-              <div class="bars">
-                <div
-                  class="bar bar--current"
-                  [style.height.%]="getBarHeight(item.thisMonth)"
-                  [title]="'₹' + item.thisMonth"
-                ></div>
-                <div
-                  class="bar bar--prev"
-                  [style.height.%]="getBarHeight(item.lastMonth)"
-                  [title]="'₹' + item.lastMonth"
-                ></div>
+          <div class="bar-group">
+            <div class="bars">
+              <div class="bar bar--current" [style.height.%]="getBarHeight(item.thisMonth)"
+                [title]="'₹' + item.thisMonth"></div>
+              <div class="bar bar--prev" [style.height.%]="getBarHeight(item.lastMonth)" [title]="'₹' + item.lastMonth">
               </div>
-              <span class="bar-label">{{ item.week }}</span>
             </div>
+            <span class="bar-label">{{ item.week }}</span>
+          </div>
           }
         </div>
       </div>
@@ -105,22 +105,23 @@
         </div>
         <div class="txn-list">
           @for (txn of recentTransactions(); track txn.patient + txn.time; let i = $index) {
-            <div class="txn-row">
-              <div class="txn-info">
-                <p class="txn-patient">{{ txn.patient }}</p>
-                <p class="txn-meta">{{ txn.worker }} · {{ txn.method }} · {{ txn.date }}, {{ txn.time }}</p>
-              </div>
-              <div class="txn-amount">
-                <p class="txn-val">{{ txn.amount }}</p>
-                <span class="badge" [class.badge--success]="txn.status === 'Paid'" [class.badge--warning]="txn.status !== 'Paid'">
-                  {{ txn.status }}
-                </span>
-              </div>
+          <div class="txn-row">
+            <div class="txn-info">
+              <p class="txn-patient">{{ txn.patient }}</p>
+              <p class="txn-meta">{{ txn.worker }} · {{ txn.method }} · {{ txn.date }}, {{ txn.time }}</p>
             </div>
+            <div class="txn-amount">
+              <p class="txn-val">{{ txn.amount }}</p>
+              <span class="badge" [class.badge--success]="txn.status === 'Paid'"
+                [class.badge--warning]="txn.status !== 'Paid'">
+                {{ txn.status }}
+              </span>
+            </div>
+          </div>
           } @empty {
-            <div class="empty-txn">
-              <p>No transactions yet.</p>
-            </div>
+          <div class="empty-txn">
+            <p>No transactions yet.</p>
+          </div>
           }
         </div>
       </div>
@@ -131,26 +132,19 @@
         <div class="donut-wrap">
           <svg width="120" height="120" viewBox="0 0 100 100" id="payment-donut">
             @for (segment of donutSegments; track segment.label) {
-              <circle
-                cx="50" cy="50" r="45"
-                fill="none"
-                [attr.stroke]="segment.color"
-                stroke-width="10"
-                [attr.stroke-dasharray]="segment.dashArray"
-                [attr.stroke-dashoffset]="segment.dashOffset"
-                stroke-linecap="butt"
-                style="transition: stroke-dashoffset 0.5s ease"
-              />
+            <circle cx="50" cy="50" r="45" fill="none" [attr.stroke]="segment.color" stroke-width="10"
+              [attr.stroke-dasharray]="segment.dashArray" [attr.stroke-dashoffset]="segment.dashOffset"
+              stroke-linecap="butt" style="transition: stroke-dashoffset 0.5s ease" />
             }
             <text x="50" y="55" text-anchor="middle" font-size="18" font-weight="800" fill="#0B2545">60%</text>
           </svg>
           <div class="donut-legend">
             @for (method of paymentMethods; track method.label) {
-              <div class="legend-row">
-                <span class="l-dot" [style.background]="method.color"></span>
-                <span class="l-label">{{ method.label }}</span>
-                <span class="l-val">{{ method.percent }}%</span>
-              </div>
+            <div class="legend-row">
+              <span class="l-dot" [style.background]="method.color"></span>
+              <span class="l-label">{{ method.label }}</span>
+              <span class="l-val">{{ method.percent }}%</span>
+            </div>
             }
           </div>
         </div>
@@ -163,19 +157,20 @@
           <button class="add-link-btn" (click)="openAddWorkerModal()">+ Add New</button>
         </div>
         @for (worker of topWorkers(); track worker.name; let i = $index) {
-          <div class="worker-rank-item">
-            <span class="rank-num">#{{ i + 1 }}</span>
-            <div class="rank-av">{{ worker.initial }}</div>
-            <div class="rank-info">
-              <p class="rank-name">{{ worker.name }}</p>
-              <p class="rank-sessions">{{ worker.sessions }} sessions · {{ worker.specialization || 'Physiotherapist' }}</p>
-            </div>
+        <div class="worker-rank-item">
+          <span class="rank-num">#{{ i + 1 }}</span>
+          <div class="rank-av">{{ worker.initial }}</div>
+          <div class="rank-info">
+            <p class="rank-name">{{ worker.name }}</p>
+            <p class="rank-sessions">{{ worker.sessions }} sessions · {{ worker.specialization || 'Physiotherapist' }}
+            </p>
           </div>
+        </div>
         } @empty {
-          <div class="empty-workers-box">
-            <p>No workers registered yet.</p>
-            <button class="btn btn-outline-sm" (click)="openAddWorkerModal()">Register First Worker</button>
-          </div>
+        <div class="empty-workers-box">
+          <p>No workers registered yet.</p>
+          <button class="btn btn-outline-sm" (click)="openAddWorkerModal()">Register First Worker</button>
+        </div>
         }
       </div>
 
@@ -183,166 +178,88 @@
   </div>
 
   <!-- ─── Active Subscriptions ──────────────────────────────────────────────── -->
-  <div class="section-row animate-fade-in-up" style="animation-delay:.3s">
-    <div class="chart-card" style="flex:1">
-      <div class="card-header-row" style="margin-bottom:16px">
-        <h3>Active Subscriptions</h3>
-        <span class="badge badge--info">Live</span>
-      </div>
-      @if (activeSubscriptions().length === 0) {
-        <div class="empty-txn" style="padding:24px;text-align:center">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 8px; display: block;">
-            <path d="M6 3h12l4 6-10 12L2 9z"></path>
-          </svg>
-          <p style="margin-top:8px;color:#64748B;font-size:13px">No active subscriptions yet.</p>
-        </div>
-      } @else {
-        <div class="sub-admin-list">
-          @for (sub of activeSubscriptions(); track sub.subscriptionId; let i = $index) {
-            <div class="sub-admin-row">
-              <div class="sub-av">{{ (sub.patientName || 'P').charAt(0).toUpperCase() }}</div>
-              <div class="sub-info">
-                <p class="sub-name">{{ sub.patientName }}</p>
-                <p class="sub-meta">{{ sub.planName }} Plan · ₹{{ sub.price | number }}</p>
-              </div>
-              <div class="sub-right">
-                <span class="sub-sessions-pill">{{ sub.remainingSessions }}/{{ sub.totalSessions }} left</span>
-                <p class="sub-expiry">Exp {{ sub.expiryDate | date:'d MMM' }}</p>
-              </div>
-            </div>
-          }
-        </div>
-      }
-    </div>
 
-    <!-- Plan Distribution -->
-    <div class="chart-card" style="flex:1">
-      <div class="card-header-row" style="margin-bottom:16px">
-        <h3>Plan Distribution</h3>
-      </div>
-      <div class="plan-dist-list">
-        @for (pd of planDistribution(); track pd.name) {
-          <div class="plan-dist-row">
-            <div class="plan-dist-left">
-              <span class="l-dot" [style.background]="pd.color" style="width: 8px; height: 8px; border-radius: 50%; display: inline-block;"></span>
-              <span class="plan-dist-name">{{ pd.name }}</span>
-            </div>
-            <div class="plan-dist-bar-wrap">
-              <div class="plan-dist-bar">
-                <div class="plan-dist-fill" [style.width.%]="pd.percent" [style.background]="pd.color"></div>
-              </div>
-              <span class="plan-dist-count">{{ pd.count }}</span>
-            </div>
-          </div>
-        }
-        @if (planDistribution().length === 0) {
-          <p style="color:#64748B;font-size:13px;text-align:center;padding:16px">No subscription data yet.</p>
-        }
-      </div>
-    </div>
-  </div>
 
   <!-- ─── ADD WORKER MODAL (Admin only registers workers) ──────────────────── -->
   @if (showAddWorkerModal()) {
-    <div class="modal-overlay" (click)="closeAddWorkerModal()">
-      <div class="worker-modal" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-          <div>
-            <h2 class="modal-title">Register New Worker / Physio</h2>
-            <p class="modal-sub">Create worker staff account in Walk In Physio</p>
-          </div>
-          <button class="btn-close" (click)="closeAddWorkerModal()">✕</button>
+  <div class="modal-overlay" (click)="closeAddWorkerModal()">
+    <div class="worker-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title">Register New Worker / Physio</h2>
+          <p class="modal-sub">Create worker staff account in Walk In Physio</p>
+        </div>
+        <button class="btn-close" (click)="closeAddWorkerModal()">✕</button>
+      </div>
+
+      @if (workerModalSuccess()) {
+      <div class="alert-success animate-fade-in">
+        <span>✓ {{ workerModalSuccess() }}</span>
+      </div>
+      }
+
+      @if (workerModalError()) {
+      <div class="alert-error animate-fade-in">
+        <span>⚠️ {{ workerModalError() }}</span>
+      </div>
+      }
+
+      <form [formGroup]="workerForm" (ngSubmit)="submitNewWorker()" class="modal-form">
+        <!-- Worker Full Name -->
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" formControlName="name" placeholder="e.g. Dr. Rahul Sharma" class="modal-input" />
         </div>
 
-        @if (workerModalSuccess()) {
-          <div class="alert-success animate-fade-in">
-            <span>✓ {{ workerModalSuccess() }}</span>
+        <!-- Mobile Number -->
+        <div class="form-group">
+          <label class="form-label">Mobile Number *</label>
+          <div class="input-with-prefix">
+            <span class="prefix">+91</span>
+            <input type="tel" formControlName="phone" placeholder="10-digit mobile" maxlength="10"
+              class="modal-input" />
           </div>
-        }
+        </div>
 
-        @if (workerModalError()) {
-          <div class="alert-error animate-fade-in">
-            <span>⚠️ {{ workerModalError() }}</span>
-          </div>
-        }
-
-        <form [formGroup]="workerForm" (ngSubmit)="submitNewWorker()" class="modal-form">
-          <!-- Worker Full Name -->
-          <div class="form-group">
-            <label class="form-label">Full Name *</label>
-            <input
-              type="text"
-              formControlName="name"
-              placeholder="e.g. Dr. Rahul Sharma"
-              class="modal-input"
-            />
-          </div>
-
-          <!-- Mobile Number -->
-          <div class="form-group">
-            <label class="form-label">Mobile Number *</label>
-            <div class="input-with-prefix">
-              <span class="prefix">+91</span>
-              <input
-                type="tel"
-                formControlName="phone"
-                placeholder="10-digit mobile"
-                maxlength="10"
-                class="modal-input"
-              />
-            </div>
-          </div>
-
-          <!-- Specialization & Experience Row -->
-          <div class="form-row">
-            <div class="form-group flex-1">
-              <label class="form-label">Specialization *</label>
-              <select formControlName="specialization" class="modal-select">
-                @for (spec of specializations; track spec) {
-                  <option [value]="spec">{{ spec }}</option>
-                }
-              </select>
-            </div>
-
-            <div class="form-group flex-1">
-              <label class="form-label">Experience *</label>
-              <input
-                type="text"
-                formControlName="experience"
-                placeholder="e.g. 4 Years"
-                class="modal-input"
-              />
-            </div>
-          </div>
-
-          <!-- 4-Digit M-PIN -->
-          <div class="form-group">
-            <label class="form-label">Assign 4-Digit M-PIN *</label>
-            <input
-              type="password"
-              formControlName="pin"
-              placeholder="4-digit PIN (e.g. 1234)"
-              maxlength="4"
-              inputmode="numeric"
-              class="modal-input"
-            />
-            <span class="field-hint">Worker will use this PIN to log in on their mobile.</span>
-          </div>
-
-          <div class="modal-actions">
-            <button type="button" class="btn btn-secondary" (click)="closeAddWorkerModal()">Cancel</button>
-            <button type="submit" class="btn btn-primary" [disabled]="isSubmittingWorker() || workerForm.invalid">
-              @if (isSubmittingWorker()) {
-                <span class="spinner"></span>
-                <span>Creating Worker Account...</span>
-              } @else {
-                <span>Save & Register Worker</span>
+        <!-- Specialization & Experience Row -->
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label class="form-label">Specialization *</label>
+            <select formControlName="specialization" class="modal-select">
+              @for (spec of specializations; track spec) {
+              <option [value]="spec">{{ spec }}</option>
               }
-            </button>
+            </select>
           </div>
-        </form>
-      </div>
+
+          <div class="form-group flex-1">
+            <label class="form-label">Experience *</label>
+            <input type="text" formControlName="experience" placeholder="e.g. 4 Years" class="modal-input" />
+          </div>
+        </div>
+
+        <!-- 4-Digit M-PIN -->
+        <div class="form-group">
+          <label class="form-label">Assign 4-Digit M-PIN *</label>
+          <input type="password" formControlName="pin" placeholder="4-digit PIN (e.g. 1234)" maxlength="4"
+            inputmode="numeric" class="modal-input" />
+          <span class="field-hint">Worker will use this PIN to log in on their mobile.</span>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="closeAddWorkerModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" [disabled]="isSubmittingWorker() || workerForm.invalid">
+            @if (isSubmittingWorker()) {
+            <span class="spinner"></span>
+            <span>Creating Worker Account...</span>
+            } @else {
+            <span>Save & Register Worker</span>
+            }
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
   }
 
 </div>

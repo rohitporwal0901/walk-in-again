@@ -248,7 +248,7 @@ export class AdminDashboardComponent implements OnInit {
       txns.sort((a, b) => (b.rawTimestamp || 0) - (a.rawTimestamp || 0));
 
       this.revenueTotal.set(totalRevenue);
-      this.recentTransactions.set(txns.slice(0, 10));
+      this.recentTransactions.set(txns.filter(t => t.method !== 'Subscription').slice(0, 10));
     }, (err) => {
       console.warn('Transactions snapshot listener:', err);
     });
@@ -279,9 +279,9 @@ export class AdminDashboardComponent implements OnInit {
         const planId = s.planId || 'unknown';
         if (!planCounts[planId]) {
           const planMeta: Record<string, { icon: string; color: string; name: string }> = {
-            plan_weekly:   { icon: '📅', color: '#2196F3', name: 'Weekly' },
+            plan_weekly: { icon: '📅', color: '#2196F3', name: 'Weekly' },
             plan_biweekly: { icon: '⭐', color: '#1CB5E0', name: '15 Days' },
-            plan_monthly:  { icon: '🏆', color: '#F4A62A', name: 'Monthly' }
+            plan_monthly: { icon: '🏆', color: '#F4A62A', name: 'Monthly' }
           };
           const meta = planMeta[planId] || { icon: '📋', color: '#94A3B8', name: s.planName || planId };
           planCounts[planId] = { name: meta.name, icon: meta.icon, count: 0, color: meta.color };
