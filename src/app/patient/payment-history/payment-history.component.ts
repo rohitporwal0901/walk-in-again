@@ -1,4 +1,4 @@
-import { Component, signal, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, signal, computed, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { Transaction } from '../../core/models/transaction.model';
@@ -29,38 +29,83 @@ export class PaymentHistoryComponent implements OnInit, OnDestroy {
   isLoading = signal<boolean>(true);
   selectedTransaction = signal<Transaction | null>(null);
 
+  totalAmountPaid = computed(() => {
+    return this.transactions()
+      .filter(t => String(t.status || '').toLowerCase() === 'paid' && !this.isSubscriptionMethod(t.paymentMethod))
+      .reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
+  });
+
+  paidTransactionsCount = computed(() => {
+    return this.transactions()
+      .filter(t => String(t.status || '').toLowerCase() === 'paid' && !this.isSubscriptionMethod(t.paymentMethod))
+      .length;
+  });
+
+  coveredSessionsCount = computed(() => {
+    return this.transactions()
+      .filter(t => this.isSubscriptionMethod(t.paymentMethod))
+      .length;
+  });
+
+  totalSavedAmount = computed(() => {
+    return this.transactions()
+      .filter(t => this.isSubscriptionMethod(t.paymentMethod))
+      .reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
+  });
+
+  private rawTxns: Transaction[] = [];
+  private currentSubTxn: Transaction | null = null;
+
+  isSubscriptionMethod(method?: string): boolean {
+    return (method || '').trim().toLowerCase() === 'subscription';
+  }
+
+  private updateCombinedList() {
+    const list = [...this.rawTxns];
+
+    if (this.currentSubTxn) {
+      const hasSubTxn = list.some(t =>
+        t.transactionId === this.currentSubTxn?.transactionId ||
+        t.sessionId === this.currentSubTxn?.sessionId ||
+        (t.type === 'subscription' && t.planName === this.currentSubTxn?.planName)
+      );
+      if (!hasSubTxn) {
+        list.unshift(this.currentSubTxn);
+      }
+    }
+
+    list.sort((a, b) => new Date(b.timestamp || b.sessionDate || 0).getTime() - new Date(a.timestamp || a.sessionDate || 0).getTime());
+    this.transactions.set(list);
+  }
+
   ngOnInit() {
     const user = this.auth.currentUser();
     if (user?.uid) {
       // Listen to transactions
       this.txnUnsub = this.sessionService.listenToPatientTransactions(user.uid, (list) => {
-        this.transactions.set(list);
+        this.rawTxns = list;
+        this.updateCombinedList();
         this.isLoading.set(false);
       });
 
       // Also watch subscription in case an existing subscription purchase was made
       this.subUnsub = this.subscriptionService.watchPatientSubscription(user.uid, (sub) => {
-        if (sub) {
-          const currentList = this.transactions().filter(t => t.paymentMethod !== 'Subscription');
-          const hasSubTxn = currentList.some(t => t.sessionId === sub.subscriptionId || t.planName === sub.planName);
-          if (!hasSubTxn && sub.price) {
-            // Include existing subscription in the view
-            const subTxn: Transaction = {
-              transactionId: sub.subscriptionId,
-              sessionId: sub.subscriptionId,
-              patientId: sub.patientId,
-              patientName: sub.patientName,
-              amount: sub.price,
-              paymentMethod: (sub.paymentMethod as any) || 'UPI',
-              status: 'Paid',
-              timestamp: sub.createdAt || sub.startDate,
-              sessionDate: sub.createdAt || sub.startDate,
-              planName: sub.planName,
-              description: `${sub.planName} Plan (${sub.totalSessions} Sessions)`,
-              type: 'subscription'
-            };
-            this.transactions.set([subTxn, ...currentList]);
-          }
+        if (sub && sub.price) {
+          this.currentSubTxn = {
+            transactionId: sub.subscriptionId,
+            sessionId: sub.subscriptionId,
+            patientId: sub.patientId,
+            patientName: sub.patientName,
+            amount: sub.price,
+            paymentMethod: (sub.paymentMethod as any) || 'UPI',
+            status: 'Paid',
+            timestamp: sub.createdAt || sub.startDate,
+            sessionDate: sub.createdAt || sub.startDate,
+            planName: sub.planName,
+            description: `${sub.planName} Plan (${sub.totalSessions} Sessions)`,
+            type: 'subscription'
+          };
+          this.updateCombinedList();
         }
       });
 

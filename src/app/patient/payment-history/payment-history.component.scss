@@ -52,6 +52,176 @@
   padding: 0 16px;
 }
 
+// ─── Top Total Paid Summary Card ──────────────────────────────────────────────
+.total-paid-card {
+  position: relative;
+  background: linear-gradient(135deg, #071F36 0%, #0F375E 55%, #154A7E 100%);
+  border-radius: 20px;
+  padding: 18px 20px 16px;
+  color: #FFFFFF;
+  box-shadow: 0 10px 26px -4px rgba(7, 31, 54, 0.22), 0 4px 10px -2px rgba(7, 31, 54, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  overflow: hidden;
+  margin-bottom: 16px;
+
+  &.skeleton-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
+  }
+
+  .card-glow {
+    position: absolute;
+    right: -25px;
+    top: -25px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.22) 0%, rgba(56, 189, 248, 0) 70%);
+    pointer-events: none;
+  }
+
+  .card-body {
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+
+    .badge-label-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .card-eyebrow {
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #38BDF8;
+      }
+
+      .verified-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 3.5px;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 999px;
+        background: rgba(16, 185, 129, 0.18);
+        color: #34D399;
+        border: 1px solid rgba(52, 211, 153, 0.3);
+      }
+    }
+
+    .card-icon-pill {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #38BDF8;
+      backdrop-filter: blur(4px);
+    }
+  }
+
+  .card-amount-row {
+    display: flex;
+    align-items: baseline;
+    gap: 3px;
+    margin-bottom: 12px;
+
+    .currency-prefix {
+      font-size: 22px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .amount-number {
+      font-size: 32px;
+      font-weight: 900;
+      color: #FFFFFF;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+  }
+
+  .card-meta-chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 7px;
+
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+
+      &.chip-paid {
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+
+        .chip-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #10B981;
+          box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+        }
+      }
+
+      &.chip-covered {
+        background: rgba(168, 85, 247, 0.2);
+        color: #E9D5FF;
+        border: 1px solid rgba(192, 132, 252, 0.35);
+
+        svg {
+          flex-shrink: 0;
+          color: #C084FC;
+        }
+      }
+    }
+  }
+}
+
+// ─── Section Label Bar ────────────────────────────────────────────────────────
+.section-label-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 2px 10px;
+
+  .section-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #475569;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .section-count-badge {
+    font-size: 11px;
+    font-weight: 700;
+    color: #0284C7;
+    background: #E0F2FE;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+}
+
 // ─── Unified Transactions Container Card (Mockup Matched) ─────────────────────
 .transactions-container {
   background: #FFFFFF;
@@ -101,6 +271,27 @@
         font-weight: 800;
         color: #0F172A;
         margin: 0 0 3px;
+
+        &.amount-covered {
+          display: flex;
+          align-items: baseline;
+          justify-content: flex-end;
+          gap: 6px;
+        }
+
+        .strike-amount {
+          font-size: 13px;
+          font-weight: 600;
+          color: #94A3B8;
+          text-decoration: line-through;
+          opacity: 0.85;
+        }
+
+        .free-val {
+          font-size: 16px;
+          font-weight: 800;
+          color: #0284C7;
+        }
       }
 
       .status-pill {
@@ -121,6 +312,12 @@
           background: #FEF3C7;
           color: #B45309;
           border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        &.pill-covered {
+          background: #EDE9FE;
+          color: #6D28D9;
+          border: 1px solid rgba(109, 40, 217, 0.25);
         }
       }
     }
@@ -300,6 +497,27 @@
       margin-bottom: 6px;
     }
 
+    .amount-val-covered {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 6px;
+
+      .strike-amount-modal {
+        font-size: 20px;
+        font-weight: 700;
+        color: #94A3B8;
+        text-decoration: line-through;
+      }
+
+      .free-modal-val {
+        font-size: 28px;
+        font-weight: 800;
+        color: #0284C7;
+      }
+    }
+
     .amount-status-tag {
       display: inline-block;
       font-size: 11px;
@@ -308,6 +526,12 @@
       color: #15803D;
       padding: 3px 10px;
       border-radius: 999px;
+
+      &.tag-covered {
+        background: #EDE9FE;
+        color: #6D28D9;
+        border: 1px solid rgba(109, 40, 217, 0.25);
+      }
     }
   }
 

@@ -3,7 +3,8 @@
   <!-- Header -->
   <header class="payments-header">
     <button class="back-btn" (click)="goBack()" aria-label="Go Back" id="payments-back-btn">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round">
         <polyline points="15 18 9 12 15 6"></polyline>
       </svg>
     </button>
@@ -13,94 +14,158 @@
 
   <div class="payments-content">
 
+    <!-- Top Total Paid Summary Card -->
+    @if (isLoading()) {
+      <div class="total-paid-card skeleton-card">
+        <div class="skeleton-line shimmer" style="width: 110px; height: 13px; margin-bottom: 12px; opacity: 0.7;"></div>
+        <div class="skeleton-line shimmer" style="width: 140px; height: 32px; margin-bottom: 14px;"></div>
+        <div class="skeleton-line shimmer" style="width: 180px; height: 18px; border-radius: 999px; opacity: 0.6;"></div>
+      </div>
+    } @else if (transactions().length > 0) {
+      <div class="total-paid-card" id="patient-total-paid-card">
+        <div class="card-glow" aria-hidden="true"></div>
+        <div class="card-body">
+          <div class="card-header-row">
+            <div class="badge-label-group">
+              <span class="card-eyebrow">TOTAL AMOUNT PAID</span>
+              <span class="verified-tag">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Settled
+              </span>
+            </div>
+            <div class="card-icon-pill" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                <line x1="2" y1="10" x2="22" y2="10"></line>
+              </svg>
+            </div>
+          </div>
+
+          <div class="card-amount-row">
+            <span class="currency-prefix">₹</span>
+            <span class="amount-number">{{ totalAmountPaid().toLocaleString('en-IN') }}</span>
+          </div>
+
+          <div class="card-meta-chips">
+            <span class="meta-chip chip-paid">
+              <span class="chip-dot"></span>
+              {{ paidTransactionsCount() }} {{ paidTransactionsCount() === 1 ? 'Payment' : 'Payments' }}
+            </span>
+
+            @if (coveredSessionsCount() > 0) {
+              <span class="meta-chip chip-covered">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2l2.4 7.2h7.6l-6.1 4.5 2.3 7.3L12 16.5l-6.2 4.5 2.3-7.3L2 9.2h7.6z"/>
+                </svg>
+                {{ coveredSessionsCount() }} Covered (Saved ₹{{ totalSavedAmount().toLocaleString('en-IN') }})
+              </span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="section-label-bar">
+        <span class="section-title">All Transactions</span>
+        <span class="section-count-badge">{{ transactions().length }}</span>
+      </div>
+    }
+
     <!-- Skeleton Loading State -->
     @if (isLoading()) {
-      <div class="transactions-container skeleton-container">
-        @for (i of [1, 2, 3, 4]; track i) {
-          <div class="txn-row">
-            <div class="txn-row-left">
-              <div class="skeleton-line shimmer" style="width: 100px; height: 16px; margin-bottom: 6px;"></div>
-              <div class="skeleton-line shimmer" style="width: 130px; height: 12px;"></div>
-            </div>
-            <div class="txn-row-right">
-              <div class="skeleton-line shimmer" style="width: 55px; height: 18px; margin-bottom: 6px;"></div>
-              <div class="skeleton-line shimmer" style="width: 48px; height: 18px; border-radius: 999px;"></div>
-            </div>
-          </div>
-          <div class="txn-divider"></div>
-        }
+    <div class="transactions-container skeleton-container">
+      @for (i of [1, 2, 3, 4]; track i) {
+      <div class="txn-row">
+        <div class="txn-row-left">
+          <div class="skeleton-line shimmer" style="width: 100px; height: 16px; margin-bottom: 6px;"></div>
+          <div class="skeleton-line shimmer" style="width: 130px; height: 12px;"></div>
+        </div>
+        <div class="txn-row-right">
+          <div class="skeleton-line shimmer" style="width: 55px; height: 18px; margin-bottom: 6px;"></div>
+          <div class="skeleton-line shimmer" style="width: 48px; height: 18px; border-radius: 999px;"></div>
+        </div>
       </div>
+      <div class="txn-divider"></div>
+      }
+    </div>
     } @else {
 
-      <!-- Transactions List (Mockup Matched Card Container) -->
-      @if (transactions().length > 0) {
-        <div class="transactions-container">
-          @for (txn of transactions(); track txn.transactionId; let last = $last) {
-            <div
-              class="txn-row"
-              [id]="'txn-' + txn.transactionId"
-              (click)="openDetail(txn)"
-            >
-              <div class="txn-row-left">
-                <h3 class="txn-date-title">
-                  {{ (txn.timestamp || txn.sessionDate) | date:'d MMM, y' }}
-                </h3>
-                <p class="txn-desc-subtitle">
-                  {{ getTransactionSubtitle(txn) }}
-                </p>
-              </div>
-
-              <div class="txn-row-right">
-                <p class="txn-amount-val">₹{{ txn.amount }}</p>
-                @if (txn.status === 'Paid') {
-                  <span class="status-pill pill-paid">Paid</span>
-                } @else {
-                  <span class="status-pill pill-pending">Pending</span>
-                }
-              </div>
-            </div>
-
-            @if (!last) {
-              <div class="txn-divider"></div>
-            }
-          }
-        </div>
-
-        <!-- Download Receipt Banner (Mockup Matched) -->
-        <div class="download-receipt-banner" (click)="downloadLatestReceipt()" id="btn-download-receipt-banner">
-          <div class="banner-left">
-            <h2 class="banner-heading">Download<br>Receipt</h2>
-          </div>
-          <div class="banner-right" aria-hidden="true">
-            <svg viewBox="0 0 100 90" width="85" height="75" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <ellipse cx="60" cy="70" rx="30" ry="10" fill="#0284C7" />
-              <path d="M28 20l28-6 16 50-28 6-16-50z" fill="#FFFFFF" />
-              <path d="M28 20l10-4 18-2 16 6-4 44-24 6-16-50z" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" />
-              <path d="M38 24l18-3 2 5-18 3-2-5z" fill="#0284C7" />
-              <path d="M37 34l18-3M36 41l18-3M35 48l14-2" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" />
-              <circle cx="62" cy="56" r="6" fill="#10B981" />
-              <polyline points="59 56 61 58 65 54" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </div>
-        </div>
-
-      } @else {
-
-        <!-- Empty State (Centered, No Card Box) -->
-        <div class="empty-state-wrap">
-          <div class="empty-icon-box">
-            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-              <line x1="1" y1="10" x2="23" y2="10"></line>
-            </svg>
-          </div>
-          <h4 class="empty-title">No Transactions Yet</h4>
-          <p class="empty-subtitle">
-            Your physiotherapy sessions and subscription plan payments will appear here.
+    <!-- Transactions List (Mockup Matched Card Container) -->
+    @if (transactions().length > 0) {
+    <div class="transactions-container">
+      @for (txn of transactions(); track txn.transactionId; let last = $last) {
+      <div class="txn-row" [id]="'txn-' + txn.transactionId" (click)="openDetail(txn)">
+        <div class="txn-row-left">
+          <h3 class="txn-date-title">
+            {{ (txn.timestamp || txn.sessionDate) | date:'d MMM, y' }}
+          </h3>
+          <p class="txn-desc-subtitle">
+            {{ getTransactionSubtitle(txn) }}
           </p>
         </div>
 
+        <div class="txn-row-right">
+          @if (isSubscriptionMethod(txn.paymentMethod)) {
+            <p class="txn-amount-val amount-covered">
+              <span class="strike-amount">₹{{ txn.amount }}</span>
+              <span class="free-val">₹0</span>
+            </p>
+            <span class="status-pill pill-covered">Plan Covered</span>
+          } @else {
+            <p class="txn-amount-val">₹{{ txn.amount }}</p>
+            @if (txn.status === 'Paid') {
+              <span class="status-pill pill-paid">Paid</span>
+            } @else {
+              <span class="status-pill pill-pending">Pending</span>
+            }
+          }
+        </div>
+      </div>
+
+      @if (!last) {
+      <div class="txn-divider"></div>
       }
+      }
+    </div>
+
+    <!-- Download Receipt Banner (Mockup Matched) -->
+    <!-- <div class="download-receipt-banner" (click)="downloadLatestReceipt()" id="btn-download-receipt-banner">
+      <div class="banner-left">
+        <h2 class="banner-heading">Download<br>Receipt</h2>
+      </div>
+      <div class="banner-right" aria-hidden="true">
+        <svg viewBox="0 0 100 90" width="85" height="75" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="60" cy="70" rx="30" ry="10" fill="#0284C7" />
+          <path d="M28 20l28-6 16 50-28 6-16-50z" fill="#FFFFFF" />
+          <path d="M28 20l10-4 18-2 16 6-4 44-24 6-16-50z" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" />
+          <path d="M38 24l18-3 2 5-18 3-2-5z" fill="#0284C7" />
+          <path d="M37 34l18-3M36 41l18-3M35 48l14-2" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" />
+          <circle cx="62" cy="56" r="6" fill="#10B981" />
+          <polyline points="59 56 61 58 65 54" stroke="white" stroke-width="1.5" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </div>
+    </div> -->
+
+    } @else {
+
+    <!-- Empty State (Centered, No Card Box) -->
+    <div class="empty-state-wrap">
+      <div class="empty-icon-box">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round">
+          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+          <line x1="1" y1="10" x2="23" y2="10"></line>
+        </svg>
+      </div>
+      <h4 class="empty-title">No Transactions Yet</h4>
+      <p class="empty-subtitle">
+        Your physiotherapy sessions and subscription plan payments will appear here.
+      </p>
+    </div>
+
+    }
 
     }
 
@@ -110,71 +175,81 @@
 
 <!-- Transaction Detail Modal -->
 @if (selectedTransaction(); as sel) {
-  <div class="modal-overlay" (click)="closeDetail()">
-    <div class="modal-sheet" (click)="$event.stopPropagation()">
-      <div class="modal-handle"></div>
+<div class="modal-overlay" (click)="closeDetail()">
+  <div class="modal-sheet" (click)="$event.stopPropagation()">
+    <div class="modal-handle"></div>
 
-      <!-- Success Header -->
-      <div class="modal-success-header">
-        <div class="success-ring">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-        </div>
-        <div>
-          <p class="modal-success-title">Payment Receipt</p>
-          <p class="modal-success-sub">{{ sel.transactionId }} · {{ (sel.timestamp || sel.sessionDate) | date:'d MMM y, h:mm a' }}</p>
-        </div>
+    <!-- Success Header -->
+    <div class="modal-success-header">
+      <div class="success-ring">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
       </div>
+      <div>
+        <p class="modal-success-title">Payment Receipt</p>
+        <p class="modal-success-sub">{{ sel.transactionId }} · {{ (sel.timestamp || sel.sessionDate) | date:'d MMM y,
+          h:mm a' }}</p>
+      </div>
+    </div>
 
-      <div class="modal-body">
-        <div class="receipt-amount-box">
-          <span class="amount-label">Total Amount Paid</span>
+    <div class="modal-body">
+      <div class="receipt-amount-box">
+        <span class="amount-label">Total Amount Paid</span>
+        @if (isSubscriptionMethod(sel.paymentMethod)) {
+          <div class="amount-val-covered">
+            <span class="strike-amount-modal">₹{{ sel.amount }}</span>
+            <span class="free-modal-val">₹0</span>
+          </div>
+          <span class="amount-status-tag tag-covered">Plan Covered</span>
+        } @else {
           <span class="amount-val">₹{{ sel.amount }}</span>
           <span class="amount-status-tag">{{ sel.status }}</span>
-        </div>
-
-        <div class="modal-detail-list">
-          <div class="detail-row">
-            <span class="row-label">Patient Name</span>
-            <span class="row-value">{{ sel.patientName }}</span>
-          </div>
-
-          <div class="detail-row">
-            <span class="row-label">Service Type</span>
-            <span class="row-value">{{ getTransactionSubtitle(sel) }}</span>
-          </div>
-
-          <div class="detail-row">
-            <span class="row-label">Payment Method</span>
-            <span class="row-value">{{ sel.paymentMethod }}</span>
-          </div>
-
-          @if (sel.razorpayPaymentId) {
-            <div class="detail-row">
-              <span class="row-label">Payment ID</span>
-              <span class="row-value text-mono">{{ sel.razorpayPaymentId }}</span>
-            </div>
-          }
-
-          <div class="detail-row">
-            <span class="row-label">Date & Time</span>
-            <span class="row-value">{{ (sel.timestamp || sel.sessionDate) | date:'medium' }}</span>
-          </div>
-        </div>
+        }
       </div>
 
-      <div class="modal-footer">
-        <button class="btn btn-close" (click)="closeDetail()">Close</button>
-        <button class="btn btn-print" (click)="downloadReceipt(sel)">
+      <div class="modal-detail-list">
+        <div class="detail-row">
+          <span class="row-label">Patient Name</span>
+          <span class="row-value">{{ sel.patientName }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="row-label">Service Type</span>
+          <span class="row-value">{{ getTransactionSubtitle(sel) }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="row-label">Payment Method</span>
+          <span class="row-value">{{ isSubscriptionMethod(sel.paymentMethod) ? 'Subscription Plan (Covered)' : sel.paymentMethod }}</span>
+        </div>
+
+        @if (sel.razorpayPaymentId) {
+        <div class="detail-row">
+          <span class="row-label">Payment ID</span>
+          <span class="row-value text-mono">{{ sel.razorpayPaymentId }}</span>
+        </div>
+        }
+
+        <div class="detail-row">
+          <span class="row-label">Date & Time</span>
+          <span class="row-value">{{ (sel.timestamp || sel.sessionDate) | date:'medium' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-close" (click)="closeDetail()">Close</button>
+      <!-- <button class="btn btn-print" (click)="downloadReceipt(sel)">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="6 9 6 2 18 2 18 9"></polyline>
             <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
             <rect x="6" y="14" width="12" height="8"></rect>
           </svg>
           Print Receipt
-        </button>
-      </div>
+        </button> -->
     </div>
   </div>
+</div>
 }
