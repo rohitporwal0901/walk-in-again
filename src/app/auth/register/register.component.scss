@@ -5,7 +5,7 @@
   @include navy-gradient;
   @include flex-center;
   flex-direction: column;
-  padding: 32px 16px;
+  padding: max(calc(env(safe-area-inset-top, 0px) + 24px), 48px) 16px max(calc(env(safe-area-inset-bottom, 0px) + 16px), 24px);
   position: relative;
   overflow: hidden;
 }

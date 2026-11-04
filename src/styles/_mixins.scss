@@ -53,12 +53,12 @@
   background: linear-gradient(135deg, #0EA5E9 0%, #38BDF8 100%);
 }
 
-@mixin safe-area-top {
-  padding-top: max(16px, env(safe-area-inset-top));
+@mixin safe-area-top($extra: 16px) {
+  padding-top: max(calc(env(safe-area-inset-top, 0px) + #{$extra}), 46px);
 }
 
-@mixin safe-area-bottom {
-  padding-bottom: max(16px, env(safe-area-inset-bottom));
+@mixin safe-area-bottom($extra: 16px) {
+  padding-bottom: max(calc(env(safe-area-inset-bottom, 0px) + #{$extra}), 24px);
 }
 
 @mixin glass {

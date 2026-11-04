@@ -1,7 +1,7 @@
 .patient-search-container {
   min-height: 100vh;
   background: #EBF5F9;
-  padding: 20px 18px 100px;
+  padding: max(calc(env(safe-area-inset-top, 0px) + 16px), 46px) 18px max(calc(env(safe-area-inset-bottom, 0px) + 88px), 100px);
   box-sizing: border-box;
 }
 

@@ -4,11 +4,12 @@
   background-image: linear-gradient(180deg, #E6F3F8 0%, #EEF7FA 100%);
   color: #0F172A;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  padding-bottom: max(calc(env(safe-area-inset-bottom, 0px) + 88px), 100px);
 }
 
 // ─── Top Header ───────────────────────────────────────────────────────────────
 .pt-header {
-  padding: calc(env(safe-area-inset-top, 0px) + 20px) 18px 16px;
+  padding: max(calc(env(safe-area-inset-top, 0px) + 16px), 46px) 18px 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;

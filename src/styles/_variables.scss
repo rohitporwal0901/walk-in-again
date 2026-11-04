@@ -83,4 +83,10 @@
   --z-sidebar:  800;
   --z-header:   700;
   --z-tooltip:  600;
+
+  // Safe Area Tokens for Mobile APK & Notch screens
+  --safe-area-top: max(env(safe-area-inset-top, 0px), 36px);
+  --safe-area-bottom: max(env(safe-area-inset-bottom, 0px), 16px);
+  --mobile-header-pt: max(calc(env(safe-area-inset-top, 0px) + 16px), 46px);
 }
+
