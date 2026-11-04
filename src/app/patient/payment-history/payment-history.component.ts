@@ -41,7 +41,7 @@ export class PaymentHistoryComponent implements OnInit, OnDestroy {
       // Also watch subscription in case an existing subscription purchase was made
       this.subUnsub = this.subscriptionService.watchPatientSubscription(user.uid, (sub) => {
         if (sub) {
-          const currentList = this.transactions();
+          const currentList = this.transactions().filter(t => t.paymentMethod !== 'Subscription');
           const hasSubTxn = currentList.some(t => t.sessionId === sub.subscriptionId || t.planName === sub.planName);
           if (!hasSubTxn && sub.price) {
             // Include existing subscription in the view
