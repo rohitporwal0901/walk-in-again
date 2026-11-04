@@ -199,6 +199,17 @@ input, textarea, select {
   text-transform: uppercase;
 }
 
+.spinner-sm {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #FFFFFF;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+
 .form-control {
   width: 100%;
   padding: 14px 16px;

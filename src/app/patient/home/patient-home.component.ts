@@ -164,21 +164,54 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  /** Patient pays for completed session */
-  async payForSession(session: Session) {
-    if (this.isPaying()) return;
+  showPaymentSheet = signal<boolean>(false);
+  selectedSessionToPay = signal<Session | null>(null);
+  selectedMethod = signal<'UPI' | 'Card' | 'Cash'>('UPI');
+  paymentError = signal<string>('');
+
+  /** Open payment method selection sheet */
+  openPaymentSheet(session: Session) {
+    this.selectedSessionToPay.set(session);
+    this.selectedMethod.set('UPI');
+    this.paymentError.set('');
+    this.showPaymentSheet.set(true);
+  }
+
+  /** Close payment method selection sheet */
+  closePaymentSheet() {
+    this.showPaymentSheet.set(false);
+    this.selectedSessionToPay.set(null);
+    this.paymentError.set('');
+  }
+
+  /** Patient pays for completed session (redirects to sheet) */
+  payForSession(session: Session) {
+    this.openPaymentSheet(session);
+  }
+
+  /** Confirm session payment with selected method (UPI, Card, Cash) */
+  async confirmSessionPayment() {
+    const session = this.selectedSessionToPay();
+    if (!session || this.isPaying()) return;
+
     this.isPaying.set(true);
+    this.paymentError.set('');
 
     try {
       const user = this.auth.currentUser();
       const fee = session.fee || this.pricingService.walkInFee();
+      const method = this.selectedMethod();
+      let razorpayPaymentId = '';
 
-      const response = await this.paymentService.openPayment({
-        amount: fee,
-        patientName: user?.name || session.patientName,
-        patientMobile: user?.mobileNumber || session.patientMobile || '9876543210',
-        description: `Physiotherapy Care Session Fee — Dr. ${session.workerName}`
-      });
+      if (method === 'UPI' || method === 'Card') {
+        const response = await this.paymentService.openPayment({
+          amount: fee,
+          patientName: user?.name || session.patientName,
+          patientMobile: user?.mobileNumber || session.patientMobile || '9876543210',
+          description: `Physiotherapy Session Fee — Dr. ${session.workerName}`
+        });
+        razorpayPaymentId = response.razorpay_payment_id || '';
+      }
 
       await this.sessionService.saveTransaction({
         sessionId: session.sessionId,
@@ -189,22 +222,24 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
         workerName: session.workerName,
         workerMobile: session.workerMobile,
         amount: fee,
-        paymentMethod: 'UPI',
-        razorpayPaymentId: response.razorpay_payment_id || '',
+        paymentMethod: method,
+        razorpayPaymentId,
         durationMinutes: session.duration || 30
       });
 
       // Mark session as paid in Firestore (advances progress bar and clears due prompt)
       await this.sessionService.markSessionAsPaid(
         session.sessionId,
-        'UPI',
-        response.razorpay_payment_id
+        method,
+        razorpayPaymentId
       );
 
+      this.showPaymentSheet.set(false);
       this.isPaying.set(false);
       this.router.navigate(['/patient/payments']);
     } catch (err: any) {
-      console.warn('Patient payment cancelled:', err);
+      console.warn('Patient session payment cancelled or error:', err);
+      this.paymentError.set(err?.message || 'Payment cancelled or failed. Please try again.');
       this.isPaying.set(false);
     }
   }
