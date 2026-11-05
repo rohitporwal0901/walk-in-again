@@ -161,7 +161,6 @@ interface FormattedSession {
                   <th>Patient</th>
                   <th>Physiotherapist</th>
                   <th>Type & Plan</th>
-                  <th>Therapies</th>
                   <th>Value</th>
                   <th>Status</th>
                   <th>Payment</th>
@@ -212,20 +211,7 @@ interface FormattedSession {
                       }
                     </td>
 
-                    <!-- Therapies -->
-                    <td class="col-therapies">
-                      <div class="therapies-chips">
-                        @for (t of sess.therapies.slice(0, 2); track $index) {
-                          <span class="therapy-tag">{{ t }}</span>
-                        }
-                        @if (sess.therapies.length > 2) {
-                          <span class="therapy-more">+{{ sess.therapies.length - 2 }}</span>
-                        }
-                        @if (!sess.therapies.length) {
-                          <span class="therapy-empty">General Assessment</span>
-                        }
-                      </div>
-                    </td>
+                  
 
                     <!-- Value -->
                     <td class="col-value">
