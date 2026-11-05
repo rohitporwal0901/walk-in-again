@@ -131,6 +131,22 @@ export class PaymentHistoryComponent implements OnInit, OnDestroy {
     }
   }
 
+  copied = signal<boolean>(false);
+
+  formatShortTxnId(id?: string): string {
+    if (!id) return 'REF-RECEIPT';
+    const clean = id.replace(/^(txn_|pay_|order_|sess_)/i, '');
+    return `REF #${clean.slice(-6).toUpperCase()}`;
+  }
+
+  copyText(text?: string) {
+    if (!text) return;
+    navigator.clipboard?.writeText(text).then(() => {
+      this.copied.set(true);
+      setTimeout(() => this.copied.set(false), 2000);
+    }).catch(() => {});
+  }
+
   getTransactionSubtitle(txn: Transaction): string {
     if (txn.description) {
       return txn.description;
@@ -138,11 +154,15 @@ export class PaymentHistoryComponent implements OnInit, OnDestroy {
     if (txn.planName) {
       return `${txn.planName} Plan`;
     }
+    if (txn.workerName) {
+      const cleanDr = txn.workerName.replace(/^dr\.?\s+/i, '');
+      return `Home Visit · Dr. ${cleanDr}`;
+    }
     if (txn.sessionId) {
       const cleanId = txn.sessionId.replace(/^sess_|^sub_/, '');
-      return `Session #${cleanId.slice(-6)}`;
+      return `Home Visit · #${cleanId.slice(-4).toUpperCase()}`;
     }
-    return 'Physiotherapy Visit';
+    return 'Home Physiotherapy Visit';
   }
 
   openDetail(txn: Transaction) {
@@ -151,6 +171,7 @@ export class PaymentHistoryComponent implements OnInit, OnDestroy {
 
   closeDetail() {
     this.selectedTransaction.set(null);
+    this.copied.set(false);
   }
 
   downloadReceipt(txn: Transaction) {

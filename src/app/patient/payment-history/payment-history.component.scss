@@ -52,17 +52,29 @@
   padding: 0 16px;
 }
 
-// ─── Top Total Paid Summary Card ──────────────────────────────────────────────
+// ─── Top Total Paid Summary Card (Luxury Clean White with Brand Accent) ──────
 .total-paid-card {
   position: relative;
-  background: linear-gradient(135deg, #071F36 0%, #0F375E 55%, #154A7E 100%);
+  background: #FFFFFF;
   border-radius: 20px;
   padding: 18px 20px 16px;
-  color: #FFFFFF;
-  box-shadow: 0 10px 26px -4px rgba(7, 31, 54, 0.22), 0 4px 10px -2px rgba(7, 31, 54, 0.1);
-  border: 1px solid rgba(56, 189, 248, 0.22);
+  color: #0F172A;
+  box-shadow: 
+    0 4px 20px -2px rgba(7, 31, 54, 0.05),
+    0 1px 3px rgba(7, 31, 54, 0.02);
+  border: 1px solid rgba(226, 232, 240, 0.95);
   overflow: hidden;
   margin-bottom: 16px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3.5px;
+    background: linear-gradient(90deg, #0284C7 0%, #38BDF8 50%, #10B981 100%);
+  }
 
   &.skeleton-card {
     background: #FFFFFF;
@@ -77,7 +89,7 @@
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(56, 189, 248, 0.22) 0%, rgba(56, 189, 248, 0) 70%);
+    background: radial-gradient(circle, rgba(186, 230, 253, 0.4) 0%, rgba(186, 230, 253, 0) 70%);
     pointer-events: none;
   }
 
@@ -90,7 +102,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 
     .badge-label-group {
       display: flex;
@@ -99,10 +111,10 @@
 
       .card-eyebrow {
         font-size: 11px;
-        font-weight: 800;
+        font-weight: 750;
         letter-spacing: 0.06em;
         text-transform: uppercase;
-        color: #38BDF8;
+        color: #64748B;
       }
 
       .verified-tag {
@@ -110,12 +122,12 @@
         align-items: center;
         gap: 3.5px;
         font-size: 10px;
-        font-weight: 700;
-        padding: 2px 7px;
+        font-weight: 750;
+        padding: 2px 8px;
         border-radius: 999px;
-        background: rgba(16, 185, 129, 0.18);
-        color: #34D399;
-        border: 1px solid rgba(52, 211, 153, 0.3);
+        background: #DCFCE7;
+        color: #15803D;
+        border: 1px solid rgba(34, 197, 94, 0.25);
       }
     }
 
@@ -123,13 +135,13 @@
       width: 32px;
       height: 32px;
       border-radius: 10px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: #F0F9FF;
+      border: 1px solid #BAE6FD;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #38BDF8;
-      backdrop-filter: blur(4px);
+      color: #0284C7;
+      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.08);
     }
   }
 
@@ -141,14 +153,14 @@
 
     .currency-prefix {
       font-size: 22px;
-      font-weight: 700;
-      color: rgba(255, 255, 255, 0.85);
+      font-weight: 650;
+      color: #64748B;
     }
 
     .amount-number {
-      font-size: 32px;
+      font-size: 34px;
       font-weight: 900;
-      color: #FFFFFF;
+      color: #0F172A;
       letter-spacing: -0.03em;
       line-height: 1;
     }
@@ -165,32 +177,32 @@
       align-items: center;
       gap: 6px;
       font-size: 11px;
-      font-weight: 600;
-      padding: 4px 10px;
+      font-weight: 750;
+      padding: 4px 11px;
       border-radius: 999px;
 
       &.chip-paid {
-        background: rgba(255, 255, 255, 0.1);
-        color: rgba(255, 255, 255, 0.95);
-        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: #F8FAFC;
+        color: #334155;
+        border: 1px solid #E2E8F0;
 
         .chip-dot {
           width: 6px;
           height: 6px;
           border-radius: 50%;
           background: #10B981;
-          box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+          box-shadow: 0 0 6px rgba(16, 185, 129, 0.8);
         }
       }
 
       &.chip-covered {
-        background: rgba(168, 85, 247, 0.2);
-        color: #E9D5FF;
-        border: 1px solid rgba(192, 132, 252, 0.35);
+        background: #F0F9FF;
+        color: #0284C7;
+        border: 1px solid #BAE6FD;
 
         svg {
           flex-shrink: 0;
-          color: #C084FC;
+          color: #0284C7;
         }
       }
     }
@@ -222,12 +234,14 @@
   }
 }
 
-// ─── Unified Transactions Container Card (Mockup Matched) ─────────────────────
+// ─── Unified Transactions Container Card ──────────────────────────────────────
 .transactions-container {
   background: #FFFFFF;
   border-radius: 20px;
   border: 1px solid rgba(226, 232, 240, 0.9);
-  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
+  box-shadow: 
+    0 4px 18px -2px rgba(7, 31, 54, 0.05),
+    0 1px 3px rgba(7, 31, 54, 0.02);
   overflow: hidden;
   margin-bottom: 16px;
 
@@ -235,7 +249,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 18px;
+    padding: 15px 18px;
     cursor: pointer;
     transition: background-color 0.15s ease;
 
@@ -245,81 +259,104 @@
 
     .txn-row-left {
       flex: 1;
+      min-width: 0;
+      padding-right: 12px;
 
       .txn-date-title {
         font-size: 15px;
         font-weight: 800;
         color: #0F172A;
         margin: 0 0 3px;
-        letter-spacing: -0.01em;
+        letter-spacing: -0.015em;
       }
 
       .txn-desc-subtitle {
         font-size: 12px;
-        font-weight: 500;
+        font-weight: 550;
         color: #64748B;
         margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
 
     .txn-row-right {
-      text-align: right;
+      display: flex;
+      align-items: center;
+      gap: 10px;
       flex-shrink: 0;
 
-      .txn-amount-val {
-        font-size: 16px;
-        font-weight: 800;
-        color: #0F172A;
-        margin: 0 0 3px;
+      .amount-badge-group {
+        text-align: right;
 
-        &.amount-covered {
-          display: flex;
-          align-items: baseline;
-          justify-content: flex-end;
-          gap: 6px;
-        }
-
-        .strike-amount {
-          font-size: 13px;
-          font-weight: 600;
-          color: #94A3B8;
-          text-decoration: line-through;
-          opacity: 0.85;
-        }
-
-        .free-val {
+        .txn-amount-val {
           font-size: 16px;
           font-weight: 800;
-          color: #0284C7;
+          color: #0F172A;
+          margin: 0 0 3px;
+          letter-spacing: -0.01em;
+
+          &.amount-covered {
+            display: flex;
+            align-items: baseline;
+            justify-content: flex-end;
+            gap: 5px;
+          }
+
+          .strike-amount {
+            font-size: 12px;
+            font-weight: 600;
+            color: #94A3B8;
+            text-decoration: line-through;
+            opacity: 0.85;
+          }
+
+          .free-val {
+            font-size: 16px;
+            font-weight: 800;
+            color: #0284C7;
+          }
+        }
+
+        .status-pill {
+          display: inline-block;
+          font-size: 10.5px;
+          font-weight: 750;
+          padding: 2.5px 8.5px;
+          border-radius: 999px;
+          letter-spacing: 0.015em;
+          white-space: nowrap;
+
+          &.pill-paid {
+            background: #DCFCE7;
+            color: #15803D;
+            border: 1px solid rgba(34, 197, 94, 0.25);
+          }
+
+          &.pill-pending {
+            background: #FEF3C7;
+            color: #B45309;
+            border: 1px solid rgba(245, 158, 11, 0.25);
+          }
+
+          &.pill-covered {
+            background: #F0F9FF;
+            color: #0284C7;
+            border: 1px solid #BAE6FD;
+          }
         }
       }
 
-      .status-pill {
-        display: inline-block;
-        font-size: 11px;
-        font-weight: 700;
-        padding: 3px 10px;
-        border-radius: 999px;
-        letter-spacing: 0.02em;
-
-        &.pill-paid {
-          background: #DCFCE7;
-          color: #15803D;
-          border: 1px solid rgba(34, 197, 94, 0.2);
-        }
-
-        &.pill-pending {
-          background: #FEF3C7;
-          color: #B45309;
-          border: 1px solid rgba(245, 158, 11, 0.2);
-        }
-
-        &.pill-covered {
-          background: #EDE9FE;
-          color: #6D28D9;
-          border: 1px solid rgba(109, 40, 217, 0.25);
-        }
+      .row-chevron {
+        color: #CBD5E1;
+        transition: transform 0.15s ease, color 0.15s ease;
       }
+    }
+
+    &:hover .row-chevron {
+      color: #0284C7;
+      transform: translateX(2px);
     }
   }
 
@@ -330,91 +367,13 @@
   }
 }
 
-// ─── Download Receipt Banner (Mockup Matched) ─────────────────────────────────
-.download-receipt-banner {
-  background: linear-gradient(135deg, #071F36 0%, #0F375E 100%);
-  border-radius: 20px;
-  padding: 18px 22px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 8px 24px rgba(7, 31, 54, 0.16);
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-
-  &:hover, &:active {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(7, 31, 54, 0.22);
-  }
-
-  .banner-left {
-    flex: 1;
-
-    .banner-heading {
-      font-size: 17px;
-      font-weight: 800;
-      color: #FFFFFF;
-      line-height: 1.25;
-      margin: 0;
-      letter-spacing: -0.01em;
-    }
-  }
-
-  .banner-right {
-    flex-shrink: 0;
-  }
-}
-
-// ─── Empty State (Centered, No Card Box) ──────────────────────────────────────
-.empty-state-wrap {
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  padding: 50px 20px;
-  min-height: 50vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  margin: 0 auto;
-
-  .empty-icon-box {
-    width: 76px;
-    height: 76px;
-    border-radius: 50%;
-    background: #FFFFFF;
-    border: 1px solid rgba(226, 232, 240, 0.9);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 16px;
-    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
-  }
-
-  .empty-title {
-    font-size: 17px;
-    font-weight: 800;
-    color: #1E293B;
-    margin: 0 0 6px;
-    letter-spacing: -0.01em;
-  }
-
-  .empty-subtitle {
-    font-size: 13px;
-    color: #64748B;
-    margin: 0;
-    line-height: 1.45;
-    max-width: 250px;
-  }
-}
-
-// ─── Modal Sheet (Receipt Details) ───────────────────────────────────────────
+// ─── Modal Sheet (Modern Receipt Action Sheet) ────────────────────────────────
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(4px);
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 1000;
   display: flex;
   align-items: flex-end;
@@ -425,14 +384,14 @@
 .modal-sheet {
   background: #FFFFFF;
   width: 100%;
-  max-width: 430px;
-  border-radius: 24px 24px 0 0;
-  padding: 20px 20px calc(env(safe-area-inset-bottom, 0px) + 20px);
-  box-shadow: 0 -8px 32px rgba(15, 23, 42, 0.15);
+  max-width: 440px;
+  border-radius: 28px 28px 0 0;
+  padding: 16px 20px calc(env(safe-area-inset-bottom, 0px) + 24px);
+  box-shadow: 0 -12px 40px rgba(15, 23, 42, 0.2);
   animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 
   .modal-handle {
-    width: 40px;
+    width: 36px;
     height: 4px;
     border-radius: 999px;
     background: #CBD5E1;
@@ -448,51 +407,64 @@
     .success-ring {
       width: 44px;
       height: 44px;
-      border-radius: 50%;
-      background: #DCFCE7;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #DCFCE7 0%, #BBF7D0 100%);
+      border: 1px solid rgba(34, 197, 94, 0.3);
       display: flex;
       align-items: center;
       justify-content: center;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.12);
       flex-shrink: 0;
     }
 
-    .modal-success-title {
-      font-size: 17px;
-      font-weight: 800;
-      color: #0F172A;
-      margin: 0 0 2px;
-    }
+    .header-titles {
+      min-width: 0;
 
-    .modal-success-sub {
-      font-size: 11px;
-      color: #64748B;
-      margin: 0;
+      .modal-success-title {
+        font-size: 17.5px;
+        font-weight: 850;
+        color: #0F172A;
+        margin: 0 0 2px;
+        letter-spacing: -0.015em;
+      }
+
+      .modal-success-sub {
+        font-size: 11.5px;
+        font-weight: 600;
+        color: #64748B;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
 
   .receipt-amount-box {
-    background: #F8FAFC;
-    border-radius: 16px;
-    padding: 16px;
+    background: linear-gradient(180deg, #F8FAFC 0%, #F1F5F9 100%);
+    border-radius: 18px;
+    padding: 18px 16px;
     text-align: center;
     border: 1px solid #E2E8F0;
     margin-bottom: 18px;
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.8);
 
     .amount-label {
       display: block;
-      font-size: 11px;
-      font-weight: 600;
+      font-size: 10.5px;
+      font-weight: 800;
       color: #64748B;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.06em;
       margin-bottom: 4px;
     }
 
     .amount-val {
       display: block;
-      font-size: 28px;
-      font-weight: 800;
+      font-size: 32px;
+      font-weight: 900;
       color: #0F172A;
+      letter-spacing: -0.03em;
       line-height: 1.1;
       margin-bottom: 6px;
     }
@@ -501,7 +473,7 @@
       display: flex;
       align-items: baseline;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
       margin-bottom: 6px;
 
       .strike-amount-modal {
@@ -512,30 +484,38 @@
       }
 
       .free-modal-val {
-        font-size: 28px;
-        font-weight: 800;
+        font-size: 32px;
+        font-weight: 900;
         color: #0284C7;
+        letter-spacing: -0.03em;
       }
     }
 
     .amount-status-tag {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 4.5px;
       font-size: 11px;
-      font-weight: 700;
+      font-weight: 750;
       background: #DCFCE7;
       color: #15803D;
       padding: 3px 10px;
       border-radius: 999px;
+      border: 1px solid rgba(34, 197, 94, 0.25);
 
       &.tag-covered {
-        background: #EDE9FE;
-        color: #6D28D9;
-        border: 1px solid rgba(109, 40, 217, 0.25);
+        background: #F0F9FF;
+        color: #0284C7;
+        border: 1px solid #BAE6FD;
       }
     }
   }
 
   .modal-detail-list {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 14px 16px;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -545,61 +525,69 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 13px;
+      font-size: 12.5px;
 
       .row-label {
         color: #64748B;
-        font-weight: 500;
+        font-weight: 550;
       }
 
       .row-value {
         color: #0F172A;
-        font-weight: 700;
+        font-weight: 750;
+        text-align: right;
 
         &.text-mono {
-          font-family: monospace;
-          font-size: 11px;
-          color: #475569;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          font-size: 11.5px;
+          color: #334155;
+        }
+      }
+
+      .copyable-val {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+
+        .copy-chip {
+          font-size: 10px;
+          font-weight: 750;
+          padding: 2px 7px;
+          border-radius: 6px;
+          background: #E0F2FE;
+          color: #0284C7;
+          border: 1px solid rgba(2, 132, 199, 0.2);
+          transition: all 0.15s ease;
+
+          &.copied {
+            background: #DCFCE7;
+            color: #15803D;
+            border-color: rgba(34, 197, 94, 0.3);
+          }
         }
       }
     }
   }
 
   .modal-footer {
-    display: flex;
-    gap: 12px;
-
-    .btn {
-      flex: 1;
-      padding: 12px 16px;
+    .btn-close {
+      width: 100%;
+      padding: 13px 18px;
       border-radius: 14px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: all 0.15s ease;
+      font-size: 14px;
+      font-weight: 750;
+      background: #0284C7;
+      color: #FFFFFF;
       border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.28);
+      transition: all 0.15s ease;
 
-      &.btn-close {
-        background: #F1F5F9;
-        color: #475569;
-
-        &:hover {
-          background: #E2E8F0;
-        }
-      }
-
-      &.btn-print {
-        background: #0284C7;
-        color: #FFFFFF;
-        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25);
-
-        &:hover {
-          background: #0369A1;
-        }
+      &:hover, &:active {
+        background: #0369A1;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(2, 132, 199, 0.32);
       }
     }
   }
