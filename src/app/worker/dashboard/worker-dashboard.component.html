@@ -4,8 +4,11 @@
   <!-- Top Bar Header -->
   <header class="top-bar">
     <div class="user-greeting">
-      <h1 class="greeting-name">Hi {{ doctorDisplayName() }}</h1>
-      <p class="greeting-subtitle">Physiotherapy</p>
+      <h1 class="greeting-name">Hi {{ doctorDisplayName() }} 👋</h1>
+      <div class="doctor-status-badge">
+        <span class="online-pulse-dot"></span>
+        <span class="status-text">Physiotherapy · Online</span>
+      </div>
     </div>
     <button class="notif-btn" id="notif-btn" type="button" aria-label="Notifications">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F172A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -32,9 +35,9 @@
       <div class="stat-lbl">Patients</div>
     </div>
 
-    <!-- Card 2: Today -->
+    <!-- Card 2: Today (Theme matched cyan instead of purple) -->
     <div class="stat-card">
-      <div class="stat-icon-bubble stat-icon-purple">
+      <div class="stat-icon-bubble stat-icon-cyan">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
           <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -59,24 +62,30 @@
     </div>
   </section>
 
-  <!-- Metrics Grid: Row 2 (2 Symmetrical Cards Matching Image 2) -->
+  <!-- Metrics Grid: Row 2 (2 Symmetrical Cards) -->
   <section class="stats-row-2">
     <!-- Left Card: Top Rate -->
     <div class="stat-wide-card">
       <div class="wide-top">
-        <span class="top-tag">Top</span>
+        <span class="top-tag">Top Rate</span>
         <span class="rate-sub">{{ completionRate() }}</span>
       </div>
       <div class="wide-title">Completed</div>
+      <div class="rate-progress-track">
+        <div class="rate-progress-bar" [style.width]="completionPercentageNumber() + '%'"></div>
+      </div>
     </div>
 
     <!-- Right Card: Earnings -->
     <div class="stat-wide-card earnings-card">
       <div class="wide-top">
-        <span class="teal-dot"></span>
+        <span class="revenue-tag">
+          <span class="teal-dot"></span>
+          Revenue
+        </span>
         <span class="revenue-val">₹{{ totalEarnings().toLocaleString('en-IN') }}</span>
       </div>
-      <div class="wide-title">Earnings</div>
+      <div class="wide-title">Total Earnings</div>
     </div>
   </section>
 
@@ -105,7 +114,7 @@
         }
       </div>
     } @else {
-      <!-- Patients List (Single Clean Row Exactly Like Image 2) -->
+      <!-- Patients List -->
       <div class="patient-list">
         @for (session of todaySessions(); track session.sessionId) {
           <div class="patient-row-card" [id]="'patient-card-' + session.sessionId">
@@ -123,9 +132,9 @@
               <h3 class="patient-name">{{ session.patientName }}</h3>
               <p class="patient-meta">
                 @if (session.status === 'completed') {
-                  <span>Ended at {{ getEndTime(session) }} ({{ session.duration || 1 }}m)</span>
+                  <span class="completed-meta">Ended at {{ getEndTime(session) }} ({{ session.duration || 1 }}m)</span>
                 } @else if (session.status === 'active') {
-                  <span class="active-badge-text">In Progress</span>
+                  <span class="active-badge-text">● In Progress</span>
                 } @else {
                   <span>{{ session.timeSlot || '10:30 AM' }}</span>
                 }
@@ -168,24 +177,24 @@
           </div>
         }
 
-        <!-- Empty Queue State: Clean & Centered without dashed box -->
+        <!-- Empty Queue State: Clean Card Hero with Single Clear CTA -->
         @if (todaySessions().length === 0) {
-          <div class="empty-queue-centered">
+          <div class="empty-queue-card">
             <div class="empty-icon-wrap">
-              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"></path>
                 <path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"></path>
                 <circle cx="20" cy="10" r="2"></circle>
               </svg>
             </div>
             <h3 class="empty-title">No Patients in Queue</h3>
-            <p class="empty-subtitle">Search for a walk-in patient below to start a new therapy session.</p>
-            <button class="btn-intake" routerLink="/worker/search" type="button">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <p class="empty-subtitle">Ready for consultations. Search or intake a walk-in patient to start a therapy session.</p>
+            <button class="btn-intake-primary" routerLink="/worker/search" type="button" id="empty-intake-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
-              Intake Walk-In Patient
+              <span>Intake Walk-In Patient</span>
             </button>
           </div>
         }
@@ -193,19 +202,21 @@
     }
   </section>
 
-  <!-- Walk-In Intake Quick Bar -->
-  <div class="intake-banner">
-    <div class="banner-text">
-      <h4>Walk-In Patient Intake</h4>
-      <p>Search registered patients by Mobile or Name</p>
+  <!-- Walk-In Intake Quick Bar (Shown when active queue exists for instant access) -->
+  @if (todaySessions().length > 0) {
+    <div class="intake-banner">
+      <div class="banner-text">
+        <h4>Walk-In Patient Intake</h4>
+        <p>Search registered patients by Mobile or Name</p>
+      </div>
+      <button class="banner-search-btn" routerLink="/worker/search" id="quick-search" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        Search Patient
+      </button>
     </div>
-    <button class="banner-search-btn" routerLink="/worker/search" id="quick-search" type="button">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="11" cy="11" r="8"></circle>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-      </svg>
-      Search Patient
-    </button>
-  </div>
+  }
 
 </div>

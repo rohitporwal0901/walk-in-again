@@ -1,7 +1,7 @@
 .worker-dashboard-container {
   min-height: 100vh;
   background: #EBF5F9;
-  padding: max(calc(env(safe-area-inset-top, 0px) + 16px), 46px) 18px max(calc(env(safe-area-inset-bottom, 0px) + 88px), 100px);
+  padding: max(calc(env(safe-area-inset-top, 0px) + 16px), 44px) 18px max(calc(env(safe-area-inset-bottom, 0px) + 88px), 100px);
   box-sizing: border-box;
 }
 
@@ -15,18 +15,53 @@
 
 .user-greeting {
   .greeting-name {
-    font-size: 22px;
+    font-size: 23px;
     font-weight: 800;
     color: #0F172A;
     letter-spacing: -0.02em;
-    margin: 0 0 3px 0;
+    margin: 0 0 4px 0;
+    line-height: 1.2;
   }
 
-  .greeting-subtitle {
-    font-size: 13px;
-    font-weight: 500;
-    color: #64748B;
-    margin: 0;
+  .doctor-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.22);
+    padding: 3px 10px;
+    border-radius: 9999px;
+
+    .online-pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulse-green 2s infinite;
+    }
+
+    .status-text {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #047857;
+      letter-spacing: -0.01em;
+    }
+  }
+}
+
+@keyframes pulse-green {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
   }
 }
 
@@ -35,8 +70,8 @@
   height: 44px;
   border-radius: 50%;
   background: #FFFFFF;
-  border: 1px solid rgba(226, 232, 240, 0.85);
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+  border: 1.5px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -44,16 +79,22 @@
   cursor: pointer;
   transition: all 0.2s ease;
 
+  &:hover {
+    background: #F8FAFC;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  }
+
   &:active {
     transform: scale(0.95);
   }
 
   .notif-badge {
     position: absolute;
-    top: 11px;
-    right: 12px;
-    width: 7px;
-    height: 7px;
+    top: 10px;
+    right: 11px;
+    width: 8px;
+    height: 8px;
     background: #0284C7;
     border-radius: 50%;
     border: 1.5px solid #FFFFFF;
@@ -70,10 +111,10 @@
 
 .stat-card {
   background: #FFFFFF;
-  border-radius: 18px;
-  padding: 14px 8px;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
-  border: 1px solid rgba(226, 232, 240, 0.7);
+  border-radius: 20px;
+  padding: 16px 8px 14px;
+  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.03);
+  border: 1.5px solid rgba(226, 232, 240, 0.9);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -82,26 +123,27 @@
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.06);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
   }
 
   .stat-icon-bubble {
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+    transition: transform 0.2s ease;
 
     &.stat-icon-blue {
       background: #E0F2FE;
       color: #0284C7;
     }
 
-    &.stat-icon-purple {
-      background: #EDE9FE;
-      color: #7C3AED;
+    &.stat-icon-cyan {
+      background: #E0F2FE;
+      color: #0284C7;
     }
 
     &.stat-icon-green {
@@ -111,21 +153,22 @@
   }
 
   .stat-num {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 800;
     color: #0F172A;
     line-height: 1.1;
-    margin-bottom: 2px;
+    margin-bottom: 3px;
   }
 
   .stat-lbl {
-    font-size: 11px;
-    font-weight: 600;
+    font-size: 11.5px;
+    font-weight: 700;
     color: #64748B;
+    letter-spacing: -0.01em;
   }
 }
 
-// ─── Row 2: 2 Symmetrical Cards (Matching Image 2) ───────────────────────────
+// ─── Row 2: 2 Symmetrical Cards ──────────────────────────────────────────────
 .stats-row-2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -135,20 +178,20 @@
 
 .stat-wide-card {
   background: #FFFFFF;
-  border-radius: 18px;
+  border-radius: 20px;
   padding: 14px 16px;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
-  border: 1px solid rgba(226, 232, 240, 0.7);
+  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.03);
+  border: 1.5px solid rgba(226, 232, 240, 0.9);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 76px;
+  min-height: 84px;
   box-sizing: border-box;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.06);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
   }
 
   .wide-top {
@@ -163,43 +206,66 @@
     background: #E0F2FE;
     color: #0284C7;
     font-size: 11px;
-    font-weight: 700;
-    padding: 2px 8px;
+    font-weight: 800;
+    padding: 3px 9px;
     border-radius: 9999px;
+    letter-spacing: -0.01em;
   }
 
   .rate-sub {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 800;
     color: #0F172A;
   }
 
   .wide-title {
-    font-size: 14px;
+    font-size: 13.5px;
     font-weight: 800;
     color: #1E293B;
     letter-spacing: -0.01em;
   }
 
+  .rate-progress-track {
+    width: 100%;
+    height: 5px;
+    background: #F1F5F9;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 8px;
+
+    .rate-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #0284C7 0%, #10B981 100%);
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+  }
+
   &.earnings-card {
-    .wide-top {
-      justify-content: flex-start;
-      gap: 7px;
+    .revenue-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #E0F2FE;
+      color: #0284C7;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 9999px;
 
       .teal-dot {
-        width: 7px;
-        height: 7px;
+        width: 6px;
+        height: 6px;
         border-radius: 50%;
-        background: #06B6D4;
-        display: inline-block;
+        background: #0284C7;
       }
+    }
 
-      .revenue-val {
-        font-size: 17px;
-        font-weight: 800;
-        color: #0F172A;
-        letter-spacing: -0.01em;
-      }
+    .revenue-val {
+      font-size: 17px;
+      font-weight: 800;
+      color: #0F172A;
+      letter-spacing: -0.02em;
     }
   }
 }
@@ -222,18 +288,19 @@
   }
 
   .section-title {
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 800;
     color: #0F172A;
     margin: 0;
+    letter-spacing: -0.02em;
   }
 
   .queue-count-badge {
     background: #E0F2FE;
     color: #0284C7;
     font-size: 11px;
-    font-weight: 700;
-    padding: 2px 8px;
+    font-weight: 800;
+    padding: 3px 9px;
     border-radius: 9999px;
   }
 
@@ -256,18 +323,22 @@
   gap: 10px;
 }
 
-// Single clean horizontal row (Exact Image 2 Mockup style)
+// Elevated Single Row Card
 .patient-row-card {
   background: #FFFFFF;
-  border-radius: 18px;
+  border-radius: 20px;
   padding: 14px 16px;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
-  border: 1px solid rgba(226, 232, 240, 0.7);
+  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.03);
+  border: 1.5px solid rgba(226, 232, 240, 0.85);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+  }
 
   &:active {
     transform: scale(0.99);
@@ -283,7 +354,7 @@
     font-size: 16px;
     font-weight: 800;
     flex-shrink: 0;
-    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
   }
 
   .patient-details {
@@ -294,20 +365,25 @@
       font-size: 15px;
       font-weight: 700;
       color: #0F172A;
-      margin: 0 0 2px;
+      margin: 0 0 3px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      letter-spacing: -0.01em;
     }
 
     .patient-meta {
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 600;
       color: #64748B;
       margin: 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+
+      .completed-meta {
+        color: #15803D;
+      }
 
       .active-badge-text {
         color: #0284C7;
@@ -323,7 +399,7 @@
       font-size: 12px;
       font-weight: 700;
       border-radius: 9999px;
-      padding: 6px 16px;
+      padding: 6px 14px;
       display: inline-block;
 
       &.status-completed {
@@ -334,53 +410,58 @@
     }
 
     .btn-start {
-      background: #0284C7;
+      background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
       color: #FFFFFF;
       font-size: 13px;
       font-weight: 700;
       border-radius: 9999px;
-      padding: 7px 20px;
+      padding: 8px 20px;
       border: none;
       cursor: pointer;
-      box-shadow: 0 3px 8px rgba(2, 132, 199, 0.28);
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
       transition: all 0.2s ease;
 
       &:hover {
-        background: #0369A1;
+        background: linear-gradient(135deg, #0369A1 0%, #075985 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 14px rgba(2, 132, 199, 0.35);
       }
 
       &.btn-active {
-        background: #0EA5E9;
-        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.25);
+        background: linear-gradient(135deg, #0284C7 0%, #06B6D4 100%);
+        box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
       }
     }
   }
 }
 
-// ─── Empty Queue Card ────────────────────────────────────────────────────────
-.empty-queue-centered {
+// ─── Empty Queue Hero Card (Self-contained, eliminates duplicate buttons) ────
+.empty-queue-card {
+  background: #FFFFFF;
+  border-radius: 24px;
+  border: 1.5px dashed rgba(2, 132, 199, 0.25);
+  box-shadow: 0 4px 20px rgba(2, 132, 199, 0.05);
+  padding: 36px 20px 30px;
+  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 38px 20px 24px;
-  margin: 8px 0;
+  margin: 6px 0 14px;
 
   .empty-icon-wrap {
     width: 68px;
     height: 68px;
     border-radius: 50%;
-    background: #E0F2FE;
+    background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 14px;
-    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.12);
+    margin-bottom: 16px;
+    box-shadow: 0 6px 18px rgba(2, 132, 199, 0.14);
   }
 
   .empty-title {
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 800;
     color: #0F172A;
     margin: 0 0 6px;
@@ -390,29 +471,30 @@
   .empty-subtitle {
     font-size: 13px;
     color: #64748B;
-    margin: 0 0 20px;
-    max-width: 280px;
+    margin: 0 0 22px;
+    max-width: 290px;
     line-height: 1.5;
   }
 
-  .btn-intake {
-    background: #0B2545;
+  .btn-intake-primary {
+    background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
     color: #FFFFFF;
     border-radius: 9999px;
-    padding: 12px 26px;
-    font-size: 13.5px;
+    padding: 13px 26px;
+    font-size: 14px;
     font-weight: 700;
     border: none;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    box-shadow: 0 6px 16px rgba(11, 37, 69, 0.22);
+    box-shadow: 0 6px 18px rgba(2, 132, 199, 0.3);
     transition: all 0.2s ease;
 
     &:hover {
-      background: #173861;
-      transform: translateY(-1px);
+      background: linear-gradient(135deg, #0369A1 0%, #075985 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(2, 132, 199, 0.4);
     }
 
     &:active {
@@ -421,17 +503,17 @@
   }
 }
 
-// ─── Walk-In Intake Banner ───────────────────────────────────────────────────
+// ─── Walk-In Intake Persistent Banner (When queue is active) ─────────────────
 .intake-banner {
-  background: linear-gradient(135deg, #0B2545 0%, #153E75 100%);
+  background: linear-gradient(135deg, #034A75 0%, #0284C7 100%);
   border-radius: 20px;
-  padding: 18px 20px;
+  padding: 16px 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-top: 14px;
   gap: 12px;
-  box-shadow: 0 8px 22px rgba(11, 37, 69, 0.18);
+  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.22);
 
   .banner-text {
     h4 {
@@ -439,18 +521,19 @@
       font-weight: 800;
       color: #FFFFFF;
       margin: 0 0 3px;
+      letter-spacing: -0.01em;
     }
 
     p {
       font-size: 11.5px;
-      color: rgba(255, 255, 255, 0.72);
+      color: rgba(255, 255, 255, 0.85);
       margin: 0;
     }
   }
 
   .banner-search-btn {
-    background: #38BDF8;
-    color: #0B2545;
+    background: #FFFFFF;
+    color: #0369A1;
     font-size: 12.5px;
     font-weight: 800;
     border-radius: 12px;
@@ -462,12 +545,17 @@
     gap: 6px;
     white-space: nowrap;
     flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.35);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: all 0.2s ease;
 
     &:hover {
-      background: #7DD3FC;
+      background: #F0F9FF;
       transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    &:active {
+      transform: scale(0.97);
     }
   }
 }
