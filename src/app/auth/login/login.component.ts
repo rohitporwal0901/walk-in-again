@@ -1,4 +1,4 @@
-import { Component, signal, inject, OnInit } from '@angular/core';
+import { Component, signal, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -7,6 +7,17 @@ import { User } from '../../core/models/user.model';
 
 export type SheetMode = 'closed' | 'login-pin' | 'register' | 'forgot-pin';
 
+export interface PromoSlide {
+  title: string;
+  desc: string;
+  badge: string;
+  img: string;
+  bg: string;
+  border: string;
+  badgeColor: string;
+  badgeBg: string;
+}
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -14,7 +25,7 @@ export type SheetMode = 'closed' | 'login-pin' | 'register' | 'forgot-pin';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -25,6 +36,53 @@ export class LoginComponent implements OnInit {
   isCheckingPhone = signal<boolean>(false);
   isLoading = signal<boolean>(false);
   errorMsg = signal<string>('');
+
+  // Auto Slider State (Swiggy / Zepto Style Mini Carousel)
+  currentSlide = signal<number>(0);
+  private sliderTimer: any = null;
+
+  slides: PromoSlide[] = [
+    {
+      title: 'Walk-In Care Anytime',
+      desc: 'No prior appointment needed for consultation',
+      badge: 'Walk-In',
+      img: '/assets/images/slider-walkin.jpg',
+      bg: '#FFFFFF',
+      border: '#E2E8F0',
+      badgeColor: '#0284C7',
+      badgeBg: '#F0F9FF'
+    },
+    {
+      title: 'Certified Specialists',
+      desc: 'Qualified BPT & MPT orthopedic experts',
+      badge: 'Specialists',
+      img: '/assets/images/slider-specialist.jpg',
+      bg: '#FFFFFF',
+      border: '#E2E8F0',
+      badgeColor: '#0D9488',
+      badgeBg: '#F0FDF4'
+    },
+    {
+      title: 'Targeted Pain Relief',
+      desc: 'Spine, knee, shoulder & sports recovery',
+      badge: 'Pain Relief',
+      img: '/assets/images/slider-relief.jpg',
+      bg: '#FFFFFF',
+      border: '#E2E8F0',
+      badgeColor: '#7C3AED',
+      badgeBg: '#FAF5FF'
+    },
+    {
+      title: 'Personalised Recovery',
+      desc: 'Customized exercise roadmap for fast healing',
+      badge: 'Custom Care',
+      img: '/assets/images/slider-rehab.jpg',
+      bg: '#FFFFFF',
+      border: '#E2E8F0',
+      badgeColor: '#0891B2',
+      badgeBg: '#ECFEFF'
+    }
+  ];
 
   // Existing user retrieved from Firestore
   existingUser = signal<User | null>(null);
@@ -54,6 +112,8 @@ export class LoginComponent implements OnInit {
   ];
 
   async ngOnInit() {
+    this.startSliderTimer();
+
     // If user is already authenticated in Firebase, automatically navigate by role
     while (this.authService.authLoading()) {
       await new Promise(r => setTimeout(r, 50));
@@ -64,6 +124,29 @@ export class LoginComponent implements OnInit {
       if (role) {
         this.authService.navigateByRole(role);
       }
+    }
+  }
+
+  ngOnDestroy() {
+    this.stopSliderTimer();
+  }
+
+  setSlide(index: number) {
+    this.currentSlide.set(index);
+    this.startSliderTimer();
+  }
+
+  private startSliderTimer() {
+    this.stopSliderTimer();
+    this.sliderTimer = setInterval(() => {
+      this.currentSlide.update(c => (c + 1) % this.slides.length);
+    }, 3300);
+  }
+
+  private stopSliderTimer() {
+    if (this.sliderTimer) {
+      clearInterval(this.sliderTimer);
+      this.sliderTimer = null;
     }
   }
 

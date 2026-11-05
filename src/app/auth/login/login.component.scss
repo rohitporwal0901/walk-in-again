@@ -4,27 +4,33 @@
 .auth-viewport {
   min-height: 100vh;
   min-height: 100dvh;
-  background: #EAF3F8;
+  background: #E8F2F7;
+  background-image: radial-gradient(at 50% 0%, #EDF7FB 0%, #DFEEF5 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  font-family: inherit;
+  padding: 18px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 
   @media (max-width: 480px) {
     padding: 0;
     align-items: stretch;
+    background: #E6F3F8;
   }
 }
 
 .phone-frame {
   width: 100%;
-  max-width: 400px;
-  height: 840px;
-  max-height: 92vh;
-  background: #E4F1F8;
-  border-radius: 44px;
-  box-shadow: 0 25px 70px -15px rgba(2, 132, 199, 0.22), 0 0 0 1.5px rgba(186, 230, 253, 0.85);
+  max-width: 410px;
+  height: 844px;
+  max-height: 94vh;
+  background: #E8F4F9;
+  border-radius: 40px;
+  box-shadow:
+    0 25px 70px -15px rgba(7, 31, 54, 0.25),
+    0 0 0 1.5px rgba(186, 230, 253, 0.8);
   position: relative;
   overflow: hidden;
   display: flex;
@@ -41,162 +47,340 @@
   }
 }
 
-// ─── Top Hero Section with Clean Soft Vignette Overlay ───────────────────────
+// ─── Top Hero Section with Smooth Medical Vignette Fade ─────────────────────
 .hero-top-section {
   width: 100%;
-  height: 48%;
+  flex: 1 1 auto;
+  min-height: 200px;
   position: relative;
   overflow: hidden;
   background: #E0F2FE;
-  flex-shrink: 0;
+  flex-shrink: 1;
 
   .hero-bg-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 20%;
+    object-position: center 25%;
     display: block;
   }
 
+  // Smooth cinematic multi-stop fade into the lower glass card
   .hero-image-gradient {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(226, 241, 248, 0) 45%, rgba(226, 241, 248, 0.65) 75%, #E4F1F8 100%);
+    background: linear-gradient(
+      180deg,
+      rgba(226, 241, 248, 0) 25%,
+      rgba(226, 241, 248, 0.25) 55%,
+      rgba(230, 243, 248, 0.7) 80%,
+      rgba(230, 243, 248, 0.95) 100%
+    );
     pointer-events: none;
   }
 }
 
-// ─── Bottom Medical Content Section (Soft Sky-Cyan Gradient Card) ────────────
+// ─── Bottom Content Section (Glassmorphic Curved Card) ───────────────────────
 .dark-content-section {
-  flex: 1;
-  background: linear-gradient(180deg, #E6F3F8 0%, #EDF7FB 35%, #E0EFF6 75%, #D6EBF4 100%);
+  flex: 0 0 auto;
+  background: rgba(235, 245, 250, 0.82);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
   border-radius: 36px 36px 0 0;
-  margin-top: -32px;
-  border-top: 1.5px solid rgba(2, 132, 199, 0.25);
-  box-shadow: 0 -12px 35px rgba(2, 132, 199, 0.12);
+  margin-top: -34px;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.9);
+  border-left: 1px solid rgba(255, 255, 255, 0.6);
+  border-right: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 
+    0 -12px 35px rgba(7, 31, 54, 0.08),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.95);
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 20px;
-  padding: 12px 24px max(24px, env(safe-area-inset-bottom, 24px));
+  padding: 12px 22px max(20px, calc(env(safe-area-inset-bottom, 0px) + 16px));
   position: relative;
   z-index: 3;
+  overflow-y: auto;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .card-accent-pill {
-  width: 42px;
-  height: 4.5px;
-  background: rgba(2, 132, 199, 0.35);
-  border-radius: 3px;
-  margin: 0 auto -6px;
+  width: 40px;
+  height: 4px;
+  background: #93C5FD;
+  border-radius: 999px;
+  margin: 0 auto 4px;
+  opacity: 0.8;
 }
 
-// ─── Brand Typography Block (Crisp, Static, No Animations) ───────────────────
+// ─── Brand Typography Block (Crisp & High Contrast) ─────────────────────────
 .brand-text-block {
   text-align: center;
-  padding-top: 0;
+  padding: 0;
+  margin-bottom: 4px;
 
   .brand-title {
-    font-size: 34px;
+    font-size: 29px;
     font-weight: 850;
-    color: #0A2540;
-    margin: 0;
-    letter-spacing: -0.6px;
+    color: #071F36;
+    margin: 0 0 3px;
+    letter-spacing: -0.025em;
     line-height: 1.15;
   }
 
   .brand-subtitle {
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 800;
-    letter-spacing: 4px;
-    margin: 6px 0 6px;
+    letter-spacing: 0.22em;
+    margin: 0 0 4px;
     text-transform: uppercase;
     color: #0284C7;
   }
 
   .brand-tagline {
-    font-size: 14px;
-    color: #475569;
-    font-weight: 600;
+    font-size: 13px;
+    color: #64748B;
+    font-weight: 500;
     margin: 0;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.01em;
   }
 }
 
-// ─── Phone Input Section ──────────────────────────────────────────────────────
+// ─── Swiggy Style Auto Promo Banner (Wide Width, Compact Height) ─────────────
+.promo-slider-container {
+  position: relative;
+  width: 100%;
+  height: 84px;
+  margin: 6px 0 8px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 8px 24px -4px rgba(7, 31, 54, 0.07),
+    0 2px 8px rgba(2, 132, 199, 0.04),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.95);
+
+  .promo-slide-card {
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    background: transparent !important;
+    padding: 10px 14px 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    opacity: 0;
+    transform: translateX(18px) scale(0.98);
+    pointer-events: none;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+
+    &.active-slide {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+      pointer-events: auto;
+      z-index: 2;
+    }
+
+    .slide-left-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+      flex: 1;
+
+      .slide-pill-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        width: fit-content;
+        font-size: 8.5px;
+        font-weight: 700;
+        padding: 1.5px 6.5px;
+        border-radius: 999px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 3px;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+        line-height: 1.35;
+
+        &::before {
+          content: '';
+          width: 3.5px;
+          height: 3.5px;
+          border-radius: 50%;
+          background: currentColor;
+          opacity: 0.9;
+          flex-shrink: 0;
+        }
+      }
+
+      .slide-title {
+        font-size: 14.5px;
+        font-weight: 850;
+        color: #0F172A;
+        margin: 0 0 2px;
+        letter-spacing: -0.015em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.25;
+      }
+
+      .slide-desc {
+        font-size: 11.5px;
+        font-weight: 500;
+        color: #64748B;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.35;
+      }
+    }
+
+    .slide-right-visual {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: #F8FAFC;
+      box-shadow: 0 4px 12px rgba(7, 31, 54, 0.08);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+
+      .slide-thumb-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+    }
+  }
+}
+
+// ─── Centered Dots Row Underneath Card (Swiggy / Blinkit Style) ──────────────
+.slider-dots-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5.5px;
+  margin: 0 0 10px;
+
+  .slider-dot {
+    width: 6px;
+    height: 4.5px;
+    border-radius: 999px;
+    background: #CBD5E1;
+    border: none;
+    padding: 0;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+
+    &:hover {
+      background: #94A3B8;
+    }
+
+    &.dot-active {
+      width: 18px;
+      height: 4.5px;
+      background: #0284C7;
+      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.35);
+    }
+  }
+}
+
+// ─── Phone Entry Section ────────────────────────────────────────────────────
 .phone-entry-section {
   position: relative;
   z-index: 2;
-  margin-top: 0;
-  padding-bottom: 0;
+  margin-top: 2px;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 2px;
 
   .input-label {
     display: block;
-    font-size: 14px;
+    font-size: 13.5px;
     font-weight: 700;
     color: #0F172A;
-    margin-bottom: 8px;
-    padding-left: 6px;
-    letter-spacing: 0.01em;
+    margin-bottom: 6px;
+    padding-left: 4px;
+    letter-spacing: -0.01em;
   }
 }
 
 .phone-input-card {
   display: flex;
   align-items: center;
-  background: #FFFFFF;
-  border: 1.5px solid #BAE6FD;
-  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(186, 230, 253, 0.85);
+  border-radius: 999px;
   padding: 0 18px;
-  height: 54px;
-  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.08);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  height: 52px;
+  box-shadow: 
+    0 4px 18px rgba(2, 132, 199, 0.06),
+    inset 0 1px 2px rgba(255, 255, 255, 0.95);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 
   &:focus-within,
   &.input-card-active {
     border-color: #0284C7;
-    background: #FFFFFF;
-    box-shadow: 0 0 0 3.5px rgba(2, 132, 199, 0.2), 0 6px 18px rgba(2, 132, 199, 0.12);
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 
+      0 0 0 4px rgba(2, 132, 199, 0.15), 
+      0 6px 20px rgba(2, 132, 199, 0.12),
+      inset 0 1px 1px rgba(255, 255, 255, 1);
   }
 
   .country-code {
-    font-size: 14.5px;
-    font-weight: 700;
-    color: #0A2540;
-    margin-right: 10px;
-    padding-right: 10px;
-    border-right: 1.5px solid #CBD5E1;
-    white-space: nowrap;
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #0F172A;
+    white-space: nowrap;
+
+    .flag-icon {
+      font-size: 16px;
+      line-height: 1;
+    }
+  }
+
+  .phone-divider {
+    width: 1.5px;
+    height: 22px;
+    background: #E2E8F0;
+    margin: 0 12px;
+    flex-shrink: 0;
   }
 
   .phone-input {
     width: 100%;
     border: none;
     background: transparent;
-    font-size: 16px;
+    font-size: 16.5px;
     font-weight: 600;
-    color: #0A2540;
+    color: #0F172A;
     outline: none;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.02em;
 
     &::placeholder {
       color: #94A3B8;
       font-weight: 400;
-      font-size: 14px;
+      font-size: 15px;
+      letter-spacing: normal;
     }
-  }
-
-  .inline-spinner {
-    width: 20px;
-    height: 20px;
-    border: 2px solid #BAE6FD;
-    border-top-color: #0284C7;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    flex-shrink: 0;
   }
 }
 
@@ -211,10 +395,10 @@
 
 .auto-proceed-hint {
   font-size: 12px;
-  color: #475569;
+  color: #64748B;
   text-align: center;
-  margin: 8px 0 12px;
-  min-height: 18px;
+  margin: 3px 0 4px;
+  min-height: 16px;
   font-weight: 500;
 
   .text-success {
@@ -223,40 +407,48 @@
   }
 }
 
-// ─── Glowing Teal/Emerald Gradient Button (Mockup Exact Match) ────────────────
+// ─── Button Pill Teal / Cyan (Frosted Glass CTA) ───────────────
 .btn-pill-teal {
   width: 100%;
-  height: 52px;
-  background: linear-gradient(135deg, #0284C7 0%, #0D9488 100%);
+  height: 50px;
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.96) 0%, rgba(13, 148, 136, 0.96) 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   color: #FFFFFF;
-  border: none;
-  border-radius: 30px;
-  font-size: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  font-size: 15.5px;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.32);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 
+    0 8px 24px rgba(2, 132, 199, 0.32),
+    inset 0 1px 1px rgba(255, 255, 255, 0.4);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-top: 4px;
+  margin-bottom: 2px;
+  flex-shrink: 0;
 
   &:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(13, 148, 136, 0.42);
-    filter: brightness(1.04);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(13, 148, 136, 0.4);
+    filter: brightness(1.03);
   }
 
   &:active:not(:disabled) {
-    transform: translateY(1px);
-    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25);
+    transform: scale(0.985);
+    box-shadow: 0 3px 10px rgba(2, 132, 199, 0.25);
   }
 
   &:disabled {
-    opacity: 0.65;
+    opacity: 0.55;
     cursor: not-allowed;
     box-shadow: none;
+    transform: none;
   }
 }
 
@@ -273,13 +465,13 @@
   to { transform: rotate(360deg); }
 }
 
-// ─── ACTION SHEET (BOTTOM SHEET) ──────────────────────────────────────────────
+// ─── ACTION SHEET (BOTTOM SHEET) OVERLAY ──────────────────────────────────────
 .sheet-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(15, 23, 42, 0.5);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(7, 31, 54, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   z-index: 20;
 }
 
@@ -288,38 +480,45 @@
   bottom: 0;
   left: 0;
   right: 0;
-  max-height: 90%;
-  background: #FFFFFF;
+  max-height: 92%;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.9);
   border-radius: 32px 32px 0 0;
-  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 
+    0 -16px 50px rgba(7, 31, 54, 0.25),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.9);
   z-index: 25;
   display: flex;
   flex-direction: column;
-  padding: 12px 24px max(28px, env(safe-area-inset-bottom, 28px));
+  padding: 12px 22px max(24px, calc(env(safe-area-inset-bottom, 0px) + 20px));
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: sheetSlideUp 0.32s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes slideUp {
+@keyframes sheetSlideUp {
   from {
     transform: translateY(100%);
+    opacity: 0.8;
   }
   to {
     transform: translateY(0);
+    opacity: 1;
   }
 }
 
 .sheet-handle-bar {
   display: flex;
   justify-content: center;
-  padding-bottom: 10px;
+  padding-bottom: 12px;
 
   .sheet-handle {
-    width: 44px;
-    height: 5px;
+    width: 38px;
+    height: 4.5px;
     background: #CBD5E1;
-    border-radius: 3px;
+    border-radius: 999px;
   }
 }
 
@@ -327,16 +526,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 
   .phone-chip {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 6px;
-    background: #F0FDFA;
-    border: 1px solid #CCFBF1;
+    gap: 8px;
+    background: #E6FFFA;
+    border: 1px solid rgba(13, 148, 136, 0.25);
     padding: 6px 14px;
-    border-radius: 20px;
+    border-radius: 999px;
     font-size: 13px;
     font-weight: 700;
     color: #0F766E;
@@ -345,10 +544,10 @@
       background: none;
       border: none;
       color: #0284C7;
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 700;
       cursor: pointer;
-      padding-left: 6px;
+      padding: 0;
 
       &:hover {
         text-decoration: underline;
@@ -357,23 +556,21 @@
   }
 
   .sheet-close-btn {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     background: #F1F5F9;
     border: none;
-    color: #64748B;
-    font-size: 14px;
-    font-weight: 700;
+    color: #475569;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
 
     &:hover {
       background: #E2E8F0;
-      color: #071F36;
+      color: #0F172A;
     }
   }
 }
@@ -383,77 +580,84 @@
   flex-direction: column;
 }
 
+// ─── Role Badges (Admin Account, Patient, Worker) ────────────────────────────
 .role-badge {
   display: inline-block;
-  padding: 5px 14px;
-  border-radius: 20px;
-  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 11.5px;
   font-weight: 700;
   margin-bottom: 8px;
   background: #E6FFFA;
   color: #0D9488;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
 
   &.badge-admin {
-    background: #FEF2F2;
+    background: #FEE2E2;
     color: #991B1B;
+    border: 1px solid rgba(239, 68, 68, 0.25);
   }
 
   &.badge-worker {
     background: #EFF6FF;
     color: #1D4ED8;
+    border: 1px solid rgba(59, 130, 246, 0.25);
   }
 
   &.badge-patient {
     background: #E6FFFA;
     color: #0D9488;
+    border: 1px solid rgba(13, 148, 136, 0.25);
   }
 }
 
 .sheet-title {
-  font-size: 20px;
-  font-weight: 800;
-  color: #071F36;
+  font-size: 22px;
+  font-weight: 850;
+  color: #0F172A;
   margin: 0 0 4px;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.02em;
 }
 
 .sheet-subtitle {
   font-size: 13px;
   color: #64748B;
-  margin: 0 0 16px;
+  font-weight: 500;
+  margin: 0 0 18px;
+  line-height: 1.4;
 }
 
-// ─── 4-Box PIN Layout ─────────────────────────────────────────────────────────
+// ─── 4-Box PIN Layout (Big, High-Touch Boxes) ─────────────────────────────────
 .pin-boxes-wrap {
   display: flex;
   justify-content: center;
   gap: 12px;
-  margin: 12px 0 18px;
+  margin: 10px 0 16px;
 
   .pin-single-box {
-    width: 58px;
-    height: 60px;
+    width: 60px;
+    height: 64px;
     border-radius: 18px;
-    border: 2px solid #CBD5E1;
+    border: 1.8px solid #CBD5E1;
     background: #F8FAFC;
     font-size: 26px;
     font-weight: 800;
-    color: #071F36;
+    color: #0F172A;
     text-align: center;
     outline: none;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 
     &:focus {
-      border-color: #0D9488;
+      border-color: #0284C7;
       background: #FFFFFF;
-      box-shadow: 0 4px 18px rgba(13, 148, 136, 0.2);
+      box-shadow: 0 0 0 3.5px rgba(2, 132, 199, 0.16), 0 4px 14px rgba(2, 132, 199, 0.12);
       transform: translateY(-2px);
     }
 
     &.pin-box-filled {
-      border-color: #0D9488;
-      background: #F0FDFA;
+      border-color: #0284C7;
+      background: #F0F9FF;
+      color: #0284C7;
     }
   }
 }
@@ -461,18 +665,39 @@
 .pin-auto-hint {
   font-size: 12px;
   color: #64748B;
-  text-align: center;
-  margin: -6px 0 18px;
+  font-weight: 500;
+}
+
+.pin-links-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 16px;
+  padding: 0 4px;
+
+  .link-btn-forgot {
+    background: none;
+    border: none;
+    color: #0284C7;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 .error-alert {
   background: #FEF2F2;
-  border: 1px solid #FCA5A5;
-  color: #B91C1C;
+  border: 1px solid #FECACA;
+  color: #DC2626;
   font-size: 12.5px;
   font-weight: 600;
   padding: 10px 14px;
-  border-radius: 14px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -480,17 +705,17 @@
   margin-bottom: 14px;
 }
 
-// ─── Sheet Registration Form (Clean Minimalist without emojis) ───────────────
+// ─── Registration Form Elements (Screenshot 3 Matching) ─────────────────────
 .sheet-form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 13px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
 }
 
 .form-row {
@@ -504,29 +729,32 @@
 }
 
 .form-label {
-  font-size: 12px;
-  font-weight: 700;
-  color: #071F36;
-  padding-left: 4px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #0F172A;
+  padding-left: 2px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .form-input-pill {
+  position: relative;
   display: flex;
   align-items: center;
   background: #F8FAFC;
   border: 1.5px solid #E2E8F0;
-  border-radius: 24px;
+  border-radius: 16px;
   padding: 0 16px;
-  height: 48px;
-  transition: all 0.2s ease;
+  height: 50px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 
   &:focus-within {
-    border-color: #0D9488;
+    border-color: #0284C7;
     background: #FFFFFF;
-    box-shadow: 0 4px 14px rgba(13, 148, 136, 0.12);
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
 
     .input-svg-icon {
-      stroke: #0D9488;
+      stroke: #0284C7;
     }
   }
 
@@ -547,24 +775,39 @@
     border: none;
     background: transparent;
     font-size: 14px;
-    font-weight: 500;
-    color: #071F36;
+    font-weight: 600;
+    color: #0F172A;
     outline: none;
 
     &::placeholder {
       color: #94A3B8;
+      font-weight: 400;
     }
+  }
+
+  &.select-pill {
+    padding-right: 36px;
   }
 
   .inner-select {
     width: 100%;
     border: none;
     background: transparent;
-    font-size: 13.5px;
+    font-size: 14px;
     font-weight: 600;
-    color: #071F36;
+    color: #0F172A;
     outline: none;
     cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+
+  .select-chevron-icon {
+    position: absolute;
+    right: 14px;
+    pointer-events: none;
+    stroke: #0F172A;
   }
 }
 
@@ -572,46 +815,19 @@
   font-size: 11px;
   color: #DC2626;
   font-weight: 500;
-  padding-left: 8px;
+  padding-left: 4px;
 }
 
-// ─── PIN Compact & Sub-Links ──────────────────────────────────────────────────
+// ─── Compact PIN Boxes for Registration & Reset Form ────────────────────────
 .pin-boxes-compact {
-  gap: 8px !important;
-  margin: 4px 0 10px !important;
+  gap: 10px !important;
+  margin: 4px 0 6px !important;
 
   .pin-box-sm {
-    width: 48px !important;
-    height: 50px !important;
+    width: 52px !important;
+    height: 54px !important;
     border-radius: 14px !important;
     font-size: 22px !important;
-  }
-}
-
-.pin-links-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: -6px 0 16px;
-  padding: 0 4px;
-
-  .pin-auto-hint {
-    margin: 0;
-    font-size: 12px;
-  }
-
-  .link-btn-forgot {
-    background: none;
-    border: none;
-    color: #0284C7;
-    font-size: 12.5px;
-    font-weight: 700;
-    cursor: pointer;
-    padding: 0;
-
-    &:hover {
-      text-decoration: underline;
-    }
   }
 }
 
@@ -623,7 +839,7 @@
   font-weight: 600;
   cursor: pointer;
   text-align: center;
-  margin-top: 14px;
+  margin-top: 12px;
 
   &:hover {
     color: #071F36;
@@ -634,8 +850,9 @@
 .badge-warning {
   background: #FEF3C7 !important;
   color: #92400E !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
 }
 
 .mt-2 {
-  margin-top: 8px;
+  margin-top: 6px;
 }

@@ -5,21 +5,63 @@
 
     <!-- ─── Top Hero Section with Cinematic Image Overlay ───────────────── -->
     <div class="hero-top-section">
-      <img src="/assets/images/splash-hero.jpg" alt="Physiotherapy stretching session" class="hero-bg-img" />
-      <!-- Smooth Vignette Gradient Fade on the bottom edge -->
+      <img src="/assets/images/splash-hero.jpg" alt="Physiotherapy session" class="hero-bg-img" />
+      <!-- Smooth Multi-Stop Vignette Gradient Fade -->
       <div class="hero-image-gradient"></div>
     </div>
 
-    <!-- ─── Bottom Dark Content Section (Modern Curved Mobile Card) ───────── -->
+    <!-- ─── Bottom Content Section (Curved Card Matching Mockup) ───────── -->
     <div class="dark-content-section">
       <!-- Minimalist Card Top Accent Pill -->
       <div class="card-accent-pill"></div>
 
-      <!-- Brand Typography (White & Teal) -->
+      <!-- Brand Typography (Walk In Again PHYSIOTHERAPY) -->
       <div class="brand-text-block">
         <h1 class="brand-title">Walk In Again</h1>
-        <h2 class="brand-subtitle">PHYSIOTHERAPY</h2>
+        <h2 class="brand-subtitle">P H Y S I O T H E R A P Y</h2>
         <p class="brand-tagline">Move Better. Live Stronger.</p>
+      </div>
+
+      <!-- ─── Swiggy Style Auto Promo Banner (Wide Width, Compact Height) ─── -->
+      <div class="promo-slider-container">
+        @for (slide of slides; track slide.title; let i = $index) {
+          <div
+            class="promo-slide-card"
+            [class.active-slide]="currentSlide() === i"
+            (click)="setSlide((i + 1) % slides.length)"
+          >
+            <!-- Left Content: Badge, Title, Subtitle -->
+            <div class="slide-left-content">
+              <span
+                class="slide-pill-badge"
+                [style.color]="slide.badgeColor"
+                [style.background]="slide.badgeBg"
+              >
+                {{ slide.badge }}
+              </span>
+              <h3 class="slide-title">{{ slide.title }}</h3>
+              <p class="slide-desc">{{ slide.desc }}</p>
+            </div>
+
+            <!-- Right Image: Clean 3D Illustration Thumbnail -->
+            <div class="slide-right-visual">
+              <img [src]="slide.img" [alt]="slide.title" class="slide-thumb-img" />
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Pagination Dots Centered Below Banner (Swiggy / Blinkit style) -->
+      <div class="slider-dots-row">
+        @for (slide of slides; track slide.title; let i = $index) {
+          <button
+            type="button"
+            class="slider-dot"
+            [class.dot-active]="currentSlide() === i"
+            (click)="setSlide(i)"
+            [attr.aria-label]="'Go to slide ' + (i + 1)"
+          ></button>
+        }
       </div>
 
       <!-- Phone Input & Action Button Section -->
@@ -27,13 +69,13 @@
         <label class="input-label" for="phone-main-input">Enter Mobile Number</label>
 
         <div class="phone-input-card" [class.input-card-active]="phoneNumber().length > 0">
-          <span class="country-code">🇮🇳 +91</span>
-          <input id="phone-main-input" type="tel" maxlength="10" inputmode="numeric"
-            placeholder="10-digit mobile number" [value]="phoneNumber()" (input)="onPhoneInput($event)"
-            class="phone-input" autocomplete="tel" />
-          <!-- @if (isCheckingPhone()) {
-          <span class="inline-spinner"></span>
-          } -->
+          <span class="country-code">
+            <span class="flag-icon">🇮🇳</span>
+            <span>+91</span>
+          </span>
+          <div class="phone-divider"></div>
+          <input id="phone-main-input" type="tel" maxlength="10" inputmode="numeric" placeholder="10 digit number"
+            [value]="phoneNumber()" (input)="onPhoneInput($event)" class="phone-input" autocomplete="tel" />
         </div>
 
         @if (errorMsg() && sheetMode() === 'closed') {
@@ -44,15 +86,13 @@
           @if (phoneNumber().length > 0 && phoneNumber().length < 10) { <span>{{ 10 - phoneNumber().length }} more
             digit{{ 10 - phoneNumber().length !== 1 ? 's' : '' }} to go</span>
             } @else if (phoneNumber().length === 10) {
-            <!-- <span class="text-success">✓ Checking account in system...</span> -->
-            } @else {
-            <span>New patient profile opens automatically if not registered.</span>
+            <span class="text-success">✓ Ready to continue</span>
             }
         </p>
 
-        <!-- Glowing Teal/Emerald Gradient Button (matching Get Started in mockup) -->
+        <!-- Glowing Teal/Emerald Gradient Continue Button -->
         <button class="btn-pill-teal" [disabled]="phoneNumber().length !== 10 || isCheckingPhone()"
-          (click)="checkPhone()">
+          (click)="checkPhone()" id="btn-login-continue">
           @if (isCheckingPhone()) {
           <span class="btn-spinner"></span>
           <span>Checking...</span>
@@ -74,13 +114,20 @@
         <div class="sheet-handle"></div>
       </div>
 
-      <!-- Sheet Top Header -->
+      <!-- Sheet Top Header: Phone Chip & Close Button -->
       <div class="sheet-header">
         <div class="phone-chip">
           <span class="chip-number">+91 {{ phoneNumber() }}</span>
-          <button class="chip-change-btn" (click)="closeSheet()">Change</button>
+          <button class="chip-change-btn" (click)="closeSheet()" type="button">Change</button>
         </div>
-        <button class="sheet-close-btn" (click)="closeSheet()" aria-label="Close">✕</button>
+
+        <button class="sheet-close-btn" (click)="closeSheet()" aria-label="Close" type="button" id="sheet-close-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
 
       <!-- ─────────────────────────────────────────────────────────────── -->
@@ -90,7 +137,8 @@
       <div class="sheet-body">
         <div class="login-greeting">
           <span class="role-badge" [class.badge-admin]="existingUser()?.role === 'admin'"
-            [class.badge-worker]="existingUser()?.role === 'worker'">
+            [class.badge-worker]="existingUser()?.role === 'worker'"
+            [class.badge-patient]="existingUser()?.role === 'patient'">
             @if (existingUser()?.role === 'admin') { Admin Account }
             @else if (existingUser()?.role === 'worker') { Physiotherapist }
             @else { Patient Account }
@@ -121,13 +169,13 @@
 
         <div class="pin-links-row">
           <span class="pin-auto-hint">Auto-submits on 4th digit</span>
-          <button type="button" class="link-btn-forgot" (click)="openForgotPin()">
+          <button type="button" class="link-btn-forgot" (click)="openForgotPin()" id="btn-forgot-pin">
             Forgot M-PIN?
           </button>
         </div>
 
         <button class="btn-pill-teal mt-2" [disabled]="isLoading() || loginPinDigits().join('').length !== 4"
-          (click)="submitLogin()">
+          (click)="submitLogin()" id="btn-login-submit">
           @if (isLoading()) {
           <span class="btn-spinner"></span>
           <span>Verifying M-PIN...</span>
@@ -153,14 +201,15 @@
 
           <!-- Full Name -->
           <div class="form-group">
-            <label class="form-label">Full Name *</label>
+            <label class="form-label">FULL NAME *</label>
             <div class="form-input-pill" [class.input-error]="reg['name'].invalid && reg['name'].touched">
               <svg class="input-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2">
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                 <circle cx="12" cy="7" r="4" />
               </svg>
-              <input type="text" formControlName="name" placeholder="e.g. Priya Mehta" class="inner-input" />
+              <input type="text" formControlName="name" placeholder="e.g. Priya Mehta" class="inner-input"
+                id="reg-input-name" />
             </div>
             @if (reg['name'].invalid && reg['name'].touched) {
             <span class="form-field-err">Full name is required</span>
@@ -170,50 +219,59 @@
           <!-- Age & Gender Row -->
           <div class="form-row">
             <div class="form-group flex-1">
-              <label class="form-label">Age *</label>
+              <label class="form-label">AGE *</label>
               <div class="form-input-pill" [class.input-error]="reg['age'].invalid && reg['age'].touched">
                 <svg class="input-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  stroke-width="2">
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
                   <line x1="16" y1="2" x2="16" y2="6" />
                   <line x1="8" y1="2" x2="8" y2="6" />
                   <line x1="3" y1="10" x2="21" y2="10" />
                 </svg>
-                <input type="number" formControlName="age" placeholder="Age" min="1" max="120" class="inner-input" />
+                <input type="number" formControlName="age" placeholder="Age" min="1" max="120" class="inner-input"
+                  id="reg-input-age" />
               </div>
             </div>
 
             <div class="form-group flex-1">
-              <label class="form-label">Gender *</label>
-              <div class="form-input-pill">
-                <select formControlName="gender" class="inner-select">
+              <label class="form-label">GENDER *</label>
+              <div class="form-input-pill select-pill">
+                <select formControlName="gender" class="inner-select" id="reg-select-gender">
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
                   <option value="Other">Other</option>
                 </select>
+                <svg class="select-chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
               </div>
             </div>
           </div>
 
           <!-- Primary Concern / Area of Pain -->
           <div class="form-group">
-            <label class="form-label">Primary Area of Pain / Concern *</label>
-            <div class="form-input-pill">
+            <label class="form-label">PRIMARY AREA OF PAIN / CONCERN *</label>
+            <div class="form-input-pill select-pill">
               <svg class="input-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2">
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
               </svg>
-              <select formControlName="condition" class="inner-select">
+              <select formControlName="condition" class="inner-select" id="reg-select-condition">
                 @for (c of conditions; track c) {
                 <option [value]="c">{{ c }}</option>
                 }
               </select>
+              <svg class="select-chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
             </div>
           </div>
 
           <!-- 4-Box PIN Input: Set PIN -->
           <div class="form-group">
-            <label class="form-label">Set 4-Digit Security M-PIN *</label>
+            <label class="form-label">SET 4-DIGIT SECURITY M-PIN *</label>
             <div class="pin-boxes-wrap pin-boxes-compact">
               @for (idx of [0, 1, 2, 3]; track idx) {
               <input [id]="'reg-' + idx" type="password" maxlength="1" inputmode="numeric" autocomplete="one-time-code"
@@ -226,7 +284,7 @@
 
           <!-- 4-Box PIN Input: Confirm PIN -->
           <div class="form-group">
-            <label class="form-label">Confirm 4-Digit M-PIN *</label>
+            <label class="form-label">CONFIRM 4-DIGIT M-PIN *</label>
             <div class="pin-boxes-wrap pin-boxes-compact">
               @for (idx of [0, 1, 2, 3]; track idx) {
               <input [id]="'reg-conf-' + idx" type="password" maxlength="1" inputmode="numeric"
@@ -250,7 +308,8 @@
           }
 
           <button type="submit" class="btn-pill-teal"
-            [disabled]="isLoading() || registerForm.invalid || registerPinDigits().join('').length !== 4 || registerConfirmPinDigits().join('').length !== 4">
+            [disabled]="isLoading() || registerForm.invalid || registerPinDigits().join('').length !== 4 || registerConfirmPinDigits().join('').length !== 4"
+            id="btn-register-submit">
             @if (isLoading()) {
             <span class="btn-spinner"></span>
             <span>Creating Account...</span>
@@ -276,7 +335,7 @@
         <div class="sheet-form">
           <!-- New PIN -->
           <div class="form-group">
-            <label class="form-label">New 4-Digit M-PIN *</label>
+            <label class="form-label">NEW 4-DIGIT M-PIN *</label>
             <div class="pin-boxes-wrap pin-boxes-compact">
               @for (idx of [0, 1, 2, 3]; track idx) {
               <input [id]="'forgot-' + idx" type="password" maxlength="1" inputmode="numeric"
@@ -290,7 +349,7 @@
 
           <!-- Confirm New PIN -->
           <div class="form-group">
-            <label class="form-label">Confirm New 4-Digit M-PIN *</label>
+            <label class="form-label">CONFIRM NEW 4-DIGIT M-PIN *</label>
             <div class="pin-boxes-wrap pin-boxes-compact">
               @for (idx of [0, 1, 2, 3]; track idx) {
               <input [id]="'forgot-conf-' + idx" type="password" maxlength="1" inputmode="numeric"
@@ -315,7 +374,7 @@
 
           <button type="button" class="btn-pill-teal"
             [disabled]="isLoading() || forgotPinDigits().join('').length !== 4 || forgotConfirmPinDigits().join('').length !== 4"
-            (click)="submitResetPin()">
+            (click)="submitResetPin()" id="btn-reset-pin-submit">
             @if (isLoading()) {
             <span class="btn-spinner"></span>
             <span>Updating PIN...</span>
