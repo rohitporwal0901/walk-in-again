@@ -5,11 +5,7 @@
 
     <!-- ─── Top Hero Section with Cinematic Image Overlay ───────────────── -->
     <div class="hero-top-section">
-      <img
-        src="/assets/images/splash-hero.jpg"
-        alt="Physiotherapy stretching session"
-        class="hero-bg-img"
-      />
+      <img src="/assets/images/splash-hero.jpg" alt="Physiotherapy stretching session" class="hero-bg-img" />
       <!-- Smooth Vignette Gradient Fade on the bottom edge -->
       <div class="hero-image-gradient"></div>
     </div>
@@ -29,50 +25,39 @@
       <!-- Phone Input & Action Button Section -->
       <div class="phone-entry-section">
         <label class="input-label" for="phone-main-input">Enter Mobile Number</label>
-        
+
         <div class="phone-input-card" [class.input-card-active]="phoneNumber().length > 0">
           <span class="country-code">🇮🇳 +91</span>
-          <input
-            id="phone-main-input"
-            type="tel"
-            maxlength="10"
-            inputmode="numeric"
-            placeholder="10-digit mobile number"
-            [value]="phoneNumber()"
-            (input)="onPhoneInput($event)"
-            class="phone-input"
-            autocomplete="tel"
-          />
-          @if (isCheckingPhone()) {
-            <span class="inline-spinner"></span>
-          }
+          <input id="phone-main-input" type="tel" maxlength="10" inputmode="numeric"
+            placeholder="10-digit mobile number" [value]="phoneNumber()" (input)="onPhoneInput($event)"
+            class="phone-input" autocomplete="tel" />
+          <!-- @if (isCheckingPhone()) {
+          <span class="inline-spinner"></span>
+          } -->
         </div>
 
         @if (errorMsg() && sheetMode() === 'closed') {
-          <span class="input-inline-error">{{ errorMsg() }}</span>
+        <span class="input-inline-error">{{ errorMsg() }}</span>
         }
 
         <p class="auto-proceed-hint">
-          @if (phoneNumber().length > 0 && phoneNumber().length < 10) {
-            <span>{{ 10 - phoneNumber().length }} more digit{{ 10 - phoneNumber().length !== 1 ? 's' : '' }} to go</span>
-          } @else if (phoneNumber().length === 10) {
-            <span class="text-success">✓ Checking account in system...</span>
-          } @else {
+          @if (phoneNumber().length > 0 && phoneNumber().length < 10) { <span>{{ 10 - phoneNumber().length }} more
+            digit{{ 10 - phoneNumber().length !== 1 ? 's' : '' }} to go</span>
+            } @else if (phoneNumber().length === 10) {
+            <!-- <span class="text-success">✓ Checking account in system...</span> -->
+            } @else {
             <span>New patient profile opens automatically if not registered.</span>
-          }
+            }
         </p>
 
         <!-- Glowing Teal/Emerald Gradient Button (matching Get Started in mockup) -->
-        <button
-          class="btn-pill-teal"
-          [disabled]="phoneNumber().length !== 10 || isCheckingPhone()"
-          (click)="checkPhone()"
-        >
+        <button class="btn-pill-teal" [disabled]="phoneNumber().length !== 10 || isCheckingPhone()"
+          (click)="checkPhone()">
           @if (isCheckingPhone()) {
-            <span class="btn-spinner"></span>
-            <span>Checking...</span>
+          <span class="btn-spinner"></span>
+          <span>Checking...</span>
           } @else {
-            <span>Continue</span>
+          <span>Continue</span>
           }
         </button>
       </div>
@@ -81,327 +66,272 @@
 
     <!-- ─── ACTION SHEET (BOTTOM SHEET) OVERLAY ────────────────────────────── -->
     @if (sheetMode() !== 'closed') {
-      <div class="sheet-backdrop animate-fade-in" (click)="closeSheet()"></div>
+    <div class="sheet-backdrop animate-fade-in" (click)="closeSheet()"></div>
 
-      <div class="action-sheet animate-slide-up">
-        <!-- Top Drag Handle -->
-        <div class="sheet-handle-bar">
-          <div class="sheet-handle"></div>
-        </div>
-
-        <!-- Sheet Top Header -->
-        <div class="sheet-header">
-          <div class="phone-chip">
-            <span class="chip-number">+91 {{ phoneNumber() }}</span>
-            <button class="chip-change-btn" (click)="closeSheet()">Change</button>
-          </div>
-          <button class="sheet-close-btn" (click)="closeSheet()" aria-label="Close">✕</button>
-        </div>
-
-        <!-- ─────────────────────────────────────────────────────────────── -->
-        <!-- SUB-VIEW 1: LOGIN (4-BOX M-PIN) — If Account Exists             -->
-        <!-- ─────────────────────────────────────────────────────────────── -->
-        @if (sheetMode() === 'login-pin') {
-          <div class="sheet-body">
-            <div class="login-greeting">
-              <span class="role-badge" [class.badge-admin]="existingUser()?.role === 'admin'" [class.badge-worker]="existingUser()?.role === 'worker'">
-                @if (existingUser()?.role === 'admin') { Admin Account }
-                @else if (existingUser()?.role === 'worker') { Physiotherapist }
-                @else { Patient Account }
-              </span>
-              <h2 class="sheet-title">Welcome Back, {{ existingUser()?.name }}!</h2>
-              <p class="sheet-subtitle">Enter your 4-digit M-PIN to access your portal</p>
-            </div>
-
-            <!-- 4-Box PIN Input -->
-            <div class="pin-boxes-wrap">
-              @for (idx of [0, 1, 2, 3]; track idx) {
-                <input
-                  [id]="'login-' + idx"
-                  type="password"
-                  maxlength="1"
-                  inputmode="numeric"
-                  autocomplete="one-time-code"
-                  class="pin-single-box"
-                  [class.pin-box-filled]="loginPinDigits()[idx] !== ''"
-                  [value]="loginPinDigits()[idx]"
-                  (input)="onBoxInput($event, idx, 'login')"
-                  (keydown.backspace)="onBoxBackspace($event, idx, 'login')"
-                />
-              }
-            </div>
-
-            @if (errorMsg()) {
-              <div class="error-alert animate-fade-in">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="12" y1="8" x2="12" y2="12" />
-                  <line x1="12" y1="16" x2="12.01" y2="16" />
-                </svg>
-                <span>{{ errorMsg() }}</span>
-              </div>
-            }
-
-            <div class="pin-links-row">
-              <span class="pin-auto-hint">Auto-submits on 4th digit</span>
-              <button type="button" class="link-btn-forgot" (click)="openForgotPin()">
-                Forgot M-PIN?
-              </button>
-            </div>
-
-            <button
-              class="btn-pill-teal mt-2"
-              [disabled]="isLoading() || loginPinDigits().join('').length !== 4"
-              (click)="submitLogin()"
-            >
-              @if (isLoading()) {
-                <span class="btn-spinner"></span>
-                <span>Verifying M-PIN...</span>
-              } @else {
-                <span>Login</span>
-              }
-            </button>
-          </div>
-        }
-
-        <!-- ─────────────────────────────────────────────────────────────── -->
-        <!-- SUB-VIEW 2: REGISTER PATIENT WITH 4-BOX PIN & CONFIRM PIN       -->
-        <!-- ─────────────────────────────────────────────────────────────── -->
-        @if (sheetMode() === 'register') {
-          <div class="sheet-body">
-            <div class="register-greeting">
-              <span class="role-badge badge-patient">New Patient Profile</span>
-              <h2 class="sheet-title">Patient Registration</h2>
-              <p class="sheet-subtitle">Complete your details and set your 4-digit M-PIN</p>
-            </div>
-
-            <form [formGroup]="registerForm" (ngSubmit)="submitRegister()" class="sheet-form">
-
-              <!-- Full Name -->
-              <div class="form-group">
-                <label class="form-label">Full Name *</label>
-                <div class="form-input-pill" [class.input-error]="reg['name'].invalid && reg['name'].touched">
-                  <svg class="input-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
-                  </svg>
-                  <input
-                    type="text"
-                    formControlName="name"
-                    placeholder="e.g. Priya Mehta"
-                    class="inner-input"
-                  />
-                </div>
-                @if (reg['name'].invalid && reg['name'].touched) {
-                  <span class="form-field-err">Full name is required</span>
-                }
-              </div>
-
-              <!-- Age & Gender Row -->
-              <div class="form-row">
-                <div class="form-group flex-1">
-                  <label class="form-label">Age *</label>
-                  <div class="form-input-pill" [class.input-error]="reg['age'].invalid && reg['age'].touched">
-                    <svg class="input-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                      <line x1="16" y1="2" x2="16" y2="6" />
-                      <line x1="8" y1="2" x2="8" y2="6" />
-                      <line x1="3" y1="10" x2="21" y2="10" />
-                    </svg>
-                    <input
-                      type="number"
-                      formControlName="age"
-                      placeholder="Age"
-                      min="1"
-                      max="120"
-                      class="inner-input"
-                    />
-                  </div>
-                </div>
-
-                <div class="form-group flex-1">
-                  <label class="form-label">Gender *</label>
-                  <div class="form-input-pill">
-                    <select formControlName="gender" class="inner-select">
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Primary Concern / Area of Pain -->
-              <div class="form-group">
-                <label class="form-label">Primary Area of Pain / Concern *</label>
-                <div class="form-input-pill">
-                  <svg class="input-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                  </svg>
-                  <select formControlName="condition" class="inner-select">
-                    @for (c of conditions; track c) {
-                      <option [value]="c">{{ c }}</option>
-                    }
-                  </select>
-                </div>
-              </div>
-
-              <!-- 4-Box PIN Input: Set PIN -->
-              <div class="form-group">
-                <label class="form-label">Set 4-Digit Security M-PIN *</label>
-                <div class="pin-boxes-wrap pin-boxes-compact">
-                  @for (idx of [0, 1, 2, 3]; track idx) {
-                    <input
-                      [id]="'reg-' + idx"
-                      type="password"
-                      maxlength="1"
-                      inputmode="numeric"
-                      autocomplete="one-time-code"
-                      class="pin-single-box pin-box-sm"
-                      [class.pin-box-filled]="registerPinDigits()[idx] !== ''"
-                      [value]="registerPinDigits()[idx]"
-                      (input)="onBoxInput($event, idx, 'reg')"
-                      (keydown.backspace)="onBoxBackspace($event, idx, 'reg')"
-                    />
-                  }
-                </div>
-              </div>
-
-              <!-- 4-Box PIN Input: Confirm PIN -->
-              <div class="form-group">
-                <label class="form-label">Confirm 4-Digit M-PIN *</label>
-                <div class="pin-boxes-wrap pin-boxes-compact">
-                  @for (idx of [0, 1, 2, 3]; track idx) {
-                    <input
-                      [id]="'reg-conf-' + idx"
-                      type="password"
-                      maxlength="1"
-                      inputmode="numeric"
-                      autocomplete="one-time-code"
-                      class="pin-single-box pin-box-sm"
-                      [class.pin-box-filled]="registerConfirmPinDigits()[idx] !== ''"
-                      [value]="registerConfirmPinDigits()[idx]"
-                      (input)="onBoxInput($event, idx, 'reg-conf')"
-                      (keydown.backspace)="onBoxBackspace($event, idx, 'reg-conf')"
-                    />
-                  }
-                </div>
-              </div>
-
-              @if (errorMsg()) {
-                <div class="error-alert animate-fade-in">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                  </svg>
-                  <span>{{ errorMsg() }}</span>
-                </div>
-              }
-
-              <button
-                type="submit"
-                class="btn-pill-teal"
-                [disabled]="isLoading() || registerForm.invalid || registerPinDigits().join('').length !== 4 || registerConfirmPinDigits().join('').length !== 4"
-              >
-                @if (isLoading()) {
-                  <span class="btn-spinner"></span>
-                  <span>Creating Account...</span>
-                } @else {
-                  <span>Complete Patient Registration</span>
-                }
-              </button>
-            </form>
-          </div>
-        }
-
-        <!-- ─────────────────────────────────────────────────────────────── -->
-        <!-- SUB-VIEW 3: FORGOT PIN / SECURITY RECOVERY                      -->
-        <!-- ─────────────────────────────────────────────────────────────── -->
-        @if (sheetMode() === 'forgot-pin') {
-          <div class="sheet-body animate-fade-in">
-            <div class="login-greeting">
-              <span class="role-badge badge-warning">Security Recovery</span>
-              <h2 class="sheet-title">Reset Security M-PIN</h2>
-              <p class="sheet-subtitle">Enter and confirm a new 4-digit M-PIN for your account</p>
-            </div>
-
-            <div class="sheet-form">
-              <!-- New PIN -->
-              <div class="form-group">
-                <label class="form-label">New 4-Digit M-PIN *</label>
-                <div class="pin-boxes-wrap pin-boxes-compact">
-                  @for (idx of [0, 1, 2, 3]; track idx) {
-                    <input
-                      [id]="'forgot-' + idx"
-                      type="password"
-                      maxlength="1"
-                      inputmode="numeric"
-                      autocomplete="one-time-code"
-                      class="pin-single-box pin-box-sm"
-                      [class.pin-box-filled]="forgotPinDigits()[idx] !== ''"
-                      [value]="forgotPinDigits()[idx]"
-                      (input)="onBoxInput($event, idx, 'forgot')"
-                      (keydown.backspace)="onBoxBackspace($event, idx, 'forgot')"
-                    />
-                  }
-                </div>
-              </div>
-
-              <!-- Confirm New PIN -->
-              <div class="form-group">
-                <label class="form-label">Confirm New 4-Digit M-PIN *</label>
-                <div class="pin-boxes-wrap pin-boxes-compact">
-                  @for (idx of [0, 1, 2, 3]; track idx) {
-                    <input
-                      [id]="'forgot-conf-' + idx"
-                      type="password"
-                      maxlength="1"
-                      inputmode="numeric"
-                      autocomplete="one-time-code"
-                      class="pin-single-box pin-box-sm"
-                      [class.pin-box-filled]="forgotConfirmPinDigits()[idx] !== ''"
-                      [value]="forgotConfirmPinDigits()[idx]"
-                      (input)="onBoxInput($event, idx, 'forgot-conf')"
-                      (keydown.backspace)="onBoxBackspace($event, idx, 'forgot-conf')"
-                    />
-                  }
-                </div>
-              </div>
-
-              @if (errorMsg()) {
-                <div class="error-alert animate-fade-in">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                  </svg>
-                  <span>{{ errorMsg() }}</span>
-                </div>
-              }
-
-              <button
-                type="button"
-                class="btn-pill-teal"
-                [disabled]="isLoading() || forgotPinDigits().join('').length !== 4 || forgotConfirmPinDigits().join('').length !== 4"
-                (click)="submitResetPin()"
-              >
-                @if (isLoading()) {
-                  <span class="btn-spinner"></span>
-                  <span>Updating PIN...</span>
-                } @else {
-                  <span>Reset M-PIN & Login</span>
-                }
-              </button>
-
-              <button type="button" class="link-btn-back" (click)="sheetMode.set('login-pin')">
-                ← Back to Login
-              </button>
-            </div>
-          </div>
-        }
-
+    <div class="action-sheet animate-slide-up">
+      <!-- Top Drag Handle -->
+      <div class="sheet-handle-bar">
+        <div class="sheet-handle"></div>
       </div>
+
+      <!-- Sheet Top Header -->
+      <div class="sheet-header">
+        <div class="phone-chip">
+          <span class="chip-number">+91 {{ phoneNumber() }}</span>
+          <button class="chip-change-btn" (click)="closeSheet()">Change</button>
+        </div>
+        <button class="sheet-close-btn" (click)="closeSheet()" aria-label="Close">✕</button>
+      </div>
+
+      <!-- ─────────────────────────────────────────────────────────────── -->
+      <!-- SUB-VIEW 1: LOGIN (4-BOX M-PIN) — If Account Exists             -->
+      <!-- ─────────────────────────────────────────────────────────────── -->
+      @if (sheetMode() === 'login-pin') {
+      <div class="sheet-body">
+        <div class="login-greeting">
+          <span class="role-badge" [class.badge-admin]="existingUser()?.role === 'admin'"
+            [class.badge-worker]="existingUser()?.role === 'worker'">
+            @if (existingUser()?.role === 'admin') { Admin Account }
+            @else if (existingUser()?.role === 'worker') { Physiotherapist }
+            @else { Patient Account }
+          </span>
+          <h2 class="sheet-title">Welcome Back, {{ existingUser()?.name }}!</h2>
+          <p class="sheet-subtitle">Enter your 4-digit M-PIN to access your portal</p>
+        </div>
+
+        <!-- 4-Box PIN Input -->
+        <div class="pin-boxes-wrap">
+          @for (idx of [0, 1, 2, 3]; track idx) {
+          <input [id]="'login-' + idx" type="password" maxlength="1" inputmode="numeric" autocomplete="one-time-code"
+            class="pin-single-box" [class.pin-box-filled]="loginPinDigits()[idx] !== ''" [value]="loginPinDigits()[idx]"
+            (input)="onBoxInput($event, idx, 'login')" (keydown.backspace)="onBoxBackspace($event, idx, 'login')" />
+          }
+        </div>
+
+        @if (errorMsg()) {
+        <div class="error-alert animate-fade-in">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          <span>{{ errorMsg() }}</span>
+        </div>
+        }
+
+        <div class="pin-links-row">
+          <span class="pin-auto-hint">Auto-submits on 4th digit</span>
+          <button type="button" class="link-btn-forgot" (click)="openForgotPin()">
+            Forgot M-PIN?
+          </button>
+        </div>
+
+        <button class="btn-pill-teal mt-2" [disabled]="isLoading() || loginPinDigits().join('').length !== 4"
+          (click)="submitLogin()">
+          @if (isLoading()) {
+          <span class="btn-spinner"></span>
+          <span>Verifying M-PIN...</span>
+          } @else {
+          <span>Login</span>
+          }
+        </button>
+      </div>
+      }
+
+      <!-- ─────────────────────────────────────────────────────────────── -->
+      <!-- SUB-VIEW 2: REGISTER PATIENT WITH 4-BOX PIN & CONFIRM PIN       -->
+      <!-- ─────────────────────────────────────────────────────────────── -->
+      @if (sheetMode() === 'register') {
+      <div class="sheet-body">
+        <div class="register-greeting">
+          <span class="role-badge badge-patient">New Patient Profile</span>
+          <h2 class="sheet-title">Patient Registration</h2>
+          <p class="sheet-subtitle">Complete your details and set your 4-digit M-PIN</p>
+        </div>
+
+        <form [formGroup]="registerForm" (ngSubmit)="submitRegister()" class="sheet-form">
+
+          <!-- Full Name -->
+          <div class="form-group">
+            <label class="form-label">Full Name *</label>
+            <div class="form-input-pill" [class.input-error]="reg['name'].invalid && reg['name'].touched">
+              <svg class="input-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              <input type="text" formControlName="name" placeholder="e.g. Priya Mehta" class="inner-input" />
+            </div>
+            @if (reg['name'].invalid && reg['name'].touched) {
+            <span class="form-field-err">Full name is required</span>
+            }
+          </div>
+
+          <!-- Age & Gender Row -->
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label class="form-label">Age *</label>
+              <div class="form-input-pill" [class.input-error]="reg['age'].invalid && reg['age'].touched">
+                <svg class="input-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <input type="number" formControlName="age" placeholder="Age" min="1" max="120" class="inner-input" />
+              </div>
+            </div>
+
+            <div class="form-group flex-1">
+              <label class="form-label">Gender *</label>
+              <div class="form-input-pill">
+                <select formControlName="gender" class="inner-select">
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Primary Concern / Area of Pain -->
+          <div class="form-group">
+            <label class="form-label">Primary Area of Pain / Concern *</label>
+            <div class="form-input-pill">
+              <svg class="input-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+              </svg>
+              <select formControlName="condition" class="inner-select">
+                @for (c of conditions; track c) {
+                <option [value]="c">{{ c }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <!-- 4-Box PIN Input: Set PIN -->
+          <div class="form-group">
+            <label class="form-label">Set 4-Digit Security M-PIN *</label>
+            <div class="pin-boxes-wrap pin-boxes-compact">
+              @for (idx of [0, 1, 2, 3]; track idx) {
+              <input [id]="'reg-' + idx" type="password" maxlength="1" inputmode="numeric" autocomplete="one-time-code"
+                class="pin-single-box pin-box-sm" [class.pin-box-filled]="registerPinDigits()[idx] !== ''"
+                [value]="registerPinDigits()[idx]" (input)="onBoxInput($event, idx, 'reg')"
+                (keydown.backspace)="onBoxBackspace($event, idx, 'reg')" />
+              }
+            </div>
+          </div>
+
+          <!-- 4-Box PIN Input: Confirm PIN -->
+          <div class="form-group">
+            <label class="form-label">Confirm 4-Digit M-PIN *</label>
+            <div class="pin-boxes-wrap pin-boxes-compact">
+              @for (idx of [0, 1, 2, 3]; track idx) {
+              <input [id]="'reg-conf-' + idx" type="password" maxlength="1" inputmode="numeric"
+                autocomplete="one-time-code" class="pin-single-box pin-box-sm"
+                [class.pin-box-filled]="registerConfirmPinDigits()[idx] !== ''"
+                [value]="registerConfirmPinDigits()[idx]" (input)="onBoxInput($event, idx, 'reg-conf')"
+                (keydown.backspace)="onBoxBackspace($event, idx, 'reg-conf')" />
+              }
+            </div>
+          </div>
+
+          @if (errorMsg()) {
+          <div class="error-alert animate-fade-in">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <span>{{ errorMsg() }}</span>
+          </div>
+          }
+
+          <button type="submit" class="btn-pill-teal"
+            [disabled]="isLoading() || registerForm.invalid || registerPinDigits().join('').length !== 4 || registerConfirmPinDigits().join('').length !== 4">
+            @if (isLoading()) {
+            <span class="btn-spinner"></span>
+            <span>Creating Account...</span>
+            } @else {
+            <span>Complete Patient Registration</span>
+            }
+          </button>
+        </form>
+      </div>
+      }
+
+      <!-- ─────────────────────────────────────────────────────────────── -->
+      <!-- SUB-VIEW 3: FORGOT PIN / SECURITY RECOVERY                      -->
+      <!-- ─────────────────────────────────────────────────────────────── -->
+      @if (sheetMode() === 'forgot-pin') {
+      <div class="sheet-body animate-fade-in">
+        <div class="login-greeting">
+          <span class="role-badge badge-warning">Security Recovery</span>
+          <h2 class="sheet-title">Reset Security M-PIN</h2>
+          <p class="sheet-subtitle">Enter and confirm a new 4-digit M-PIN for your account</p>
+        </div>
+
+        <div class="sheet-form">
+          <!-- New PIN -->
+          <div class="form-group">
+            <label class="form-label">New 4-Digit M-PIN *</label>
+            <div class="pin-boxes-wrap pin-boxes-compact">
+              @for (idx of [0, 1, 2, 3]; track idx) {
+              <input [id]="'forgot-' + idx" type="password" maxlength="1" inputmode="numeric"
+                autocomplete="one-time-code" class="pin-single-box pin-box-sm"
+                [class.pin-box-filled]="forgotPinDigits()[idx] !== ''" [value]="forgotPinDigits()[idx]"
+                (input)="onBoxInput($event, idx, 'forgot')"
+                (keydown.backspace)="onBoxBackspace($event, idx, 'forgot')" />
+              }
+            </div>
+          </div>
+
+          <!-- Confirm New PIN -->
+          <div class="form-group">
+            <label class="form-label">Confirm New 4-Digit M-PIN *</label>
+            <div class="pin-boxes-wrap pin-boxes-compact">
+              @for (idx of [0, 1, 2, 3]; track idx) {
+              <input [id]="'forgot-conf-' + idx" type="password" maxlength="1" inputmode="numeric"
+                autocomplete="one-time-code" class="pin-single-box pin-box-sm"
+                [class.pin-box-filled]="forgotConfirmPinDigits()[idx] !== ''" [value]="forgotConfirmPinDigits()[idx]"
+                (input)="onBoxInput($event, idx, 'forgot-conf')"
+                (keydown.backspace)="onBoxBackspace($event, idx, 'forgot-conf')" />
+              }
+            </div>
+          </div>
+
+          @if (errorMsg()) {
+          <div class="error-alert animate-fade-in">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <span>{{ errorMsg() }}</span>
+          </div>
+          }
+
+          <button type="button" class="btn-pill-teal"
+            [disabled]="isLoading() || forgotPinDigits().join('').length !== 4 || forgotConfirmPinDigits().join('').length !== 4"
+            (click)="submitResetPin()">
+            @if (isLoading()) {
+            <span class="btn-spinner"></span>
+            <span>Updating PIN...</span>
+            } @else {
+            <span>Reset M-PIN & Login</span>
+            }
+          </button>
+
+          <button type="button" class="link-btn-back" (click)="sheetMode.set('login-pin')">
+            ← Back to Login
+          </button>
+        </div>
+      </div>
+      }
+
+    </div>
     }
 
   </div>
