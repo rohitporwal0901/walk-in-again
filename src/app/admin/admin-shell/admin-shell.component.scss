@@ -21,8 +21,8 @@ $topbar-h: 62px;
 .admin-sidebar {
   width: $sidebar-w;
   height: 100vh;
-  background: linear-gradient(180deg, #023859 0%, #03537E 45%, #054C5E 80%, #033948 100%);
-  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(180deg, #E6F3F8 0%, #EDF7FB 40%, #E0EFF6 80%, #D8EBF4 100%);
+  border-right: 1.5px solid #CFE3EE;
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -30,14 +30,16 @@ $topbar-h: 62px;
   z-index: var(--z-sidebar);
   transition: width var(--transition-base);
   overflow: hidden;
-  box-shadow: 4px 0 24px rgba(2, 56, 89, 0.2);
+  box-shadow: 4px 0 20px rgba(2, 132, 199, 0.07);
 }
 
 .sidebar-logo {
   @include flex-start;
   gap: 12px;
   padding: 18px 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #D0E3EE;
   min-height: 72px;
 
   .logo-icon-sm {
@@ -47,8 +49,8 @@ $topbar-h: 62px;
     overflow: hidden;
     @include flex-center;
     flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    border: 1.5px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(2, 132, 199, 0.12);
+    border: 1.5px solid #CFE3EE;
     background: #FFFFFF;
 
     .logo-img {
@@ -63,8 +65,8 @@ $topbar-h: 62px;
     display: flex;
     flex-direction: column;
     white-space: nowrap;
-    .logo-t1 { font-size: 14px; font-weight: 800; color: #FFFFFF; letter-spacing: -0.01em; }
-    .logo-t2 { font-size: 9.5px; font-weight: 700; color: #7DD3FC; letter-spacing: 0.14em; }
+    .logo-t1 { font-size: 14.5px; font-weight: 800; color: #0F172A; letter-spacing: -0.01em; }
+    .logo-t2 { font-size: 9.5px; font-weight: 800; color: #0284C7; letter-spacing: 0.14em; }
   }
 }
 
@@ -73,7 +75,7 @@ $topbar-h: 62px;
   padding: 16px 10px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   overflow-y: auto;
   @include scrollbar-thin;
 }
@@ -81,11 +83,11 @@ $topbar-h: 62px;
 .sidebar-item, .sidebar-logout {
   @include flex-start;
   gap: 12px;
-  padding: 10px 12px;
+  padding: 10px 14px;
   border-radius: 12px;
-  color: rgba(255, 255, 255, 0.82);
+  color: #334155;
   font-size: 13.5px;
-  font-weight: 500;
+  font-weight: 600;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   white-space: nowrap;
@@ -100,26 +102,35 @@ $topbar-h: 62px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.2s ease;
+    color: #475569;
+    transition: transform 0.2s ease, color 0.2s ease;
   }
   .si-label { font-family: var(--font-family); }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.12);
-    color: #FFFFFF;
-    .si-icon { transform: scale(1.08); }
+    background: #FFFFFF;
+    color: #0284C7;
+    box-shadow: 0 2px 8px rgba(2, 132, 199, 0.1);
+    border-color: rgba(207, 227, 238, 0.8);
+    .si-icon {
+      color: #0284C7;
+      transform: scale(1.08);
+    }
   }
 
   &.active {
-    background: linear-gradient(135deg, #0EA5E9 0%, #0D9488 100%);
+    background: linear-gradient(135deg, #0284C7 0%, #0D9488 100%);
     color: #FFFFFF;
     font-weight: 700;
-    box-shadow: 0 4px 18px rgba(14, 165, 233, 0.45);
-    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 4px 16px rgba(2, 132, 199, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.25);
 
     .si-icon {
       color: #FFFFFF;
       transform: scale(1.05);
+    }
+    .si-label {
+      color: #FFFFFF;
     }
   }
 }
@@ -127,14 +138,15 @@ $topbar-h: 62px;
 .sidebar-logout {
   margin: 0 10px 16px;
   width: calc(100% - 20px);
-  color: rgba(255, 255, 255, 0.65);
-  background: transparent;
-  border: 1px solid transparent;
+  color: #64748B;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid #CFE3EE;
   font-family: var(--font-family);
   &:hover {
-    background: rgba(239, 68, 68, 0.2);
-    color: #FCA5A5;
-    border-color: rgba(239, 68, 68, 0.3);
+    background: #FFFFFF;
+    color: #DC2626;
+    border-color: #FECACA;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.12);
   }
 }
 
