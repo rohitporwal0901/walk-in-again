@@ -137,19 +137,32 @@
     }
   }
 
-  .celebration-title {
-    font-size: 23px;
-    font-weight: 850;
-    color: #0F172A;
-    letter-spacing: -0.02em;
-    margin: 0 0 4px;
+  .celebration-title-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 4px;
+
+    .celebration-party-icon {
+      font-size: 22px;
+      animation: bounceParty 0.8s ease infinite alternate;
+    }
+
+    .celebration-title {
+      font-size: 23px;
+      font-weight: 850;
+      color: #0F172A;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
   }
 
   .celebration-subtitle {
     font-size: 13px;
     font-weight: 500;
     color: #64748B;
-    margin: 0 0 20px;
+    margin: 0 0 18px;
     line-height: 1.4;
   }
 
@@ -157,7 +170,7 @@
     background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
     border: 1.5px solid #BAE6FD;
     border-radius: 18px;
-    padding: 14px 18px;
+    padding: 13px 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -177,7 +190,7 @@
       }
 
       .plan-pill-sessions {
-        font-size: 12px;
+        font-size: 11.5px;
         font-weight: 700;
         color: #0284C7;
         margin-top: 1px;
@@ -185,22 +198,65 @@
     }
 
     .plan-pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
       font-size: 11px;
       font-weight: 750;
       color: #15803D;
       background: #DCFCE7;
       border: 1px solid rgba(34, 197, 94, 0.3);
-      padding: 3.5px 10px;
+      padding: 3px 10px;
       border-radius: 999px;
       letter-spacing: 0.02em;
+
+      .pill-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #10B981;
+        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.35);
+      }
     }
   }
 
-  .celebration-note {
-    font-size: 12px;
-    color: #94A3B8;
-    margin: 0 0 22px;
-    line-height: 1.45;
+  // Swiggy-Style Unlocked Benefits Box
+  .celebration-benefits-box {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 12px 14px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+
+    .benefit-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .benefit-check {
+        width: 17px;
+        height: 17px;
+        border-radius: 50%;
+        background: #DCFCE7;
+        color: #15803D;
+        font-size: 10px;
+        font-weight: 900;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .benefit-text {
+        font-size: 12px;
+        font-weight: 600;
+        color: #334155;
+      }
+    }
   }
 
   .btn-celebration-done {
@@ -256,6 +312,11 @@
     transform: scale(1.35);
     opacity: 0;
   }
+}
+
+@keyframes bounceParty {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-3px) scale(1.1); }
 }
 
 // ─── Content ──────────────────────────────────────────────────────────────────
