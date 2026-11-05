@@ -367,6 +367,50 @@
   }
 }
 
+// ─── Empty State (Centered, Exactly like My Sessions) ─────────────────────────
+.empty-state-wrap {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 50px 20px;
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 0 auto;
+
+  .empty-icon-box {
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+  }
+
+  .empty-title {
+    font-size: 17px;
+    font-weight: 800;
+    color: #1E293B;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .empty-subtitle {
+    font-size: 13px;
+    color: #64748B;
+    margin: 0;
+    line-height: 1.45;
+    max-width: 250px;
+  }
+}
+
 // ─── Modal Sheet (Modern Receipt Action Sheet) ────────────────────────────────
 .modal-overlay {
   position: fixed;
