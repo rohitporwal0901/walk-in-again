@@ -114,10 +114,10 @@ export class AdminDashboardComponent implements OnInit {
   ];
 
   kpis = computed<KpiCard[]>(() => [
-    { label: 'Total Patients', value: this.patientCount().toString(), icon: '', growth: '', growthPositive: true, color: '#0284C7', bgColor: '#EFF6FF' },
-    { label: 'Workers (Staff)', value: this.workerCount().toString(), icon: '', growth: '', growthPositive: true, color: '#16A34A', bgColor: '#DCFCE7' },
+    { label: 'Total Patients', value: this.patientCount().toString(), icon: '', growth: '', growthPositive: true, color: '#0284C7', bgColor: '#E0F2FE' },
+    { label: 'Workers (Staff)', value: this.workerCount().toString(), icon: '', growth: '', growthPositive: true, color: '#0D9488', bgColor: '#CCFBF1' },
     { label: 'Sessions', value: this.sessionCount().toString(), icon: '', growth: '', growthPositive: true, color: '#D97706', bgColor: '#FEF3C7' },
-    { label: 'Total Revenue', value: '₹' + this.revenueTotal().toLocaleString('en-IN'), icon: '', growth: '', growthPositive: true, color: '#E11D48', bgColor: '#FFE4E6' },
+    { label: 'Total Revenue', value: '₹' + this.revenueTotal().toLocaleString('en-IN'), icon: '', growth: '', growthPositive: true, color: '#16A34A', bgColor: '#DCFCE7' },
   ]);
 
   // Pre-computed donut segments
@@ -134,8 +134,8 @@ export class AdminDashboardComponent implements OnInit {
   chartMax = 3000;
 
   private paymentData = [
-    { label: 'UPI', percent: 60, color: '#2196F3' },
-    { label: 'Card', percent: 25, color: '#22C55E' },
+    { label: 'UPI', percent: 60, color: '#0284C7' },
+    { label: 'Card', percent: 25, color: '#0D9488' },
     { label: 'Cash', percent: 15, color: '#F59E0B' },
   ];
 

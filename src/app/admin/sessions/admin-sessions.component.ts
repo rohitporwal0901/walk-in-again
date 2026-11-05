@@ -44,7 +44,7 @@ interface FormattedSession {
 
       <!-- KPI Summary Cards -->
       <section class="kpi-grid">
-        <div class="kpi-card highlight-card">
+        <div class="kpi-card">
           <div class="kpi-icon-wrap icon-primary">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
@@ -52,9 +52,9 @@ interface FormattedSession {
             </svg>
           </div>
           <div class="kpi-content">
-            <span class="kpi-label label-light">Total Sessions</span>
-            <span class="kpi-value val-light">{{ sessions().length }}</span>
-            <span class="kpi-sub-text sub-light">All-time clinic sessions</span>
+            <span class="kpi-label">Total Sessions</span>
+            <span class="kpi-value">{{ sessions().length }}</span>
+            <span class="kpi-sub-text">All-time clinic sessions</span>
           </div>
         </div>
 
@@ -296,22 +296,23 @@ interface FormattedSession {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 14px;
     }
 
     .page-title {
-      font-size: 20px;
-      font-weight: 700;
+      font-size: 22px;
+      font-weight: 800;
       color: #0F172A;
-      margin: 0 0 2px;
-      letter-spacing: -0.01em;
+      margin: 0 0 3px;
+      letter-spacing: -0.02em;
     }
 
     .page-sub {
-      font-size: 12.5px;
+      font-size: 13px;
       color: #64748B;
+      font-weight: 500;
       margin: 0;
     }
 
@@ -321,9 +322,9 @@ interface FormattedSession {
       gap: 6px;
       background: #DCFCE7;
       color: #166534;
-      padding: 4px 10px;
+      padding: 5px 12px;
       border-radius: 999px;
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 700;
       border: 1px solid #BBF7D0;
     }
@@ -339,133 +340,111 @@ interface FormattedSession {
     // KPI Cards Grid
     .kpi-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 14px;
-      margin-bottom: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
     }
 
     .kpi-card {
       background: #FFFFFF;
-      border-radius: 12px;
-      padding: 16px 18px;
+      border-radius: 18px;
+      padding: 18px 20px;
       display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03);
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
       border: 1px solid rgba(226, 232, 240, 0.85);
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-      min-height: 82px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
       box-sizing: border-box;
 
       &:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.07);
+        border-color: rgba(2, 132, 199, 0.3);
       }
     }
 
-    .kpi-card.highlight-card {
-      background: linear-gradient(135deg, #0B2545 0%, #134074 100%);
-      border: none;
-      box-shadow: 0 4px 14px rgba(11, 37, 69, 0.2);
-    }
-
     .kpi-icon-wrap {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
 
       svg {
-        width: 20px;
-        height: 20px;
+        width: 24px;
+        height: 24px;
       }
 
       &.icon-primary {
-        background: rgba(255, 255, 255, 0.18);
-        color: #FFFFFF;
+        background: #E0F2FE;
+        color: #0284C7;
       }
 
       &.icon-active {
-        background: #E0F2FE;
-        color: #0284C7;
-        border: 1px solid #BAE6FD;
+        background: #DCFCE7;
+        color: #16A34A;
       }
 
       &.icon-completed {
-        background: #DCFCE7;
-        color: #16A34A;
-        border: 1px solid #BBF7D0;
+        background: #EDE9FE;
+        color: #7C3AED;
       }
 
       &.icon-value {
         background: #FEF3C7;
         color: #D97706;
-        border: 1px solid #FDE68A;
       }
     }
 
     .kpi-content {
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 2px;
       min-width: 0;
     }
 
     .kpi-label {
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
       color: #64748B;
       text-transform: uppercase;
-      letter-spacing: 0.03em;
-      line-height: 1.25;
-    }
-
-    .label-light {
-      color: rgba(255, 255, 255, 0.85);
+      letter-spacing: 0.04em;
     }
 
     .kpi-value {
-      font-size: 22px;
-      font-weight: 750;
+      font-size: 24px;
+      font-weight: 800;
       color: #0F172A;
       line-height: 1.15;
-    }
-
-    .val-light {
-      color: #FFFFFF;
+      letter-spacing: -0.02em;
     }
 
     .kpi-sub-text {
-      font-size: 11px;
+      font-size: 12px;
       color: #94A3B8;
       font-weight: 500;
-      margin-top: 1px;
-    }
-
-    .sub-light {
-      color: rgba(255, 255, 255, 0.7);
     }
 
     // Controls Panel
     .controls-panel {
       background: #FFFFFF;
-      border-radius: 12px;
-      padding: 12px 16px;
+      border-radius: 18px;
+      padding: 14px 18px;
       display: flex;
       align-items: center;
       flex-wrap: wrap;
-      gap: 14px;
-      margin-bottom: 16px;
+      gap: 16px;
+      margin-bottom: 20px;
       border: 1px solid rgba(226, 232, 240, 0.85);
-      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.02);
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
     }
 
     .search-wrap {
       flex: 1;
-      min-width: 240px;
+      min-width: 250px;
       position: relative;
       display: flex;
       align-items: center;
@@ -473,77 +452,77 @@ interface FormattedSession {
 
     .search-wrap svg {
       position: absolute;
-      left: 12px;
-      width: 16px;
-      height: 16px;
+      left: 14px;
+      width: 17px;
+      height: 17px;
       pointer-events: none;
     }
 
     .search-input {
       width: 100%;
-      height: 38px;
-      padding: 0 12px 0 36px;
+      height: 40px;
+      padding: 0 14px 0 40px;
       border: 1.5px solid #E2E8F0;
-      border-radius: 8px;
+      border-radius: 10px;
       background: #F8FAFC;
       font-size: 13px;
       color: #0F172A;
       outline: none;
-      transition: all 0.15s ease;
+      transition: all 0.2s ease;
 
       &:focus {
         background: #FFFFFF;
         border-color: #0284C7;
-        box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.1);
+        box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
       }
     }
 
     .filter-group {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       flex-wrap: wrap;
     }
 
     .filter-lbl {
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
       color: #64748B;
-      margin-right: 2px;
       text-transform: uppercase;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.04em;
     }
 
     .filter-pill {
       background: #F8FAFC;
-      border: 1px solid #E2E8F0;
-      padding: 6px 13px;
-      border-radius: 7px;
-      font-size: 12px;
+      border: 1.5px solid #E2E8F0;
+      padding: 7px 15px;
+      border-radius: 10px;
+      font-size: 12.5px;
       font-weight: 600;
       color: #475569;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
       &:hover {
         background: #F1F5F9;
         color: #0F172A;
+        border-color: #CBD5E1;
       }
 
       &.active {
-        background: #0B2545;
+        background: linear-gradient(135deg, #0284C7 0%, #0D9488 100%);
         color: #FFFFFF;
-        border-color: #0B2545;
+        border-color: transparent;
         font-weight: 700;
-        box-shadow: 0 1px 4px rgba(11, 37, 69, 0.2);
+        box-shadow: 0 4px 12px rgba(2, 132, 199, 0.28);
       }
     }
 
     // Table
     .table-container-card {
       background: #FFFFFF;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+      border-radius: 18px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
       border: 1px solid rgba(226, 232, 240, 0.85);
       overflow: hidden;
     }
@@ -564,18 +543,18 @@ interface FormattedSession {
     }
 
     .sessions-table th {
-      padding: 11px 14px;
+      padding: 14px 16px;
       font-size: 11.5px;
-      font-weight: 600;
+      font-weight: 700;
       text-transform: uppercase;
       color: #64748B;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.04em;
       white-space: nowrap;
     }
 
     .sessions-table tbody tr {
       border-bottom: 1px solid #F1F5F9;
-      transition: background 0.1s ease;
+      transition: background 0.15s ease;
 
       &:hover {
         background: #F8FAFC;
@@ -583,8 +562,8 @@ interface FormattedSession {
     }
 
     .sessions-table td {
-      padding: 11px 14px;
-      font-size: 12.5px;
+      padding: 14px 16px;
+      font-size: 13px;
       color: #1E293B;
       vertical-align: middle;
     }
@@ -592,38 +571,38 @@ interface FormattedSession {
     .id-cell {
       display: flex;
       flex-direction: column;
-      gap: 1px;
+      gap: 2px;
     }
 
     .session-id {
       font-family: monospace;
       font-size: 12px;
-      color: #0B2545;
+      color: #0284C7;
       font-weight: 700;
     }
 
     .session-date {
-      font-size: 11px;
+      font-size: 11.5px;
       color: #64748B;
     }
 
     .patient-cell {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
 
     .patient-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      background: #0B2545;
-      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #E0F2FE;
+      color: #0284C7;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 13px;
+      font-weight: 800;
       flex-shrink: 0;
     }
 
@@ -634,25 +613,25 @@ interface FormattedSession {
     }
 
     .p-name {
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 13.5px;
+      font-weight: 700;
       color: #0F172A;
     }
 
     .p-phone {
-      font-size: 11px;
+      font-size: 11.5px;
       color: #64748B;
     }
 
     .worker-pill {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       background: #F8FAFC;
       border: 1px solid #E2E8F0;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-size: 11.5px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 12px;
       font-weight: 600;
       color: #1E293B;
     }
@@ -667,10 +646,10 @@ interface FormattedSession {
     .plan-badge {
       background: #EDE9FE;
       color: #6D28D9;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 700;
       border: 1px solid #DDD6FE;
       white-space: nowrap;
     }
@@ -678,9 +657,9 @@ interface FormattedSession {
     .walkin-badge {
       background: #F1F5F9;
       color: #475569;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11.5px;
       font-weight: 600;
       border: 1px solid #E2E8F0;
       white-space: nowrap;
@@ -689,49 +668,49 @@ interface FormattedSession {
     .therapies-chips {
       display: flex;
       flex-wrap: wrap;
-      gap: 4px;
+      gap: 5px;
       max-width: 220px;
     }
 
     .therapy-tag {
       background: #F8FAFC;
       border: 1px solid #E2E8F0;
-      font-size: 11px;
-      padding: 2px 7px;
-      border-radius: 5px;
+      font-size: 11.5px;
+      padding: 3px 8px;
+      border-radius: 6px;
       color: #334155;
       font-weight: 500;
     }
 
     .therapy-more {
       background: #E2E8F0;
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 5px;
+      font-size: 10.5px;
+      padding: 3px 7px;
+      border-radius: 6px;
       color: #475569;
       font-weight: 700;
     }
 
     .therapy-empty {
-      font-size: 11.5px;
+      font-size: 12px;
       color: #94A3B8;
       font-style: italic;
     }
 
     .fee-text {
-      font-size: 13.5px;
-      font-weight: 700;
+      font-size: 14px;
+      font-weight: 800;
       color: #0F172A;
     }
 
     .status-badge {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       padding: 4px 10px;
       border-radius: 999px;
-      font-size: 11px;
-      font-weight: 600;
+      font-size: 11.5px;
+      font-weight: 700;
       white-space: nowrap;
     }
 
@@ -753,12 +732,13 @@ interface FormattedSession {
 
     .status-active {
       background: #E0F2FE;
-      color: #0369A1;
+      color: #0284C7;
       border: 1px solid #BAE6FD;
     }
 
     .status-active .dot {
       background: #0284C7;
+      animation: pulse 1.5s infinite;
     }
 
     .status-pending {
@@ -778,10 +758,10 @@ interface FormattedSession {
     }
 
     .pay-badge {
-      padding: 3px 8px;
-      border-radius: 5px;
-      font-size: 11px;
-      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 700;
       white-space: nowrap;
     }
 
@@ -804,7 +784,7 @@ interface FormattedSession {
     }
 
     .empty-table-cell {
-      padding: 32px 16px !important;
+      padding: 40px 16px !important;
       text-align: center;
     }
 
@@ -815,30 +795,30 @@ interface FormattedSession {
     }
 
     .empty-icon-wrap {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
       background: #F1F5F9;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
 
       svg {
-        width: 24px;
-        height: 24px;
+        width: 28px;
+        height: 28px;
       }
     }
 
     .empty-box h3 {
-      font-size: 14px;
-      font-weight: 700;
+      font-size: 15px;
+      font-weight: 800;
       color: #0F172A;
       margin: 0 0 4px;
     }
 
     .empty-box p {
-      font-size: 12px;
+      font-size: 12.5px;
       color: #64748B;
       margin: 0;
     }
@@ -847,14 +827,14 @@ interface FormattedSession {
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 40px 16px;
-      gap: 10px;
+      padding: 48px 16px;
+      gap: 12px;
       color: #64748B;
     }
 
     .spinner-ring {
-      width: 26px;
-      height: 26px;
+      width: 28px;
+      height: 28px;
       border: 2.5px solid #E2E8F0;
       border-top-color: #0284C7;
       border-radius: 50%;

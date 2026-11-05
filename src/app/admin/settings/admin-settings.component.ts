@@ -291,17 +291,17 @@ import { Unsubscribe } from '@angular/fire/firestore';
   styles: [`
     .settings-page {
       padding: 0;
-      max-width: 980px;
-      margin: 0 auto;
+      max-width: 1000px;
+      margin: 0;
     }
 
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 14px;
     }
 
     .live-status-pill {
@@ -311,13 +311,13 @@ import { Unsubscribe } from '@angular/fire/firestore';
       background: #F0FDF4;
       border: 1px solid #BBF7D0;
       color: #166534;
-      font-size: 10.5px;
+      font-size: 11px;
       font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 12px;
-      margin-bottom: 4px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: 6px;
       text-transform: uppercase;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.04em;
     }
 
     .live-dot {
@@ -335,41 +335,42 @@ import { Unsubscribe } from '@angular/fire/firestore';
     }
 
     .page-title {
-      font-size: 20px;
-      font-weight: 700;
+      font-size: 22px;
+      font-weight: 800;
       color: #0F172A;
-      margin: 0 0 2px;
-      letter-spacing: -0.01em;
+      margin: 0 0 4px;
+      letter-spacing: -0.02em;
     }
 
     .page-sub {
-      font-size: 12.5px;
+      font-size: 13px;
       color: #64748B;
       margin: 0;
     }
 
     .btn {
-      padding: 7px 14px;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 12.5px;
+      padding: 9px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 13px;
       cursor: pointer;
       border: none;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
       transition: all 0.18s;
     }
 
     .btn-primary {
-      background: #0284C7;
+      background: linear-gradient(135deg, #0284C7 0%, #0D9488 100%);
       color: white;
-      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
     }
 
     .btn-primary:hover:not(:disabled) {
-      background: #0369A1;
       transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+      filter: brightness(1.05);
     }
 
     .btn-primary:disabled {
@@ -394,42 +395,42 @@ import { Unsubscribe } from '@angular/fire/firestore';
       background: #F0FDF4;
       border: 1px solid #86EFAC;
       color: #166534;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-size: 12px;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 12.5px;
       font-weight: 600;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
 
     .alert-error {
       background: #FEF2F2;
       border: 1px solid #FCA5A5;
       color: #991B1B;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-size: 12px;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 12.5px;
       font-weight: 600;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
     .content-grid {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 16px;
     }
 
     .section-card {
       background: #FFFFFF;
-      border-radius: 12px;
-      padding: 16px 18px;
-      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03);
-      border: 1px solid #E2E8F0;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+      border: 1px solid rgba(226, 232, 240, 0.85);
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 16px;
     }
 
     .card-head {
@@ -437,21 +438,21 @@ import { Unsubscribe } from '@angular/fire/firestore';
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 8px;
-      padding-bottom: 10px;
+      gap: 10px;
+      padding-bottom: 12px;
       border-bottom: 1px solid #F1F5F9;
     }
 
     .ch-left {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
     .head-icon {
-      width: 30px;
-      height: 30px;
-      border-radius: 7px;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -467,53 +468,55 @@ import { Unsubscribe } from '@angular/fire/firestore';
     }
 
     .head-title {
-      font-size: 14.5px;
-      font-weight: 700;
+      font-size: 15.5px;
+      font-weight: 800;
       color: #0F172A;
       margin: 0;
       letter-spacing: -0.01em;
     }
 
     .head-sub {
-      font-size: 12px;
+      font-size: 12.5px;
       color: #64748B;
     }
 
     .rate-badge, .plan-count-badge {
       font-size: 11.5px;
       font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 14px;
+      padding: 5px 12px;
+      border-radius: 999px;
     }
 
     .rate-badge {
-      background: #EFF6FF;
-      color: #1D4ED8;
-      border: 1px solid #BFDBFE;
+      background: #E0F2FE;
+      color: #0284C7;
+      border: 1px solid #BAE6FD;
     }
 
     .plan-count-badge {
-      background: #F0FDFA;
-      color: #0F766E;
+      background: #CCFBF1;
+      color: #0D9488;
       border: 1px solid #99F6E4;
     }
 
     .form-compact {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 16px;
     }
 
     .field-row {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
     }
 
     .field-label {
       font-size: 12px;
       font-weight: 700;
       color: #334155;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
     }
 
     .input-chips-group {
@@ -527,10 +530,10 @@ import { Unsubscribe } from '@angular/fire/firestore';
       display: flex;
       align-items: center;
       background: #F8FAFC;
-      border: 1.5px solid #CBD5E1;
-      border-radius: 10px;
-      padding: 5px 12px;
-      width: 190px;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 7px 14px;
+      width: 200px;
       transition: all 0.15s;
     }
 
@@ -561,7 +564,7 @@ import { Unsubscribe } from '@angular/fire/firestore';
     }
 
     .p-unit {
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 600;
       color: #64748B;
       white-space: nowrap;
@@ -569,7 +572,7 @@ import { Unsubscribe } from '@angular/fire/firestore';
 
     .quick-chips {
       display: flex;
-      gap: 6px;
+      gap: 8px;
       flex-wrap: wrap;
     }
 
@@ -577,9 +580,9 @@ import { Unsubscribe } from '@angular/fire/firestore';
       background: #F1F5F9;
       border: 1px solid #E2E8F0;
       color: #475569;
-      padding: 5px 10px;
-      border-radius: 8px;
-      font-size: 11.5px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.15s;
@@ -591,41 +594,42 @@ import { Unsubscribe } from '@angular/fire/firestore';
     }
 
     .chip-btn.chip-active {
-      background: #0284C7;
-      border-color: #0284C7;
+      background: linear-gradient(135deg, #0284C7 0%, #0D9488 100%);
+      border-color: transparent;
       color: white;
+      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
     }
 
     .duration-chips {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
     .dur-chip {
       background: #F8FAFC;
       border: 1.5px solid #E2E8F0;
-      border-radius: 9px;
-      padding: 6px 12px;
+      border-radius: 12px;
+      padding: 8px 14px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       transition: all 0.15s;
     }
 
     .dur-chip strong {
-      font-size: 12px;
+      font-size: 12.5px;
       color: #0F172A;
     }
 
     .dur-chip span {
-      font-size: 11px;
+      font-size: 11.5px;
       color: #64748B;
     }
 
     .dur-chip.dur-active {
-      background: #EFF6FF;
+      background: #E0F2FE;
       border-color: #0284C7;
     }
 
@@ -638,9 +642,9 @@ import { Unsubscribe } from '@angular/fire/firestore';
       align-items: center;
       background: #F8FAFC;
       border: 1px solid #E2E8F0;
-      border-radius: 10px;
-      padding: 8px 14px;
-      gap: 16px;
+      border-radius: 14px;
+      padding: 10px 18px;
+      gap: 18px;
       flex-wrap: wrap;
     }
 
@@ -651,19 +655,19 @@ import { Unsubscribe } from '@angular/fire/firestore';
     }
 
     .ci-lbl {
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 600;
       color: #64748B;
     }
 
     .ci-val {
-      font-size: 13.5px;
+      font-size: 14px;
       font-weight: 800;
       color: #0F172A;
     }
 
     .text-green {
-      color: #16A34A;
+      color: #0D9488;
     }
 
     .ci-divider {
@@ -676,27 +680,28 @@ import { Unsubscribe } from '@angular/fire/firestore';
     .plans-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
     .plan-row-card {
-      background: #F8FAFC;
+      background: #FFFFFF;
       border: 1px solid #E2E8F0;
-      border-radius: 12px;
-      padding: 12px 14px;
+      border-radius: 16px;
+      padding: 14px 18px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
       transition: all 0.15s;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.02);
     }
 
     .plan-row-card:hover {
       border-color: #CBD5E1;
-      background: #FFFFFF;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
     }
 
     .plan-popular {
-      border-color: #FBBF24;
+      border: 1.5px solid #F59E0B;
       background: #FFFDF5;
     }
 
@@ -713,16 +718,16 @@ import { Unsubscribe } from '@angular/fire/firestore';
     }
 
     .prc-icon {
-      font-size: 16px;
+      font-size: 18px;
     }
 
     .plan-name-inp {
-      font-size: 14px;
+      font-size: 14.5px;
       font-weight: 800;
       color: #0F172A;
-      max-width: 160px;
-      border-bottom: 1px dashed transparent;
-      padding-bottom: 1px;
+      max-width: 180px;
+      border-bottom: 1.5px dashed transparent;
+      padding-bottom: 2px;
     }
 
     .plan-name-inp:focus {
@@ -740,10 +745,10 @@ import { Unsubscribe } from '@angular/fire/firestore';
     }
 
     .pop-pill {
-      font-size: 10.5px;
+      font-size: 11px;
       font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
       background: #F1F5F9;
       color: #64748B;
       transition: all 0.15s;
@@ -758,31 +763,31 @@ import { Unsubscribe } from '@angular/fire/firestore';
     .prc-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 10px;
+      gap: 12px;
     }
 
     .pg-item {
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 4px;
     }
 
     .pg-lbl {
-      font-size: 10.5px;
+      font-size: 11px;
       font-weight: 700;
       color: #64748B;
       text-transform: uppercase;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.03em;
     }
 
     .pg-input-box {
       display: flex;
       align-items: center;
       background: #FFFFFF;
-      border: 1px solid #CBD5E1;
-      border-radius: 8px;
-      padding: 4px 8px;
-      height: 32px;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 5px 10px;
+      height: 34px;
       transition: all 0.15s;
     }
 
@@ -792,20 +797,20 @@ import { Unsubscribe } from '@angular/fire/firestore';
     }
 
     .pg-sym {
-      font-size: 13px;
+      font-size: 13.5px;
       font-weight: 800;
       color: #0F172A;
       margin-right: 4px;
     }
 
     .pg-num {
-      font-size: 13px;
+      font-size: 13.5px;
       font-weight: 700;
       width: 100%;
     }
 
     .pg-unit {
-      font-size: 10.5px;
+      font-size: 11px;
       color: #94A3B8;
       font-weight: 600;
       white-space: nowrap;
@@ -813,9 +818,10 @@ import { Unsubscribe } from '@angular/fire/firestore';
     }
 
     .rate-box {
-      background: #F1F5F9;
-      border-radius: 8px;
-      padding: 4px 8px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 5px 10px;
       justify-content: center;
     }
 
@@ -826,13 +832,13 @@ import { Unsubscribe } from '@angular/fire/firestore';
     }
 
     .rate-val {
-      font-size: 14px;
+      font-size: 14.5px;
       font-weight: 800;
-      color: #0369A1;
+      color: #0D9488;
     }
 
     .rate-sub {
-      font-size: 10.5px;
+      font-size: 11px;
       color: #64748B;
       font-weight: 600;
     }
@@ -842,7 +848,7 @@ import { Unsubscribe } from '@angular/fire/firestore';
       justify-content: flex-end;
       align-items: center;
       gap: 12px;
-      padding-top: 10px;
+      padding-top: 14px;
       border-top: 1px solid #F1F5F9;
     }
 
@@ -850,11 +856,11 @@ import { Unsubscribe } from '@angular/fire/firestore';
       background: transparent;
       border: none;
       color: #64748B;
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 700;
       cursor: pointer;
-      padding: 6px 10px;
-      border-radius: 6px;
+      padding: 7px 12px;
+      border-radius: 8px;
     }
 
     .btn-text:hover {

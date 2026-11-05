@@ -21,15 +21,17 @@
 @mixin card {
   background: var(--card);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
   padding: var(--space-lg);
 }
 
 @mixin card-hover {
-  transition: transform var(--transition-base), box-shadow var(--transition-base);
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
   &:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-xl);
+    box-shadow: var(--shadow-md);
+    border-color: rgba(2, 132, 199, 0.25);
   }
 }
 
