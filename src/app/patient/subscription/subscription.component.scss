@@ -56,16 +56,17 @@
 // ─── Fullscreen Confetti Canvas ──────────────────────────────────────────────
 .confetti-canvas {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100vw;
   height: 100vh;
   pointer-events: none;
-  z-index: 10001;
-  display: none;
+  z-index: 100005;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.15s ease-in;
 
   &.canvas-active {
-    display: block;
+    opacity: 1;
   }
 }
 
@@ -73,10 +74,10 @@
 .celebration-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(7, 31, 54, 0.6);
+  background: rgba(7, 31, 54, 0.65);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  z-index: 10000;
+  z-index: 100000;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -147,12 +147,12 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
       this.lastPurchasedPlan.set(plan);
       this.showPaymentSheet.set(false);
       this.purchaseSuccess.set(true);
-      setTimeout(() => this.launchConfetti(), 40);
+      setTimeout(() => this.launchConfetti(), 30);
 
       if (this.autoCloseTimer) clearTimeout(this.autoCloseTimer);
       this.autoCloseTimer = setTimeout(() => {
         this.closeCelebration();
-      }, 5500);
+      }, 6500);
     } catch (err: any) {
       this.errorMsg.set(err?.message || 'Payment failed. Please try again.');
     } finally {
@@ -171,12 +171,15 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
       this.confettiAnimId = null;
     }
 
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const width = window.innerWidth;
     const height = window.innerHeight;
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-    ctx.scale(dpr, dpr);
+
+    canvas.width = Math.floor(width * dpr);
+    canvas.height = Math.floor(height * dpr);
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     interface Particle {
       x: number;
@@ -192,80 +195,105 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
       wobbleSpeed: number;
       opacity: number;
       decay: number;
-      shape: 'rect' | 'circle';
+      shape: 'rect' | 'circle' | 'sparkle';
+      gravity: number;
+      drag: number;
     }
 
     const colors = [
-      '#10B981', '#06B6D4', '#3B82F6', '#8B5CF6',
-      '#EC4899', '#F59E0B', '#EF4444', '#14B8A6',
-      '#FACC15', '#6366F1'
+      '#0284C7', '#0D9488', '#10B981', '#3B82F6',
+      '#8B5CF6', '#EC4899', '#F59E0B', '#EF4444',
+      '#FACC15', '#FFD700', '#14B8A6', '#6366F1'
     ];
 
     const particles: Particle[] = [];
-    const count = 180;
 
-    for (let i = 0; i < count; i++) {
-      const emitterChoice = i % 5;
-      let startX: number;
-      let startY: number;
-      let angle: number;
-      let speed: number;
+    const spawnBurst = (count: number, isSecondWave = false) => {
+      for (let i = 0; i < count; i++) {
+        const emitter = i % 3;
+        let startX: number;
+        let startY: number;
+        let angleDeg: number;
+        let speed: number;
 
-      if (emitterChoice < 2) {
-        // Left Cannon
-        startX = width * 0.15;
-        startY = height * 0.85;
-        angle = (Math.PI / 180) * (45 + Math.random() * 40);
-        speed = 16 + Math.random() * 16;
-      } else if (emitterChoice < 4) {
-        // Right Cannon
-        startX = width * 0.85;
-        startY = height * 0.85;
-        angle = (Math.PI / 180) * (95 + Math.random() * 40);
-        speed = 16 + Math.random() * 16;
-      } else {
-        // Center burst
-        startX = width * 0.5;
-        startY = height * 0.65;
-        angle = (Math.PI / 180) * (60 + Math.random() * 60);
-        speed = 14 + Math.random() * 20;
+        if (emitter === 0) {
+          // Left Cannon: launches towards center-right
+          startX = width * 0.08;
+          startY = height * 0.88;
+          angleDeg = 48 + Math.random() * 32; // 48° to 80°
+          speed = (isSecondWave ? 15 : 18) + Math.random() * 16;
+        } else if (emitter === 1) {
+          // Right Cannon: launches towards center-left
+          startX = width * 0.92;
+          startY = height * 0.88;
+          angleDeg = 100 + Math.random() * 32; // 100° to 132°
+          speed = (isSecondWave ? 15 : 18) + Math.random() * 16;
+        } else {
+          // Center fountain burst
+          startX = width * (0.45 + Math.random() * 0.1);
+          startY = height * 0.72;
+          angleDeg = 75 + Math.random() * 30; // 75° to 105°
+          speed = (isSecondWave ? 14 : 17) + Math.random() * 18;
+        }
+
+        const angleRad = (angleDeg * Math.PI) / 180;
+        const vx = Math.cos(angleRad) * speed;
+        const vy = -Math.sin(angleRad) * speed;
+
+        const shapeRnd = Math.random();
+        const shape: 'rect' | 'circle' | 'sparkle' =
+          shapeRnd > 0.4 ? 'rect' : shapeRnd > 0.15 ? 'circle' : 'sparkle';
+
+        particles.push({
+          x: startX,
+          y: startY,
+          vx,
+          vy,
+          sizeW: 8 + Math.random() * 7,
+          sizeH: 5 + Math.random() * 7,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * Math.PI * 2,
+          rotationSpeed: (Math.random() - 0.5) * 0.22,
+          wobble: Math.random() * Math.PI * 2,
+          wobbleSpeed: 0.08 + Math.random() * 0.1,
+          opacity: 1,
+          decay: 0.003 + Math.random() * 0.004,
+          shape,
+          gravity: 0.32 + Math.random() * 0.08,
+          drag: 0.97
+        });
       }
+    };
 
-      const vx = Math.cos(angle) * (emitterChoice >= 2 && emitterChoice < 4 ? -speed : speed);
-      const vy = -Math.sin(angle) * speed;
+    // Wave 1: Immediate cannon blast (180 particles)
+    spawnBurst(180, false);
 
-      particles.push({
-        x: startX,
-        y: startY,
-        vx,
-        vy,
-        sizeW: 7 + Math.random() * 7,
-        sizeH: 4 + Math.random() * 6,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        rotation: Math.random() * Math.PI * 2,
-        rotationSpeed: (Math.random() - 0.5) * 0.25,
-        wobble: Math.random() * Math.PI * 2,
-        wobbleSpeed: 0.08 + Math.random() * 0.1,
-        opacity: 1,
-        decay: 0.003 + Math.random() * 0.004,
-        shape: Math.random() > 0.25 ? 'rect' : 'circle'
-      });
-    }
+    // Wave 2: Second celebratory wave after 320ms for full-screen fireworks
+    setTimeout(() => {
+      if (this.purchaseSuccess()) {
+        spawnBurst(80, true);
+      }
+    }, 320);
 
     const animate = () => {
       ctx.clearRect(0, 0, width, height);
       let aliveCount = 0;
 
-      for (const p of particles) {
-        p.vx *= 0.98;
-        p.vy += 0.38;
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.vx *= p.drag;
+        p.vy += p.gravity;
         p.x += p.vx;
         p.y += p.vy;
         p.rotation += p.rotationSpeed;
         p.wobble += p.wobbleSpeed;
-        p.opacity -= p.decay;
 
-        if (p.opacity > 0 && p.y < height + 40) {
+        // Start fading opacity after peak
+        if (p.vy > 0) {
+          p.opacity -= p.decay;
+        }
+
+        if (p.opacity > 0 && p.y < height + 60 && p.x > -60 && p.x < width + 60) {
           aliveCount++;
           ctx.save();
           ctx.translate(p.x, p.y);
@@ -276,9 +304,23 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
 
           if (p.shape === 'rect') {
             ctx.fillRect(-p.sizeW / 2, -p.sizeH / 2, p.sizeW, p.sizeH);
-          } else {
+          } else if (p.shape === 'circle') {
             ctx.beginPath();
-            ctx.arc(0, 0, p.sizeW / 2.5, 0, Math.PI * 2);
+            ctx.arc(0, 0, p.sizeW / 2.3, 0, Math.PI * 2);
+            ctx.fill();
+          } else {
+            // Sparkle / Diamond
+            ctx.beginPath();
+            const s = p.sizeW * 0.7;
+            ctx.moveTo(0, -s);
+            ctx.lineTo(s * 0.35, -s * 0.35);
+            ctx.lineTo(s, 0);
+            ctx.lineTo(s * 0.35, s * 0.35);
+            ctx.lineTo(0, s);
+            ctx.lineTo(-s * 0.35, s * 0.35);
+            ctx.lineTo(-s, 0);
+            ctx.lineTo(-s * 0.35, -s * 0.35);
+            ctx.closePath();
             ctx.fill();
           }
 
