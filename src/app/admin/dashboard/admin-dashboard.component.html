@@ -15,7 +15,7 @@
         </svg>
         <span>Register Worker / Physio</span>
       </button>
-      <select class="period-select" id="period-selector" [(ngModel)]="selectedPeriod">
+      <select class="period-select" id="period-selector" [ngModel]="selectedPeriod()" (ngModelChange)="selectedPeriod.set($event)">
         <option value="Month">This Month</option>
         <option value="Week">This Week</option>
       </select>
@@ -70,49 +70,130 @@
   <!-- Charts Row -->
   <div class="charts-row">
 
-    <!-- Revenue Chart -->
-    <div class="chart-card animate-fade-in-up" style="animation-delay:.1s">
-      <div class="chart-header">
-        <div>
-          <h3>Revenue Overview</h3>
-          <p class="chart-sub">Weekly income comparison (Current vs Previous month)</p>
+    <!-- Left Column (Revenue Overview + Active Recovery Plans) -->
+    <div class="main-column">
+
+      <!-- Revenue Chart -->
+      <div class="chart-card animate-fade-in-up" style="animation-delay:.1s">
+        <div class="chart-header">
+          <div>
+            <h3>Revenue Overview</h3>
+            <p class="chart-sub">
+              @if (selectedPeriod() === 'Month') {
+                Weekly income comparison (Current vs Previous month)
+              } @else {
+                Daily income comparison (Current vs Previous week)
+              }
+            </p>
+          </div>
+          <div class="chart-legend">
+            <span class="legend-item"><span class="legend-dot" style="background: var(--accent)"></span> {{ selectedPeriod() === 'Month' ? 'This Month' : 'This Week' }}</span>
+            <span class="legend-item"><span class="legend-dot" style="background: #CBD5E1"></span> {{ selectedPeriod() === 'Month' ? 'Last Month' : 'Last Week' }}</span>
+          </div>
         </div>
-        <div class="chart-legend">
-          <span class="legend-item"><span class="legend-dot" style="background: var(--accent)"></span> This Month</span>
-          <span class="legend-item"><span class="legend-dot" style="background: #CBD5E1"></span> Last Month</span>
+        <div class="bar-chart">
+          <div class="bars-container">
+            @for (item of chartData(); track item.week) {
+            <div class="bar-group">
+              <div class="bars">
+                <div class="bar bar--current" [style.height.%]="getBarHeight(item.thisMonth)"
+                  [title]="(selectedPeriod() === 'Month' ? 'This Month: ' : 'This Week: ') + '₹' + item.thisMonth.toLocaleString('en-IN')"></div>
+                <div class="bar bar--prev" [style.height.%]="getBarHeight(item.lastMonth)"
+                  [title]="(selectedPeriod() === 'Month' ? 'Last Month: ' : 'Last Week: ') + '₹' + item.lastMonth.toLocaleString('en-IN')">
+                </div>
+              </div>
+              <span class="bar-label">{{ item.week }}</span>
+            </div>
+            }
+          </div>
+        </div>
+        <div class="chart-footer-stats">
+          <div class="cf-stat">
+            <span class="cf-label">{{ selectedPeriod() === 'Month' ? 'Avg Weekly Revenue' : 'Avg Daily Revenue' }}</span>
+            <span class="cf-val">₹{{ avgWeeklyRevenue().toLocaleString('en-IN') }}</span>
+          </div>
+          <div class="cf-divider"></div>
+          <div class="cf-stat">
+            <span class="cf-label">Peak Performance</span>
+            <span class="cf-val">{{ peakPerformance() }}</span>
+          </div>
+          <div class="cf-divider"></div>
+          <div class="cf-stat">
+            <span class="cf-label">Growth Rate</span>
+            <span class="cf-val font-accent">{{ growthRate() }}</span>
+          </div>
         </div>
       </div>
-      <div class="bar-chart">
-        <div class="bars-container">
-          @for (item of chartData; track item.week) {
-          <div class="bar-group">
-            <div class="bars">
-              <div class="bar bar--current" [style.height.%]="getBarHeight(item.thisMonth)"
-                [title]="'₹' + item.thisMonth"></div>
-              <div class="bar bar--prev" [style.height.%]="getBarHeight(item.lastMonth)" [title]="'₹' + item.lastMonth">
+
+      <!-- Active Patient Recovery Plans Card (Covers the empty space) -->
+      <div class="active-subs-card animate-fade-in-up" style="animation-delay:.15s">
+        <div class="card-header-row">
+          <div>
+            <h3>Active Patient Recovery Plans</h3>
+            <p class="card-sub">Live patient subscription packages and treatment progress</p>
+          </div>
+          <a class="view-all" routerLink="/admin/subscriptions">View All Plans →</a>
+        </div>
+
+        @if (planDistribution().length > 0) {
+        <div class="plan-dist-bar-strip">
+          @for (pd of planDistribution(); track pd.name) {
+          <div class="dist-pill">
+            <span class="dist-dot" [style.background]="pd.color"></span>
+            <span class="dist-name">{{ pd.name }}</span>
+            <span class="dist-badge">{{ pd.count }} patients ({{ pd.percent }}%)</span>
+          </div>
+          }
+        </div>
+        }
+
+        <div class="active-subs-list">
+          @for (sub of activeSubscriptions(); track sub.subscriptionId) {
+          <div class="sub-item-card">
+            <div class="sub-head">
+              <div class="sub-patient-info">
+                <div class="sub-av">{{ (sub.patientName || 'P').charAt(0).toUpperCase() }}</div>
+                <div>
+                  <h4 class="sub-patient-name">{{ sub.patientName }}</h4>
+                  <span class="sub-plan-tag">{{ sub.planName }}</span>
+                </div>
+              </div>
+              <div class="sub-status-box">
+                <span class="sub-sessions-badge">
+                  {{ sub.remainingSessions }} Sessions Left
+                </span>
+                <span class="sub-validity">
+                  Valid till {{ sub.expiryDate | date:'mediumDate' }}
+                </span>
               </div>
             </div>
-            <span class="bar-label">{{ item.week }}</span>
+
+            <div class="sub-prog-wrap">
+              <div class="sub-prog-track">
+                <div class="sub-prog-fill"
+                  [style.width.%]="sub.totalSessions > 0 ? (sub.remainingSessions / sub.totalSessions) * 100 : 0">
+                </div>
+              </div>
+              <div class="sub-prog-labels">
+                <span>{{ sub.totalSessions - sub.remainingSessions }} of {{ sub.totalSessions }} Completed</span>
+                <span>{{ sub.totalSessions > 0 ? Math.round((sub.remainingSessions / sub.totalSessions) * 100) : 0 }}% Available</span>
+              </div>
+            </div>
+          </div>
+          } @empty {
+          <div class="empty-subs-box">
+            <div class="empty-icon-circle">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 3h12l4 6-10 12L2 9z"></path>
+              </svg>
+            </div>
+            <p class="empty-title">No Active Patient Plans</p>
+            <p class="empty-desc">When patients enroll in recovery packages, their live progress will show here.</p>
           </div>
           }
         </div>
       </div>
-      <div class="chart-footer-stats">
-        <div class="cf-stat">
-          <span class="cf-label">Avg Weekly Revenue</span>
-          <span class="cf-val">₹2,000</span>
-        </div>
-        <div class="cf-divider"></div>
-        <div class="cf-stat">
-          <span class="cf-label">Peak Performance</span>
-          <span class="cf-val">Week 4 (₹2,800)</span>
-        </div>
-        <div class="cf-divider"></div>
-        <div class="cf-stat">
-          <span class="cf-label">Growth Rate</span>
-          <span class="cf-val font-accent">+33% MoM</span>
-        </div>
-      </div>
+
     </div>
 
     <!-- Table + Donut + Workers Side Column -->
@@ -125,7 +206,7 @@
           <a class="view-all" routerLink="/admin/transactions">View All →</a>
         </div>
         <div class="txn-list">
-          @for (txn of recentTransactions(); track txn.patient + txn.time; let i = $index) {
+          @for (txn of recentTransactions(); track txn.patient + txn.time + $index) {
           <div class="txn-row">
             <div class="txn-info">
               <p class="txn-patient">{{ txn.patient }}</p>
@@ -152,15 +233,20 @@
         <h3>Payment Methods</h3>
         <div class="donut-wrap">
           <svg width="120" height="120" viewBox="0 0 100 100" id="payment-donut">
-            @for (segment of donutSegments; track segment.label) {
+            @for (segment of donutSegments(); track segment.label) {
             <circle cx="50" cy="50" r="45" fill="none" [attr.stroke]="segment.color" stroke-width="10"
               [attr.stroke-dasharray]="segment.dashArray" [attr.stroke-dashoffset]="segment.dashOffset"
               stroke-linecap="butt" style="transition: stroke-dashoffset 0.5s ease" />
             }
-            <text x="50" y="55" text-anchor="middle" font-size="18" font-weight="800" fill="#0F172A">60%</text>
+            <text x="50" y="52" text-anchor="middle" font-size="17" font-weight="800" fill="#0F172A">
+              {{ dominantPayment().percent }}%
+            </text>
+            <text x="50" y="65" text-anchor="middle" font-size="9" font-weight="700" fill="#64748B">
+              {{ dominantPayment().label }}
+            </text>
           </svg>
           <div class="donut-legend">
-            @for (method of paymentMethods; track method.label) {
+            @for (method of paymentMethods(); track method.label) {
             <div class="legend-row">
               <span class="l-dot" [style.background]="method.color"></span>
               <span class="l-label">{{ method.label }}</span>
@@ -177,29 +263,28 @@
           <h3>Staff & Physiotherapists</h3>
           <button class="add-link-btn" (click)="openAddWorkerModal()">+ Add New</button>
         </div>
-        @for (worker of topWorkers(); track worker.name; let i = $index) {
-        <div class="worker-rank-item">
-          <span class="rank-num">#{{ i + 1 }}</span>
-          <div class="rank-av">{{ worker.initial }}</div>
-          <div class="rank-info">
-            <p class="rank-name">{{ worker.name }}</p>
-            <p class="rank-sessions">{{ worker.sessions }} sessions · {{ worker.specialization || 'Physiotherapist' }}
-            </p>
+        <div class="workers-list">
+          @for (worker of topWorkers(); track worker.name; let i = $index) {
+          <div class="worker-rank-item">
+            <span class="rank-num">#{{ i + 1 }}</span>
+            <div class="rank-av">{{ worker.initial }}</div>
+            <div class="rank-info">
+              <p class="rank-name">{{ worker.name }}</p>
+              <p class="rank-sessions">{{ worker.sessions }} sessions · {{ worker.specialization || 'Physiotherapist' }}
+              </p>
+            </div>
           </div>
+          } @empty {
+          <div class="empty-workers-box">
+            <p>No workers registered yet.</p>
+            <button class="btn btn-outline-sm" (click)="openAddWorkerModal()">Register First Worker</button>
+          </div>
+          }
         </div>
-        } @empty {
-        <div class="empty-workers-box">
-          <p>No workers registered yet.</p>
-          <button class="btn btn-outline-sm" (click)="openAddWorkerModal()">Register First Worker</button>
-        </div>
-        }
       </div>
 
     </div>
   </div>
-
-  <!-- ─── Active Subscriptions ──────────────────────────────────────────────── -->
-
 
   <!-- ─── ADD WORKER MODAL (Admin only registers workers) ──────────────────── -->
   @if (showAddWorkerModal()) {

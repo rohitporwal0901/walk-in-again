@@ -309,6 +309,212 @@
   }
 }
 
+// ─── Main Column ────────────────────────────────────────────────────────────
+.main-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+// ─── Active Subscriptions & Recovery Plans Card ─────────────────────────────
+.active-subs-card {
+  background: #FFFFFF;
+  border-radius: 18px;
+  padding: 22px 24px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  .card-header-row {
+    @include flex-between;
+    align-items: flex-start;
+    h3 { font-size: 16px; font-weight: 800; color: #0F172A; margin: 0 0 2px; letter-spacing: -0.01em; }
+    .card-sub { font-size: 12.5px; color: #64748B; margin: 0; }
+    .view-all {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #0284C7;
+      text-decoration: none;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: color 0.15s ease;
+      &:hover { text-decoration: underline; color: #0369A1; }
+    }
+  }
+}
+
+.plan-dist-bar-strip {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-bottom: 2px;
+}
+
+.dist-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #334155;
+
+  .dist-dot { width: 7px; height: 7px; border-radius: 50%; }
+  .dist-name { font-weight: 700; }
+  .dist-badge { color: #64748B; }
+}
+
+.active-subs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 6px;
+  @include scrollbar-thin;
+}
+
+.sub-item-card {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: #FFFFFF;
+    border-color: #CBD5E1;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  }
+}
+
+.sub-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sub-patient-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sub-av {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0284C7 0%, #0D9488 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
+  flex-shrink: 0;
+}
+
+.sub-patient-name {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0 0 2px;
+}
+
+.sub-plan-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: #0284C7;
+  background: #E0F2FE;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.sub-status-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.sub-sessions-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #0D9488;
+  background: #CCFBF1;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.sub-validity {
+  font-size: 11px;
+  color: #94A3B8;
+  font-weight: 500;
+}
+
+.sub-prog-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sub-prog-track {
+  width: 100%;
+  height: 6px;
+  background: #E2E8F0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.sub-prog-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0D9488, #10B981);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.sub-prog-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748B;
+}
+
+.empty-subs-box {
+  padding: 24px 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  .empty-icon-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #E0F2FE;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2px;
+  }
+  .empty-title { font-size: 13.5px; font-weight: 700; color: #0F172A; margin: 0; }
+  .empty-desc { font-size: 12px; color: #94A3B8; margin: 0; max-width: 280px; }
+}
+
 // ─── Side Column ────────────────────────────────────────────────────────────
 .side-column {
   display: flex;
@@ -364,6 +570,16 @@
       &:hover { text-decoration: underline; color: #0369A1; }
     }
   }
+}
+
+.workers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 230px;
+  overflow-y: auto;
+  padding-right: 6px;
+  @include scrollbar-thin;
 }
 
 .worker-rank-item {
@@ -434,6 +650,10 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  max-height: 290px;
+  overflow-y: auto;
+  padding-right: 6px;
+  @include scrollbar-thin;
 }
 
 .txn-row {
