@@ -1,4 +1,4 @@
-import { Component, signal, computed, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, signal, computed, inject, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -41,6 +41,14 @@ export class ActiveSessionComponent implements OnInit, OnDestroy {
   selectedPaymentMethod = signal<'UPI' | 'Card' | 'Cash'>('UPI');
   timeDisplayNow = signal<string>(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
 
+  // Rapido-Style Swipe to End Session State
+  swipeOffset = signal<number>(0);
+  swipeProgress = signal<number>(0);
+  isSwiping = signal<boolean>(false);
+  swipeCompleted = signal<boolean>(false);
+  private startTouchX = 0;
+  private maxSwipeDistance = 260;
+
   isCoveredByPlan = signal<boolean>(false);
   planName = signal<string>('');
   sessionValue = signal<number>(500);
@@ -48,6 +56,7 @@ export class ActiveSessionComponent implements OnInit, OnDestroy {
 
   sessionDuration = computed(() => Math.max(1, Math.ceil(this.sessionService.timerSeconds() / 60)));
   sessionFee = computed(() => this.isCoveredByPlan() ? 0 : this.sessionService.getSessionFee(this.sessionDuration()));
+  completedTherapiesCount = computed(() => this.therapies().filter(t => t.checked).length);
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('sessionId') || '';
@@ -122,6 +131,71 @@ export class ActiveSessionComponent implements OnInit, OnDestroy {
   resumeSession() {
     this.showSummary.set(false);
     this.sessionService.startTimer();
+    this.resetSwipe();
+  }
+
+  // ─── Swipe Slider Gesture Controls (Rapido Style) ──────────────────────────
+  onSwipeStart(event: TouchEvent | MouseEvent) {
+    if (this.swipeCompleted()) return;
+    this.isSwiping.set(true);
+    const clientX = 'touches' in event ? event.touches[0].clientX : event.clientX;
+    this.startTouchX = clientX - this.swipeOffset();
+
+    const container = document.getElementById('swipe-container');
+    if (container) {
+      const containerWidth = container.clientWidth;
+      this.maxSwipeDistance = Math.max(120, containerWidth - 58);
+    }
+  }
+
+  onSwipeMove(event: TouchEvent | MouseEvent) {
+    if (!this.isSwiping() || this.swipeCompleted()) return;
+    const clientX = 'touches' in event ? event.touches[0].clientX : event.clientX;
+    const rawDelta = clientX - this.startTouchX;
+    const clamped = Math.max(0, Math.min(rawDelta, this.maxSwipeDistance));
+    this.swipeOffset.set(clamped);
+    this.swipeProgress.set(clamped / this.maxSwipeDistance);
+  }
+
+  onSwipeEnd() {
+    if (!this.isSwiping() || this.swipeCompleted()) return;
+    this.isSwiping.set(false);
+
+    if (this.swipeProgress() >= 0.70) {
+      // Completed swipe: snap to end and trigger endSession
+      this.swipeOffset.set(this.maxSwipeDistance);
+      this.swipeProgress.set(1);
+      this.swipeCompleted.set(true);
+
+      setTimeout(() => {
+        this.endSession();
+      }, 250);
+    } else {
+      // Revert smoothly
+      this.swipeOffset.set(0);
+      this.swipeProgress.set(0);
+    }
+  }
+
+  resetSwipe() {
+    this.swipeOffset.set(0);
+    this.swipeProgress.set(0);
+    this.isSwiping.set(false);
+    this.swipeCompleted.set(false);
+  }
+
+  @HostListener('window:mousemove', ['$event'])
+  onWindowMouseMove(event: MouseEvent) {
+    if (this.isSwiping()) {
+      this.onSwipeMove(event);
+    }
+  }
+
+  @HostListener('window:mouseup')
+  onWindowMouseUp() {
+    if (this.isSwiping()) {
+      this.onSwipeEnd();
+    }
   }
 
   /**

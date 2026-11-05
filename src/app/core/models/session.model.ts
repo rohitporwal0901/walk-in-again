@@ -34,7 +34,7 @@ export interface Session {
 }
 
 export const DEFAULT_THERAPIES: TherapyItem[] = [
-  { id: 'therapy_exercise', label: 'Therapy Trackers', checked: true },
+  { id: 'therapy_exercise', label: 'Therapeutic Exercise', checked: true },
   { id: 'stretching', label: 'Stretching', checked: false },
   { id: 'heat_therapy', label: 'Heat Therapy & Massage', checked: false },
   { id: 'joint_mobilization', label: 'Joint Mobilization', checked: false },

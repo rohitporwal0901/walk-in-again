@@ -1,4 +1,4 @@
-import { Component, signal, computed, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, signal, computed, inject, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
@@ -111,6 +111,12 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
     }
   });
 
+  formatDoctorName(name?: string): string {
+    const raw = (name || 'Rahul Sharma').trim();
+    const clean = raw.replace(/^(Dr\.?\s*)+/i, '').trim();
+    return clean ? `Dr. ${clean}` : 'Dr. Rahul Sharma';
+  }
+
   quickActions = [
     { id: 'action-sessions', label: 'Sessions', route: '/patient/sessions', bg: '#FEF9C3', iconBg: '#FEF08A', color: '#854D0E', type: 'sessions' },
     { id: 'action-payments', label: 'Payments', route: '/patient/payments', bg: '#F3E8FF', iconBg: '#E9D5FF', color: '#6B21A8', type: 'payments' },
@@ -168,6 +174,87 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
   selectedSessionToPay = signal<Session | null>(null);
   selectedMethod = signal<'UPI' | 'Card' | 'Cash'>('UPI');
   paymentError = signal<string>('');
+
+  // ─── Rapido-Style Swipe to Pay State ─────────────────────────────────────────
+  paySwipeOffset = signal<number>(0);
+  paySwipeProgress = signal<number>(0);
+  isPaySwiping = signal<boolean>(false);
+  paySwipeCompleted = signal<boolean>(false);
+  private startPayTouchX = 0;
+  private maxPaySwipeDistance = 260;
+
+  onPaySwipeStart(event: TouchEvent | MouseEvent, session: Session) {
+    if (this.paySwipeCompleted() || this.isPaying()) return;
+    this.isPaySwiping.set(true);
+    const clientX = 'touches' in event ? event.touches[0].clientX : event.clientX;
+    this.startPayTouchX = clientX - this.paySwipeOffset();
+
+    const container = document.getElementById('pay-swipe-container');
+    if (container) {
+      const containerWidth = container.clientWidth;
+      this.maxPaySwipeDistance = Math.max(120, containerWidth - 54);
+    }
+  }
+
+  onPaySwipeMove(event: TouchEvent | MouseEvent) {
+    if (!this.isPaySwiping() || this.paySwipeCompleted()) return;
+    const clientX = 'touches' in event ? event.touches[0].clientX : event.clientX;
+    const rawDelta = clientX - this.startPayTouchX;
+    const clamped = Math.max(0, Math.min(rawDelta, this.maxPaySwipeDistance));
+    this.paySwipeOffset.set(clamped);
+    this.paySwipeProgress.set(clamped / this.maxPaySwipeDistance);
+  }
+
+  onPaySwipeEnd(session: Session) {
+    if (!this.isPaySwiping() || this.paySwipeCompleted()) return;
+    this.isPaySwiping.set(false);
+
+    if (this.paySwipeProgress() >= 0.70) {
+      // Completed swipe: snap knob to end
+      this.paySwipeOffset.set(this.maxPaySwipeDistance);
+      this.paySwipeProgress.set(1);
+      this.paySwipeCompleted.set(true);
+
+      // Open payment action sheet
+      setTimeout(() => {
+        this.openPaymentSheet(session);
+        // Reset slider smoothly after sheet opens
+        setTimeout(() => {
+          this.resetPaySwipe();
+        }, 400);
+      }, 200);
+    } else {
+      // Revert smoothly
+      this.paySwipeOffset.set(0);
+      this.paySwipeProgress.set(0);
+    }
+  }
+
+  resetPaySwipe() {
+    this.paySwipeOffset.set(0);
+    this.paySwipeProgress.set(0);
+    this.isPaySwiping.set(false);
+    this.paySwipeCompleted.set(false);
+  }
+
+  @HostListener('window:mousemove', ['$event'])
+  onWindowMouseMove(event: MouseEvent) {
+    if (this.isPaySwiping()) {
+      this.onPaySwipeMove(event);
+    }
+  }
+
+  @HostListener('window:mouseup')
+  onWindowMouseUp() {
+    if (this.isPaySwiping()) {
+      const sess = this.unpaidCompletedSession();
+      if (sess) {
+        this.onPaySwipeEnd(sess);
+      } else {
+        this.resetPaySwipe();
+      }
+    }
+  }
 
   /** Open payment method selection sheet */
   openPaymentSheet(session: Session) {

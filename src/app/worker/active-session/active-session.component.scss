@@ -1,8 +1,8 @@
-// ─── Active Session Screen (Exact Image 1 Mockup) ───────────────────────────
+// ─── Active Session Screen ────────────────────────────────────────────────────
 .session-screen {
   min-height: 100vh;
   background: #EBF5F9;
-  padding: max(calc(env(safe-area-inset-top, 0px) + 16px), 46px) 18px max(calc(env(safe-area-inset-bottom, 0px) + 88px), 100px);
+  padding: max(calc(env(safe-area-inset-top, 0px) + 16px), 44px) 18px max(calc(env(safe-area-inset-bottom, 0px) + 88px), 100px);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -13,20 +13,24 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 
   .back-btn {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     background: #FFFFFF;
-    border: 1px solid rgba(226, 232, 240, 0.85);
-    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+    border: 1.5px solid rgba(226, 232, 240, 0.9);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: transform 0.15s ease;
+    transition: transform 0.15s ease, background 0.15s ease;
+
+    &:hover {
+      background: #F8FAFC;
+    }
 
     &:active {
       transform: scale(0.95);
@@ -43,54 +47,141 @@
 
   .header-placeholder {
     width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+
+  .header-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    padding: 4px 10px;
+    border-radius: 9999px;
+
+    .live-pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulseGreen 1.8s infinite;
+    }
+
+    .status-txt {
+      font-size: 11px;
+      font-weight: 700;
+      color: #047857;
+      letter-spacing: -0.01em;
+    }
   }
 }
 
-// ─── Patient Header Card (Image 1 Style) ─────────────────────────────────────
-.patient-header-card {
+@keyframes pulseGreen {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+// ─── Patient Hero Card ───────────────────────────────────────────────────────
+.patient-hero-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 14px 16px;
+  border: 1.5px solid rgba(226, 232, 240, 0.85);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
+  gap: 12px;
   margin-bottom: 16px;
 
-  .patient-avatar-circle {
-    width: 60px;
-    height: 60px;
+  .patient-hero-avatar {
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
-    background: #E0F2FE;
+    background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);
     color: #0284C7;
+    font-size: 18px;
+    font-weight: 800;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
-    font-weight: 800;
-    margin-bottom: 8px;
-    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.15);
+    box-shadow: 0 2px 8px rgba(2, 132, 199, 0.15);
+    flex-shrink: 0;
   }
 
-  .patient-title {
-    font-size: 18px;
-    font-weight: 800;
-    color: #0F172A;
-    margin: 0 0 3px;
-    letter-spacing: -0.01em;
-  }
+  .patient-hero-details {
+    flex: 1;
+    min-width: 0;
 
-  .patient-plan-tag {
-    font-size: 12px;
-    font-weight: 600;
-    color: #64748B;
-    margin: 0;
+    .patient-name-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 3px;
+
+      .patient-hero-name {
+        font-size: 16px;
+        font-weight: 800;
+        color: #0F172A;
+        margin: 0;
+        letter-spacing: -0.01em;
+      }
+
+      .hero-plan-badge {
+        font-size: 10.5px;
+        font-weight: 700;
+        color: #15803D;
+        background: #DCFCE7;
+        border: 1px solid rgba(22, 163, 74, 0.25);
+        padding: 1px 7px;
+        border-radius: 9999px;
+      }
+    }
+
+    .patient-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #64748B;
+
+      .condition-chip {
+        font-size: 11px;
+        font-weight: 700;
+        color: #0284C7;
+        background: #E0F2FE;
+        border: 1px solid rgba(2, 132, 199, 0.2);
+        padding: 1px 8px;
+        border-radius: 9999px;
+      }
+
+      .meta-dot {
+        color: #CBD5E1;
+      }
+
+      .mobile-text {
+        font-size: 12px;
+        font-weight: 500;
+        color: #64748B;
+      }
+    }
   }
 }
 
-// ─── Circular Timer Widget ───────────────────────────────────────────────────
-.timer-widget-container {
+// ─── Circular Timer Widget Card ──────────────────────────────────────────────
+.timer-widget-card {
+  background: #FFFFFF;
+  border-radius: 24px;
+  padding: 20px 18px 18px;
+  border: 1.5px solid rgba(226, 232, 240, 0.85);
+  box-shadow: 0 4px 20px rgba(2, 132, 199, 0.05);
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
   position: relative;
 
   .circular-timer-ring {
@@ -125,7 +216,7 @@
       text-align: center;
 
       .time-elapsed-val {
-        font-size: 34px;
+        font-size: 36px;
         font-weight: 800;
         color: #0F172A;
         letter-spacing: -0.02em;
@@ -136,49 +227,93 @@
 
       .time-elapsed-lbl {
         font-size: 11.5px;
-        font-weight: 600;
+        font-weight: 700;
         color: #64748B;
-        letter-spacing: 0.02em;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+
+        &.paused {
+          color: #D97706;
+        }
       }
     }
   }
 
   .pause-chip-btn {
-    margin-top: 10px;
-    background: #FFFFFF;
-    border: 1px solid rgba(226, 232, 240, 0.9);
+    background: #F8FAFC;
+    border: 1.5px solid #E2E8F0;
     border-radius: 9999px;
-    padding: 6px 16px;
-    font-size: 12px;
+    padding: 8px 22px;
+    font-size: 13px;
     font-weight: 700;
     color: #334155;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 7px;
     cursor: pointer;
     box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
 
     &:hover {
-      background: #F8FAFC;
+      background: #F1F5F9;
+      color: #0F172A;
+      border-color: #CBD5E1;
+    }
+
+    &:active {
+      transform: scale(0.97);
     }
 
     &.paused {
       background: #FEF3C7;
       color: #B45309;
       border-color: #FDE68A;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
     }
   }
 }
 
-// ─── Therapy Trackers Card (Image 1 List Design) ─────────────────────────────
+// ─── Therapy Trackers Card ───────────────────────────────────────────────────
 .therapy-trackers-card {
   background: #FFFFFF;
-  border-radius: 20px;
-  box-shadow: 0 3px 14px rgba(15, 23, 42, 0.03);
-  border: 1px solid rgba(226, 232, 240, 0.75);
+  border-radius: 22px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+  border: 1.5px solid rgba(226, 232, 240, 0.85);
   margin-bottom: 14px;
   overflow: hidden;
+
+  .trackers-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 16px;
+    border-bottom: 1px solid #F1F5F9;
+    background: #FAFCFE;
+
+    .card-header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .trackers-title {
+        font-size: 14px;
+        font-weight: 800;
+        color: #0F172A;
+        margin: 0;
+        letter-spacing: -0.01em;
+      }
+    }
+
+    .trackers-progress-pill {
+      font-size: 11px;
+      font-weight: 700;
+      color: #0284C7;
+      background: #E0F2FE;
+      border: 1px solid rgba(2, 132, 199, 0.2);
+      padding: 2px 8px;
+      border-radius: 9999px;
+    }
+  }
 
   .trackers-list {
     display: flex;
@@ -189,7 +324,7 @@
       align-items: center;
       gap: 12px;
       padding: 13px 16px;
-      border-bottom: 1px solid #F1F5F9;
+      border-bottom: 1px solid #F8FAFC;
       cursor: pointer;
       transition: background 0.15s ease;
 
@@ -225,9 +360,9 @@
 
       .tracker-label {
         flex: 1;
-        font-size: 14px;
+        font-size: 13.5px;
         font-weight: 600;
-        color: #1E293B;
+        color: #334155;
       }
 
       &.checked .tracker-label {
@@ -236,6 +371,7 @@
       }
 
       .tracker-chevron {
+        color: #94A3B8;
         flex-shrink: 0;
       }
     }
@@ -245,54 +381,178 @@
 // ─── Clinical Notes Box ──────────────────────────────────────────────────────
 .clinical-notes-card {
   background: #FFFFFF;
-  border-radius: 18px;
-  padding: 12px 14px;
-  box-shadow: 0 3px 14px rgba(15, 23, 42, 0.03);
-  border: 1px solid rgba(226, 232, 240, 0.75);
-  margin-bottom: 20px;
+  border-radius: 20px;
+  padding: 12px 16px 14px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+  border: 1.5px solid rgba(226, 232, 240, 0.85);
+  margin-bottom: 18px;
+
+  .notes-header-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+
+    .notes-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+  }
 
   .notes-input {
     width: 100%;
-    border: none;
+    border: 1px solid #E2E8F0;
     outline: none;
-    background: transparent;
+    background: #F8FAFC;
+    border-radius: 12px;
+    padding: 10px 12px;
     font-size: 13px;
     font-family: inherit;
     color: #0F172A;
     resize: none;
-    line-height: 1.4;
+    line-height: 1.45;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
 
     &::placeholder {
       color: #94A3B8;
     }
+
+    &:focus {
+      border-color: #0284C7;
+      background: #FFFFFF;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+    }
   }
 }
 
-// ─── Big Bottom Action Button: End Session ───────────────────────────────────
-.btn-end-session {
+// ─── Rapido-Style Swipe To End Session Slider (Red Theme) ─────────────────────
+.swipe-slider-container {
   margin-top: auto;
-  background: linear-gradient(135deg, #0B2545 0%, #0369A1 100%);
-  color: #FFFFFF;
-  border: none;
+  position: relative;
+  height: 58px;
+  background: linear-gradient(135deg, #7F1D1D 0%, #991B1B 50%, #B91C1C 100%);
   border-radius: 9999px;
-  padding: 15px 24px;
-  font-size: 15px;
-  font-weight: 700;
+  padding: 4px;
+  box-sizing: border-box;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(185, 28, 28, 0.35), 0 2px 6px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  cursor: pointer;
-  box-shadow: 0 8px 24px rgba(11, 37, 69, 0.25);
-  transition: all 0.2s ease;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 28px rgba(11, 37, 69, 0.3);
+  &.is-swiping {
+    box-shadow: 0 10px 28px rgba(220, 38, 38, 0.45);
   }
 
-  &:active {
-    transform: scale(0.98);
+  &.is-completed {
+    background: linear-gradient(135deg, #059669 0%, #10B981 100%);
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+  }
+
+  // Active fill expanding along with thumb
+  .swipe-track-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, #DC2626 0%, #EF4444 100%);
+    border-radius: 9999px;
+    pointer-events: none;
+    transition: width 0.05s linear;
+  }
+
+  // Shimmering Label & Animated Rapido-style Chevrons
+  .swipe-label-wrap {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding-left: 36px;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+
+    .swipe-text {
+      color: #FFFFFF;
+      font-size: 14.5px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    }
+
+    .swipe-chevrons {
+      display: inline-flex;
+      align-items: center;
+      gap: 1px;
+
+      .chevron {
+        font-size: 18px;
+        font-weight: 900;
+        color: #FEE2E2;
+        line-height: 1;
+        opacity: 0.4;
+        animation: chevronSlide 1.5s infinite ease-in-out;
+
+        &.c1 { animation-delay: 0s; }
+        &.c2 { animation-delay: 0.2s; }
+        &.c3 { animation-delay: 0.4s; }
+      }
+    }
+  }
+
+  // Circular Draggable Knob / Thumb
+  .swipe-thumb {
+    position: relative;
+    z-index: 2;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    cursor: grab;
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+
+    &:active {
+      cursor: grabbing;
+      transform: scale(1.04);
+    }
+
+    &.completed {
+      background: #10B981;
+      color: #FFFFFF;
+    }
+  }
+
+  &.is-swiping .swipe-thumb {
+    transition: none;
+  }
+}
+
+@keyframes chevronSlide {
+  0% {
+    opacity: 0.3;
+    transform: translateX(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(3px);
+  }
+  100% {
+    opacity: 0.3;
+    transform: translateX(0);
   }
 }
 
@@ -302,43 +562,67 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  margin: 10px 0 22px;
+  margin: 10px 0 20px;
 
   .success-icon-bubble {
     width: 68px;
     height: 68px;
     border-radius: 50%;
-    background: #10B981;
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 14px;
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+    margin-bottom: 12px;
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.12),
+                0 0 0 16px rgba(16, 185, 129, 0.05),
+                0 8px 24px rgba(16, 185, 129, 0.32);
+    animation: successPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
   .summary-success-title {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 800;
     color: #0F172A;
-    margin: 0 0 4px;
-    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+    letter-spacing: -0.02em;
   }
 
-  .summary-patient-name {
-    font-size: 14px;
+  .summary-patient-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #FFFFFF;
+    border: 1px solid rgba(226, 232, 240, 0.85);
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 13px;
     font-weight: 600;
-    color: #64748B;
-    margin: 0;
+    color: #475569;
+
+    .patient-dot {
+      color: #10B981;
+      font-size: 9px;
+    }
+
+    .pill-divider {
+      color: #CBD5E1;
+    }
+
+    .patient-condition-txt {
+      color: #0284C7;
+      font-weight: 700;
+    }
   }
 }
 
 .summary-card {
   background: #FFFFFF;
-  border-radius: 20px;
-  padding: 18px 20px;
-  box-shadow: 0 3px 16px rgba(15, 23, 42, 0.04);
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  margin-bottom: 18px;
+  border-radius: 22px;
+  padding: 16px 18px 18px;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+  border: 1.5px solid rgba(226, 232, 240, 0.85);
+  margin-bottom: 16px;
 
   .summary-pt-row {
     display: flex;
@@ -352,7 +636,7 @@
       width: 44px;
       height: 44px;
       border-radius: 50%;
-      background: #E0F2FE;
+      background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);
       color: #0284C7;
       display: flex;
       align-items: center;
@@ -360,131 +644,204 @@
       font-size: 17px;
       font-weight: 800;
       flex-shrink: 0;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
     }
 
     .summary-pt-info {
       flex: 1;
       min-width: 0;
 
-      .pt-name-heading {
-        font-size: 15px;
-        font-weight: 700;
-        color: #0F172A;
-        margin: 0 0 2px;
+      .pt-title-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 3px;
+
+        .pt-name-heading {
+          font-size: 16px;
+          font-weight: 800;
+          color: #0F172A;
+          margin: 0;
+          letter-spacing: -0.01em;
+        }
+
+        .summary-plan-tag {
+          font-size: 11px;
+          font-weight: 700;
+          color: #0284C7;
+          background: #E0F2FE;
+          padding: 2px 8px;
+          border-radius: 9999px;
+          border: 1px solid rgba(2, 132, 199, 0.2);
+        }
       }
 
       .pt-meta-time {
         font-size: 12px;
+        font-weight: 500;
         color: #64748B;
         margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        .meta-dot {
+          color: #CBD5E1;
+        }
       }
     }
   }
 
-  .summary-stats-grid {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
+  .summary-metrics-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
 
-    .stat-col {
+    .metric-box {
+      border-radius: 16px;
+      padding: 12px 14px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      text-align: center;
+      gap: 5px;
 
-      .stat-label {
-        font-size: 11.5px;
-        font-weight: 600;
-        color: #64748B;
-        margin-bottom: 4px;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
+      &.duration-box {
+        background: #F8FAFC;
+        border: 1.5px solid #E2E8F0;
       }
 
-      .stat-val {
-        font-size: 18px;
-        font-weight: 800;
-        color: #0F172A;
+      &.earning-box {
+        background: #F0FDF4;
+        border: 1.5px solid #BBF7D0;
+      }
 
-        &.fee-accent {
-          color: #0F172A;
-        }
+      .metric-header {
+        display: flex;
+        align-items: center;
+        gap: 6px;
 
-        &.fee-free {
-          color: #10B981;
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
+        .metric-label {
+          font-size: 11px;
+          font-weight: 700;
+          color: #64748B;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
 
-          .covered-tag {
-            font-size: 11px;
-            font-weight: 700;
-            background: #DCFCE7;
+          &.earning-label {
             color: #15803D;
-            padding: 2px 7px;
-            border-radius: 6px;
-            letter-spacing: normal;
           }
         }
       }
-    }
 
-    .stat-divider {
-      width: 1px;
-      height: 34px;
-      background: #E2E8F0;
+      .metric-val {
+        font-size: 20px;
+        font-weight: 800;
+        color: #0F172A;
+        font-variant-numeric: tabular-nums;
+        line-height: 1.1;
+
+        &.earning-val {
+          color: #15803D;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          flex-wrap: wrap;
+        }
+
+        .metric-plan-pill {
+          font-size: 10.5px;
+          font-weight: 700;
+          background: #DCFCE7;
+          color: #166534;
+          padding: 2px 7px;
+          border-radius: 9999px;
+          border: 1px solid rgba(22, 101, 52, 0.15);
+        }
+      }
     }
   }
 }
 
 .sub-coverage-card {
-  background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+  background: linear-gradient(135deg, #F0F9FF 0%, #EBF8FF 100%);
   border: 1.5px solid #BAE6FD;
-  border-radius: 20px;
+  border-radius: 22px;
   padding: 16px 18px;
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-  margin-bottom: 22px;
-  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.08);
+  margin-bottom: 20px;
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.07);
 
-  .sub-badge-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    background: #FFFFFF;
+  .sub-card-top {
     display: flex;
     align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(2, 132, 199, 0.15);
+    gap: 12px;
+    margin-bottom: 12px;
+
+    .sub-badge-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.12);
+      border: 1px solid rgba(186, 230, 253, 0.8);
+    }
+
+    .sub-card-header-text {
+      flex: 1;
+      min-width: 0;
+
+      .sub-title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 3px;
+
+        .sub-cov-title {
+          font-size: 14.5px;
+          font-weight: 800;
+          color: #0369A1;
+          margin: 0;
+        }
+
+        .sub-verified-badge {
+          font-size: 11px;
+          font-weight: 700;
+          color: #15803D;
+          background: #DCFCE7;
+          padding: 2px 8px;
+          border-radius: 9999px;
+          flex-shrink: 0;
+        }
+      }
+
+      .sub-cov-desc {
+        font-size: 12.5px;
+        color: #334155;
+        margin: 0;
+
+        .earning-accent {
+          color: #059669;
+          font-weight: 800;
+        }
+      }
+    }
   }
 
-  .sub-coverage-content {
-    flex: 1;
-
-    .sub-cov-title {
-      font-size: 14px;
-      font-weight: 800;
-      color: #0369A1;
-      margin: 0 0 3px;
-    }
-
-    .sub-cov-desc {
-      font-size: 13px;
-      color: #0F172A;
-      margin: 0 0 6px;
-    }
-
-    .sub-cov-badge {
-      display: inline-block;
-      font-size: 11.5px;
-      font-weight: 600;
-      color: #0284C7;
-      background: rgba(255, 255, 255, 0.8);
-      padding: 3px 8px;
-      border-radius: 6px;
-    }
+  .sub-deduction-callout {
+    background: #FFFFFF;
+    border: 1px solid rgba(186, 230, 253, 0.8);
+    border-radius: 12px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #0284C7;
   }
 }
 
@@ -668,25 +1025,26 @@
 }
 
 .btn-proceed-payment {
-  background: linear-gradient(135deg, #0B2545 0%, #0369A1 100%);
+  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
   color: #FFFFFF;
   border: none;
   border-radius: 9999px;
-  padding: 15px 24px;
+  padding: 16px 24px;
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(11, 37, 69, 0.25);
-  transition: all 0.2s ease;
+  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.35);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   width: 100%;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 28px rgba(11, 37, 69, 0.3);
+    box-shadow: 0 12px 28px rgba(2, 132, 199, 0.45);
+    background: linear-gradient(135deg, #0369A1 0%, #075985 100%);
   }
 
   &:active {
@@ -696,6 +1054,7 @@
   &:disabled {
     opacity: 0.65;
     cursor: not-allowed;
+    transform: none;
   }
 }
 
@@ -722,4 +1081,10 @@
 @keyframes scaleUp {
   from { opacity: 0; transform: scale(0.93); }
   to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes successPop {
+  0% { transform: scale(0.7); opacity: 0; }
+  60% { transform: scale(1.08); }
+  100% { transform: scale(1); opacity: 1; }
 }

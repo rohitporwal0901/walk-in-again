@@ -86,19 +86,40 @@
     <!-- 1. Real-Time OTP Verification Banner for Patient -->
     @if (pendingOtpSession(); as pendingSess) {
     <div class="patient-otp-banner animate-scale-in">
-      <div class="otp-banner-head">
-        <span class="live-otp-dot"></span>
-        <span class="otp-badge-title">Session Verification Code</span>
+      <div class="otp-banner-top-row">
+        <div class="otp-badge-wrap">
+          <span class="live-otp-dot"></span>
+          <span class="otp-badge-title">Session Check-In Code</span>
+        </div>
+        <span class="otp-security-pill">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          Verification Code
+        </span>
       </div>
-      <p class="otp-sub-prompt">
-        Dr. <strong>{{ pendingSess.workerName }}</strong> has requested to start your session. Share this 4-digit code:
-      </p>
+
+      <div class="otp-doctor-callout">
+        <p class="otp-sub-prompt">
+          <strong>{{ formatDoctorName(pendingSess.workerName) }}</strong> has requested to start your therapy session. Share this 4-digit code:
+        </p>
+      </div>
+
       <div class="otp-display-cards">
         @for (digit of (pendingSess.otp || '1234').split(''); track $index) {
         <div class="otp-card-digit">{{ digit }}</div>
         }
       </div>
-      <p class="otp-wait-hint">Your therapy session begins as soon as the doctor enters this code.</p>
+
+      <div class="otp-wait-hint-row">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <span>Your therapy session begins as soon as the doctor enters this code.</span>
+      </div>
     </div>
     }
 
@@ -106,55 +127,117 @@
     @if (activeSession(); as active) {
     <div class="active-session-banner animate-fade-in">
       <div class="session-badge-row">
-        <span class="live-dot"></span>
-        <span class="session-badge-title">Session In Progress</span>
-      </div>
-      <div class="session-banner-content">
-        <div class="session-time-col">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <polyline points="12 6 12 12 16 14"></polyline>
-          </svg>
-          <div>
-            <p class="sess-date">{{ active.date | date:'mediumDate' }}</p>
-            <p class="sess-time">{{ active.timeSlot || 'Active Now' }}</p>
-          </div>
+        <div class="live-dot-wrap">
+          <span class="live-dot"></span>
+          <span class="session-badge-title">Session In Progress</span>
         </div>
+        <span class="live-status-pill">Active Therapy</span>
+      </div>
+
+      <div class="session-banner-content">
         <div class="session-dr-col">
           <div class="dr-avatar">{{ (active.workerName || 'P').charAt(0).toUpperCase() }}</div>
-          <div>
-            <p class="dr-title">Dr. {{ active.workerName || 'Physiotherapist' }}</p>
-            <p class="dr-sub">{{ active.notes || 'Therapy in Progress' }}</p>
+          <div class="dr-info">
+            <h4 class="dr-title">{{ formatDoctorName(active.workerName) }}</h4>
+            <span class="dr-condition-chip">{{ active.notes || 'Physiotherapy Session' }}</span>
+          </div>
+        </div>
+
+        <div class="session-time-col">
+          <div class="time-capsule">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2.2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <div class="time-texts">
+              <span class="sess-time">{{ active.timeSlot || 'Active Now' }}</span>
+              <span class="sess-date">{{ active.date | date:'mediumDate' }}</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
     }
 
-    <!-- 3. Unpaid Completed Session Payment Due Banner -->
+    <!-- 3. Unpaid Completed Session Payment Due Banner with Swipe-to-Pay -->
     @if (unpaidCompletedSession(); as completedSess) {
     <div class="payment-due-banner animate-scale-in">
       <div class="due-banner-head">
-        <span class="due-badge">Session Completed</span>
-        <span class="due-amount">₹{{ completedSess.fee || defaultWalkInFee() }}</span>
+        <div class="due-badge-wrap">
+          <span class="live-dot-amber"></span>
+          <span class="due-badge">Session Completed</span>
+        </div>
+        <div class="due-amount-pill">
+          <span class="currency-symbol">₹</span>
+          <span class="amount-number">{{ completedSess.fee || defaultWalkInFee() }}</span>
+        </div>
       </div>
-      <div class="due-details">
-        <p class="due-desc">Dr. {{ completedSess.workerName }} has completed your physiotherapy session ({{
-          completedSess.duration || 30 }} mins).</p>
+
+      <div class="due-doctor-row">
+        <div class="doctor-avatar-circle">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        <div class="doctor-info-text">
+          <h4 class="doctor-title">{{ formatDoctorName(completedSess.workerName) }}</h4>
+          <p class="due-desc">
+            Physiotherapy session completed ({{ completedSess.duration || 30 }} mins)
+          </p>
+        </div>
       </div>
-      <button type="button" class="btn-pay-now" (click)="openPaymentSheet(completedSess)" [disabled]="isPaying()"
-        id="pay-session-btn">
-        @if (isPaying()) {
-        <span class="spinner-sm"></span>
-        <span>Processing...</span>
-        } @else {
-        <span>Pay ₹{{ completedSess.fee || defaultWalkInFee() }}</span>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-          stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="9 18 15 12 9 6"></polyline>
+
+      <!-- Rapido-Style Swipe-To-Pay Slider -->
+      <div
+        class="pay-swipe-slider animate-fade-in-up"
+        id="pay-swipe-container"
+        [class.is-swiping]="isPaySwiping()"
+        [class.is-completed]="paySwipeCompleted()"
+        (touchstart)="onPaySwipeStart($event, completedSess)"
+        (touchmove)="onPaySwipeMove($event)"
+        (touchend)="onPaySwipeEnd(completedSess)"
+        (touchcancel)="onPaySwipeEnd(completedSess)"
+        (mousedown)="onPaySwipeStart($event, completedSess)"
+      >
+        <!-- Background Expanding Track Fill -->
+        <div class="pay-swipe-fill" [style.width.px]="paySwipeOffset() + 48"></div>
+
+        <!-- Center Shimmering Text & Animated Chevrons -->
+        <div class="pay-swipe-label-wrap" [style.opacity]="1 - (paySwipeProgress() * 1.3)">
+          <span class="pay-swipe-text">Slide to Pay ₹{{ completedSess.fee || defaultWalkInFee() }}</span>
+          <div class="pay-swipe-chevrons">
+            <span class="p-chevron pc1">›</span>
+            <span class="p-chevron pc2">›</span>
+            <span class="p-chevron pc3">›</span>
+          </div>
+        </div>
+
+        <!-- Draggable Circular Thumb Knob with Chevron / Checkmark -->
+        <div
+          class="pay-swipe-thumb"
+          [style.transform]="'translateX(' + paySwipeOffset() + 'px)'"
+          [class.completed]="paySwipeCompleted()"
+        >
+          @if (paySwipeCompleted()) {
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          } @else {
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          }
+        </div>
+      </div>
+
+      <div class="pay-hint-row">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
         </svg>
-        }
-      </button>
+        <span>Swipe opens UPI, Cards & Cash payment options</span>
+      </div>
     </div>
     }
 
