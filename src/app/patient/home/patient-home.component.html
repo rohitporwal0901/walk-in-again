@@ -3,11 +3,12 @@
   <!-- Header -->
   <header class="pt-header">
     <div class="user-greeting-wrap">
-      <h1 class="pt-name">Hello {{ patientName() || 'Priya' }}</h1>
+      <h1 class="pt-name">Hello {{ patientName() || 'Walk-in Patient' }} <span class="wave-hand">👋</span></h1>
       <p class="pt-subtitle">Stay Healthy, Stay Strong</p>
     </div>
     <button class="notif-btn" id="pt-notif-btn" aria-label="Notifications">
-      <svg class="bell-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg class="bell-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
         <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
       </svg>
@@ -20,214 +21,213 @@
     <!-- Skeleton Loading State (Prevents dummy data flash) -->
     @if (isLoading()) {
 
-      <!-- Hero Shimmer Card -->
-      <div class="treatment-hero-card skeleton-card">
-        <div class="hero-info">
-          <div class="skeleton-line shimmer" style="width: 130px; height: 13px; margin-bottom: 10px;"></div>
-          <div class="skeleton-line shimmer" style="width: 100px; height: 32px; margin-bottom: 8px;"></div>
-          <div class="skeleton-line shimmer" style="width: 110px; height: 12px; margin-bottom: 14px;"></div>
-          <div class="skeleton-line shimmer" style="width: 140px; height: 8px; border-radius: 999px;"></div>
-        </div>
-        <div class="hero-illustration skeleton-shimmer-box shimmer"></div>
+    <!-- Hero Shimmer Card -->
+    <div class="treatment-hero-card skeleton-card">
+      <div class="hero-info">
+        <div class="skeleton-line shimmer" style="width: 130px; height: 13px; margin-bottom: 10px;"></div>
+        <div class="skeleton-line shimmer" style="width: 100px; height: 32px; margin-bottom: 8px;"></div>
+        <div class="skeleton-line shimmer" style="width: 110px; height: 12px; margin-bottom: 14px;"></div>
+        <div class="skeleton-line shimmer" style="width: 140px; height: 8px; border-radius: 999px;"></div>
       </div>
+      <div class="hero-illustration skeleton-shimmer-box shimmer"></div>
+    </div>
 
-      <!-- 2 Metric Cards Shimmer -->
-      <div class="metrics-grid">
-        <div class="metric-card skeleton-metric-card">
-          <div class="metric-top-row">
-            <div class="skeleton-bubble shimmer"></div>
-            <div class="skeleton-line shimmer" style="width: 44px; height: 18px; border-radius: 999px;"></div>
-          </div>
-          <div class="metric-body">
-            <div class="skeleton-line shimmer" style="width: 70px; height: 11px; margin-bottom: 6px;"></div>
-            <div class="skeleton-line shimmer" style="width: 110px; height: 16px; margin-bottom: 6px;"></div>
-            <div class="skeleton-line shimmer" style="width: 85px; height: 11px;"></div>
-          </div>
+    <!-- 2 Metric Cards Shimmer -->
+    <div class="metrics-grid">
+      <div class="metric-card skeleton-metric-card">
+        <div class="metric-top-row">
+          <div class="skeleton-bubble shimmer"></div>
+          <div class="skeleton-line shimmer" style="width: 44px; height: 18px; border-radius: 999px;"></div>
         </div>
-        <div class="metric-card skeleton-metric-card">
-          <div class="metric-top-row">
-            <div class="skeleton-bubble shimmer"></div>
-            <div class="skeleton-line shimmer" style="width: 44px; height: 18px; border-radius: 999px;"></div>
-          </div>
-          <div class="metric-body">
-            <div class="skeleton-line shimmer" style="width: 70px; height: 11px; margin-bottom: 6px;"></div>
-            <div class="skeleton-line shimmer" style="width: 110px; height: 16px; margin-bottom: 6px;"></div>
-            <div class="skeleton-line shimmer" style="width: 85px; height: 11px;"></div>
-          </div>
+        <div class="metric-body">
+          <div class="skeleton-line shimmer" style="width: 70px; height: 11px; margin-bottom: 6px;"></div>
+          <div class="skeleton-line shimmer" style="width: 110px; height: 16px; margin-bottom: 6px;"></div>
+          <div class="skeleton-line shimmer" style="width: 85px; height: 11px;"></div>
         </div>
       </div>
+      <div class="metric-card skeleton-metric-card">
+        <div class="metric-top-row">
+          <div class="skeleton-bubble shimmer"></div>
+          <div class="skeleton-line shimmer" style="width: 44px; height: 18px; border-radius: 999px;"></div>
+        </div>
+        <div class="metric-body">
+          <div class="skeleton-line shimmer" style="width: 70px; height: 11px; margin-bottom: 6px;"></div>
+          <div class="skeleton-line shimmer" style="width: 110px; height: 16px; margin-bottom: 6px;"></div>
+          <div class="skeleton-line shimmer" style="width: 85px; height: 11px;"></div>
+        </div>
+      </div>
+    </div>
 
     } @else {
 
-      <!-- Real Treatment Progress Card -->
-      <div class="treatment-hero-card">
-        <div class="hero-info">
-          <span class="hero-label">My Treatment Progress</span>
-          <div class="hero-count-row">
-            <span class="count-numbers">{{ completedSessions() }} / {{ totalRecommendedSessions() }}</span>
-          </div>
-          <p class="count-sublabel">Sessions Completed</p>
-
-          <!-- Rounded Progress Bar -->
-          <div class="progress-bar-container">
-            <div class="progress-bar-track">
-              <div class="progress-bar-fill" [style.width.%]="progressPercent()"></div>
-            </div>
-          </div>
+    <!-- Real Treatment Progress Card -->
+    <div class="treatment-hero-card">
+      <div class="hero-info">
+        <span class="hero-label">My Treatment Progress</span>
+        <div class="hero-count-row">
+          <span class="count-numbers">{{ completedSessions() }} / {{ totalRecommendedSessions() }}</span>
         </div>
+        <p class="count-sublabel">Sessions Completed</p>
 
-        <!-- Generated Vector Physio Art -->
-        <div class="hero-illustration" aria-hidden="true">
-          <img
-            src="assets/images/hero-physio-progress.jpg"
-            alt="Physiotherapy Exercise"
-            class="hero-img"
-          />
+        <!-- Rounded Progress Bar -->
+        <div class="progress-bar-container">
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" [style.width.%]="progressPercent()"></div>
+          </div>
         </div>
       </div>
 
-      <!-- 1. Real-Time OTP Verification Banner for Patient -->
-      @if (pendingOtpSession(); as pendingSess) {
-        <div class="patient-otp-banner animate-scale-in">
-          <div class="otp-banner-head">
-            <span class="live-otp-dot"></span>
-            <span class="otp-badge-title">Session Verification Code</span>
-          </div>
-          <p class="otp-sub-prompt">
-            Dr. <strong>{{ pendingSess.workerName }}</strong> has requested to start your session. Share this 4-digit code:
-          </p>
-          <div class="otp-display-cards">
-            @for (digit of (pendingSess.otp || '1234').split(''); track $index) {
-              <div class="otp-card-digit">{{ digit }}</div>
-            }
-          </div>
-          <p class="otp-wait-hint">Your therapy session begins as soon as the doctor enters this code.</p>
-        </div>
-      }
+      <!-- Generated Vector Physio Art -->
+      <div class="hero-illustration" aria-hidden="true">
+        <img src="assets/images/hero-physio-progress.jpg" alt="Physiotherapy Exercise" class="hero-img" />
+      </div>
+    </div>
 
-      <!-- 2. Active Session In Progress Banner -->
-      @if (activeSession(); as active) {
-        <div class="active-session-banner animate-fade-in">
-          <div class="session-badge-row">
-            <span class="live-dot"></span>
-            <span class="session-badge-title">Session In Progress</span>
-          </div>
-          <div class="session-banner-content">
-            <div class="session-time-col">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-              <div>
-                <p class="sess-date">{{ active.date | date:'mediumDate' }}</p>
-                <p class="sess-time">{{ active.timeSlot || 'Active Now' }}</p>
-              </div>
-            </div>
-            <div class="session-dr-col">
-              <div class="dr-avatar">{{ (active.workerName || 'P').charAt(0).toUpperCase() }}</div>
-              <div>
-                <p class="dr-title">Dr. {{ active.workerName || 'Physiotherapist' }}</p>
-                <p class="dr-sub">{{ active.notes || 'Therapy in Progress' }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      }
-
-      <!-- 3. Unpaid Completed Session Payment Due Banner -->
-      @if (unpaidCompletedSession(); as completedSess) {
-        <div class="payment-due-banner animate-scale-in">
-          <div class="due-banner-head">
-            <span class="due-badge">Session Completed</span>
-            <span class="due-amount">₹{{ completedSess.fee || defaultWalkInFee() }}</span>
-          </div>
-          <div class="due-details">
-            <p class="due-desc">Dr. {{ completedSess.workerName }} has completed your physiotherapy session ({{ completedSess.duration || 30 }} mins).</p>
-          </div>
-          <button
-            type="button"
-            class="btn-pay-now"
-            (click)="openPaymentSheet(completedSess)"
-            [disabled]="isPaying()"
-            id="pay-session-btn"
-          >
-            @if (isPaying()) {
-              <span class="spinner-sm"></span>
-              <span>Processing...</span>
-            } @else {
-              <span>Pay ₹{{ completedSess.fee || defaultWalkInFee() }}</span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
-            }
-          </button>
-        </div>
-      }
-
-      <!-- 2 White Metric Cards (Walk-In Status & Plan/Visit Summary) -->
-      <div class="metrics-grid">
-
-        <!-- Card 1: Walk-In Clinic & Home Visit Status -->
-        <div class="metric-card" (click)="navigate('/patient/sessions')">
-          <div class="metric-top-row">
-            <div class="icon-bubble icon-teal">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 21h18"></path>
-                <path d="M5 21V7l8-4v18"></path>
-                <path d="M19 21V11l-6-4"></path>
-                <line x1="9" y1="9" x2="10" y2="9"></line>
-                <line x1="9" y1="13" x2="10" y2="13"></line>
-                <line x1="9" y1="17" x2="10" y2="17"></line>
-              </svg>
-            </div>
-            <span class="status-pill open-pill">
-              <span class="green-dot"></span>
-              Open
-            </span>
-          </div>
-          <div class="metric-body">
-            <h3 class="metric-title">Walk-In Status</h3>
-            <p class="metric-value">9:00 AM - 8:00 PM</p>
-            <p class="metric-caption">Clinic & Home Visits</p>
-          </div>
-        </div>
-
-        <!-- Card 2: Subscription or Daily Visit Details -->
-        @if (activePlanSub(); as sub) {
-          <div class="metric-card" (click)="navigate('/patient/subscription')">
-            <div class="metric-top-row">
-              <div class="icon-bubble icon-blue">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                  <line x1="16" y1="2" x2="16" y2="6"></line>
-                  <line x1="8" y1="2" x2="8" y2="6"></line>
-                  <line x1="3" y1="10" x2="21" y2="10"></line>
-                </svg>
-              </div>
-              <span class="status-pill sub-pill">Active</span>
-            </div>
-            <div class="metric-body">
-              <h3 class="metric-title">{{ sub.planName }} Plan</h3>
-              <p class="metric-value">{{ sub.remainingSessions }} Left</p>
-              <p class="metric-caption">{{ sub.totalSessions }} Sessions Pack</p>
-            </div>
-          </div>
-        } @else {
-          <div class="metric-card" (click)="navigate('/patient/subscription')">
-            <div class="metric-top-row">
-              <div class="icon-bubble icon-blue">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-                </svg>
-              </div>
-              <span class="status-pill payg-pill">Daily</span>
-            </div>
-            <div class="metric-body">
-              <h3 class="metric-title">Daily Visit</h3>
-              <p class="metric-value">{{ completedSessions() }} Visited</p>
-              <p class="metric-caption highlight-link">Save with Plan →</p>
-            </div>
-          </div>
+    <!-- 1. Real-Time OTP Verification Banner for Patient -->
+    @if (pendingOtpSession(); as pendingSess) {
+    <div class="patient-otp-banner animate-scale-in">
+      <div class="otp-banner-head">
+        <span class="live-otp-dot"></span>
+        <span class="otp-badge-title">Session Verification Code</span>
+      </div>
+      <p class="otp-sub-prompt">
+        Dr. <strong>{{ pendingSess.workerName }}</strong> has requested to start your session. Share this 4-digit code:
+      </p>
+      <div class="otp-display-cards">
+        @for (digit of (pendingSess.otp || '1234').split(''); track $index) {
+        <div class="otp-card-digit">{{ digit }}</div>
         }
-
       </div>
+      <p class="otp-wait-hint">Your therapy session begins as soon as the doctor enters this code.</p>
+    </div>
+    }
+
+    <!-- 2. Active Session In Progress Banner -->
+    @if (activeSession(); as active) {
+    <div class="active-session-banner animate-fade-in">
+      <div class="session-badge-row">
+        <span class="live-dot"></span>
+        <span class="session-badge-title">Session In Progress</span>
+      </div>
+      <div class="session-banner-content">
+        <div class="session-time-col">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <div>
+            <p class="sess-date">{{ active.date | date:'mediumDate' }}</p>
+            <p class="sess-time">{{ active.timeSlot || 'Active Now' }}</p>
+          </div>
+        </div>
+        <div class="session-dr-col">
+          <div class="dr-avatar">{{ (active.workerName || 'P').charAt(0).toUpperCase() }}</div>
+          <div>
+            <p class="dr-title">Dr. {{ active.workerName || 'Physiotherapist' }}</p>
+            <p class="dr-sub">{{ active.notes || 'Therapy in Progress' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- 3. Unpaid Completed Session Payment Due Banner -->
+    @if (unpaidCompletedSession(); as completedSess) {
+    <div class="payment-due-banner animate-scale-in">
+      <div class="due-banner-head">
+        <span class="due-badge">Session Completed</span>
+        <span class="due-amount">₹{{ completedSess.fee || defaultWalkInFee() }}</span>
+      </div>
+      <div class="due-details">
+        <p class="due-desc">Dr. {{ completedSess.workerName }} has completed your physiotherapy session ({{
+          completedSess.duration || 30 }} mins).</p>
+      </div>
+      <button type="button" class="btn-pay-now" (click)="openPaymentSheet(completedSess)" [disabled]="isPaying()"
+        id="pay-session-btn">
+        @if (isPaying()) {
+        <span class="spinner-sm"></span>
+        <span>Processing...</span>
+        } @else {
+        <span>Pay ₹{{ completedSess.fee || defaultWalkInFee() }}</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+        }
+      </button>
+    </div>
+    }
+
+    <!-- 2 White Metric Cards (Walk-In Status & Plan/Visit Summary) -->
+    <div class="metrics-grid">
+
+      <!-- Card 1: Walk-In Clinic & Home Visit Status -->
+      <div class="metric-card" (click)="navigate('/patient/sessions')">
+        <div class="metric-top-row">
+          <div class="icon-bubble icon-teal">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 21h18"></path>
+              <path d="M5 21V7l8-4v18"></path>
+              <path d="M19 21V11l-6-4"></path>
+              <line x1="9" y1="9" x2="10" y2="9"></line>
+              <line x1="9" y1="13" x2="10" y2="13"></line>
+              <line x1="9" y1="17" x2="10" y2="17"></line>
+            </svg>
+          </div>
+          <span class="status-pill open-pill">
+            <span class="green-dot"></span>
+            Open Now
+          </span>
+        </div>
+        <div class="metric-body">
+          <h3 class="metric-title">Walk-In Status</h3>
+          <p class="metric-value">9:00 AM - 8:00 PM</p>
+          <p class="metric-caption">Clinic & Home Visits</p>
+        </div>
+      </div>
+
+      <!-- Card 2: Subscription or Daily Visit Details -->
+      @if (activePlanSub(); as sub) {
+      <div class="metric-card" (click)="navigate('/patient/subscription')">
+        <div class="metric-top-row">
+          <div class="icon-bubble icon-blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </div>
+          <span class="status-pill sub-pill">Active Plan</span>
+        </div>
+        <div class="metric-body">
+          <h3 class="metric-title">{{ sub.planName }} Plan</h3>
+          <p class="metric-value">{{ sub.remainingSessions }} Left</p>
+          <p class="metric-caption">{{ sub.totalSessions }} Sessions Pack</p>
+        </div>
+      </div>
+      } @else {
+      <div class="metric-card" (click)="navigate('/patient/subscription')">
+        <div class="metric-top-row">
+          <div class="icon-bubble icon-blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+          </div>
+          <span class="status-pill payg-pill">Daily Walk-In</span>
+        </div>
+        <div class="metric-body">
+          <h3 class="metric-title">Daily Visit</h3>
+          <p class="metric-value">{{ completedSessions() }} Visited</p>
+          <p class="metric-caption highlight-link">Save with Plan →</p>
+        </div>
+      </div>
+      }
+
+    </div>
 
     }
 
@@ -236,45 +236,43 @@
       <h2 class="section-title">Quick Actions</h2>
       <div class="actions-grid">
         @for (action of quickActions; track action.id) {
-          <button
-            class="action-item"
-            [id]="action.id"
-            [style.--btn-bg]="action.bg"
-            [style.--btn-icon-bg]="action.iconBg"
-            [style.--btn-color]="action.color"
-            (click)="navigate(action.route)"
-          >
-            <div class="action-icon-box">
-              @if (action.type === 'sessions') {
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                  <line x1="16" y1="13" x2="8" y2="13"></line>
-                  <line x1="16" y1="17" x2="8" y2="17"></line>
-                  <polyline points="10 9 9 9 8 9"></polyline>
-                </svg>
-              } @else if (action.type === 'payments') {
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                  <line x1="1" y1="10" x2="23" y2="10"></line>
-                </svg>
-              } @else if (action.type === 'plans') {
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="20 12 20 22 4 22 4 12"></polyline>
-                  <rect x="2" y="7" width="20" height="5"></rect>
-                  <line x1="12" y1="22" x2="12" y2="7"></line>
-                  <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
-                  <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
-                </svg>
-              } @else if (action.type === 'homecare') {
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                </svg>
-              }
-            </div>
-            <span class="action-title">{{ action.label }}</span>
-          </button>
+        <button class="action-item" [id]="action.id" [style.--btn-bg]="action.bg" [style.--btn-icon-bg]="action.iconBg"
+          [style.--btn-color]="action.color" (click)="navigate(action.route)">
+          <div class="action-icon-box">
+            @if (action.type === 'sessions') {
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            } @else if (action.type === 'payments') {
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+              <line x1="1" y1="10" x2="23" y2="10"></line>
+            </svg>
+            } @else if (action.type === 'plans') {
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 12 20 22 4 22 4 12"></polyline>
+              <rect x="2" y="7" width="20" height="5"></rect>
+              <line x1="12" y1="22" x2="12" y2="7"></line>
+              <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+              <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+            </svg>
+            } @else if (action.type === 'homecare') {
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            }
+          </div>
+          <span class="action-title">{{ action.label }}</span>
+        </button>
         }
       </div>
     </div>
@@ -286,11 +284,7 @@
         <p class="promo-subtext">Certified physiotherapy care for your complete and pain-free recovery.</p>
       </div>
       <div class="promo-art-wrap" aria-hidden="true">
-        <img
-          src="assets/images/promo-wellness.jpg"
-          alt="Move Better Live Stronger"
-          class="promo-img"
-        />
+        <img src="assets/images/promo-wellness.jpg" alt="Move Better Live Stronger" class="promo-img" />
       </div>
     </div>
 
@@ -298,96 +292,103 @@
 
   <!-- Payment Bottom Sheet for Walk-In Session -->
   @if (showPaymentSheet()) {
-    <div class="sheet-overlay" (click)="closePaymentSheet()">
-      <div class="payment-sheet" (click)="$event.stopPropagation()">
-        <div class="sheet-handle"></div>
+  <div class="sheet-overlay" (click)="closePaymentSheet()">
+    <div class="payment-sheet" (click)="$event.stopPropagation()">
+      <div class="sheet-handle"></div>
 
-        @if (selectedSessionToPay(); as sess) {
-          <div class="sheet-header">
-            <h2 class="sheet-title">Pay Session Fee</h2>
-            <button class="sheet-close" (click)="closePaymentSheet()" aria-label="Close">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
-          </div>
-
-          <!-- Session Summary Card -->
-          <div class="sheet-plan-summary">
-            <div class="summary-left">
-              <h3 class="summary-name">Dr. {{ sess.workerName }}</h3>
-              <p class="summary-detail">Walk-in Physiotherapy Session · {{ sess.duration || 30 }} mins</p>
-            </div>
-            <div class="summary-price">₹{{ sess.fee || defaultWalkInFee() }}</div>
-          </div>
-
-          <!-- Payment Method Selection Grid -->
-          <div class="method-section">
-            <p class="method-label">Select Payment Method</p>
-            <div class="method-grid">
-              @for (m of ['UPI', 'Card', 'Cash']; track m) {
-                <button
-                  class="method-btn"
-                  [class.method-btn--active]="selectedMethod() === m"
-                  (click)="selectedMethod.set($any(m))"
-                  [id]="'session-method-' + m"
-                  type="button"
-                >
-                  <span class="method-icon-wrap">
-                    @if (m === 'UPI') {
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
-                    } @else if (m === 'Card') {
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
-                    } @else {
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>
-                    }
-                  </span>
-                  <span class="method-name">{{ m === 'Card' ? 'Card / Online' : m }}</span>
-                </button>
-              }
-            </div>
-          </div>
-
-          @if (selectedMethod() === 'Cash') {
-            <div class="cash-notice-box">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="16" x2="12" y2="12"></line>
-                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-              </svg>
-              <span>Please hand over <strong>₹{{ sess.fee || defaultWalkInFee() }}</strong> cash directly to Dr. {{ sess.workerName }} or at the reception.</span>
-            </div>
-          }
-
-          @if (paymentError()) {
-            <div class="sheet-error">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-              <span>{{ paymentError() }}</span>
-            </div>
-          }
-
-          <!-- Action Button -->
-          <div class="sheet-actions">
-            <button
-              class="sheet-confirm-btn"
-              [disabled]="isPaying()"
-              (click)="confirmSessionPayment()"
-              id="confirm-session-pay-btn"
-            >
-              @if (isPaying()) {
-                <span class="spinner-sm"></span>
-                <span>Processing Payment...</span>
-              } @else if (selectedMethod() === 'Cash') {
-                <span>Confirm Cash Payment (₹{{ sess.fee || defaultWalkInFee() }})</span>
-              } @else {
-                <span>Pay ₹{{ sess.fee || defaultWalkInFee() }} via {{ selectedMethod() }}</span>
-              }
-            </button>
-          </div>
-        }
+      @if (selectedSessionToPay(); as sess) {
+      <div class="sheet-header">
+        <h2 class="sheet-title">Pay Session Fee</h2>
+        <button class="sheet-close" (click)="closePaymentSheet()" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
+
+      <!-- Session Summary Card -->
+      <div class="sheet-plan-summary">
+        <div class="summary-left">
+          <h3 class="summary-name">Dr. {{ sess.workerName }}</h3>
+          <p class="summary-detail">Walk-in Physiotherapy Session · {{ sess.duration || 30 }} mins</p>
+        </div>
+        <div class="summary-price">₹{{ sess.fee || defaultWalkInFee() }}</div>
+      </div>
+
+      <!-- Payment Method Selection Grid -->
+      <div class="method-section">
+        <p class="method-label">Select Payment Method</p>
+        <div class="method-grid">
+          @for (m of ['UPI', 'Card', 'Cash']; track m) {
+          <button class="method-btn" [class.method-btn--active]="selectedMethod() === m"
+            (click)="selectedMethod.set($any(m))" [id]="'session-method-' + m" type="button">
+            <span class="method-icon-wrap">
+              @if (m === 'UPI') {
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+              </svg>
+              } @else if (m === 'Card') {
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                <line x1="1" y1="10" x2="23" y2="10"></line>
+              </svg>
+              } @else {
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                <circle cx="12" cy="12" r="2"></circle>
+                <path d="M6 12h.01M18 12h.01"></path>
+              </svg>
+              }
+            </span>
+            <span class="method-name">{{ m === 'Card' ? 'Card / Online' : m }}</span>
+          </button>
+          }
+        </div>
+      </div>
+
+      @if (selectedMethod() === 'Cash') {
+      <div class="cash-notice-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <span>Please hand over <strong>₹{{ sess.fee || defaultWalkInFee() }}</strong> cash directly to Dr. {{
+          sess.workerName }} or at the reception.</span>
+      </div>
+      }
+
+      @if (paymentError()) {
+      <div class="sheet-error">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <span>{{ paymentError() }}</span>
+      </div>
+      }
+
+      <!-- Action Button -->
+      <div class="sheet-actions">
+        <button class="sheet-confirm-btn" [disabled]="isPaying()" (click)="confirmSessionPayment()"
+          id="confirm-session-pay-btn">
+          @if (isPaying()) {
+          <span class="spinner-sm"></span>
+          <span>Processing Payment...</span>
+          } @else if (selectedMethod() === 'Cash') {
+          <span>Confirm Cash Payment (₹{{ sess.fee || defaultWalkInFee() }})</span>
+          } @else {
+          <span>Pay ₹{{ sess.fee || defaultWalkInFee() }} via {{ selectedMethod() }}</span>
+          }
+        </button>
+      </div>
+      }
     </div>
+  </div>
   }
 
 </div>
