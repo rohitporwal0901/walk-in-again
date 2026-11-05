@@ -1,9 +1,9 @@
 <div class="subscription-page">
 
-  <!-- Header -->
+  <!-- Clean, Spacious Header -->
   <header class="sub-header">
     <button class="back-btn" (click)="goBack()" aria-label="Go Back" id="sub-back-btn">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="15 18 9 12 15 6"></polyline>
       </svg>
     </button>
@@ -13,10 +13,10 @@
     </div>
   </header>
 
-  <!-- Fullscreen Confetti Canvas (Classic App Multi-Color Physics) -->
+  <!-- Fullscreen Confetti Canvas (Celebration Physics) -->
   <canvas #confettiCanvas class="confetti-canvas" [class.canvas-active]="purchaseSuccess()"></canvas>
 
-  <!-- Celebration Success Modal -->
+  <!-- Celebration Success Modal (Activated Popup) -->
   @if (purchaseSuccess()) {
     <div class="celebration-backdrop" (click)="closeCelebration()">
       <div class="celebration-card" (click)="$event.stopPropagation()">
@@ -51,6 +51,9 @@
 
         <button type="button" class="btn-celebration-done" (click)="closeCelebration()" id="btn-celebration-done">
           Awesome, Let's Go!
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
         </button>
       </div>
     </div>
@@ -58,9 +61,9 @@
 
   <div class="sub-content">
 
-    <!-- Active Subscription Hero Card (Prominently Highlighted) -->
+    <!-- Active Subscription Hero Card (Prominently Highlighted, Reference Matched) -->
     @if (activeSub(); as sub) {
-      <div class="active-plan-hero-card animate-fade-in-up">
+      <div class="active-plan-hero-card">
         <div class="active-card-top">
           <span class="active-status-badge">
             <span class="live-pulse-dot"></span>
@@ -73,14 +76,21 @@
 
         <div class="active-card-body">
           <div class="active-plan-left">
-            <h2 class="active-plan-title">{{ sub.planName }} Plan</h2>
-            <p class="active-expiry-text">Expires when all {{ sub.totalSessions }} sessions completed</p>
+            <div class="active-check-circle" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="active-title-group">
+              <h2 class="active-plan-title">{{ sub.planName }} Plan</h2>
+              <p class="active-expiry-text">Expires when all {{ sub.totalSessions }} sessions completed</p>
+            </div>
           </div>
 
           <div class="active-sessions-stat">
             <div class="stat-number-row">
               <span class="stat-big-num">{{ sub.remainingSessions }}</span>
-              <span class="stat-small-label">/ {{ sub.totalSessions }}</span>
+              <span class="stat-small-label">/{{ sub.totalSessions }}</span>
             </div>
             <span class="stat-caption">Sessions Left</span>
           </div>
@@ -92,16 +102,26 @@
             <div class="active-progress-fill" [style.width.%]="planProgressPercent()"></div>
           </div>
           <div class="active-progress-info">
-            <span>{{ sub.totalSessions - sub.remainingSessions }} of {{ sub.totalSessions }} used</span>
-            <span>{{ planProgressPercent() }}% completed</span>
+            <span class="progress-info-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              {{ sub.totalSessions - sub.remainingSessions }} of {{ sub.totalSessions }} used
+            </span>
+            <span class="progress-info-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+              {{ planProgressPercent() }}% completed
+            </span>
           </div>
         </div>
       </div>
     }
 
-    <!-- Packages Section Heading -->
+    <!-- Packages Section Heading with Sparkle Accents -->
     <div class="section-heading-wrap">
-      <h2 class="section-title">Available Session Packages</h2>
+      <div class="section-title-row">
+        <span class="sparkle-icon" aria-hidden="true">✦</span>
+        <h2 class="section-title">Available Session Packages</h2>
+        <span class="sparkle-icon" aria-hidden="true">✦</span>
+      </div>
       <p class="section-subtitle">Select a package to pre-book multiple therapy visits and save.</p>
     </div>
 
@@ -110,8 +130,8 @@
       <div class="plans-list">
         @for (i of [1, 2, 3]; track i) {
           <div class="plan-card skeleton-plan-card">
-            <div class="skeleton-line shimmer" style="width: 44px; height: 44px; border-radius: 14px; margin-bottom: 12px;"></div>
-            <div class="skeleton-line shimmer" style="width: 130px; height: 20px; margin-bottom: 6px;"></div>
+            <div class="skeleton-line shimmer" style="width: 52px; height: 52px; border-radius: 16px; margin-bottom: 12px;"></div>
+            <div class="skeleton-line shimmer" style="width: 140px; height: 20px; margin-bottom: 6px;"></div>
             <div class="skeleton-line shimmer" style="width: 80%; height: 14px; margin-bottom: 16px;"></div>
             <div class="skeleton-line shimmer" style="width: 100%; height: 44px; border-radius: 14px;"></div>
           </div>
@@ -119,112 +139,134 @@
       </div>
     } @else {
 
-      <!-- Clean Plan Cards (Un-overlapping, Perfectly Balanced) -->
+      <!-- Clean Plan Cards (Reference Matched Visual Hierarchy) -->
       <div class="plans-list">
         @for (plan of plans(); track plan.id; let i = $index) {
           <div
             class="plan-card"
             [class.popular-plan]="plan.isPopular"
             [class.active-user-plan]="activeSub()?.planId === plan.id"
+            [class.monthly-vip-plan]="plan.id === 'plan_monthly'"
             [id]="'plan-card-' + plan.id"
           >
-            <!-- Top Row: Icon on left, Most Popular badge on right -->
-            <div class="plan-top-row">
-              <div class="plan-icon-box" [style.color]="plan.color" [style.background]="plan.color + '18'">
+            <!-- Most Popular Banner (Gold Glow) -->
+            @if (plan.isPopular) {
+              <div class="popular-ribbon">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                Most Popular
+              </div>
+            }
+
+            <!-- Main Content Grid -->
+            <div class="plan-card-main">
+              <!-- Left 3D Calendar Squircle Icon Box -->
+              <div class="plan-calendar-squircle" [class.squircle-weekly]="plan.id === 'plan_weekly'" [class.squircle-biweekly]="plan.id === 'plan_biweekly'" [class.squircle-monthly]="plan.id === 'plan_monthly'">
+                <!-- Calendar Grid Graphic -->
+                <div class="cal-mini-sheet">
+                  <div class="cal-mini-bar"></div>
+                  <div class="cal-mini-dots">
+                    <span></span><span></span><span></span>
+                    <span></span><span></span><span></span>
+                  </div>
+                </div>
+
+                <!-- Custom Badge Overlay -->
                 @if (plan.id === 'plan_weekly') {
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                  </svg>
+                  <span class="cal-badge-overlay badge-check">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
                 } @else if (plan.id === 'plan_biweekly') {
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                  </svg>
+                  <span class="cal-badge-overlay badge-clock">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                  </span>
                 } @else {
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
-                    <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
-                    <path d="M4 22h16"></path>
-                    <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
-                    <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
-                    <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
-                  </svg>
+                  <span class="cal-badge-overlay badge-crown">👑</span>
                 }
               </div>
 
-              @if (plan.isPopular) {
-                <span class="popular-ribbon">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                  </svg>
-                  Most Popular
-                </span>
-              }
-            </div>
+              <!-- Center/Right Details -->
+              <div class="plan-info-col">
+                <div class="plan-title-price-row">
+                  <h3 class="plan-title-text">{{ plan.name }} Plan</h3>
+                  <div class="plan-price-group">
+                    <span class="plan-price-currency">₹{{ plan.price | number }}</span>
+                    <span class="plan-price-per">/ plan</span>
+                  </div>
+                </div>
 
-            <!-- Second Row: Plan Name on left, Price on right -->
-            <div class="plan-header-row">
-              <h3 class="plan-title-text">{{ plan.name }} Plan</h3>
-              <div class="plan-price-group">
-                <span class="plan-price-currency">₹{{ plan.price | number }}</span>
-                <span class="plan-price-per">/ plan</span>
+                <p class="plan-desc-text">
+                  @if (plan.id === 'plan_weekly') {
+                    Best for short-term recovery — 7 sessions in 7 days
+                  } @else if (plan.id === 'plan_biweekly') {
+                    Ideal for moderate treatment — 15 sessions in 2 weeks
+                  } @else if (plan.id === 'plan_monthly') {
+                    Complete treatment course — 30 sessions in 30 days
+                  } @else {
+                    {{ plan.description }}
+                  }
+                </p>
+
+                <!-- Tags Row -->
+                <div class="plan-tags-row">
+                  <span class="plan-badge-pill">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    {{ plan.sessions }} Sessions
+                  </span>
+                  <span class="plan-badge-pill">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                      <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    Session Based Pack
+                  </span>
+                </div>
               </div>
             </div>
 
-            <!-- Description -->
-            <div class="plan-info-group">
-              <p class="plan-desc-text">{{ plan.description }}</p>
-            </div>
-
-            <!-- Sessions & Validity Tags -->
-            <div class="plan-tags-row">
-              <span class="plan-badge-pill">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                  <line x1="16" y1="2" x2="16" y2="6"></line>
-                  <line x1="8" y1="2" x2="8" y2="6"></line>
-                  <line x1="3" y1="10" x2="21" y2="10"></line>
-                </svg>
-                {{ plan.sessions }} Sessions
-              </span>
-              <span class="plan-badge-pill">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                </svg>
-                Session Based Pack
-              </span>
-            </div>
-
             <!-- Action Button -->
-            @if (activeSub()?.planId === plan.id) {
-              <button class="plan-btn current-active-btn" disabled>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                Current Active Plan
-              </button>
-            } @else {
-              <button
-                class="plan-btn"
-                [class.btn-popular]="plan.isPopular"
-                (click)="selectPlan(plan)"
-                [id]="'choose-' + plan.id"
-              >
-                Choose {{ plan.name }} Plan
-              </button>
-            }
+            <div class="plan-action-box">
+              @if (activeSub()?.planId === plan.id) {
+                <button class="plan-btn current-active-btn" disabled>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  You're on this plan
+                </button>
+              } @else {
+                <button
+                  class="plan-btn"
+                  [class.btn-popular]="plan.isPopular"
+                  [class.btn-monthly]="plan.id === 'plan_monthly'"
+                  (click)="selectPlan(plan)"
+                  [id]="'choose-' + plan.id"
+                >
+                  <span>Choose {{ plan.name }} Plan</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </button>
+              }
+            </div>
           </div>
         }
       </div>
-
     }
 
   </div>
 
-  <!-- Payment Bottom Sheet (Full Centered Overlay with Smooth Slide-up) -->
+  <!-- Payment Bottom Sheet (Smooth Centered Modal Drawer) -->
   @if (showPaymentSheet()) {
     <div class="sheet-overlay" (click)="closeSheet()">
       <div class="payment-sheet" (click)="$event.stopPropagation()">
