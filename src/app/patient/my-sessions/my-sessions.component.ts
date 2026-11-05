@@ -53,6 +53,41 @@ export class MySessionsComponent implements OnInit, OnDestroy {
     return this.filteredSessions().slice(start, start + this.pageSize());
   });
 
+  tabCounts = computed(() => {
+    const list = this.allSessions();
+    return {
+      All: list.length,
+      Completed: list.filter(s => s.status === 'completed').length,
+      Active: list.filter(s => s.status === 'active').length,
+    };
+  });
+
+  formatDrName(name?: string): string {
+    if (!name) return 'Physiotherapist';
+    const trimmed = name.trim();
+    if (trimmed.toLowerCase().startsWith('dr.') || trimmed.toLowerCase().startsWith('dr ')) {
+      return trimmed;
+    }
+    return `Dr. ${trimmed}`;
+  }
+
+  getInitials(name?: string): string {
+    if (!name) return 'PT';
+    const clean = name.replace(/^dr\.?\s+/i, '').trim();
+    const parts = clean.split(' ').filter(Boolean);
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return clean.slice(0, 2).toUpperCase() || 'DR';
+  }
+
+  getTherapyLabel(session: Session): string {
+    if (session.therapies && session.therapies.length > 0) {
+      return session.therapies.map(t => t.label).join(', ');
+    }
+    return session.notes || 'Physiotherapy Consultation';
+  }
+
   pageNumbers = computed(() => {
     const total = this.totalPages();
     return Array.from({ length: total }, (_, i) => i + 1);

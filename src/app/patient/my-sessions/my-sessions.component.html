@@ -22,8 +22,9 @@
           (click)="setTab(tab)"
           [id]="'pill-' + tab.toLowerCase()"
         >
-          {{ tab }}
-          @if (tab === 'Active' && activeTab() === 'Active') {
+          <span>{{ tab }}</span>
+          <span class="tab-count-chip">{{ tabCounts()[tab] }}</span>
+          @if (tab === 'Active' && tabCounts().Active > 0) {
             <span class="live-dot"></span>
           }
         </button>
@@ -40,9 +41,9 @@
               <div class="timeline-line-skeleton"></div>
             </div>
             <div class="card-details">
-              <div class="skeleton-line shimmer" style="width: 110px; height: 16px; margin-bottom: 8px;"></div>
-              <div class="skeleton-line shimmer" style="width: 140px; height: 12px; margin-bottom: 6px;"></div>
-              <div class="skeleton-line shimmer" style="width: 90px; height: 11px;"></div>
+              <div class="skeleton-line shimmer" style="width: 110px; height: 16px; margin-bottom: 6px;"></div>
+              <div class="skeleton-line shimmer" style="width: 75px; height: 12px; margin-bottom: 6px;"></div>
+              <div class="skeleton-line shimmer" style="width: 140px; height: 12px;"></div>
             </div>
             <div class="card-badge-wrap">
               <div class="skeleton-badge shimmer"></div>
@@ -52,33 +53,40 @@
       </div>
     } @else {
 
-      <!-- Session Cards List -->
+      <!-- Session Cards List (Refined Compact Timeline Layout) -->
       <div class="sessions-list">
         @for (session of paginatedSessions(); track session.sessionId; let i = $index) {
           <div class="session-card" [id]="'session-' + session.sessionId">
             <!-- Timeline Indicator -->
             <div class="card-left-timeline">
-              <span class="timeline-dot" [class.dot-active]="session.status === 'active'"></span>
+              <span class="timeline-dot" [class.dot-active]="session.status === 'active'" [class.dot-pending]="session.status === 'completed' && session.paymentStatus === 'pending'"></span>
               <span class="timeline-line"></span>
             </div>
 
-            <!-- Details -->
+            <!-- Details Content -->
             <div class="card-details">
               <h3 class="session-date-text">
                 {{ session.date | date:'d MMM, y' }}
               </h3>
               <p class="session-time-text">
-                {{ session.timeSlot || 'Walk-In Session' }}
-              </p>
-              <p class="session-therapist-text">
-                Dr. {{ session.workerName || 'Physiotherapist' }}
-                @if (session.therapies && session.therapies.length > 0) {
-                  • {{ session.therapies[0].label }}
+                <span>{{ session.timeSlot || 'Home Session' }}</span>
+                <span class="meta-dot">•</span>
+                @if (session.isCoveredBySubscription) {
+                  <span class="coverage-tag plan-covered">Plan Covered</span>
+                } @else if (session.paymentStatus === 'paid') {
+                  <span class="coverage-tag paid-tag">₹{{ session.fee || 500 }} Paid</span>
+                } @else if (session.paymentStatus === 'pending') {
+                  <span class="coverage-tag pending-tag">₹{{ session.fee || 500 }} Due</span>
                 }
               </p>
+              <div class="session-therapist-row">
+                <span class="therapist-name">{{ formatDrName(session.workerName) }}</span>
+                <span class="meta-dot">•</span>
+                <span class="visit-tag">Home Visit</span>
+              </div>
             </div>
 
-            <!-- Status Pill Badge -->
+            <!-- Status Pill Badge (Single Clean Badge) -->
             <div class="card-badge-wrap">
               @if (session.status === 'completed' && session.paymentStatus === 'pending') {
                 <span class="status-badge badge-pending">Payment Due</span>
