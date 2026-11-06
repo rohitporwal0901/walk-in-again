@@ -299,6 +299,7 @@
           border-radius: 10px;
           background: #E0F2FE;
           color: #0284C7;
+          border: 1px solid #BAE6FD;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -338,21 +339,27 @@
         white-space: nowrap;
 
         &.plan-monthly {
+          background: #FEF3C7;
+          color: #92400E;
+          border-color: #FDE68A;
+        }
+
+        &.plan-15days {
           background: #E0F2FE;
           color: #0284C7;
           border-color: #BAE6FD;
         }
 
-        &.plan-15days {
-          background: #EDE9FE;
-          color: #6D28D9;
-          border-color: #DDD6FE;
+        &.plan-weekly {
+          background: #F3E8FF;
+          color: #7E22CE;
+          border-color: #E9D5FF;
         }
 
-        &.plan-weekly {
-          background: #FEF3C7;
-          color: #92400E;
-          border-color: #FDE68A;
+        &.plan-custom {
+          background: #DCFCE7;
+          color: #166534;
+          border-color: #BBF7D0;
         }
       }
     }
@@ -492,6 +499,8 @@
       height: 52px;
       border-radius: 14px;
       background: #F1F5F9;
+      border: 1px solid #E2E8F0;
+      color: #64748B;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -544,4 +553,197 @@
   0% { transform: scale(0.95); opacity: 0.8; }
   50% { transform: scale(1.2); opacity: 1; }
   100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+// ─── Scoped Dark Theme Overrides ────────────────────────────────────────────
+:host-context(.admin-dark-theme) {
+  .page-title { color: #F8FAFC !important; }
+  .page-sub   { color: #94A3B8 !important; }
+
+  .top-status-badge {
+    background: rgba(16, 185, 129, 0.16) !important;
+    color: #34D399 !important;
+    border-color: rgba(16, 185, 129, 0.35) !important;
+    .live-dot { background: #34D399 !important; }
+  }
+
+  .controls-panel {
+    background: #131E35 !important;
+    border-color: #1E2D48 !important;
+    box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.5) !important;
+
+    .search-wrap svg {
+      stroke: #64748B !important;
+    }
+
+    .search-input {
+      background: #0F172A !important;
+      border-color: #1E2D48 !important;
+      color: #F8FAFC !important;
+      &::placeholder { color: #64748B !important; }
+      &:focus {
+        background: #131E35 !important;
+        border-color: #0284C7 !important;
+        box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25) !important;
+      }
+    }
+
+    .filter-group {
+      .filter-lbl { color: #94A3B8 !important; }
+
+      .filter-pill {
+        background: #0F172A !important;
+        border-color: #1E2D48 !important;
+        color: #94A3B8 !important;
+
+        &:hover {
+          background: #192744 !important;
+          color: #F8FAFC !important;
+          border-color: #243656 !important;
+        }
+
+        &.active {
+          background: linear-gradient(135deg, #0284C7 0%, #0D9488 100%) !important;
+          color: #FFFFFF !important;
+          border-color: transparent !important;
+          box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35) !important;
+        }
+      }
+    }
+  }
+
+  .table-container-card {
+    background: #131E35 !important;
+    border-color: #1E2D48 !important;
+    box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.5) !important;
+
+    .subs-table {
+      thead tr {
+        background: #0F172A !important;
+        border-bottom-color: #1E2D48 !important;
+      }
+
+      th {
+        color: #94A3B8 !important;
+      }
+
+      tbody tr {
+        border-bottom-color: #1A2740 !important;
+        background: transparent !important;
+
+        &:hover {
+          background: #182642 !important;
+        }
+      }
+
+      td {
+        color: #CBD5E1 !important;
+      }
+
+      .col-patient .patient-cell {
+        .avatar-bubble {
+          background: rgba(2, 132, 199, 0.2) !important;
+          color: #38BDF8 !important;
+          border-color: rgba(56, 189, 248, 0.3) !important;
+        }
+
+        .patient-text {
+          .name { color: #F8FAFC !important; }
+          .sub-id { color: #94A3B8 !important; }
+        }
+      }
+
+      .col-plan .plan-pill {
+        &.plan-monthly {
+          background: rgba(245, 158, 11, 0.18) !important;
+          color: #FBBF24 !important;
+          border-color: rgba(251, 191, 36, 0.35) !important;
+        }
+
+        &.plan-15days {
+          background: rgba(2, 132, 199, 0.18) !important;
+          color: #38BDF8 !important;
+          border-color: rgba(56, 189, 248, 0.35) !important;
+        }
+
+        &.plan-weekly {
+          background: rgba(139, 92, 246, 0.18) !important;
+          color: #C4B5FD !important;
+          border-color: rgba(139, 92, 246, 0.35) !important;
+        }
+
+        &.plan-custom {
+          background: rgba(16, 185, 129, 0.18) !important;
+          color: #34D399 !important;
+          border-color: rgba(52, 211, 153, 0.35) !important;
+        }
+      }
+
+      .col-sessions .session-progress-wrap {
+        .progress-labels {
+          .remain-bold { color: #38BDF8 !important; }
+          .used-text { color: #94A3B8 !important; }
+        }
+
+        .progress-track {
+          background: #1E2D48 !important;
+        }
+      }
+
+      .col-price .price-val {
+        color: #F8FAFC !important;
+      }
+
+      .col-payment .payment-badge {
+        background: #0F172A !important;
+        color: #CBD5E1 !important;
+        border-color: #1E2D48 !important;
+      }
+
+      .col-validity {
+        .exp-date { color: #94A3B8 !important; }
+        .days-left-tag { color: #38BDF8 !important; }
+      }
+
+      .col-status .status-pill {
+        &.status-active {
+          background: rgba(16, 185, 129, 0.18) !important;
+          color: #34D399 !important;
+          border-color: rgba(52, 211, 153, 0.3) !important;
+          .pulse-dot { background: #34D399 !important; }
+        }
+
+        &.status-expired {
+          background: rgba(239, 68, 68, 0.18) !important;
+          color: #F87171 !important;
+          border-color: rgba(248, 113, 113, 0.3) !important;
+        }
+      }
+    }
+
+    .empty-subs-box {
+      .empty-icon-wrap {
+        background: #0F172A !important;
+        border-color: #1E2D48 !important;
+        color: #38BDF8 !important;
+
+        svg {
+          stroke: #38BDF8 !important;
+        }
+      }
+
+      h3 { color: #F8FAFC !important; }
+      p  { color: #94A3B8 !important; }
+    }
+
+    .loading-state {
+      color: #94A3B8 !important;
+      p { color: #94A3B8 !important; }
+
+      .spinner-ring {
+        border-color: #1E2D48 !important;
+        border-top-color: #38BDF8 !important;
+      }
+    }
+  }
 }

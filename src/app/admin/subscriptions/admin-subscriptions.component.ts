@@ -142,6 +142,14 @@ export class AdminSubscriptionsComponent implements OnInit, OnDestroy {
     }
   }
 
+  getPlanClass(planName?: string): string {
+    const p = (planName || '').toLowerCase();
+    if (p.includes('month') || p.includes('30')) return 'plan-monthly';
+    if (p.includes('15') || p.includes('biweekly')) return 'plan-15days';
+    if (p.includes('week') || p.includes('7')) return 'plan-weekly';
+    return 'plan-custom';
+  }
+
   getPlanBadgeColor(planName?: string): { bg: string; text: string; border: string } {
     const p = (planName || '').toLowerCase();
     if (p.includes('month') || p.includes('30')) {

@@ -256,10 +256,10 @@ interface FormattedSession {
                   </tr>
                 } @empty {
                   <tr>
-                    <td colspan="8" class="empty-table-cell">
+                    <td colspan="7" class="empty-table-cell">
                       <div class="empty-box">
                         <div class="empty-icon-wrap">
-                          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
                             <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
                           </svg>
@@ -596,6 +596,7 @@ interface FormattedSession {
       border-radius: 10px;
       background: #E0F2FE;
       color: #0284C7;
+      border: 1px solid #BAE6FD;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -797,6 +798,8 @@ interface FormattedSession {
       height: 52px;
       border-radius: 14px;
       background: #F1F5F9;
+      border: 1px solid #E2E8F0;
+      color: #64748B;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -847,6 +850,200 @@ interface FormattedSession {
       0% { transform: scale(0.95); opacity: 0.8; }
       50% { transform: scale(1.2); opacity: 1; }
       100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
+    // ─── Scoped Dark Theme Overrides ──────────────────────────────────────
+    :host-context(.admin-dark-theme) {
+      .page-title { color: #F8FAFC !important; }
+      .page-sub   { color: #94A3B8 !important; }
+
+      .top-status-badge {
+        background: rgba(16, 185, 129, 0.16) !important;
+        color: #34D399 !important;
+        border-color: rgba(16, 185, 129, 0.35) !important;
+        .live-dot { background: #34D399 !important; }
+      }
+
+      .controls-panel {
+        background: #131E35 !important;
+        border-color: #1E2D48 !important;
+        box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.5) !important;
+      }
+
+      .search-wrap svg {
+        stroke: #64748B !important;
+      }
+
+      .search-input {
+        background: #0F172A !important;
+        border-color: #1E2D48 !important;
+        color: #F8FAFC !important;
+        &::placeholder { color: #64748B !important; }
+        &:focus {
+          background: #131E35 !important;
+          border-color: #0284C7 !important;
+          box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25) !important;
+        }
+      }
+
+      .filter-lbl { color: #94A3B8 !important; }
+
+      .filter-pill {
+        background: #0F172A !important;
+        border-color: #1E2D48 !important;
+        color: #94A3B8 !important;
+
+        &:hover {
+          background: #192744 !important;
+          color: #F8FAFC !important;
+          border-color: #243656 !important;
+        }
+
+        &.active {
+          background: linear-gradient(135deg, #0284C7 0%, #0D9488 100%) !important;
+          color: #FFFFFF !important;
+          border-color: transparent !important;
+          box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35) !important;
+        }
+      }
+
+      .table-container-card {
+        background: #131E35 !important;
+        border-color: #1E2D48 !important;
+        box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.5) !important;
+      }
+
+      .sessions-table thead tr {
+        background: #0F172A !important;
+        border-bottom-color: #1E2D48 !important;
+      }
+
+      .sessions-table th {
+        color: #94A3B8 !important;
+      }
+
+      .sessions-table tbody tr {
+        border-bottom-color: #1A2740 !important;
+        background: transparent !important;
+
+        &:hover {
+          background: #182642 !important;
+        }
+      }
+
+      .sessions-table td {
+        color: #CBD5E1 !important;
+      }
+
+      .session-id { color: #38BDF8 !important; }
+      .session-date { color: #94A3B8 !important; }
+
+      .patient-avatar {
+        background: rgba(2, 132, 199, 0.2) !important;
+        color: #38BDF8 !important;
+        border-color: rgba(56, 189, 248, 0.3) !important;
+      }
+
+      .p-name { color: #F8FAFC !important; }
+      .p-phone { color: #94A3B8 !important; }
+
+      .worker-pill {
+        background: #0F172A !important;
+        border-color: #1E2D48 !important;
+        color: #E2E8F0 !important;
+
+        .worker-dot {
+          background: #38BDF8 !important;
+        }
+      }
+
+      .plan-badge {
+        background: rgba(139, 92, 246, 0.18) !important;
+        color: #C4B5FD !important;
+        border-color: rgba(139, 92, 246, 0.35) !important;
+      }
+
+      .walkin-badge {
+        background: #0F172A !important;
+        color: #94A3B8 !important;
+        border-color: #1E2D48 !important;
+      }
+
+      .fee-text { color: #F8FAFC !important; }
+
+      .status-badge {
+        &.status-completed {
+          background: rgba(16, 185, 129, 0.18) !important;
+          color: #34D399 !important;
+          border-color: rgba(52, 211, 153, 0.3) !important;
+          .dot { background: #34D399 !important; }
+        }
+
+        &.status-active {
+          background: rgba(2, 132, 199, 0.18) !important;
+          color: #38BDF8 !important;
+          border-color: rgba(56, 189, 248, 0.3) !important;
+          .dot { background: #38BDF8 !important; }
+        }
+
+        &.status-pending {
+          background: rgba(245, 158, 11, 0.18) !important;
+          color: #FBBF24 !important;
+          border-color: rgba(251, 191, 36, 0.3) !important;
+          .dot { background: #FBBF24 !important; }
+        }
+
+        &.status-cancelled {
+          background: rgba(239, 68, 68, 0.18) !important;
+          color: #F87171 !important;
+          border-color: rgba(248, 113, 113, 0.3) !important;
+          .dot { background: #F87171 !important; }
+        }
+      }
+
+      .pay-badge {
+        &.pay-paid {
+          background: rgba(16, 185, 129, 0.18) !important;
+          color: #34D399 !important;
+          border-color: rgba(52, 211, 153, 0.3) !important;
+        }
+
+        &.pay-plan {
+          background: rgba(139, 92, 246, 0.18) !important;
+          color: #C4B5FD !important;
+          border-color: rgba(139, 92, 246, 0.35) !important;
+        }
+
+        &.pay-unpaid {
+          background: rgba(245, 158, 11, 0.18) !important;
+          color: #FBBF24 !important;
+          border-color: rgba(251, 191, 36, 0.3) !important;
+        }
+      }
+
+      .empty-box {
+        .empty-icon-wrap {
+          background: #0F172A !important;
+          border-color: #1E2D48 !important;
+          color: #38BDF8 !important;
+
+          svg {
+            stroke: #38BDF8 !important;
+          }
+        }
+
+        h3 { color: #F8FAFC !important; }
+        p  { color: #94A3B8 !important; }
+      }
+
+      .loading-state {
+        color: #94A3B8 !important;
+        p { color: #94A3B8 !important; }
+        .spinner-ring {
+          border-color: #1E2D48 !important;
+          border-top-color: #38BDF8 !important;
+        }
+      }
     }
   `]
 })

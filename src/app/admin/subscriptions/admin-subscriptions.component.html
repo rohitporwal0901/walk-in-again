@@ -164,9 +164,7 @@
                 <td class="col-plan">
                   <span
                     class="plan-pill"
-                    [style.background]="getPlanBadgeColor(sub.planName).bg"
-                    [style.color]="getPlanBadgeColor(sub.planName).text"
-                    [style.borderColor]="getPlanBadgeColor(sub.planName).border"
+                    [class]="'plan-pill ' + getPlanClass(sub.planName)"
                   >
                     {{ sub.planName || 'Plan' }}
                   </span>
@@ -219,7 +217,7 @@
                 <td colspan="7" class="empty-table-cell">
                   <div class="empty-subs-box">
                     <div class="empty-icon-wrap">
-                      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M6 3h12l4 6-10 12L2 9z"></path>
                       </svg>
                     </div>

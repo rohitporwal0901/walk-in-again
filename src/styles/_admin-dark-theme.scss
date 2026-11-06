@@ -333,9 +333,15 @@ body.admin-dark-theme,
 
   .empty-icon-wrap {
     background: #0F172A !important;
+    border: 1px solid #1E2D48 !important;
+
+    svg {
+      stroke: #38BDF8 !important;
+    }
   }
 
-  .empty-box {
+  .empty-box,
+  .empty-subs-box {
     h3 { color: #F8FAFC !important; }
     p  { color: #94A3B8 !important; }
   }
@@ -443,6 +449,13 @@ body.admin-dark-theme,
       border: 1px solid rgba(52, 211, 153, 0.3) !important;
     }
 
+    &.pay-plan {
+      background: rgba(139, 92, 246, 0.18) !important;
+      color: #C4B5FD !important;
+      border: 1px solid rgba(139, 92, 246, 0.35) !important;
+    }
+
+    &.pay-unpaid,
     &.pay-pending {
       background: rgba(245, 158, 11, 0.18) !important;
       color: #FBBF24 !important;
@@ -456,9 +469,107 @@ body.admin-dark-theme,
     }
   }
 
-  .worker-pill,
+  // Clinical Sessions Specific
+  .session-id {
+    color: #38BDF8 !important;
+  }
+
+  .session-date {
+    color: #94A3B8 !important;
+  }
+
+  .patient-avatar,
+  .avatar-bubble {
+    background: rgba(2, 132, 199, 0.2) !important;
+    color: #38BDF8 !important;
+    border: 1px solid rgba(56, 189, 248, 0.3) !important;
+  }
+
+  .p-name {
+    color: #F8FAFC !important;
+  }
+
+  .p-phone {
+    color: #94A3B8 !important;
+  }
+
+  .worker-pill {
+    background: #0F172A !important;
+    border: 1px solid #1E2D48 !important;
+    color: #E2E8F0 !important;
+
+    .worker-dot {
+      background: #38BDF8 !important;
+    }
+  }
+
   .clinic-pill {
     color: #CBD5E1 !important;
+  }
+
+  .plan-badge {
+    background: rgba(139, 92, 246, 0.18) !important;
+    color: #C4B5FD !important;
+    border: 1px solid rgba(139, 92, 246, 0.35) !important;
+  }
+
+  .walkin-badge {
+    background: #0F172A !important;
+    color: #94A3B8 !important;
+    border: 1px solid #1E2D48 !important;
+  }
+
+  // Patient Subscriptions Specific
+  .col-patient .patient-text {
+    .name { color: #F8FAFC !important; }
+    .sub-id { color: #94A3B8 !important; }
+  }
+
+  .plan-pill {
+    &.plan-monthly {
+      background: rgba(245, 158, 11, 0.18) !important;
+      color: #FBBF24 !important;
+      border: 1px solid rgba(251, 191, 36, 0.35) !important;
+    }
+
+    &.plan-15days {
+      background: rgba(2, 132, 199, 0.18) !important;
+      color: #38BDF8 !important;
+      border: 1px solid rgba(56, 189, 248, 0.35) !important;
+    }
+
+    &.plan-weekly {
+      background: rgba(139, 92, 246, 0.18) !important;
+      color: #C4B5FD !important;
+      border: 1px solid rgba(139, 92, 246, 0.35) !important;
+    }
+
+    &.plan-custom {
+      background: rgba(16, 185, 129, 0.18) !important;
+      color: #34D399 !important;
+      border: 1px solid rgba(52, 211, 153, 0.35) !important;
+    }
+  }
+
+  .session-progress-wrap {
+    .remain-bold { color: #38BDF8 !important; }
+    .used-text { color: #94A3B8 !important; }
+    .progress-track { background: #1E2D48 !important; }
+  }
+
+  .price-val {
+    color: #F8FAFC !important;
+  }
+
+  .payment-badge {
+    background: #0F172A !important;
+    color: #CBD5E1 !important;
+    border: 1px solid #1E2D48 !important;
+  }
+
+  .col-validity {
+    .exp-date { color: #94A3B8 !important; }
+    .days-left-tag { color: #38BDF8 !important; }
   }
 
   .therapy-tag {
@@ -474,6 +585,15 @@ body.admin-dark-theme,
 
   .fee-text {
     color: #F8FAFC !important;
+  }
+
+  .loading-state {
+    color: #94A3B8 !important;
+    p { color: #94A3B8 !important; }
+    .spinner-ring {
+      border-color: #1E2D48 !important;
+      border-top-color: #38BDF8 !important;
+    }
   }
 
   // 6. Dashboard Cards, Charts, Rankings
