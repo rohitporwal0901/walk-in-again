@@ -250,7 +250,7 @@ interface FormattedTransaction {
                     <td colspan="7" class="empty-table-cell">
                       <div class="empty-box">
                         <div class="empty-icon-wrap">
-                          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="2" y="5" width="20" height="14" rx="2"></rect>
                             <line x1="2" y1="10" x2="22" y2="10"></line>
                           </svg>
@@ -587,6 +587,7 @@ interface FormattedTransaction {
       border-radius: 10px;
       background: #E0F2FE;
       color: #0284C7;
+      border: 1px solid #BAE6FD;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -735,6 +736,8 @@ interface FormattedTransaction {
       height: 52px;
       border-radius: 14px;
       background: #F1F5F9;
+      border: 1px solid #E2E8F0;
+      color: #64748B;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -785,6 +788,178 @@ interface FormattedTransaction {
       0% { transform: scale(0.95); opacity: 0.8; }
       50% { transform: scale(1.2); opacity: 1; }
       100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
+    // ─── Scoped Dark Theme Overrides ──────────────────────────────────────
+    :host-context(.admin-dark-theme) {
+      .page-title { color: #F8FAFC !important; }
+      .page-sub   { color: #94A3B8 !important; }
+
+      .top-status-badge {
+        background: rgba(16, 185, 129, 0.16) !important;
+        color: #34D399 !important;
+        border-color: rgba(16, 185, 129, 0.35) !important;
+        .live-dot { background: #34D399 !important; }
+      }
+
+      .controls-panel {
+        background: #131E35 !important;
+        border-color: #1E2D48 !important;
+        box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.5) !important;
+      }
+
+      .search-wrap svg {
+        stroke: #64748B !important;
+      }
+
+      .search-input {
+        background: #0F172A !important;
+        border-color: #1E2D48 !important;
+        color: #F8FAFC !important;
+        &::placeholder { color: #64748B !important; }
+        &:focus {
+          background: #131E35 !important;
+          border-color: #0284C7 !important;
+          box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25) !important;
+        }
+      }
+
+      .filter-lbl { color: #94A3B8 !important; }
+
+      .filter-pill {
+        background: #0F172A !important;
+        border-color: #1E2D48 !important;
+        color: #94A3B8 !important;
+
+        &:hover {
+          background: #192744 !important;
+          color: #F8FAFC !important;
+          border-color: #243656 !important;
+        }
+
+        &.active {
+          background: linear-gradient(135deg, #0284C7 0%, #0D9488 100%) !important;
+          color: #FFFFFF !important;
+          border-color: transparent !important;
+          box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35) !important;
+        }
+      }
+
+      .table-container-card {
+        background: #131E35 !important;
+        border-color: #1E2D48 !important;
+        box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.5) !important;
+      }
+
+      .txns-table thead tr {
+        background: #0F172A !important;
+        border-bottom-color: #1E2D48 !important;
+      }
+
+      .txns-table th {
+        color: #94A3B8 !important;
+      }
+
+      .txns-table tbody tr {
+        border-bottom-color: #1A2740 !important;
+        background: transparent !important;
+
+        &:hover {
+          background: #182642 !important;
+        }
+      }
+
+      .txns-table td {
+        color: #CBD5E1 !important;
+      }
+
+      .txn-id { color: #38BDF8 !important; }
+      .txn-date { color: #94A3B8 !important; }
+
+      .patient-avatar {
+        background: rgba(2, 132, 199, 0.2) !important;
+        color: #38BDF8 !important;
+        border-color: rgba(56, 189, 248, 0.3) !important;
+      }
+
+      .p-name { color: #F8FAFC !important; }
+      .p-phone { color: #94A3B8 !important; }
+
+      .desc-title { color: #F8FAFC !important; }
+
+      .plan-tag {
+        background: rgba(139, 92, 246, 0.18) !important;
+        color: #C4B5FD !important;
+        border-color: rgba(139, 92, 246, 0.35) !important;
+      }
+
+      .amount-val { color: #34D399 !important; }
+
+      .method-pill {
+        &.method-upi {
+          background: rgba(109, 40, 217, 0.2) !important;
+          color: #C4B5FD !important;
+          border-color: rgba(139, 92, 246, 0.35) !important;
+        }
+
+        &.method-card {
+          background: rgba(2, 132, 199, 0.2) !important;
+          color: #38BDF8 !important;
+          border-color: rgba(56, 189, 248, 0.35) !important;
+        }
+
+        &.method-cash {
+          background: rgba(22, 163, 74, 0.2) !important;
+          color: #4ADE80 !important;
+          border-color: rgba(74, 222, 128, 0.35) !important;
+        }
+
+        &.method-sub {
+          background: rgba(245, 158, 11, 0.2) !important;
+          color: #FBBF24 !important;
+          border-color: rgba(251, 191, 36, 0.35) !important;
+        }
+
+        &.method-other {
+          background: #0F172A !important;
+          color: #94A3B8 !important;
+          border: 1px solid #1E2D48 !important;
+        }
+      }
+
+      .worker-pill { color: #E2E8F0 !important; }
+      .clinic-pill { color: #94A3B8 !important; }
+
+      .status-badge.status-paid {
+        background: rgba(16, 185, 129, 0.18) !important;
+        color: #34D399 !important;
+        border-color: rgba(52, 211, 153, 0.3) !important;
+        .dot { background: #34D399 !important; }
+      }
+
+      .empty-box {
+        .empty-icon-wrap {
+          background: #0F172A !important;
+          border-color: #1E2D48 !important;
+          color: #38BDF8 !important;
+
+          svg {
+            stroke: #38BDF8 !important;
+          }
+        }
+
+        h3 { color: #F8FAFC !important; }
+        p  { color: #94A3B8 !important; }
+      }
+
+      .loading-state {
+        color: #94A3B8 !important;
+        p { color: #94A3B8 !important; }
+        .spinner-ring {
+          border-color: #1E2D48 !important;
+          border-top-color: #38BDF8 !important;
+        }
+      }
     }
   `]
 })

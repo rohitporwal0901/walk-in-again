@@ -380,6 +380,7 @@ body.admin-dark-theme,
   }
 
   .status-badge {
+    &.status-paid,
     &.status-completed {
       background: rgba(16, 185, 129, 0.18) !important;
       color: #34D399 !important;
@@ -570,6 +571,29 @@ body.admin-dark-theme,
   .col-validity {
     .exp-date { color: #94A3B8 !important; }
     .days-left-tag { color: #38BDF8 !important; }
+  }
+
+  // Financial Transactions Specific
+  .txn-id {
+    color: #38BDF8 !important;
+  }
+
+  .txn-date {
+    color: #94A3B8 !important;
+  }
+
+  .desc-title {
+    color: #F8FAFC !important;
+  }
+
+  .plan-tag {
+    background: rgba(139, 92, 246, 0.18) !important;
+    color: #C4B5FD !important;
+    border-color: rgba(139, 92, 246, 0.35) !important;
+  }
+
+  .amount-val {
+    color: #34D399 !important;
   }
 
   .therapy-tag {
