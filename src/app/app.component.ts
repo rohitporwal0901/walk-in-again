@@ -9,10 +9,10 @@ import { AuthService } from './core/services/auth.service';
   imports: [CommonModule, RouterOutlet],
   template: `
     @if (auth.authLoading()) {
-      <!-- LinkedIn-Style Initial Loading / Splash Screen -->
+      <!-- YouTube / LinkedIn Style Minimalist Fullscreen Splash Screen -->
       <div class="app-splash-screen" id="app-splash">
-        <div class="splash-card">
-          <!-- Animated Brand Icon Squircle -->
+        <div class="splash-center-content">
+          <!-- Brand Icon Squircle -->
           <div class="splash-logo-wrap">
             <svg class="splash-logo-svg" viewBox="0 0 128 128" width="76" height="76">
               <defs>
@@ -39,9 +39,12 @@ import { AuthService } from './core/services/auth.service';
           <span class="splash-brand-category">PHYSIOTHERAPY</span>
           <p class="splash-tagline">Move Better. Live Stronger.</p>
 
-          <!-- LinkedIn-Style Indeterminate Sliding Progress Bar -->
-          <div class="linkedin-loader" role="progressbar" aria-label="Loading application">
-            <div class="loader-slide-bar"></div>
+          <!-- YouTube / LinkedIn Indeterminate Sliding Progress Bar (Wide & Smooth) -->
+          <div class="yt-progress-container" role="progressbar" aria-label="Loading application">
+            <div class="yt-progress-bar">
+              <div class="yt-bar-line bar-primary"></div>
+              <div class="yt-bar-line bar-secondary"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -56,42 +59,41 @@ import { AuthService } from './core/services/auth.service';
       min-height: 100dvh;
     }
 
-    /* ─── LinkedIn-Style Splash Screen ───────────────────────────────────────── */
+    /* ─── YouTube / LinkedIn Clean Fullscreen Splash ───────────────────────── */
     .app-splash-screen {
       position: fixed;
       inset: 0;
-      background: #EBF5F9;
-      background: radial-gradient(circle at 50% 35%, #F0F9FD 0%, #E2EEF5 100%);
+      background: #FFFFFF;
       z-index: 999999;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 24px;
-      animation: splashFadeIn 0.25s ease-out;
+      animation: splashFadeIn 0.2s ease-out;
     }
 
-    .splash-card {
+    .splash-center-content {
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      max-width: 320px;
+      max-width: 360px;
       width: 100%;
     }
 
     .splash-logo-wrap {
-      margin-bottom: 18px;
-      filter: drop-shadow(0 10px 22px rgba(11, 37, 69, 0.16));
-      animation: logoFloat 2.4s ease-in-out infinite;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 10px 24px rgba(11, 37, 69, 0.14));
+      animation: logoFloat 2.6s ease-in-out infinite;
     }
 
     .splash-brand-title {
-      font-size: 24px;
+      font-size: 25px;
       font-weight: 800;
       color: #0F172A;
-      margin: 0 0 4px;
-      letter-spacing: -0.02em;
+      margin: 0 0 5px;
+      letter-spacing: -0.025em;
     }
 
     .splash-brand-category {
@@ -107,41 +109,71 @@ import { AuthService } from './core/services/auth.service';
       font-size: 13px;
       color: #64748B;
       font-weight: 500;
-      margin: 0 0 26px;
+      margin: 0 0 28px;
     }
 
-    /* ─── LinkedIn-Style Indeterminate Sliding Bar ────────────────────────────── */
-    .linkedin-loader {
-      width: 150px;
-      height: 3.5px;
-      background: rgba(2, 132, 199, 0.15);
-      border-radius: 9999px;
-      overflow: hidden;
+    /* ─── YouTube / LinkedIn Material Indeterminate Linear Progress Bar ─────── */
+    .yt-progress-container {
+      width: 260px;
+      max-width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .yt-progress-bar {
       position: relative;
+      width: 100%;
+      height: 4px;
+      background: #E5E7EB;
+      border-radius: 999px;
+      overflow: hidden;
     }
 
-    .loader-slide-bar {
+    /* YouTube / Material dual-sliding lines */
+    .yt-bar-line {
       position: absolute;
       top: 0;
       bottom: 0;
-      width: 45%;
-      background: linear-gradient(90deg, #0284C7 0%, #38BDF8 50%, #0284C7 100%);
-      border-radius: 9999px;
-      animation: linkedinSlide 1.3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      background: #0284C7;
+      border-radius: 999px;
+      will-change: left, right;
     }
 
-    @keyframes linkedinSlide {
+    .bar-primary {
+      animation: ytIndeterminate1 2s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+    }
+
+    .bar-secondary {
+      animation: ytIndeterminate2 2s cubic-bezier(0.165, 0.84, 0.44, 1) 1.15s infinite;
+    }
+
+    @keyframes ytIndeterminate1 {
       0% {
-        left: -45%;
-        width: 35%;
+        left: -35%;
+        right: 100%;
       }
-      50% {
-        left: 30%;
-        width: 60%;
+      60% {
+        left: 100%;
+        right: -90%;
       }
       100% {
         left: 100%;
-        width: 35%;
+        right: -90%;
+      }
+    }
+
+    @keyframes ytIndeterminate2 {
+      0% {
+        left: -200%;
+        right: 100%;
+      }
+      60% {
+        left: 107%;
+        right: -8%;
+      }
+      100% {
+        left: 107%;
+        right: -8%;
       }
     }
 
@@ -150,18 +182,16 @@ import { AuthService } from './core/services/auth.service';
         transform: translateY(0);
       }
       50% {
-        transform: translateY(-4px);
+        transform: translateY(-3px);
       }
     }
 
     @keyframes splashFadeIn {
       from {
         opacity: 0;
-        transform: scale(0.98);
       }
       to {
         opacity: 1;
-        transform: scale(1);
       }
     }
   `]
