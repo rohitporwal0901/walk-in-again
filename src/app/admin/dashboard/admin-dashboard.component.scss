@@ -1281,4 +1281,93 @@
       }
     }
   }
+
+  // Worker Modal Dark Theme Overrides
+  .modal-overlay {
+    background: rgba(0, 0, 0, 0.75) !important;
+  }
+
+  .worker-modal {
+    background: #131E35 !important;
+    border: 1px solid #1E2D48 !important;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8) !important;
+
+    .modal-header {
+      .modal-title {
+        color: #F8FAFC !important;
+        font-weight: 800 !important;
+      }
+      .modal-sub {
+        color: #94A3B8 !important;
+      }
+      .btn-close {
+        background: #1E2D48 !important;
+        border: 1px solid #243656 !important;
+        color: #CBD5E1 !important;
+        &:hover {
+          background: #243656 !important;
+          color: #FFFFFF !important;
+        }
+      }
+    }
+
+    .form-label {
+      color: #E2E8F0 !important;
+      font-weight: 700 !important;
+    }
+
+    .modal-input,
+    .modal-select {
+      background: #0F172A !important;
+      border: 1.5px solid #1E2D48 !important;
+      color: #F8FAFC !important;
+
+      &::placeholder {
+        color: #64748B !important;
+      }
+
+      option {
+        background-color: #0F172A !important;
+        color: #F8FAFC !important;
+      }
+
+      &:focus {
+        background: #131E35 !important;
+        border-color: #38BDF8 !important;
+        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2) !important;
+      }
+    }
+
+    .input-with-prefix {
+      background: #0F172A !important;
+      border: 1.5px solid #1E2D48 !important;
+
+      .prefix {
+        color: #94A3B8 !important;
+        border-right: 1.5px solid #1E2D48 !important;
+      }
+
+      &:focus-within {
+        background: #131E35 !important;
+        border-color: #38BDF8 !important;
+        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2) !important;
+      }
+    }
+
+    .field-hint {
+      color: #94A3B8 !important;
+    }
+
+    .modal-actions {
+      .btn-secondary {
+        background: #0F172A !important;
+        border: 1px solid #1E2D48 !important;
+        color: #CBD5E1 !important;
+        &:hover {
+          background: #182642 !important;
+          color: #FFFFFF !important;
+        }
+      }
+    }
+  }
 }

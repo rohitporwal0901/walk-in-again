@@ -648,10 +648,29 @@ body.admin-dark-theme,
   .worker-modal {
     background: #131E35 !important;
     border: 1px solid #1E2D48 !important;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75) !important;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8) !important;
 
-    .modal-title { color: #F8FAFC !important; }
+    .modal-header {
+      .modal-title { color: #F8FAFC !important; font-weight: 800 !important; }
+      .modal-sub   { color: #94A3B8 !important; }
+      .btn-close {
+        background: #1E2D48 !important;
+        border: 1px solid #243656 !important;
+        color: #CBD5E1 !important;
+        &:hover {
+          background: #243656 !important;
+          color: #FFFFFF !important;
+        }
+      }
+    }
+
+    .modal-title { color: #F8FAFC !important; font-weight: 800 !important; }
     .modal-desc, .modal-sub { color: #94A3B8 !important; }
+
+    .form-label, label {
+      color: #E2E8F0 !important;
+      font-weight: 700 !important;
+    }
 
     .modal-input,
     .modal-select {
@@ -659,10 +678,19 @@ body.admin-dark-theme,
       border: 1.5px solid #1E2D48 !important;
       color: #F8FAFC !important;
 
+      &::placeholder {
+        color: #64748B !important;
+      }
+
+      option {
+        background-color: #0F172A !important;
+        color: #F8FAFC !important;
+      }
+
       &:focus {
         background: #131E35 !important;
-        border-color: #0284C7 !important;
-        box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25) !important;
+        border-color: #38BDF8 !important;
+        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2) !important;
       }
     }
 
@@ -670,10 +698,20 @@ body.admin-dark-theme,
       background: #0F172A !important;
       border: 1.5px solid #1E2D48 !important;
 
-      .input-prefix {
+      .prefix, .input-prefix {
         color: #94A3B8 !important;
         border-right: 1.5px solid #1E2D48 !important;
       }
+
+      &:focus-within {
+        background: #131E35 !important;
+        border-color: #38BDF8 !important;
+        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2) !important;
+      }
+    }
+
+    .field-hint {
+      color: #94A3B8 !important;
     }
 
     .btn-cancel,
@@ -687,6 +725,13 @@ body.admin-dark-theme,
         color: #FFFFFF !important;
       }
     }
+  }
+
+  // Global Form Labels Across All Admin Forms
+  .form-label,
+  .field-label,
+  .filter-lbl {
+    color: #E2E8F0 !important;
   }
 
   // 8. Settings Page Dark Theme
@@ -703,34 +748,34 @@ body.admin-dark-theme,
       .head-t2 { color: #94A3B8 !important; }
     }
 
-    .theme-card-option {
+    .compact-impact-bar {
       background: #0F172A !important;
-      border-color: #1E2D48 !important;
+      border: 1px solid #1E2D48 !important;
 
-      &:hover {
-        background: #16223B !important;
-        border-color: #0284C7 !important;
-      }
-
-      &.selected {
-        background: #16223B !important;
-        border-color: #0284C7 !important;
-        box-shadow: 0 4px 18px rgba(2, 132, 199, 0.25) !important;
-      }
-
-      .tco-name {
-        color: #F8FAFC !important;
-      }
-
-      .tco-desc {
-        color: #94A3B8 !important;
-      }
+      .ci-lbl { color: #94A3B8 !important; }
+      .ci-val { color: #F8FAFC !important; }
+      .ci-divider { background: #1E2D48 !important; }
+      .text-green { color: #34D399 !important; }
     }
 
-    .theme-status-chip {
+    .dur-chip {
       background: #0F172A !important;
-      border-color: #1E2D48 !important;
-      color: #CBD5E1 !important;
+      border: 1.5px solid #1E2D48 !important;
+
+      strong { color: #F8FAFC !important; }
+      span   { color: #94A3B8 !important; }
+
+      &:hover {
+        background: #182642 !important;
+      }
+
+      &.dur-active {
+        background: rgba(2, 132, 199, 0.18) !important;
+        border-color: #0284C7 !important;
+
+        strong { color: #38BDF8 !important; }
+        span   { color: #BAE6FD !important; }
+      }
     }
 
     .price-input-row,
@@ -739,7 +784,13 @@ body.admin-dark-theme,
       border: 1px solid #1E2D48 !important;
 
       &:hover {
+        background: #111C33 !important;
         border-color: #243656 !important;
+      }
+
+      &.plan-popular {
+        border-color: #F59E0B !important;
+        background: rgba(245, 158, 11, 0.08) !important;
       }
     }
 
@@ -748,10 +799,18 @@ body.admin-dark-theme,
     }
 
     .pg-input-box,
-    .pg-rate-display,
     .compact-prefix-box {
       background: #131E35 !important;
       border: 1px solid #1E2D48 !important;
+    }
+
+    .rate-box {
+      background: #131E35 !important;
+      border: 1px solid #1E2D48 !important;
+    }
+
+    .pg-rate-display {
+      background: transparent !important;
     }
 
     .rate-val {

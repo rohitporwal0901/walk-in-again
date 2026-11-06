@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PricingService } from '../../core/services/pricing.service';
 import { SubscriptionService } from '../../core/services/subscription.service';
-import { ThemeService } from '../../core/services/theme.service';
 import { SubscriptionPlan } from '../../core/models/subscription.model';
 import { Unsubscribe } from '@angular/fire/firestore';
 
@@ -64,131 +63,6 @@ import { Unsubscribe } from '@angular/fire/firestore';
 
       <div class="content-grid">
         
-        <!-- ─── 0. Portal Theme & Appearance (Dark / Light Mode) ─── -->
-        <section class="section-card theme-section">
-          <div class="card-head">
-            <div class="ch-left">
-              <span class="head-icon icon-purple">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                </svg>
-              </span>
-              <div>
-                <h2 class="head-title">Theme & Appearance (थीम और डिस्प्ले मोड)</h2>
-                <span class="head-sub">Choose dark, light, or auto theme mode across all admin pages</span>
-              </div>
-            </div>
-            <span class="theme-status-chip" [class.is-dark]="themeService.isDark()">
-              Active: {{ themeService.themeMode() === 'auto' ? 'System (' + themeService.activeTheme() + ')' : (themeService.activeTheme() === 'dark' ? 'Dark Mode' : 'Light Mode') }}
-            </span>
-          </div>
-
-          <div class="theme-options-grid">
-            <!-- Light Option -->
-            <button
-              type="button"
-              class="theme-card-option"
-              [class.selected]="themeService.themeMode() === 'light'"
-              (click)="themeService.setTheme('light')"
-            >
-              <div class="tco-preview preview-light">
-                <div class="prev-topbar"></div>
-                <div class="prev-body">
-                  <div class="prev-sidebar"></div>
-                  <div class="prev-main">
-                    <div class="prev-pill"></div>
-                    <div class="prev-box"></div>
-                  </div>
-                </div>
-              </div>
-              <div class="tco-info">
-                <div class="tco-title-row">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="5"></circle>
-                    <line x1="12" y1="1" x2="12" y2="3"></line>
-                    <line x1="12" y1="21" x2="12" y2="23"></line>
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                    <line x1="1" y1="12" x2="3" y2="12"></line>
-                    <line x1="21" y1="12" x2="23" y2="12"></line>
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                  </svg>
-                  <span class="tco-name">Light Theme</span>
-                </div>
-                <p class="tco-desc">Crisp white & medical teal interface, clean and airy</p>
-              </div>
-              @if (themeService.themeMode() === 'light') {
-                <div class="tco-badge">Selected</div>
-              }
-            </button>
-
-            <!-- Dark Option -->
-            <button
-              type="button"
-              class="theme-card-option"
-              [class.selected]="themeService.themeMode() === 'dark'"
-              (click)="themeService.setTheme('dark')"
-            >
-              <div class="tco-preview preview-dark">
-                <div class="prev-topbar"></div>
-                <div class="prev-body">
-                  <div class="prev-sidebar"></div>
-                  <div class="prev-main">
-                    <div class="prev-pill"></div>
-                    <div class="prev-box"></div>
-                  </div>
-                </div>
-              </div>
-              <div class="tco-info">
-                <div class="tco-title-row">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                  </svg>
-                  <span class="tco-name">Dark Theme</span>
-                </div>
-                <p class="tco-desc">Deep sapphire obsidian theme, easy on eyes</p>
-              </div>
-              @if (themeService.themeMode() === 'dark') {
-                <div class="tco-badge">Selected</div>
-              }
-            </button>
-
-            <!-- Auto Option -->
-            <button
-              type="button"
-              class="theme-card-option"
-              [class.selected]="themeService.themeMode() === 'auto'"
-              (click)="themeService.setTheme('auto')"
-            >
-              <div class="tco-preview preview-auto">
-                <div class="prev-topbar"></div>
-                <div class="prev-body">
-                  <div class="prev-sidebar"></div>
-                  <div class="prev-main">
-                    <div class="prev-pill"></div>
-                    <div class="prev-box"></div>
-                  </div>
-                </div>
-              </div>
-              <div class="tco-info">
-                <div class="tco-title-row">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                    <line x1="8" y1="21" x2="16" y2="21"></line>
-                    <line x1="12" y1="17" x2="12" y2="21"></line>
-                  </svg>
-                  <span class="tco-name">System Default</span>
-                </div>
-                <p class="tco-desc">Automatically synchronizes with your device theme</p>
-              </div>
-              @if (themeService.themeMode() === 'auto') {
-                <div class="tco-badge">Selected</div>
-              }
-            </button>
-          </div>
-        </section>
-
         <!-- ─── 1. Default Walk-In Session Pricing (Compact Card) ─── -->
         <section class="section-card">
           <div class="card-head">
@@ -593,136 +467,7 @@ import { Unsubscribe } from '@angular/fire/firestore';
       background: #CCFBF1;
     }
 
-    .icon-purple {
-      background: #EEF2FF;
-    }
 
-    .theme-status-chip {
-      font-size: 11.5px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: #F1F5F9;
-      color: #334155;
-      border: 1px solid #E2E8F0;
-
-      &.is-dark {
-        background: rgba(2, 132, 199, 0.18);
-        color: #38BDF8;
-        border-color: rgba(2, 132, 199, 0.35);
-      }
-    }
-
-    .theme-options-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 14px;
-    }
-
-    .theme-card-option {
-      background: #F8FAFC;
-      border: 2px solid #E2E8F0;
-      border-radius: 16px;
-      padding: 14px;
-      text-align: left;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      position: relative;
-      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
-
-      &:hover {
-        background: #FFFFFF;
-        border-color: #0284C7;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(2, 132, 199, 0.12);
-      }
-
-      &.selected {
-        background: #FFFFFF;
-        border-color: #0284C7;
-        box-shadow: 0 6px 20px rgba(2, 132, 199, 0.16);
-      }
-    }
-
-    .tco-preview {
-      width: 100%;
-      height: 70px;
-      border-radius: 10px;
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-
-      .prev-topbar { height: 14px; }
-      .prev-body { flex: 1; display: flex; }
-      .prev-sidebar { width: 22px; }
-      .prev-main { flex: 1; padding: 6px; display: flex; flex-direction: column; gap: 4px; }
-      .prev-pill { width: 45%; height: 6px; border-radius: 3px; }
-      .prev-box { width: 85%; height: 18px; border-radius: 4px; }
-
-      &.preview-light {
-        background: #F0F7FB;
-        .prev-topbar { background: #FFFFFF; border-bottom: 1px solid #E2E8F0; }
-        .prev-sidebar { background: #FFFFFF; border-right: 1px solid #E2E8F0; }
-        .prev-pill { background: #0D9488; }
-        .prev-box { background: #FFFFFF; border: 1px solid #E2E8F0; }
-      }
-
-      &.preview-dark {
-        background: #0A0F1D;
-        border-color: #1E2D48;
-        .prev-topbar { background: #0F172A; border-bottom: 1px solid #1E2D48; }
-        .prev-sidebar { background: #0F172A; border-right: 1px solid #1E2D48; }
-        .prev-pill { background: #38BDF8; }
-        .prev-box { background: #131E35; border: 1px solid #1E2D48; }
-      }
-
-      &.preview-auto {
-        background: linear-gradient(135deg, #F0F7FB 50%, #0A0F1D 50%);
-        .prev-topbar { background: linear-gradient(135deg, #FFFFFF 50%, #0F172A 50%); }
-        .prev-sidebar { background: linear-gradient(135deg, #FFFFFF 50%, #0F172A 50%); }
-        .prev-pill { background: #10B981; }
-        .prev-box { background: linear-gradient(135deg, #FFFFFF 50%, #131E35 50%); }
-      }
-    }
-
-    .tco-info {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .tco-title-row {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .tco-name {
-      font-size: 13.5px;
-      font-weight: 700;
-      color: #0F172A;
-    }
-
-    .tco-desc {
-      font-size: 11.5px;
-      color: #64748B;
-      margin: 0;
-      line-height: 1.4;
-    }
-
-    .tco-badge {
-      align-self: flex-start;
-      background: linear-gradient(135deg, #0284C7 0%, #0D9488 100%);
-      color: #FFFFFF;
-      font-size: 10.5px;
-      font-weight: 700;
-      padding: 3px 9px;
-      border-radius: 999px;
-      letter-spacing: 0.02em;
-    }
 
     .head-title {
       font-size: 15.5px;
@@ -1138,11 +883,167 @@ import { Unsubscribe } from '@angular/fire/firestore';
         justify-content: center;
       }
     }
+
+    // Direct Dark Theme Overrides for Settings Page
+    :host-context(.admin-dark-theme) {
+      .page-title { color: #F8FAFC !important; }
+      .page-sub   { color: #94A3B8 !important; }
+
+      .section-card {
+        background: #131E35 !important;
+        border: 1px solid #1E2D48 !important;
+        box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.5) !important;
+      }
+
+      .card-head {
+        border-bottom: 1px solid #1E2D48 !important;
+      }
+
+      .head-title {
+        color: #F8FAFC !important;
+        font-weight: 800 !important;
+      }
+
+      .head-sub {
+        color: #94A3B8 !important;
+      }
+
+      .rate-badge,
+      .plan-count-badge {
+        background: rgba(2, 132, 199, 0.18) !important;
+        color: #38BDF8 !important;
+        border: 1px solid rgba(2, 132, 199, 0.35) !important;
+      }
+
+      .field-label {
+        color: #E2E8F0 !important;
+        font-weight: 700 !important;
+      }
+
+      .compact-prefix-box {
+        background: #0F172A !important;
+        border: 1.5px solid #1E2D48 !important;
+        .p-symbol, .p-unit { color: #94A3B8 !important; }
+        .fee-inp { color: #F8FAFC !important; }
+        &:focus-within {
+          background: #131E35 !important;
+          border-color: #38BDF8 !important;
+        }
+      }
+
+      .chip-btn {
+        background: #0F172A !important;
+        border: 1.5px solid #1E2D48 !important;
+        color: #94A3B8 !important;
+        &:hover {
+          background: #182642 !important;
+          color: #F8FAFC !important;
+        }
+        &.chip-active {
+          background: linear-gradient(135deg, #0284C7 0%, #0D9488 100%) !important;
+          color: #FFFFFF !important;
+          border-color: transparent !important;
+        }
+      }
+
+      .dur-chip {
+        background: #0F172A !important;
+        border: 1.5px solid #1E2D48 !important;
+        strong { color: #F8FAFC !important; }
+        span   { color: #94A3B8 !important; }
+        &:hover {
+          background: #182642 !important;
+        }
+        &.dur-active {
+          background: rgba(2, 132, 199, 0.18) !important;
+          border-color: #0284C7 !important;
+          strong { color: #38BDF8 !important; }
+          span   { color: #BAE6FD !important; }
+        }
+      }
+
+      .compact-impact-bar {
+        background: #0F172A !important;
+        border: 1px solid #1E2D48 !important;
+        .ci-lbl { color: #94A3B8 !important; }
+        .ci-val { color: #F8FAFC !important; }
+        .ci-divider { background: #1E2D48 !important; }
+        .text-green { color: #34D399 !important; }
+      }
+
+      .plan-row-card {
+        background: #0F172A !important;
+        border: 1px solid #1E2D48 !important;
+        &:hover {
+          background: #111C33 !important;
+          border-color: #243656 !important;
+        }
+        &.plan-popular {
+          border-color: #F59E0B !important;
+          background: rgba(245, 158, 11, 0.08) !important;
+        }
+      }
+
+      .plan-name-inp {
+        color: #F8FAFC !important;
+      }
+
+      .pop-pill {
+        background: #1E2D48 !important;
+        color: #CBD5E1 !important;
+        &.pop-active {
+          background: rgba(245, 158, 11, 0.2) !important;
+          color: #FBBF24 !important;
+          border: 1px solid rgba(245, 158, 11, 0.4) !important;
+        }
+      }
+
+      .pg-lbl {
+        color: #94A3B8 !important;
+      }
+
+      .pg-input-box {
+        background: #131E35 !important;
+        border: 1px solid #1E2D48 !important;
+        .pg-sym { color: #F8FAFC !important; }
+        .pg-num { color: #F8FAFC !important; }
+        .pg-unit { color: #94A3B8 !important; }
+        &:focus-within {
+          border-color: #38BDF8 !important;
+        }
+      }
+
+      .rate-box {
+        background: #131E35 !important;
+        border: 1px solid #1E2D48 !important;
+      }
+
+      .pg-rate-display {
+        background: transparent !important;
+      }
+
+      .rate-val {
+        color: #38BDF8 !important;
+      }
+
+      .rate-sub {
+        color: #94A3B8 !important;
+      }
+
+      .card-footer-compact {
+        border-top: 1px solid #1E2D48 !important;
+        .btn-text {
+          color: #94A3B8 !important;
+          &:hover {
+            color: #F8FAFC !important;
+          }
+        }
+      }
+    }
   `]
 })
 export class AdminSettingsComponent implements OnInit, OnDestroy {
   public pricingService = inject(PricingService);
-  public themeService = inject(ThemeService);
   private subService = inject(SubscriptionService);
 
   walkInFee = signal<number>(500);
