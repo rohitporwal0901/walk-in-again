@@ -25,44 +25,45 @@
   <!-- KPI Cards -->
   <div class="kpi-grid">
     @for (kpi of kpis(); track kpi.label; let i = $index) {
-    <div class="kpi-card animate-fade-in-up stagger-{{ i + 1 }}" [style.--kpi-color]="kpi.color"
-      [style.--kpi-bg]="kpi.bgColor">
-      <div class="kpi-icon-wrap">
-        @if (kpi.label.includes('Patient')) {
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-          stroke-linecap="round" stroke-linejoin="round">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-          <circle cx="9" cy="7" r="4"></circle>
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-        </svg>
-        } @else if (kpi.label.includes('Worker')) {
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-          stroke-linecap="round" stroke-linejoin="round">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-          <circle cx="8.5" cy="7" r="4"></circle>
-          <polyline points="17 11 19 13 23 9"></polyline>
-        </svg>
-        } @else if (kpi.label.includes('Session')) {
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-          stroke-linecap="round" stroke-linejoin="round">
-          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-          <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-        </svg>
-        } @else {
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-          stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-        </svg>
+    <div class="kpi-card animate-fade-in-up stagger-{{ i + 1 }}" [style.background]="kpi.bgColor">
+      <div class="kpi-top-row">
+        <span class="kpi-label">{{ kpi.label }}</span>
+        @if (kpi.growth && kpi.growth !== '+0%' && kpi.growth !== '0%') {
+          <span class="kpi-growth" [class.positive]="kpi.growthPositive">{{ kpi.growth }}</span>
         }
       </div>
-      <div class="kpi-body">
-        <p class="kpi-value">{{ kpi.value }}</p>
-        <p class="kpi-label">{{ kpi.label }}</p>
+      <div class="kpi-bottom-row">
+        <span class="kpi-value">{{ kpi.value }}</span>
+        <div class="kpi-icon-wrap">
+          @if (kpi.label.includes('Patient')) {
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          } @else if (kpi.label.includes('Worker')) {
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="8.5" cy="7" r="4"></circle>
+            <polyline points="17 11 19 13 23 9"></polyline>
+          </svg>
+          } @else if (kpi.label.includes('Session')) {
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+          </svg>
+          } @else {
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          }
+        </div>
       </div>
-      @if (kpi.growth && kpi.growth !== '+0%' && kpi.growth !== '0%') {
-        <div class="kpi-growth" [class.positive]="kpi.growthPositive">{{ kpi.growth }}</div>
-      }
     </div>
     }
   </div>

@@ -38,64 +38,68 @@ interface FormattedTransaction {
         </div>
       </header>
 
-      <!-- KPI Summary Cards -->
+      <!-- KPI Summary Cards (HealthHub Gradient Style) -->
       <section class="kpi-grid">
         <!-- Net Revenue -->
-        <div class="kpi-card">
-          <div class="kpi-icon-wrap icon-revenue">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-            </svg>
-          </div>
-          <div class="kpi-content">
+        <div class="kpi-card kpi-card-cyan">
+          <div class="kpi-top-row">
             <span class="kpi-label">Total Net Revenue</span>
+          </div>
+          <div class="kpi-bottom-row">
             <span class="kpi-value">₹{{ totalNetRevenue().toLocaleString('en-IN') }}</span>
-            <span class="kpi-sub-text">Real collected payments</span>
+            <div class="kpi-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+              </svg>
+            </div>
           </div>
         </div>
 
         <!-- Plan Purchases -->
-        <div class="kpi-card">
-          <div class="kpi-icon-wrap icon-sub">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M6 3h12l4 6-10 12L2 9z"></path>
-            </svg>
-          </div>
-          <div class="kpi-content">
+        <div class="kpi-card kpi-card-amber">
+          <div class="kpi-top-row">
             <span class="kpi-label">Plan Purchases</span>
+          </div>
+          <div class="kpi-bottom-row">
             <span class="kpi-value">₹{{ subscriptionRevenue().toLocaleString('en-IN') }}</span>
-            <span class="kpi-sub-text">{{ subscriptionTxnCount() }} plans enrolled</span>
+            <div class="kpi-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 3h12l4 6-10 12L2 9z"></path>
+              </svg>
+            </div>
           </div>
         </div>
 
         <!-- Walk-In Collections -->
-        <div class="kpi-card">
-          <div class="kpi-icon-wrap icon-walkin">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="8.5" cy="7" r="4"></circle>
-              <polyline points="17 11 19 13 23 9"></polyline>
-            </svg>
-          </div>
-          <div class="kpi-content">
+        <div class="kpi-card kpi-card-teal">
+          <div class="kpi-top-row">
             <span class="kpi-label">Walk-In Revenue</span>
+          </div>
+          <div class="kpi-bottom-row">
             <span class="kpi-value">₹{{ walkInRevenue().toLocaleString('en-IN') }}</span>
-            <span class="kpi-sub-text">{{ walkInTxnCount() }} direct payments</span>
+            <div class="kpi-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="8.5" cy="7" r="4"></circle>
+                <polyline points="17 11 19 13 23 9"></polyline>
+              </svg>
+            </div>
           </div>
         </div>
 
         <!-- Total Transactions -->
-        <div class="kpi-card">
-          <div class="kpi-icon-wrap icon-count">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-              <line x1="2" y1="10" x2="22" y2="10"></line>
-            </svg>
-          </div>
-          <div class="kpi-content">
+        <div class="kpi-card kpi-card-green">
+          <div class="kpi-top-row">
             <span class="kpi-label">Total Transactions</span>
+          </div>
+          <div class="kpi-bottom-row">
             <span class="kpi-value">{{ filteredTransactions().length }}</span>
-            <span class="kpi-sub-text">Average: ₹{{ averageTxnValue() }}</span>
+            <div class="kpi-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                <line x1="2" y1="10" x2="22" y2="10"></line>
+              </svg>
+            </div>
           </div>
         </div>
       </section>
@@ -314,95 +318,103 @@ interface FormattedTransaction {
       animation: pulse 1.5s infinite;
     }
 
-    // KPI Cards Grid
+    // KPI Cards Grid (Matches HealthHub Gradient Design)
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 16px;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
     }
 
     .kpi-card {
-      background: #FFFFFF;
       border-radius: 18px;
-      padding: 18px 20px;
+      padding: 18px 22px;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
       display: flex;
-      align-items: center;
-      gap: 16px;
-      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
-      border: 1px solid rgba(226, 232, 240, 0.85);
-      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 114px;
+      position: relative;
+      overflow: hidden;
       box-sizing: border-box;
+      color: #FFFFFF;
+      transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1);
 
       &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.07);
-        border-color: rgba(2, 132, 199, 0.3);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 28px rgba(15, 23, 42, 0.16);
+      }
+
+      &.kpi-card-teal {
+        background: linear-gradient(135deg, #0D9488 0%, #14B8A6 100%);
+      }
+      &.kpi-card-cyan, &.kpi-card-blue {
+        background: linear-gradient(135deg, #0284C7 0%, #0EA5E9 100%);
+      }
+      &.kpi-card-amber, &.kpi-card-gold {
+        background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%);
+      }
+      &.kpi-card-green {
+        background: linear-gradient(135deg, #059669 0%, #10B981 100%);
       }
     }
 
+    .kpi-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .kpi-label {
+      font-size: 13.5px;
+      color: rgba(255, 255, 255, 0.95);
+      font-weight: 600;
+      margin: 0;
+      letter-spacing: 0.01em;
+    }
+
+    .kpi-bottom-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .kpi-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: #FFFFFF;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
     .kpi-icon-wrap {
-      width: 48px;
-      height: 48px;
+      width: 44px;
+      height: 44px;
       border-radius: 14px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      transition: transform 0.2s ease, background 0.2s ease;
 
       svg {
-        width: 24px;
-        height: 24px;
+        width: 22px;
+        height: 22px;
+        stroke: #FFFFFF;
       }
     }
 
-    .icon-revenue {
-      background: #DCFCE7;
-      color: #16A34A;
-    }
-
-    .icon-sub {
-      background: #EDE9FE;
-      color: #7C3AED;
-    }
-
-    .icon-walkin {
-      background: #E0F2FE;
-      color: #0284C7;
-    }
-
-    .icon-count {
-      background: #FEF3C7;
-      color: #D97706;
-    }
-
-    .kpi-content {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      min-width: 0;
-    }
-
-    .kpi-label {
-      font-size: 12px;
-      font-weight: 700;
-      color: #64748B;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .kpi-value {
-      font-size: 24px;
-      font-weight: 800;
-      color: #0F172A;
-      line-height: 1.15;
-      letter-spacing: -0.02em;
-    }
-
-    .kpi-sub-text {
-      font-size: 12px;
-      color: #94A3B8;
-      font-weight: 500;
+    .kpi-card:hover .kpi-icon-wrap {
+      transform: scale(1.08);
+      background: rgba(255, 255, 255, 0.28);
     }
 
     // Controls Panel

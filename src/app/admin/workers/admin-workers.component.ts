@@ -37,48 +37,51 @@ interface WorkerRow {
         </button>
       </div>
 
-      <!-- KPI Overview Cards -->
+      <!-- KPI Overview Cards (HealthHub Gradient Style) -->
       <section class="kpi-grid">
-        <div class="kpi-card">
-          <div class="kpi-icon-wrap icon-primary">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="8.5" cy="7" r="4"></circle>
-              <line x1="20" y1="8" x2="20" y2="14"></line>
-              <line x1="23" y1="11" x2="17" y2="11"></line>
-            </svg>
-          </div>
-          <div class="kpi-content">
+        <div class="kpi-card kpi-card-teal">
+          <div class="kpi-top-row">
             <span class="kpi-label">Total Physio Staff</span>
+          </div>
+          <div class="kpi-bottom-row">
             <span class="kpi-value">{{ workers().length }}</span>
-            <span class="kpi-sub-text">Active clinic practitioners</span>
+            <div class="kpi-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="8.5" cy="7" r="4"></circle>
+                <line x1="20" y1="8" x2="20" y2="14"></line>
+                <line x1="23" y1="11" x2="17" y2="11"></line>
+              </svg>
+            </div>
           </div>
         </div>
 
-        <div class="kpi-card">
-          <div class="kpi-icon-wrap icon-completed">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-              <polyline points="22 4 12 14.01 9 11.01"></polyline>
-            </svg>
-          </div>
-          <div class="kpi-content">
+        <div class="kpi-card kpi-card-cyan">
+          <div class="kpi-top-row">
             <span class="kpi-label">Sessions Completed</span>
+          </div>
+          <div class="kpi-bottom-row">
             <span class="kpi-value">{{ totalCompletedSessions() }}</span>
-            <span class="kpi-sub-text">Delivered treatments</span>
+            <div class="kpi-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
           </div>
         </div>
 
-        <div class="kpi-card">
-          <div class="kpi-icon-wrap icon-earnings">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-            </svg>
-          </div>
-          <div class="kpi-content">
+        <div class="kpi-card kpi-card-amber">
+          <div class="kpi-top-row">
             <span class="kpi-label">Total Staff Earnings</span>
+          </div>
+          <div class="kpi-bottom-row">
             <span class="kpi-value">₹{{ totalStaffEarnings().toLocaleString('en-IN') }}</span>
-            <span class="kpi-sub-text">Paid practitioner share</span>
+            <div class="kpi-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+              </svg>
+            </div>
           </div>
         </div>
       </section>
@@ -293,19 +296,21 @@ interface WorkerRow {
     .btn-secondary { background: #F1F5F9; color: #475569; border: 1px solid #E2E8F0; }
     .btn-secondary:hover { background: #E2E8F0; color: #0F172A; }
 
-    // KPI Cards
-    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px; }
-    .kpi-card { background: #FFFFFF; border-radius: 18px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04); border: 1px solid rgba(226, 232, 240, 0.85); transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; box-sizing: border-box; }
-    .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(15, 23, 42, 0.07); border-color: rgba(2, 132, 199, 0.3); }
-    .kpi-icon-wrap { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .kpi-icon-wrap svg { width: 24px; height: 24px; }
-    .kpi-icon-wrap.icon-primary { background: #E0F2FE; color: #0284C7; }
-    .kpi-icon-wrap.icon-completed { background: #DCFCE7; color: #16A34A; }
-    .kpi-icon-wrap.icon-earnings { background: #FEF3C7; color: #D97706; }
-    .kpi-content { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-    .kpi-label { font-size: 12px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.04em; }
-    .kpi-value { font-size: 24px; font-weight: 800; color: #0F172A; line-height: 1.15; letter-spacing: -0.02em; }
-    .kpi-sub-text { font-size: 12px; color: #94A3B8; font-weight: 500; }
+    // KPI Cards (HealthHub Gradient Style)
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 22px; }
+    .kpi-card { border-radius: 18px; padding: 18px 22px; box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08); border: 1px solid rgba(255, 255, 255, 0.16); display: flex; flex-direction: column; justify-content: space-between; min-height: 114px; position: relative; overflow: hidden; box-sizing: border-box; color: #FFFFFF; transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1); }
+    .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(15, 23, 42, 0.16); }
+    .kpi-card.kpi-card-teal { background: linear-gradient(135deg, #0D9488 0%, #14B8A6 100%); }
+    .kpi-card.kpi-card-cyan, .kpi-card.kpi-card-blue { background: linear-gradient(135deg, #0284C7 0%, #0EA5E9 100%); }
+    .kpi-card.kpi-card-amber, .kpi-card.kpi-card-gold { background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%); }
+    .kpi-card.kpi-card-green { background: linear-gradient(135deg, #059669 0%, #10B981 100%); }
+    .kpi-top-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .kpi-label { font-size: 13.5px; color: rgba(255, 255, 255, 0.95); font-weight: 600; margin: 0; letter-spacing: 0.01em; }
+    .kpi-bottom-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-top: 14px; }
+    .kpi-value { font-size: 32px; font-weight: 800; color: #FFFFFF; line-height: 1; letter-spacing: -0.02em; }
+    .kpi-icon-wrap { width: 44px; height: 44px; border-radius: 14px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.3); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.2s ease, background 0.2s ease; }
+    .kpi-icon-wrap svg { width: 22px; height: 22px; stroke: #FFFFFF; }
+    .kpi-card:hover .kpi-icon-wrap { transform: scale(1.08); background: rgba(255, 255, 255, 0.28); }
 
     // Controls Panel
     .controls-panel { background: #FFFFFF; border-radius: 18px; padding: 14px 18px; display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; border: 1px solid rgba(226, 232, 240, 0.85); box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04); }
