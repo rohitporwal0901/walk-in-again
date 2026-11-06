@@ -115,10 +115,10 @@ export class AdminDashboardComponent implements OnInit {
   ];
 
   kpis = computed<KpiCard[]>(() => [
-    { label: 'Total Patients', value: this.patientCount().toString(), icon: '', growth: '', growthPositive: true, color: '#FFFFFF', bgColor: 'linear-gradient(135deg, #0284C7 0%, #0EA5E9 100%)' },
-    { label: 'Workers (Staff)', value: this.workerCount().toString(), icon: '', growth: '', growthPositive: true, color: '#FFFFFF', bgColor: 'linear-gradient(135deg, #0D9488 0%, #14B8A6 100%)' },
-    { label: 'Sessions', value: this.sessionCount().toString(), icon: '', growth: '', growthPositive: true, color: '#FFFFFF', bgColor: 'linear-gradient(135deg, #D97706 0%, #F59E0B 100%)' },
-    { label: 'Total Revenue', value: '₹' + this.revenueTotal().toLocaleString('en-IN'), icon: '', growth: '', growthPositive: true, color: '#FFFFFF', bgColor: 'linear-gradient(135deg, #059669 0%, #10B981 100%)' },
+    { label: 'Total Patients', value: this.patientCount().toString(), icon: '', growth: '', growthPositive: true, color: '#FFFFFF', bgColor: 'linear-gradient(135deg, #14B8A6 0%, #0D9488 100%)' },
+    { label: 'Workers (Staff)', value: this.workerCount().toString(), icon: '', growth: '', growthPositive: true, color: '#FFFFFF', bgColor: 'linear-gradient(135deg, #10B981 0%, #059669 100%)' },
+    { label: 'Sessions', value: this.sessionCount().toString(), icon: '', growth: '', growthPositive: true, color: '#FFFFFF', bgColor: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)' },
+    { label: 'Total Revenue', value: '₹' + this.revenueTotal().toLocaleString('en-IN'), icon: '', growth: '', growthPositive: true, color: '#FFFFFF', bgColor: 'linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%)' },
   ]);
 
   // Raw Transactions from Firestore for real-time charts & calculations

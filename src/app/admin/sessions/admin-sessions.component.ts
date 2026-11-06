@@ -44,7 +44,7 @@ interface FormattedSession {
 
       <!-- KPI Summary Cards (HealthHub Gradient Style) -->
       <section class="kpi-grid">
-        <div class="kpi-card kpi-card-cyan">
+        <div class="kpi-card kpi-card-teal">
           <div class="kpi-top-row">
             <span class="kpi-label">Total Sessions</span>
           </div>
@@ -59,7 +59,7 @@ interface FormattedSession {
           </div>
         </div>
 
-        <div class="kpi-card kpi-card-teal">
+        <div class="kpi-card kpi-card-green">
           <div class="kpi-top-row">
             <span class="kpi-label">Active In Clinic</span>
           </div>
@@ -73,7 +73,7 @@ interface FormattedSession {
           </div>
         </div>
 
-        <div class="kpi-card kpi-card-green">
+        <div class="kpi-card kpi-card-purple">
           <div class="kpi-top-row">
             <span class="kpi-label">Completed Sessions</span>
           </div>
@@ -88,7 +88,7 @@ interface FormattedSession {
           </div>
         </div>
 
-        <div class="kpi-card kpi-card-amber">
+        <div class="kpi-card kpi-card-blue">
           <div class="kpi-top-row">
             <span class="kpi-label">Total Session Value</span>
           </div>
@@ -356,16 +356,16 @@ interface FormattedSession {
       }
 
       &.kpi-card-teal {
-        background: linear-gradient(135deg, #0D9488 0%, #14B8A6 100%);
-      }
-      &.kpi-card-cyan, &.kpi-card-blue {
-        background: linear-gradient(135deg, #0284C7 0%, #0EA5E9 100%);
-      }
-      &.kpi-card-amber, &.kpi-card-gold {
-        background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%);
+        background: linear-gradient(135deg, #14B8A6 0%, #0D9488 100%);
       }
       &.kpi-card-green {
-        background: linear-gradient(135deg, #059669 0%, #10B981 100%);
+        background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      }
+      &.kpi-card-purple {
+        background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);
+      }
+      &.kpi-card-blue, &.kpi-card-cyan {
+        background: linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%);
       }
     }
 

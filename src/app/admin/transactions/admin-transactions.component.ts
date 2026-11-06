@@ -41,7 +41,7 @@ interface FormattedTransaction {
       <!-- KPI Summary Cards (HealthHub Gradient Style) -->
       <section class="kpi-grid">
         <!-- Net Revenue -->
-        <div class="kpi-card kpi-card-cyan">
+        <div class="kpi-card kpi-card-teal">
           <div class="kpi-top-row">
             <span class="kpi-label">Total Net Revenue</span>
           </div>
@@ -56,7 +56,7 @@ interface FormattedTransaction {
         </div>
 
         <!-- Plan Purchases -->
-        <div class="kpi-card kpi-card-amber">
+        <div class="kpi-card kpi-card-green">
           <div class="kpi-top-row">
             <span class="kpi-label">Plan Purchases</span>
           </div>
@@ -71,7 +71,7 @@ interface FormattedTransaction {
         </div>
 
         <!-- Walk-In Collections -->
-        <div class="kpi-card kpi-card-teal">
+        <div class="kpi-card kpi-card-purple">
           <div class="kpi-top-row">
             <span class="kpi-label">Walk-In Revenue</span>
           </div>
@@ -88,7 +88,7 @@ interface FormattedTransaction {
         </div>
 
         <!-- Total Transactions -->
-        <div class="kpi-card kpi-card-green">
+        <div class="kpi-card kpi-card-blue">
           <div class="kpi-top-row">
             <span class="kpi-label">Total Transactions</span>
           </div>
@@ -352,8 +352,8 @@ interface FormattedTransaction {
       &.kpi-card-cyan, &.kpi-card-blue {
         background: linear-gradient(135deg, #0284C7 0%, #0EA5E9 100%);
       }
-      &.kpi-card-amber, &.kpi-card-gold {
-        background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%);
+      &.kpi-card-purple {
+        background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);
       }
       &.kpi-card-green {
         background: linear-gradient(135deg, #059669 0%, #10B981 100%);

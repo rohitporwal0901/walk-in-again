@@ -56,7 +56,7 @@ interface WorkerRow {
           </div>
         </div>
 
-        <div class="kpi-card kpi-card-cyan">
+        <div class="kpi-card kpi-card-green">
           <div class="kpi-top-row">
             <span class="kpi-label">Sessions Completed</span>
           </div>
@@ -71,7 +71,7 @@ interface WorkerRow {
           </div>
         </div>
 
-        <div class="kpi-card kpi-card-amber">
+        <div class="kpi-card kpi-card-purple">
           <div class="kpi-top-row">
             <span class="kpi-label">Total Staff Earnings</span>
           </div>
@@ -302,7 +302,7 @@ interface WorkerRow {
     .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(15, 23, 42, 0.16); }
     .kpi-card.kpi-card-teal { background: linear-gradient(135deg, #0D9488 0%, #14B8A6 100%); }
     .kpi-card.kpi-card-cyan, .kpi-card.kpi-card-blue { background: linear-gradient(135deg, #0284C7 0%, #0EA5E9 100%); }
-    .kpi-card.kpi-card-amber, .kpi-card.kpi-card-gold { background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%); }
+    .kpi-card.kpi-card-purple { background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%); }
     .kpi-card.kpi-card-green { background: linear-gradient(135deg, #059669 0%, #10B981 100%); }
     .kpi-top-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
     .kpi-label { font-size: 13.5px; color: rgba(255, 255, 255, 0.95); font-weight: 600; margin: 0; letter-spacing: 0.01em; }
