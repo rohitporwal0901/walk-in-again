@@ -577,13 +577,23 @@ body.admin-dark-theme,
     border-bottom: 1.5px solid #1E2D48 !important;
   }
 
-  .bar-col {
+  .bar-col,
+  .bar-slot {
     .bar-track {
-      background: #1E2D48 !important;
+      background: rgba(255, 255, 255, 0.04) !important;
     }
 
     .bar-day-lbl {
       color: #94A3B8 !important;
+    }
+  }
+
+  .grid-lines {
+    .grid-line {
+      border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+      &.baseline {
+        border-bottom-color: #1E2D48 !important;
+      }
     }
   }
 

@@ -332,6 +332,38 @@ export class AdminDashboardComponent implements OnInit {
     return `0% ${suffix}`;
   });
 
+  hasRevenueData = computed(() => {
+    const data = this.chartData();
+    return data.some(d => d.thisMonth > 0 || d.lastMonth > 0);
+  });
+
+  growthStatus = computed<'positive' | 'negative' | 'neutral'>(() => {
+    const data = this.chartData();
+    const curTotal = data.reduce((sum, d) => sum + d.thisMonth, 0);
+    const prevTotal = data.reduce((sum, d) => sum + d.lastMonth, 0);
+    if (curTotal === 0 && prevTotal === 0) return 'neutral';
+    if (curTotal > prevTotal) return 'positive';
+    if (curTotal < prevTotal) return 'negative';
+    return 'neutral';
+  });
+
+  formatCurrency(val: number): string {
+    if (val >= 100000) return (val / 100000).toFixed(1).replace(/\.0$/, '') + 'L';
+    if (val >= 1000) return (val / 1000).toFixed(val % 1000 === 0 ? 0 : 1) + 'k';
+    return val.toString();
+  }
+
+  yAxisLevels = computed(() => {
+    const max = this.chartMax();
+    return [
+      { val: max, label: this.formatCurrency(max) },
+      { val: Math.round(max * 0.75), label: this.formatCurrency(Math.round(max * 0.75)) },
+      { val: Math.round(max * 0.5), label: this.formatCurrency(Math.round(max * 0.5)) },
+      { val: Math.round(max * 0.25), label: this.formatCurrency(Math.round(max * 0.25)) },
+      { val: 0, label: '0' }
+    ];
+  });
+
   ngOnInit() {
     this.loadRealFirestoreData();
   }

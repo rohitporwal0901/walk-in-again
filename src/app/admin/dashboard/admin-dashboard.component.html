@@ -77,7 +77,7 @@
       <!-- Revenue Chart -->
       <div class="chart-card animate-fade-in-up" style="animation-delay:.1s">
         <div class="chart-header">
-          <div>
+          <div class="chart-title-group">
             <h3>Revenue Overview</h3>
             <p class="chart-sub">
               @if (selectedPeriod() === 'Month') {
@@ -87,30 +87,78 @@
               }
             </p>
           </div>
-          <div class="chart-legend">
-            <span class="legend-item"><span class="legend-dot" style="background: var(--accent)"></span> {{
-              selectedPeriod() === 'Month' ? 'This Month' : 'This Week' }}</span>
-            <span class="legend-item"><span class="legend-dot" style="background: #CBD5E1"></span> {{ selectedPeriod()
-              === 'Month' ? 'Last Month' : 'Last Week' }}</span>
+          <div class="chart-header-actions">
+            <div class="period-toggle" role="group" aria-label="Chart Period">
+              <button type="button" class="period-btn" [class.active]="selectedPeriod() === 'Month'" (click)="selectedPeriod.set('Month')">Month</button>
+              <button type="button" class="period-btn" [class.active]="selectedPeriod() === 'Week'" (click)="selectedPeriod.set('Week')">Week</button>
+            </div>
+            <div class="chart-legend">
+              <span class="legend-item"><span class="legend-dot legend-dot--current"></span> {{
+                selectedPeriod() === 'Month' ? 'This Month' : 'This Week' }}</span>
+              <span class="legend-item"><span class="legend-dot legend-dot--prev"></span> {{ selectedPeriod()
+                === 'Month' ? 'Last Month' : 'Last Week' }}</span>
+            </div>
           </div>
         </div>
-        <div class="bar-chart">
-          <div class="bars-container">
-            @for (item of chartData(); track item.week) {
-            <div class="bar-group">
-              <div class="bars">
-                <div class="bar bar--current" [style.height.%]="getBarHeight(item.thisMonth)"
-                  [title]="(selectedPeriod() === 'Month' ? 'This Month: ' : 'This Week: ') + '₹' + item.thisMonth.toLocaleString('en-IN')">
+
+        <div class="chart-body">
+          <div class="y-axis">
+            @for (level of yAxisLevels(); track level.val) {
+            <span class="y-label">₹{{ level.label }}</span>
+            }
+          </div>
+          <div class="chart-plot-area">
+            <div class="grid-lines">
+              @for (level of yAxisLevels(); track level.val) {
+              <div class="grid-line" [class.baseline]="level.val === 0"></div>
+              }
+            </div>
+
+            <div class="bars-container">
+              @for (item of chartData(); track item.week) {
+              <div class="bar-group">
+                <div class="bars">
+                  <div class="bar-slot">
+                    <div class="bar-track"></div>
+                    <div class="bar bar--current" [style.height.%]="getBarHeight(item.thisMonth)"
+                      [class.bar--has-value]="item.thisMonth > 0">
+                      <div class="bar-tooltip">
+                        <span class="tip-badge">{{ selectedPeriod() === 'Month' ? 'This Month' : 'This Week' }}</span>
+                        <span class="tip-amount">₹{{ item.thisMonth.toLocaleString('en-IN') }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="bar-slot">
+                    <div class="bar-track"></div>
+                    <div class="bar bar--prev" [style.height.%]="getBarHeight(item.lastMonth)"
+                      [class.bar--has-value]="item.lastMonth > 0">
+                      <div class="bar-tooltip">
+                        <span class="tip-badge">{{ selectedPeriod() === 'Month' ? 'Last Month' : 'Last Week' }}</span>
+                        <span class="tip-amount">₹{{ item.lastMonth.toLocaleString('en-IN') }}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="bar bar--prev" [style.height.%]="getBarHeight(item.lastMonth)"
-                  [title]="(selectedPeriod() === 'Month' ? 'Last Month: ' : 'Last Week: ') + '₹' + item.lastMonth.toLocaleString('en-IN')">
-                </div>
+                <span class="bar-label">{{ item.week }}</span>
               </div>
-              <span class="bar-label">{{ item.week }}</span>
+              }
+            </div>
+
+            @if (!hasRevenueData()) {
+            <div class="chart-empty-state">
+              <div class="empty-state-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <span>No revenue recorded yet for this period</span>
+              </div>
             </div>
             }
           </div>
         </div>
+
         <div class="chart-footer-stats">
           <div class="cf-stat">
             <span class="cf-label">{{ selectedPeriod() === 'Month' ? 'Avg Weekly Revenue' : 'Avg Daily Revenue'
@@ -125,7 +173,7 @@
           <div class="cf-divider"></div>
           <div class="cf-stat">
             <span class="cf-label">Growth Rate</span>
-            <span class="cf-val font-accent">{{ growthRate() }}</span>
+            <span class="cf-val growth-badge" [ngClass]="'growth-' + growthStatus()">{{ growthRate() }}</span>
           </div>
         </div>
       </div>
