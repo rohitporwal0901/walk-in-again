@@ -259,7 +259,7 @@ interface PatientRow {
     .kpi-card:hover .kpi-icon-wrap { transform: scale(1.08); background: rgba(255, 255, 255, 0.28); }
 
     // Controls
-    .controls-panel { background: #FFFFFF; border-radius: 18px; padding: 14px 18px; display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; border: 1px solid rgba(226, 232, 240, 0.85); box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04); }
+    .controls-panel { background: #FFFFFF; border-radius: 20px; padding: 14px 18px; display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; border: 1px solid rgba(226, 232, 240, 0.85); box-shadow: 0 10px 28px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04); }
     .search-wrap { flex: 1; min-width: 250px; position: relative; display: flex; align-items: center; }
     .search-wrap svg { position: absolute; left: 14px; width: 17px; height: 17px; pointer-events: none; }
     .search-input { width: 100%; height: 40px; padding: 0 14px 0 40px; border: 1.5px solid #E2E8F0; border-radius: 10px; background: #F8FAFC; font-size: 13px; color: #0F172A; outline: none; transition: all 0.2s ease; }
@@ -271,7 +271,7 @@ interface PatientRow {
     .filter-pill.active { background: linear-gradient(135deg, #0284C7 0%, #0D9488 100%); color: #FFFFFF; border-color: transparent; font-weight: 700; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.28); }
 
     // Table
-    .table-container-card { background: #FFFFFF; border-radius: 18px; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04); border: 1px solid rgba(226, 232, 240, 0.85); overflow: hidden; }
+    .table-container-card { background: #FFFFFF; border-radius: 20px; box-shadow: 0 10px 28px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04); border: 1px solid rgba(226, 232, 240, 0.85); overflow: hidden; }
     .table-responsive { overflow-x: auto; }
     .patients-table { width: 100%; border-collapse: collapse; text-align: left; }
     .patients-table thead tr { background: #F8FAFC; border-bottom: 1.5px solid #E2E8F0; }

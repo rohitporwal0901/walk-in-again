@@ -269,7 +269,7 @@ interface WorkerPerformance {
 
     // Analytics Split Grid
     .analytics-split-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 20px; }
-    .report-card { background: #FFFFFF; border-radius: 18px; padding: 22px; box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03); border: 1px solid rgba(226, 232, 240, 0.85); display: flex; flex-direction: column; gap: 16px; }
+    .report-card { background: #FFFFFF; border-radius: 20px; padding: 22px; box-shadow: 0 10px 28px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04); border: 1px solid rgba(226, 232, 240, 0.85); display: flex; flex-direction: column; gap: 16px; }
     .card-header { display: flex; justify-content: space-between; align-items: flex-start; }
     .card-title { font-size: 15px; font-weight: 800; color: #0F172A; margin: 0 0 3px; }
     .card-sub { font-size: 12.5px; color: #64748B; margin: 0; }
@@ -305,7 +305,7 @@ interface WorkerPerformance {
     .dot-walkin { background: #10B981; }
 
     // Table
-    .table-container-card { background: #FFFFFF; border-radius: 18px; box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03); border: 1px solid rgba(226, 232, 240, 0.85); overflow: hidden; }
+    .table-container-card { background: #FFFFFF; border-radius: 20px; box-shadow: 0 10px 28px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04); border: 1px solid rgba(226, 232, 240, 0.85); overflow: hidden; }
     .table-top-bar { padding: 16px 20px; border-bottom: 1px solid #F1F5F9; }
     .table-responsive { overflow-x: auto; }
     .report-table { width: 100%; border-collapse: collapse; text-align: left; }

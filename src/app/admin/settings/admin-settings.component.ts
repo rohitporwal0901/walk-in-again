@@ -424,9 +424,9 @@ import { Unsubscribe } from '@angular/fire/firestore';
 
     .section-card {
       background: #FFFFFF;
-      border-radius: 18px;
+      border-radius: 20px;
       padding: 22px;
-      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+      box-shadow: 0 10px 28px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
       border: 1px solid rgba(226, 232, 240, 0.85);
       display: flex;
       flex-direction: column;

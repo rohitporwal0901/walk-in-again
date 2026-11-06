@@ -420,7 +420,7 @@ interface FormattedTransaction {
     // Controls Panel
     .controls-panel {
       background: #FFFFFF;
-      border-radius: 18px;
+      border-radius: 20px;
       padding: 14px 18px;
       display: flex;
       align-items: center;
@@ -428,7 +428,7 @@ interface FormattedTransaction {
       gap: 16px;
       margin-bottom: 20px;
       border: 1px solid rgba(226, 232, 240, 0.85);
-      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+      box-shadow: 0 10px 28px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
     }
 
     .search-wrap {
@@ -510,8 +510,8 @@ interface FormattedTransaction {
     // Table Container
     .table-container-card {
       background: #FFFFFF;
-      border-radius: 18px;
-      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+      border-radius: 20px;
+      box-shadow: 0 10px 28px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
       border: 1px solid rgba(226, 232, 240, 0.85);
       overflow: hidden;
     }
