@@ -293,6 +293,71 @@ $topbar-h: 62px;
 
 .topbar-right { @include flex-start; gap: 12px; }
 
+.topbar-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #F8FAFC;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 12px 5px 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+
+  .theme-icon-container {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    @include flex-center;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .theme-text {
+    letter-spacing: 0.01em;
+  }
+
+  &:hover {
+    background: #F1F5F9;
+    border-color: #CBD5E1;
+    transform: translateY(-1px);
+
+    .theme-icon-container {
+      transform: scale(1.1) rotate(15deg);
+    }
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &.is-dark {
+    background: #131E35;
+    border-color: #243656;
+    color: #F8FAFC;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+    .theme-icon-container {
+      background: #0F172A;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.35);
+    }
+
+    &:hover {
+      background: #192744;
+      border-color: #38BDF8;
+
+      .theme-icon-container {
+        transform: scale(1.1) rotate(-15deg);
+      }
+    }
+  }
+}
+
 .topbar-btn {
   width: 38px; height: 38px;
   border-radius: 50%;
@@ -477,4 +542,164 @@ $topbar-h: 62px;
 @keyframes scaleUp {
   from { opacity: 0; transform: scale(0.92); }
   to { opacity: 1; transform: scale(1); }
+}
+
+// ─── Direct Dark Theme Overrides for Admin Shell ────────────────────────────
+.admin-layout.admin-dark-theme {
+  background: #0A0F1D;
+
+  .admin-sidebar {
+    background: #0F172A;
+    border-right: 1px solid #1E2D48;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+
+    .sidebar-logo {
+      background: #0F172A;
+      border-bottom: 1px solid #1E2D48;
+
+      .logo-icon-sm {
+        background: #131E35;
+        border-color: #243656;
+      }
+
+      .sidebar-logo-text {
+        .logo-t1 { color: #F8FAFC !important; }
+        .logo-t2 { color: #2DD4BF !important; }
+      }
+    }
+
+    .sidebar-admin-badge {
+      background: rgba(13, 148, 136, 0.18);
+      border: 1px solid rgba(45, 212, 191, 0.35);
+
+      .badge-text {
+        .badge-t1 { color: #2DD4BF !important; }
+        .badge-t2 { color: #FFFFFF !important; font-weight: 800; }
+      }
+    }
+
+    .sidebar-section-title {
+      color: #94A3B8 !important;
+    }
+
+    .sidebar-item {
+      color: #CBD5E1 !important;
+
+      .si-icon {
+        color: #94A3B8 !important;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.08) !important;
+        color: #38BDF8 !important;
+
+        .si-icon {
+          color: #38BDF8 !important;
+        }
+      }
+
+      &.active {
+        background: linear-gradient(135deg, #0D9488 0%, #14B8A6 100%) !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 4px 16px rgba(13, 148, 136, 0.4) !important;
+
+        .si-icon,
+        .si-label {
+          color: #FFFFFF !important;
+        }
+      }
+    }
+
+    .sidebar-user-footer {
+      background: #0F172A;
+      border-top: 1px solid #1E2D48;
+
+      .footer-info {
+        .footer-name { color: #FFFFFF !important; font-weight: 800; }
+        .footer-role { color: #94A3B8 !important; }
+      }
+
+      .footer-logout-btn {
+        background: #131E35;
+        border-color: #243656;
+        color: #CBD5E1;
+
+        &:hover {
+          background: rgba(239, 68, 68, 0.2);
+          border-color: #EF4444;
+          color: #EF4444;
+        }
+      }
+    }
+  }
+
+  .admin-main {
+    background: #0A0F1D;
+  }
+
+  .admin-topbar {
+    background: #0F172A;
+    border-bottom: 1px solid #1E2D48;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+
+    .sidebar-toggle {
+      background: #131E35;
+      border-color: #243656;
+      color: #CBD5E1;
+      &:hover {
+        background: #1E2D48;
+        border-color: #38BDF8;
+        color: #FFFFFF;
+      }
+    }
+
+    .topbar-btn {
+      background: #131E35;
+      border-color: #243656;
+      color: #CBD5E1;
+      &::after { border-color: #0F172A; }
+      &:hover {
+        background: #1E2D48;
+        border-color: #38BDF8;
+        color: #FFFFFF;
+      }
+    }
+
+    .admin-user-chip {
+      background: #131E35;
+      border-color: #243656;
+      color: #FFFFFF;
+      &:hover {
+        background: #1E2D48;
+        border-color: #38BDF8;
+      }
+    }
+  }
+
+  .admin-content {
+    background: #0A0F1D;
+  }
+
+  .logout-modal-backdrop {
+    background: rgba(0, 0, 0, 0.75);
+
+    .logout-modal-card {
+      background: #131E35;
+      border: 1px solid #1E2D48;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+
+      .modal-title { color: #F8FAFC; }
+      .modal-desc  { color: #94A3B8; }
+
+      .btn-cancel {
+        background: #0F172A;
+        border-color: #1E2D48;
+        color: #CBD5E1;
+        &:hover {
+          background: #1E2D48;
+          color: #FFFFFF;
+        }
+      }
+    }
+  }
 }

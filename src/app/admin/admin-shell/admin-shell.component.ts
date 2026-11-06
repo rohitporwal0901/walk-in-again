@@ -2,6 +2,7 @@ import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { ThemeService } from '../../core/services/theme.service';
 
 interface NavItem {
   id: string;
@@ -19,6 +20,7 @@ interface NavItem {
 })
 export class AdminShellComponent {
   private auth = inject(AuthService);
+  themeService = inject(ThemeService);
 
   sidebarOpen = signal<boolean>(true);
   searchQuery = signal<string>('');

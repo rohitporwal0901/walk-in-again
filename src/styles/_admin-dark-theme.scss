@@ -1,0 +1,844 @@
+// ─── WalkIn Physio Admin Dark Theme System ──────────────────────────────────
+// Elegantly crafted obsidian-navy theme for medical clinic administrators.
+
+:root[data-theme='dark'],
+:root[data-admin-theme='dark'],
+body.admin-dark-theme,
+.admin-layout.admin-dark-theme {
+  // Theme Overrides for Core Variables
+  --bg:             #0A0F1D;
+  --bg-alt:         #0F172A;
+  --card:           #131E35;
+  --card-hover:     #192744;
+  --border:         #1E2D48;
+  --border-light:   #162238;
+
+  --text-primary:   #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted:     #64748B;
+  --text-white:     #FFFFFF;
+
+  --shadow-sm:      0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.25);
+  --shadow-md:      0 6px 18px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.3);
+  --shadow-lg:      0 10px 28px -4px rgba(0, 0, 0, 0.6), 0 4px 10px -2px rgba(0, 0, 0, 0.4);
+  --shadow-xl:      0 20px 40px rgba(0, 0, 0, 0.7);
+  --shadow-card:    0 10px 28px -4px rgba(0, 0, 0, 0.5), 0 4px 10px -2px rgba(0, 0, 0, 0.35);
+}
+
+// ─── Admin Layout & Shell Scoped Dark Styles ──────────────────────────────────
+body.admin-dark-theme,
+.admin-layout.admin-dark-theme {
+  background: #0A0F1D;
+  color: #F8FAFC;
+
+  // 1. Sidebar
+  .admin-sidebar {
+    background: #0F172A;
+    border-right: 1px solid #1E2D48;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+
+    .sidebar-logo {
+      background: #0F172A;
+      border-bottom: 1px solid #1E2D48;
+
+      .logo-icon-sm {
+        background: #131E35;
+        border-color: #243656;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+      }
+
+      .sidebar-logo-text {
+        .logo-t1 { color: #F8FAFC !important; }
+        .logo-t2 { color: #2DD4BF !important; }
+      }
+    }
+
+    .sidebar-admin-badge {
+      background: rgba(13, 148, 136, 0.18) !important;
+      border-color: rgba(45, 212, 191, 0.35) !important;
+
+      .badge-avatar {
+        background: linear-gradient(135deg, #0D9488 0%, #14B8A6 100%) !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 2px 8px rgba(13, 148, 136, 0.4) !important;
+      }
+
+      .badge-text {
+        .badge-t1 { color: #2DD4BF !important; font-weight: 700; }
+        .badge-t2 { color: #FFFFFF !important; font-weight: 800; }
+      }
+    }
+
+    .sidebar-section-title {
+      color: #94A3B8 !important;
+    }
+
+    .sidebar-item {
+      color: #CBD5E1 !important;
+
+      .si-icon {
+        color: #94A3B8 !important;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.08) !important;
+        color: #38BDF8 !important;
+
+        .si-icon {
+          color: #38BDF8 !important;
+        }
+      }
+
+      &.active {
+        background: linear-gradient(135deg, #0D9488 0%, #14B8A6 100%) !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 4px 16px rgba(13, 148, 136, 0.45) !important;
+
+        .si-icon,
+        .si-label {
+          color: #FFFFFF !important;
+        }
+      }
+    }
+
+    .sidebar-user-footer {
+      background: #0F172A !important;
+      border-top: 1px solid #1E2D48 !important;
+
+      .footer-avatar {
+        background: linear-gradient(135deg, #0284C7 0%, #0D9488 100%) !important;
+        color: #FFFFFF !important;
+      }
+
+      .footer-info {
+        .footer-name { color: #FFFFFF !important; font-weight: 800; }
+        .footer-role { color: #94A3B8 !important; }
+      }
+
+      .footer-logout-btn {
+        background: #131E35 !important;
+        border-color: #243656 !important;
+        color: #CBD5E1 !important;
+
+        &:hover {
+          background: rgba(239, 68, 68, 0.2) !important;
+          border-color: #EF4444 !important;
+          color: #EF4444 !important;
+        }
+      }
+    }
+  }
+
+  // 2. Main Wrapper & Topbar
+  .admin-main {
+    background: #0A0F1D;
+  }
+
+  .admin-topbar {
+    background: #0F172A;
+    border-bottom: 1px solid #1E2D48;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+
+    .sidebar-toggle {
+      background: #131E35;
+      border-color: #243656;
+      color: #CBD5E1;
+
+      &:hover {
+        background: #1E2D48;
+        border-color: #38BDF8;
+        color: #FFFFFF;
+      }
+    }
+
+    .topbar-btn {
+      background: #131E35;
+      border-color: #243656;
+      color: #CBD5E1;
+
+      &:hover {
+        background: #1E2D48;
+        border-color: #38BDF8;
+        color: #FFFFFF;
+      }
+
+      &::after {
+        border-color: #0F172A;
+      }
+    }
+
+    .admin-user-chip {
+      background: #131E35;
+      border-color: #243656;
+      color: #F8FAFC;
+
+      &:hover {
+        background: #1E2D48;
+        border-color: #38BDF8;
+      }
+    }
+  }
+
+  .admin-content {
+    background: #0A0F1D;
+  }
+
+  // 3. Common Headings & Badges Across Pages
+  .page-title {
+    color: #F8FAFC !important;
+  }
+
+  .page-sub {
+    color: #94A3B8 !important;
+  }
+
+  .top-status-badge {
+    background: rgba(16, 185, 129, 0.16) !important;
+    color: #34D399 !important;
+    border: 1px solid rgba(16, 185, 129, 0.35) !important;
+
+    .live-dot {
+      background: #34D399 !important;
+    }
+  }
+
+  // 4. Control Panels, Search, and Filters
+  .controls-panel {
+    background: #131E35 !important;
+    border: 1px solid #1E2D48 !important;
+    box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .search-wrap svg {
+    stroke: #64748B !important;
+  }
+
+  .search-input {
+    background: #0F172A !important;
+    border: 1.5px solid #1E2D48 !important;
+    color: #F8FAFC !important;
+
+    &::placeholder {
+      color: #64748B !important;
+    }
+
+    &:focus {
+      background: #131E35 !important;
+      border-color: #0284C7 !important;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25) !important;
+    }
+  }
+
+  .filter-lbl {
+    color: #94A3B8 !important;
+  }
+
+  .filter-pill {
+    background: #0F172A !important;
+    border: 1.5px solid #1E2D48 !important;
+    color: #94A3B8 !important;
+
+    &:hover {
+      background: #192744 !important;
+      color: #F8FAFC !important;
+      border-color: #243656 !important;
+    }
+
+    &.active {
+      background: linear-gradient(135deg, #0284C7 0%, #0D9488 100%) !important;
+      color: #FFFFFF !important;
+      border-color: transparent !important;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35) !important;
+    }
+  }
+
+  select,
+  .spec-select,
+  .period-select,
+  .sort-select,
+  .method-select,
+  .modal-select {
+    background-color: #0F172A !important;
+    border: 1.5px solid #1E2D48 !important;
+    color: #F8FAFC !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+
+    option {
+      background-color: #0F172A !important;
+      color: #F8FAFC !important;
+    }
+
+    &:hover, &:focus {
+      border-color: #38BDF8 !important;
+      background-color: #131E35 !important;
+    }
+  }
+
+  // 5. Table Container & Tables
+  .table-container-card {
+    background: #131E35 !important;
+    border: 1px solid #1E2D48 !important;
+    box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  table {
+    thead tr {
+      background: #0F172A !important;
+      border-bottom: 1.5px solid #1E2D48 !important;
+    }
+
+    th {
+      color: #94A3B8 !important;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #1A2740 !important;
+      background: transparent !important;
+
+      &:hover {
+        background: #182642 !important;
+      }
+    }
+
+    td {
+      color: #CBD5E1 !important;
+    }
+  }
+
+  .name {
+    color: #F8FAFC !important;
+  }
+
+  .pid,
+  .text-muted,
+  .reg-date {
+    color: #64748B !important;
+  }
+
+  .contact-pill {
+    background: #0F172A !important;
+    border: 1px solid #1E2D48 !important;
+    color: #CBD5E1 !important;
+  }
+
+  .completed-badge {
+    background: #0F172A !important;
+    color: #E2E8F0 !important;
+    border: 1px solid #1E2D48 !important;
+  }
+
+  .prog-track {
+    background: #1E2D48 !important;
+  }
+
+  .empty-icon-wrap {
+    background: #0F172A !important;
+  }
+
+  .empty-box {
+    h3 { color: #F8FAFC !important; }
+    p  { color: #94A3B8 !important; }
+  }
+
+  // Status & Badges
+  .sub-plan-badge {
+    background: rgba(2, 132, 199, 0.18) !important;
+    color: #38BDF8 !important;
+    border: 1px solid rgba(2, 132, 199, 0.35) !important;
+
+    &.badge-gold {
+      background: rgba(245, 158, 11, 0.18) !important;
+      color: #FBBF24 !important;
+      border: 1px solid rgba(245, 158, 11, 0.35) !important;
+    }
+  }
+
+  .status-pill {
+    &.status-active {
+      background: rgba(16, 185, 129, 0.18) !important;
+      color: #34D399 !important;
+      border: 1px solid rgba(52, 211, 153, 0.3) !important;
+    }
+
+    &.status-expired {
+      background: rgba(239, 68, 68, 0.18) !important;
+      color: #F87171 !important;
+      border: 1px solid rgba(248, 113, 113, 0.3) !important;
+    }
+
+    &.status-walkin {
+      background: #0F172A !important;
+      color: #94A3B8 !important;
+      border: 1px solid #1E2D48 !important;
+    }
+  }
+
+  .status-badge {
+    &.status-completed {
+      background: rgba(16, 185, 129, 0.18) !important;
+      color: #34D399 !important;
+      border: 1px solid rgba(52, 211, 153, 0.3) !important;
+      .dot { background: #34D399 !important; }
+    }
+
+    &.status-active {
+      background: rgba(2, 132, 199, 0.18) !important;
+      color: #38BDF8 !important;
+      border: 1px solid rgba(56, 189, 248, 0.3) !important;
+      .dot { background: #38BDF8 !important; }
+    }
+
+    &.status-pending {
+      background: rgba(245, 158, 11, 0.18) !important;
+      color: #FBBF24 !important;
+      border: 1px solid rgba(251, 191, 36, 0.3) !important;
+      .dot { background: #FBBF24 !important; }
+    }
+
+    &.status-cancelled {
+      background: rgba(239, 68, 68, 0.18) !important;
+      color: #F87171 !important;
+      border: 1px solid rgba(248, 113, 113, 0.3) !important;
+      .dot { background: #F87171 !important; }
+    }
+  }
+
+  // Payment Method & Status Badges
+  .method-pill {
+    &.method-upi {
+      background: rgba(109, 40, 217, 0.2) !important;
+      color: #C4B5FD !important;
+      border: 1px solid rgba(139, 92, 246, 0.35) !important;
+    }
+
+    &.method-card {
+      background: rgba(2, 132, 199, 0.2) !important;
+      color: #38BDF8 !important;
+      border: 1px solid rgba(56, 189, 248, 0.35) !important;
+    }
+
+    &.method-cash {
+      background: rgba(22, 163, 74, 0.2) !important;
+      color: #4ADE80 !important;
+      border: 1px solid rgba(74, 222, 128, 0.35) !important;
+    }
+
+    &.method-sub {
+      background: rgba(245, 158, 11, 0.2) !important;
+      color: #FBBF24 !important;
+      border: 1px solid rgba(251, 191, 36, 0.35) !important;
+    }
+
+    &.method-other {
+      background: #0F172A !important;
+      color: #94A3B8 !important;
+      border: 1px solid #1E2D48 !important;
+    }
+  }
+
+  .pay-badge {
+    &.pay-paid {
+      background: rgba(16, 185, 129, 0.18) !important;
+      color: #34D399 !important;
+      border: 1px solid rgba(52, 211, 153, 0.3) !important;
+    }
+
+    &.pay-pending {
+      background: rgba(245, 158, 11, 0.18) !important;
+      color: #FBBF24 !important;
+      border: 1px solid rgba(251, 191, 36, 0.3) !important;
+    }
+
+    &.pay-failed {
+      background: rgba(239, 68, 68, 0.18) !important;
+      color: #F87171 !important;
+      border: 1px solid rgba(248, 113, 113, 0.3) !important;
+    }
+  }
+
+  .worker-pill,
+  .clinic-pill {
+    color: #CBD5E1 !important;
+  }
+
+  .therapy-tag {
+    background: #0F172A !important;
+    border: 1px solid #1E2D48 !important;
+    color: #CBD5E1 !important;
+  }
+
+  .therapy-more {
+    background: #1E2D48 !important;
+    color: #94A3B8 !important;
+  }
+
+  .fee-text {
+    color: #F8FAFC !important;
+  }
+
+  // 6. Dashboard Cards, Charts, Rankings
+  .dash-card,
+  .chart-card,
+  .stat-card,
+  .table-card,
+  .quick-action-card,
+  .activity-card,
+  .section-card,
+  .perf-card,
+  .ranking-card,
+  .active-subs-card,
+  .transactions-card,
+  .donut-card,
+  .workers-card {
+    background: #131E35 !important;
+    border: 1px solid #1E2D48 !important;
+    box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.5) !important;
+
+    h3, h4, .card-title {
+      color: #F8FAFC !important;
+    }
+
+    .chart-sub, .card-sub, .sub-text {
+      color: #94A3B8 !important;
+    }
+
+    .view-all,
+    .add-link-btn {
+      color: #38BDF8 !important;
+      &:hover { color: #7DD3FC !important; }
+    }
+  }
+
+  // Dashboard Cards Child Elements
+  .dist-pill {
+    background: #0F172A !important;
+    border-color: #1E2D48 !important;
+    color: #E2E8F0 !important;
+    .dist-badge { color: #94A3B8 !important; }
+  }
+
+  .sub-item-card {
+    background: #0F172A !important;
+    border-color: #1E2D48 !important;
+    &:hover {
+      background: #182642 !important;
+      border-color: #243656 !important;
+    }
+    .sub-patient-name { color: #F8FAFC !important; }
+  }
+
+  .empty-subs-box {
+    .empty-icon-circle {
+      background: #0F172A !important;
+      border: 1px solid #1E2D48 !important;
+      svg { stroke: #38BDF8 !important; }
+    }
+    .empty-title { color: #F8FAFC !important; }
+    .empty-desc  { color: #94A3B8 !important; }
+  }
+
+  .txn-row {
+    border-bottom: 1px solid #1E2D48 !important;
+    .txn-patient { color: #F8FAFC !important; }
+    .txn-meta    { color: #94A3B8 !important; }
+    .txn-val     { color: #34D399 !important; }
+  }
+
+  .empty-txn {
+    p { color: #94A3B8 !important; }
+  }
+
+  .worker-rank-item {
+    border-bottom: 1px solid #1E2D48 !important;
+    .rank-name { color: #F8FAFC !important; }
+    .rank-sessions { color: #94A3B8 !important; }
+    .rank-num { color: #64748B !important; }
+    .rank-av {
+      background: #1E2D48 !important;
+      color: #38BDF8 !important;
+    }
+  }
+
+  .empty-workers-box {
+    p { color: #94A3B8 !important; }
+    .btn-outline-sm {
+      border-color: #0284C7 !important;
+      background: transparent !important;
+      color: #38BDF8 !important;
+      &:hover {
+        background: #0284C7 !important;
+        color: #FFFFFF !important;
+      }
+    }
+  }
+
+  // Dashboard Chart specific styling
+  .chart-head {
+    border-bottom: 1.5px solid #1E2D48 !important;
+  }
+
+  .bar-col {
+    .bar-track {
+      background: #1E2D48 !important;
+    }
+
+    .bar-day-lbl {
+      color: #94A3B8 !important;
+    }
+  }
+
+  .donut-val-text,
+  text[fill="#0F172A"] {
+    fill: #F8FAFC !important;
+  }
+
+  .donut-sub-text,
+  text[fill="#64748B"] {
+    fill: #94A3B8 !important;
+  }
+
+  .legend-item {
+    color: #CBD5E1 !important;
+  }
+
+  .legend-row {
+    border-bottom: 1px solid #1E2D48 !important;
+    .l-label { color: #CBD5E1 !important; }
+    .l-val   { color: #F8FAFC !important; }
+  }
+
+  .rank-item {
+    background: #0F172A !important;
+    border: 1px solid #1E2D48 !important;
+
+    &:hover {
+      background: #182642 !important;
+      border-color: #243656 !important;
+    }
+
+    .rank-name { color: #F8FAFC !important; }
+    .rank-meta { color: #94A3B8 !important; }
+    .rank-num  { background: #131E35 !important; color: #38BDF8 !important; border: 1px solid #1E2D48 !important; }
+  }
+
+  .quick-btn {
+    background: #0F172A !important;
+    border: 1.5px solid #1E2D48 !important;
+    color: #F8FAFC !important;
+
+    &:hover {
+      background: #182642 !important;
+      border-color: #0284C7 !important;
+      transform: translateY(-2px);
+    }
+
+    .qb-icon {
+      background: #131E35 !important;
+      color: #38BDF8 !important;
+    }
+  }
+
+  // 7. Modals (Logout modal, Worker registration modal)
+  .logout-modal-backdrop,
+  .modal-overlay {
+    background: rgba(0, 0, 0, 0.75) !important;
+  }
+
+  .logout-modal-card,
+  .worker-modal {
+    background: #131E35 !important;
+    border: 1px solid #1E2D48 !important;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75) !important;
+
+    .modal-title { color: #F8FAFC !important; }
+    .modal-desc, .modal-sub { color: #94A3B8 !important; }
+
+    .modal-input,
+    .modal-select {
+      background: #0F172A !important;
+      border: 1.5px solid #1E2D48 !important;
+      color: #F8FAFC !important;
+
+      &:focus {
+        background: #131E35 !important;
+        border-color: #0284C7 !important;
+        box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25) !important;
+      }
+    }
+
+    .input-with-prefix {
+      background: #0F172A !important;
+      border: 1.5px solid #1E2D48 !important;
+
+      .input-prefix {
+        color: #94A3B8 !important;
+        border-right: 1.5px solid #1E2D48 !important;
+      }
+    }
+
+    .btn-cancel,
+    .btn-secondary {
+      background: #0F172A !important;
+      border: 1px solid #1E2D48 !important;
+      color: #CBD5E1 !important;
+
+      &:hover {
+        background: #182642 !important;
+        color: #FFFFFF !important;
+      }
+    }
+  }
+
+  // 8. Settings Page Dark Theme
+  .settings-page {
+    .section-card {
+      background: #131E35 !important;
+      border: 1px solid #1E2D48 !important;
+    }
+
+    .card-head {
+      border-bottom: 1px solid #1E2D48 !important;
+
+      .head-t1 { color: #F8FAFC !important; }
+      .head-t2 { color: #94A3B8 !important; }
+    }
+
+    .theme-card-option {
+      background: #0F172A !important;
+      border-color: #1E2D48 !important;
+
+      &:hover {
+        background: #16223B !important;
+        border-color: #0284C7 !important;
+      }
+
+      &.selected {
+        background: #16223B !important;
+        border-color: #0284C7 !important;
+        box-shadow: 0 4px 18px rgba(2, 132, 199, 0.25) !important;
+      }
+
+      .tco-name {
+        color: #F8FAFC !important;
+      }
+
+      .tco-desc {
+        color: #94A3B8 !important;
+      }
+    }
+
+    .theme-status-chip {
+      background: #0F172A !important;
+      border-color: #1E2D48 !important;
+      color: #CBD5E1 !important;
+    }
+
+    .price-input-row,
+    .plan-row-card {
+      background: #0F172A !important;
+      border: 1px solid #1E2D48 !important;
+
+      &:hover {
+        border-color: #243656 !important;
+      }
+    }
+
+    .clean-inp {
+      color: #F8FAFC !important;
+    }
+
+    .pg-input-box,
+    .pg-rate-display,
+    .compact-prefix-box {
+      background: #131E35 !important;
+      border: 1px solid #1E2D48 !important;
+    }
+
+    .rate-val {
+      color: #38BDF8 !important;
+    }
+
+    .pg-lbl,
+    .field-label {
+      color: #94A3B8 !important;
+    }
+
+    .pg-sym,
+    .pg-unit,
+    .p-symbol,
+    .p-unit,
+    .rate-sub {
+      color: #64748B !important;
+    }
+
+    .chip-btn {
+      background: #0F172A !important;
+      border: 1.5px solid #1E2D48 !important;
+      color: #94A3B8 !important;
+
+      &:hover {
+        background: #182642 !important;
+        color: #F8FAFC !important;
+      }
+
+      &.chip-active {
+        background: linear-gradient(135deg, #0284C7 0%, #0D9488 100%) !important;
+        color: #FFFFFF !important;
+        border-color: transparent !important;
+      }
+    }
+
+    .card-footer-compact {
+      border-top: 1px solid #1E2D48 !important;
+    }
+
+    .btn-text {
+      color: #94A3B8 !important;
+
+      &:hover {
+        color: #F8FAFC !important;
+      }
+    }
+  }
+
+  // 9. Reports Page Dark Theme
+  .reports-admin-page {
+    .report-card,
+    .stat-panel,
+    .analytics-box {
+      background: #131E35 !important;
+      border: 1px solid #1E2D48 !important;
+    }
+
+    .perf-row {
+      background: #0F172A !important;
+      border: 1px solid #1E2D48 !important;
+
+      &:hover {
+        background: #182642 !important;
+      }
+    }
+
+    .perf-name { color: #F8FAFC !important; }
+    .perf-stat { color: #94A3B8 !important; }
+  }
+
+  // Scrollbar Styling in Dark Mode
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0A0F1D;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #1E2D48;
+    border-radius: 999px;
+
+    &:hover {
+      background: #243656;
+    }
+  }
+}

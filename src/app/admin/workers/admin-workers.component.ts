@@ -383,6 +383,134 @@ interface WorkerRow {
 
     @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes pulse { 0% { transform: scale(0.95); opacity: 0.8; } 50% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.8; } }
+
+    :host-context(.admin-dark-theme) {
+      .page-title { color: #F8FAFC !important; }
+      .page-sub   { color: #94A3B8 !important; }
+
+      .controls-panel {
+        background: #131E35 !important;
+        border: 1px solid #1E2D48 !important;
+        box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.5) !important;
+      }
+
+      .search-input {
+        background: #0F172A !important;
+        border: 1.5px solid #1E2D48 !important;
+        color: #F8FAFC !important;
+        &::placeholder { color: #64748B !important; }
+        &:focus {
+          background: #131E35 !important;
+          border-color: #0284C7 !important;
+          box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25) !important;
+        }
+      }
+
+      .filter-lbl { color: #94A3B8 !important; }
+
+      .spec-select {
+        background-color: #0F172A !important;
+        border: 1.5px solid #1E2D48 !important;
+        color: #F8FAFC !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+
+        option {
+          background-color: #0F172A !important;
+          color: #F8FAFC !important;
+        }
+
+        &:hover, &:focus {
+          border-color: #38BDF8 !important;
+          background-color: #131E35 !important;
+        }
+      }
+
+      .table-container-card {
+        background: #131E35 !important;
+        border: 1px solid #1E2D48 !important;
+        box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.5) !important;
+      }
+
+      .workers-table thead tr {
+        background: #0F172A !important;
+        border-bottom: 1.5px solid #1E2D48 !important;
+      }
+
+      .workers-table th {
+        color: #94A3B8 !important;
+      }
+
+      .workers-table tbody tr {
+        border-bottom: 1px solid #1A2740 !important;
+        background: transparent !important;
+        &:hover {
+          background: #182642 !important;
+        }
+      }
+
+      .workers-table td {
+        color: #CBD5E1 !important;
+      }
+
+      .w-name { color: #F8FAFC !important; }
+      .w-id   { color: #64748B !important; }
+      .contact-pill {
+        background: #0F172A !important;
+        border-color: #1E2D48 !important;
+        color: #CBD5E1 !important;
+      }
+      .spec-badge {
+        background: rgba(2, 132, 199, 0.18) !important;
+        color: #38BDF8 !important;
+        border-color: rgba(2, 132, 199, 0.35) !important;
+      }
+      .exp-text { color: #94A3B8 !important; }
+      .sess-count-badge {
+        background: rgba(245, 158, 11, 0.18) !important;
+        color: #FBBF24 !important;
+        border-color: rgba(245, 158, 11, 0.35) !important;
+      }
+      .earnings-val { color: #34D399 !important; }
+
+      .empty-icon-wrap {
+        background: #0F172A !important;
+        border: 1px solid #1E2D48 !important;
+        svg { stroke: #38BDF8 !important; }
+      }
+
+      .empty-workers-box h3 { color: #F8FAFC !important; }
+      .empty-workers-box p  { color: #94A3B8 !important; }
+
+      .worker-modal {
+        background: #131E35 !important;
+        border: 1px solid #1E2D48 !important;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75) !important;
+        .modal-title { color: #F8FAFC !important; }
+        .modal-sub   { color: #94A3B8 !important; }
+        .form-label  { color: #F8FAFC !important; }
+        .field-hint  { color: #64748B !important; }
+        .btn-close {
+          background: #1E2D48 !important;
+          color: #CBD5E1 !important;
+          &:hover { background: #243656 !important; color: #FFFFFF !important; }
+        }
+        .modal-input, .modal-select {
+          background: #0F172A !important;
+          border-color: #1E2D48 !important;
+          color: #F8FAFC !important;
+          option { background: #0F172A !important; color: #F8FAFC !important; }
+          &:focus {
+            background: #131E35 !important;
+            border-color: #38BDF8 !important;
+          }
+        }
+        .input-with-prefix {
+          background: #0F172A !important;
+          border-color: #1E2D48 !important;
+          .prefix { color: #94A3B8 !important; border-right-color: #1E2D48 !important; }
+        }
+      }
+    }
   `]
 })
 export class AdminWorkersComponent implements OnInit, OnDestroy {
