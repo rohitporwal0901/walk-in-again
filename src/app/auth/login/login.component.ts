@@ -38,49 +38,49 @@ export class LoginComponent implements OnInit, OnDestroy {
   errorMsg = signal<string>('');
 
   // Auto Slider State (Swiggy / Zepto Style Mini Carousel)
-  currentSlide = signal<number>(0);
+  currentSlide = signal<number>(1);
   private sliderTimer: any = null;
 
   slides: PromoSlide[] = [
     {
       title: 'Walk-In Care Anytime',
       desc: 'No prior appointment needed for consultation',
-      badge: 'Walk-In',
-      img: '/assets/images/slider-walkin.jpg',
+      badge: 'WALK-IN',
+      img: 'assets/images/slider-walkin.jpg',
       bg: '#FFFFFF',
       border: '#E2E8F0',
       badgeColor: '#0284C7',
-      badgeBg: '#F0F9FF'
+      badgeBg: '#FFFFFF'
     },
     {
       title: 'Certified Specialists',
       desc: 'Qualified BPT & MPT orthopedic experts',
-      badge: 'Specialists',
-      img: '/assets/images/slider-specialist.jpg',
+      badge: 'SPECIALISTS',
+      img: 'assets/images/slider-specialist.jpg',
       bg: '#FFFFFF',
       border: '#E2E8F0',
       badgeColor: '#0D9488',
-      badgeBg: '#F0FDF4'
-    },
-    {
-      title: 'Targeted Pain Relief',
-      desc: 'Spine, knee, shoulder & sports recovery',
-      badge: 'Pain Relief',
-      img: '/assets/images/slider-relief.jpg',
-      bg: '#FFFFFF',
-      border: '#E2E8F0',
-      badgeColor: '#7C3AED',
-      badgeBg: '#FAF5FF'
+      badgeBg: '#FFFFFF'
     },
     {
       title: 'Personalised Recovery',
       desc: 'Customized exercise roadmap for fast healing',
-      badge: 'Custom Care',
-      img: '/assets/images/slider-rehab.jpg',
+      badge: 'CUSTOM CARE',
+      img: 'assets/images/slider-rehab.jpg',
       bg: '#FFFFFF',
       border: '#E2E8F0',
       badgeColor: '#0891B2',
-      badgeBg: '#ECFEFF'
+      badgeBg: '#FFFFFF'
+    },
+    {
+      title: 'Targeted Pain Relief',
+      desc: 'Spine, knee, shoulder & sports recovery',
+      badge: 'PAIN RELIEF',
+      img: 'assets/images/slider-relief.jpg',
+      bg: '#FFFFFF',
+      border: '#E2E8F0',
+      badgeColor: '#7C3AED',
+      badgeBg: '#FFFFFF'
     }
   ];
 
