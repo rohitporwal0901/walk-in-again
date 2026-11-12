@@ -1,0 +1,751 @@
+// ─── User-Side Glassmorphism Theme ───────────────────────────────────────────
+// Applied to: Patient (Home, Sessions, Payments, Subscription)
+//             Worker  (Dashboard, Active-Session, Patient-Search, Session-History)
+// Strategy: Keep the airy sky-blue background, overlay frosted-glass cards,
+//           add animated gradient mesh, shimmer highlights and micro-motion.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SECTION 1 — GLASS DESIGN TOKENS
+// ══════════════════════════════════════════════════════════════════════════════
+:root {
+  // Glass surface layers
+  --glass-bg:           rgba(255, 255, 255, 0.52);
+  --glass-bg-strong:    rgba(255, 255, 255, 0.72);
+  --glass-bg-subtle:    rgba(255, 255, 255, 0.28);
+  --glass-bg-dark:      rgba(7, 31, 54, 0.28);
+
+  // Glass borders
+  --glass-border:       rgba(255, 255, 255, 0.78);
+  --glass-border-muted: rgba(255, 255, 255, 0.42);
+  --glass-border-blue:  rgba(2, 132, 199, 0.22);
+
+  // Blur levels
+  --blur-xs:   blur(6px);
+  --blur-sm:   blur(12px);
+  --blur-md:   blur(20px);
+  --blur-lg:   blur(32px);
+  --blur-xl:   blur(48px);
+
+  // Glass shadows
+  --glass-shadow-sm:  0 4px 16px rgba(7, 31, 54, 0.06), 0 1px 4px rgba(7, 31, 54, 0.03);
+  --glass-shadow-md:  0 8px 28px rgba(7, 31, 54, 0.08), 0 2px 8px rgba(7, 31, 54, 0.04);
+  --glass-shadow-lg:  0 16px 48px rgba(7, 31, 54, 0.12), 0 4px 14px rgba(7, 31, 54, 0.06);
+  --glass-shadow-xl:  0 24px 64px rgba(7, 31, 54, 0.16), 0 8px 24px rgba(7, 31, 54, 0.08);
+  --glass-glow-blue:  0 0 20px rgba(2, 132, 199, 0.18), 0 8px 28px rgba(7, 31, 54, 0.08);
+  --glass-glow-teal:  0 0 20px rgba(13, 148, 136, 0.16), 0 8px 28px rgba(7, 31, 54, 0.08);
+  --glass-glow-green: 0 0 20px rgba(16, 185, 129, 0.18), 0 8px 28px rgba(7, 31, 54, 0.08);
+
+  // Gradient mesh background
+  --mesh-bg:
+    radial-gradient(ellipse 80% 60% at 15% 10%,  rgba(186, 230, 253, 0.55) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 50% at 85% 20%,  rgba(167, 243, 208, 0.30) 0%, transparent 65%),
+    radial-gradient(ellipse 70% 60% at 50% 90%,  rgba(224, 242, 254, 0.60) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 90% 70%,  rgba(196, 181, 253, 0.18) 0%, transparent 60%),
+    linear-gradient(170deg, #EAF5FB 0%, #F0F8FC 50%, #E8F4FA 100%);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SECTION 2 — SHARED MIXINS
+// ══════════════════════════════════════════════════════════════════════════════
+
+// Core frosted glass surface
+@mixin glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--blur-md);
+  -webkit-backdrop-filter: var(--blur-md);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow-md);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.22s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--glass-shadow-lg);
+    border-color: rgba(255, 255, 255, 0.90);
+  }
+}
+
+// Stronger glass (white-ish, readable)
+@mixin glass-card-strong {
+  background: var(--glass-bg-strong);
+  backdrop-filter: var(--blur-sm);
+  -webkit-backdrop-filter: var(--blur-sm);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow-md);
+}
+
+// Subtle ghost surface
+@mixin glass-subtle {
+  background: var(--glass-bg-subtle);
+  backdrop-filter: var(--blur-xs);
+  -webkit-backdrop-filter: var(--blur-xs);
+  border: 1px solid var(--glass-border-muted);
+}
+
+// Inner glow shimmer highlight (top edge specular)
+@mixin glass-shine {
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1.5px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.95) 40%,
+      rgba(255, 255, 255, 0.95) 60%,
+      transparent 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+
+// Gradient brand accent top bar (3.5 px)
+@mixin glass-accent-bar($gradient: linear-gradient(90deg, #0284C7 0%, #38BDF8 50%, #10B981 100%)) {
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3.5px;
+    background: $gradient;
+    pointer-events: none;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SECTION 3 — ANIMATED BACKGROUND (applies to all user-side page wrappers)
+// ══════════════════════════════════════════════════════════════════════════════
+
+%user-glass-bg {
+  background: var(--mesh-bg);
+  background-attachment: fixed;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: -15%;
+    width: 55vw;
+    height: 55vw;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(186, 230, 253, 0.42) 0%, transparent 70%);
+    animation: glassBgOrb1 18s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  &::after {
+    content: '';
+    position: fixed;
+    bottom: -10%;
+    right: -10%;
+    width: 45vw;
+    height: 45vw;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(167, 243, 208, 0.30) 0%, transparent 70%);
+    animation: glassBgOrb2 22s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+
+@keyframes glassBgOrb1 {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(5vw, 3vh) scale(1.08); }
+  100% { transform: translate(-3vw, 6vh) scale(0.95); }
+}
+
+@keyframes glassBgOrb2 {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(-4vw, -4vh) scale(1.06); }
+  100% { transform: translate(3vw, 3vh) scale(0.97); }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SECTION 4 — PATIENT HOME (.patient-home)
+// ══════════════════════════════════════════════════════════════════════════════
+
+.patient-home {
+  @extend %user-glass-bg;
+
+  .metric-card {
+    @include glass-card;
+    @include glass-shine;
+    border-radius: 22px;
+  }
+
+  .treatment-hero-card {
+    @include glass-card-strong;
+    @include glass-shine;
+    border-radius: 24px;
+    background: linear-gradient(
+      135deg,
+      rgba(224, 242, 254, 0.75) 0%,
+      rgba(191, 231, 250, 0.68) 50%,
+      rgba(178, 226, 249, 0.72) 100%
+    );
+    backdrop-filter: var(--blur-md);
+    -webkit-backdrop-filter: var(--blur-md);
+    border: 1.5px solid rgba(255, 255, 255, 0.85);
+    box-shadow:
+      0 12px 36px rgba(2, 132, 199, 0.14),
+      0 4px 12px rgba(7, 31, 54, 0.04),
+      inset 0 1px 2px rgba(255, 255, 255, 0.95);
+  }
+
+  .patient-otp-banner {
+    @include glass-card-strong;
+    @include glass-accent-bar(linear-gradient(90deg, #0284C7 0%, #38BDF8 50%, #10B981 100%));
+    border-radius: 22px;
+    border-color: rgba(2, 132, 199, 0.28);
+    box-shadow: var(--glass-glow-blue);
+
+    .otp-doctor-callout {
+      background: rgba(248, 250, 252, 0.6);
+      backdrop-filter: var(--blur-xs);
+      -webkit-backdrop-filter: var(--blur-xs);
+      border: 1px solid rgba(226, 232, 240, 0.6);
+    }
+
+    .otp-card-digit {
+      background: linear-gradient(180deg, rgba(240, 249, 255, 0.85) 0%, rgba(224, 242, 254, 0.75) 100%);
+      backdrop-filter: var(--blur-xs);
+      -webkit-backdrop-filter: var(--blur-xs);
+      border: 2px solid rgba(2, 132, 199, 0.35);
+    }
+  }
+
+  .active-session-banner {
+    @include glass-card-strong;
+    @include glass-accent-bar(linear-gradient(90deg, #10B981 0%, #0284C7 100%));
+    border-radius: 22px;
+    border-color: rgba(16, 185, 129, 0.35);
+    box-shadow: var(--glass-glow-green);
+
+    .time-capsule {
+      background: rgba(248, 250, 252, 0.55);
+      backdrop-filter: var(--blur-xs);
+      -webkit-backdrop-filter: var(--blur-xs);
+      border: 1px solid rgba(226, 232, 240, 0.55);
+    }
+  }
+
+  .payment-due-banner {
+    @include glass-card-strong;
+    @include glass-accent-bar(linear-gradient(90deg, #F59E0B 0%, #10B981 100%));
+    border-radius: 22px;
+    border-color: rgba(16, 185, 129, 0.30);
+    box-shadow: var(--glass-glow-teal);
+
+    .due-doctor-row {
+      background: rgba(248, 250, 252, 0.55);
+      backdrop-filter: var(--blur-xs);
+      -webkit-backdrop-filter: var(--blur-xs);
+      border: 1px solid rgba(241, 245, 249, 0.70);
+    }
+  }
+
+  .action-item {
+    background: rgba(255, 255, 255, 0.60) !important;
+    backdrop-filter: var(--blur-sm);
+    -webkit-backdrop-filter: var(--blur-sm);
+    border: 1px solid rgba(255, 255, 255, 0.80) !important;
+    box-shadow: var(--glass-shadow-sm);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+
+    &:hover, &:active {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: var(--glass-shadow-md);
+    }
+  }
+
+  .promo-banner {
+    background: linear-gradient(
+      135deg,
+      rgba(7, 31, 54, 0.80) 0%,
+      rgba(2, 132, 199, 0.72) 100%
+    );
+    backdrop-filter: var(--blur-sm);
+    -webkit-backdrop-filter: var(--blur-sm);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: var(--glass-shadow-lg);
+  }
+
+  .notif-btn {
+    background: rgba(255, 255, 255, 0.65) !important;
+    backdrop-filter: var(--blur-sm);
+    -webkit-backdrop-filter: var(--blur-sm);
+    border: 1px solid rgba(255, 255, 255, 0.85) !important;
+    box-shadow: var(--glass-shadow-sm);
+  }
+
+  .payment-sheet {
+    @include glass-card-strong;
+    border-radius: 28px 28px 0 0;
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 -8px 48px rgba(7, 31, 54, 0.14);
+  }
+
+  .sheet-overlay {
+    background: rgba(7, 31, 54, 0.38);
+    backdrop-filter: var(--blur-xs);
+    -webkit-backdrop-filter: var(--blur-xs);
+  }
+
+  .method-btn {
+    background: rgba(255, 255, 255, 0.55) !important;
+    backdrop-filter: var(--blur-xs);
+    -webkit-backdrop-filter: var(--blur-xs);
+    border: 1.5px solid rgba(226, 232, 240, 0.70) !important;
+
+    &.method-btn--active {
+      background: rgba(2, 132, 199, 0.12) !important;
+      border-color: rgba(2, 132, 199, 0.55) !important;
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SECTION 5 — PATIENT SESSIONS (.sessions-page)
+// ══════════════════════════════════════════════════════════════════════════════
+
+.sessions-page {
+  @extend %user-glass-bg;
+
+  .session-card {
+    @include glass-card;
+    @include glass-shine;
+    border-radius: 18px;
+  }
+
+  .back-btn {
+    @include glass-subtle;
+    border-radius: 50%;
+    box-shadow: var(--glass-shadow-sm);
+    border-color: rgba(255, 255, 255, 0.70) !important;
+  }
+
+  .pill-btn {
+    background: rgba(255, 255, 255, 0.55) !important;
+    backdrop-filter: var(--blur-xs);
+    -webkit-backdrop-filter: var(--blur-xs);
+    border-color: rgba(226, 232, 240, 0.65) !important;
+
+    &.active {
+      background: #0284C7 !important;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+  }
+
+  .empty-state-wrap .empty-icon-box {
+    @include glass-card-strong;
+    border-radius: 50%;
+  }
+
+  .page-nav-btn {
+    @include glass-subtle;
+    border-color: rgba(226, 232, 240, 0.65) !important;
+  }
+
+  .page-number-btn {
+    background: rgba(255, 255, 255, 0.52) !important;
+    backdrop-filter: var(--blur-xs);
+    -webkit-backdrop-filter: var(--blur-xs);
+    border-color: rgba(226, 232, 240, 0.60) !important;
+
+    &.active {
+      background: #0284C7 !important;
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SECTION 6 — PATIENT PAYMENT HISTORY (.payments-page)
+// ══════════════════════════════════════════════════════════════════════════════
+
+.payments-page {
+  @extend %user-glass-bg;
+
+  .total-paid-card {
+    @include glass-card-strong;
+    @include glass-shine;
+    @include glass-accent-bar(linear-gradient(90deg, #0284C7 0%, #38BDF8 50%, #10B981 100%));
+    border-radius: 20px;
+  }
+
+  .payment-card {
+    @include glass-card;
+    @include glass-shine;
+    border-radius: 18px;
+  }
+
+  .back-btn {
+    @include glass-subtle;
+    border-radius: 50%;
+    box-shadow: var(--glass-shadow-sm);
+    border-color: rgba(255, 255, 255, 0.70) !important;
+  }
+
+  .filter-pills-bar {
+    .pill-btn {
+      background: rgba(255, 255, 255, 0.55) !important;
+      backdrop-filter: var(--blur-xs);
+      -webkit-backdrop-filter: var(--blur-xs);
+      border-color: rgba(226, 232, 240, 0.65) !important;
+
+      &.active {
+        background: #0284C7 !important;
+        backdrop-filter: none;
+      }
+    }
+  }
+
+  .stats-summary-card,
+  .payment-summary-card,
+  .summary-card {
+    @include glass-card;
+    @include glass-shine;
+    border-radius: 18px;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SECTION 7 — PATIENT SUBSCRIPTION (.subscription-page)
+// ══════════════════════════════════════════════════════════════════════════════
+
+.subscription-page {
+  @extend %user-glass-bg;
+
+  .active-plan-card,
+  .plan-hero-card,
+  .current-plan-card {
+    @include glass-card-strong;
+    @include glass-shine;
+    border-radius: 24px;
+  }
+
+  .plan-card,
+  .plan-option-card,
+  .sub-plan-card {
+    @include glass-card;
+    @include glass-shine;
+    border-radius: 20px;
+
+    &.plan-selected,
+    &.selected,
+    &.active-plan {
+      background: rgba(2, 132, 199, 0.10) !important;
+      border-color: rgba(2, 132, 199, 0.55) !important;
+      box-shadow: var(--glass-glow-blue);
+    }
+  }
+
+  .sessions-progress-card,
+  .progress-card {
+    @include glass-card-strong;
+    @include glass-shine;
+    @include glass-accent-bar(linear-gradient(90deg, #0284C7 0%, #0D9488 50%, #10B981 100%));
+    border-radius: 22px;
+  }
+
+  .back-btn {
+    @include glass-subtle;
+    border-radius: 50%;
+    box-shadow: var(--glass-shadow-sm);
+    border-color: rgba(255, 255, 255, 0.70) !important;
+  }
+
+  .benefit-item,
+  .feature-row {
+    background: rgba(255, 255, 255, 0.40) !important;
+    backdrop-filter: var(--blur-xs);
+    -webkit-backdrop-filter: var(--blur-xs);
+    border-color: rgba(255, 255, 255, 0.60) !important;
+  }
+
+  .celebration-backdrop {
+    backdrop-filter: var(--blur-sm);
+    -webkit-backdrop-filter: var(--blur-sm);
+    background: rgba(7, 31, 54, 0.40) !important;
+  }
+
+  .celebration-modal {
+    @include glass-card-strong;
+    border-radius: 28px;
+    box-shadow: var(--glass-shadow-xl);
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SECTION 8 — WORKER DASHBOARD (.worker-dashboard-container)
+// ══════════════════════════════════════════════════════════════════════════════
+
+.worker-dashboard-container {
+  @extend %user-glass-bg;
+
+  .stat-card {
+    @include glass-card;
+    @include glass-shine;
+    border-radius: 20px;
+
+    .stat-icon-bubble {
+      background: rgba(255, 255, 255, 0.60) !important;
+      backdrop-filter: var(--blur-xs);
+      -webkit-backdrop-filter: var(--blur-xs);
+      border: 1px solid rgba(255, 255, 255, 0.80) !important;
+    }
+  }
+
+  .stat-wide-card {
+    @include glass-card;
+    @include glass-shine;
+    border-radius: 20px;
+  }
+
+  .patient-row-card {
+    @include glass-card;
+    @include glass-shine;
+    border-radius: 20px;
+  }
+
+  .empty-queue-card {
+    background: rgba(255, 255, 255, 0.52) !important;
+    backdrop-filter: var(--blur-md);
+    -webkit-backdrop-filter: var(--blur-md);
+    border: 1.5px dashed rgba(2, 132, 199, 0.35) !important;
+    border-radius: 24px;
+    box-shadow: var(--glass-shadow-md);
+
+    .empty-icon-wrap {
+      background: linear-gradient(135deg, rgba(224, 242, 254, 0.80) 0%, rgba(186, 230, 253, 0.70) 100%) !important;
+      backdrop-filter: var(--blur-xs);
+      -webkit-backdrop-filter: var(--blur-xs);
+    }
+  }
+
+  .intake-banner {
+    background: linear-gradient(135deg,
+      rgba(3, 74, 117, 0.85) 0%,
+      rgba(2, 132, 199, 0.80) 100%
+    ) !important;
+    backdrop-filter: var(--blur-sm);
+    -webkit-backdrop-filter: var(--blur-sm);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: var(--glass-shadow-lg);
+
+    .banner-search-btn {
+      background: rgba(255, 255, 255, 0.90) !important;
+      backdrop-filter: var(--blur-xs);
+      -webkit-backdrop-filter: var(--blur-xs);
+    }
+  }
+
+  .notif-btn {
+    background: rgba(255, 255, 255, 0.65) !important;
+    backdrop-filter: var(--blur-sm);
+    -webkit-backdrop-filter: var(--blur-sm);
+    border: 1.5px solid rgba(255, 255, 255, 0.85) !important;
+    box-shadow: var(--glass-shadow-sm);
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SECTION 9 — WORKER ACTIVE SESSION (.session-screen)
+// ══════════════════════════════════════════════════════════════════════════════
+
+.session-screen {
+  @extend %user-glass-bg;
+
+  [class*="-card"],
+  [class*="card-"],
+  .patient-card,
+  .timer-card,
+  .session-info-card,
+  .otp-verify-card,
+  .notes-card,
+  .session-status-card {
+    @include glass-card;
+    @include glass-shine;
+    border-radius: 20px;
+  }
+
+  .back-btn {
+    @include glass-subtle;
+    border-radius: 50%;
+    box-shadow: var(--glass-shadow-sm);
+    border-color: rgba(255, 255, 255, 0.70) !important;
+  }
+
+  .header-status-badge {
+    background: rgba(16, 185, 129, 0.12) !important;
+    backdrop-filter: var(--blur-xs);
+    -webkit-backdrop-filter: var(--blur-xs);
+    border-color: rgba(16, 185, 129, 0.30) !important;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SECTION 10 — WORKER PATIENT SEARCH (.patient-search-container)
+// ══════════════════════════════════════════════════════════════════════════════
+
+.patient-search-container {
+  @extend %user-glass-bg;
+
+  .search-input-wrapper {
+    background: rgba(255, 255, 255, 0.72) !important;
+    backdrop-filter: var(--blur-md);
+    -webkit-backdrop-filter: var(--blur-md);
+    border: 1.5px solid rgba(255, 255, 255, 0.90) !important;
+    box-shadow: var(--glass-shadow-sm);
+
+    &:focus-within {
+      border-color: rgba(2, 132, 199, 0.55) !important;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12), var(--glass-shadow-sm) !important;
+    }
+  }
+
+  .patient-result-card,
+  .result-card,
+  .search-result-card {
+    @include glass-card;
+    @include glass-shine;
+    border-radius: 18px;
+  }
+
+  [class*="card"],
+  .intake-form-card,
+  .new-patient-card {
+    @include glass-card;
+    @include glass-shine;
+    border-radius: 20px;
+  }
+
+  .back-btn {
+    @include glass-subtle;
+    border-radius: 50%;
+    box-shadow: var(--glass-shadow-sm);
+    border-color: rgba(255, 255, 255, 0.70) !important;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SECTION 11 — WORKER SESSION HISTORY (.session-history-container)
+// ══════════════════════════════════════════════════════════════════════════════
+
+.session-history-container {
+  @extend %user-glass-bg;
+
+  .stat-kpi-card {
+    @include glass-card;
+    @include glass-shine;
+    border-radius: 18px;
+
+    .kpi-icon-bubble {
+      background: rgba(255, 255, 255, 0.65) !important;
+      backdrop-filter: var(--blur-xs);
+      -webkit-backdrop-filter: var(--blur-xs);
+    }
+  }
+
+  .session-hist-card,
+  .history-card,
+  [class*="session-card"],
+  [class*="hist-card"] {
+    @include glass-card;
+    @include glass-shine;
+    border-radius: 18px;
+  }
+
+  .sessions-count-chip {
+    background: rgba(255, 255, 255, 0.65) !important;
+    backdrop-filter: var(--blur-xs);
+    -webkit-backdrop-filter: var(--blur-xs);
+    border: 1px solid rgba(255, 255, 255, 0.82) !important;
+    box-shadow: var(--glass-shadow-sm);
+  }
+
+  .filter-pill,
+  .tab-pill {
+    background: rgba(255, 255, 255, 0.52) !important;
+    backdrop-filter: var(--blur-xs);
+    -webkit-backdrop-filter: var(--blur-xs);
+    border-color: rgba(226, 232, 240, 0.65) !important;
+
+    &.active {
+      background: #0284C7 !important;
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SECTION 12 — BOTTOM NAV (global .bottom-nav)
+// ══════════════════════════════════════════════════════════════════════════════
+
+.bottom-nav {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: var(--blur-lg);
+  -webkit-backdrop-filter: var(--blur-lg);
+  border-top: 1px solid rgba(255, 255, 255, 0.85) !important;
+  box-shadow:
+    0 -4px 24px rgba(7, 31, 54, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.90) !important;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SECTION 13 — GLOBAL MODALS / OVERLAYS / SHEETS
+// ══════════════════════════════════════════════════════════════════════════════
+
+.sheet-overlay {
+  background: rgba(7, 31, 54, 0.35) !important;
+  backdrop-filter: var(--blur-xs);
+  -webkit-backdrop-filter: var(--blur-xs);
+}
+
+.modal-panel,
+.bottom-sheet,
+.action-sheet {
+  @include glass-card-strong;
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -8px 48px rgba(7, 31, 54, 0.14);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SECTION 14 — UTILITY CLASSES (opt-in helpers)
+// ══════════════════════════════════════════════════════════════════════════════
+
+.glass-card {
+  @include glass-card;
+  @include glass-shine;
+  border-radius: 20px;
+}
+
+.glass-card-strong {
+  @include glass-card-strong;
+  @include glass-shine;
+  border-radius: 20px;
+}
+
+.glass-subtle {
+  @include glass-subtle;
+  border-radius: 12px;
+}
+
+.glass-bubble {
+  @include glass-subtle;
+  border-radius: 50%;
+  box-shadow: var(--glass-shadow-sm);
+}

@@ -1,0 +1,1348 @@
+// ═══════════════════════════════════════════════════════════════════════════════
+// MOBILE PREMIUM OVERRIDES — Myntra / Rapido / Swiggy level polish
+// All user-side screens: Patient + Worker
+// Mobile-first: 320px → 430px sweet spot, safe-area aware
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 1. GLOBAL MOBILE TYPOGRAPHY SCALE (crisp, tight, premium)
+// ─────────────────────────────────────────────────────────────────────────────
+:root {
+  // Tighter mobile scale — matches top apps
+  --mf-font-xs:    10.5px;
+  --mf-font-sm:    12px;
+  --mf-font-base:  13.5px;
+  --mf-font-md:    15px;
+  --mf-font-lg:    17px;
+  --mf-font-xl:    20px;
+  --mf-font-2xl:   24px;
+  --mf-font-3xl:   28px;
+
+  // Tight letter-spacing for headings (Myntra style)
+  --mf-ls-tight:   -0.025em;
+  --mf-ls-tighter: -0.03em;
+  --mf-ls-base:    -0.01em;
+
+  // Premium spacing
+  --mf-space-xs:  4px;
+  --mf-space-sm:  8px;
+  --mf-space-md:  14px;
+  --mf-space-lg:  18px;
+  --mf-space-xl:  24px;
+
+  // Card radii
+  --mf-radius-sm:  10px;
+  --mf-radius-md:  14px;
+  --mf-radius-lg:  18px;
+  --mf-radius-xl:  22px;
+  --mf-radius-2xl: 26px;
+
+  // Touch targets (minimum 44px per Apple HIG)
+  --mf-touch-sm: 36px;
+  --mf-touch-md: 44px;
+  --mf-touch-lg: 52px;
+
+  // Safe areas
+  --safe-top:    max(env(safe-area-inset-top, 0px), 36px);
+  --safe-bottom: max(env(safe-area-inset-bottom, 0px), 16px);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 2. BASE MOBILE RESETS
+// ─────────────────────────────────────────────────────────────────────────────
+html {
+  font-size: 15px; // Slightly smaller base for mobile density
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-size: var(--mf-font-base);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation; // Faster taps, no 300ms delay
+  overscroll-behavior-y: contain;
+}
+
+// Every page wrapper — max mobile width + center
+.patient-home,
+.sessions-page,
+.payments-page,
+.subscription-page,
+.worker-dashboard-container,
+.session-screen,
+.patient-search-container,
+.session-history-container {
+  max-width: 430px;
+  margin: 0 auto;
+  overflow-x: hidden;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 3. BOTTOM NAV — Premium Glass (Myntra-level)
+// ─────────────────────────────────────────────────────────────────────────────
+.bottom-nav {
+  max-width: 430px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px var(--mf-space-sm) max(calc(var(--safe-bottom) + 4px), 14px);
+
+  .nav-item {
+    gap: 3px;
+    padding: 4px 6px;
+    min-height: var(--mf-touch-md);
+    border-radius: var(--mf-radius-md);
+
+    .nav-icon {
+      font-size: 21px;
+    }
+
+    // Label — tighter, crisper
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+
+    &.active {
+      color: #0284C7;
+
+      .nav-icon {
+        transform: translateY(-1px);
+      }
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 4. PATIENT HOME — Full Premium Revamp
+// ─────────────────────────────────────────────────────────────────────────────
+.patient-home {
+  padding-bottom: max(calc(var(--safe-bottom) + 80px), 96px);
+
+  // ── Header ─────────────────────────────────────────────────────────────────
+  .pt-header {
+    padding: calc(var(--safe-top) + 4px) var(--mf-space-lg) var(--mf-space-md);
+
+    .pt-name {
+      font-size: var(--mf-font-xl);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tighter);
+      line-height: 1.15;
+
+      .wave-hand {
+        font-size: 20px;
+      }
+    }
+
+    .pt-subtitle {
+      font-size: var(--mf-font-sm);
+      font-weight: 500;
+      margin-top: 1px;
+      letter-spacing: 0.01em;
+      color: #64748B;
+    }
+
+    .notif-btn {
+      width: var(--mf-touch-md);
+      height: var(--mf-touch-md);
+      border-radius: 50%;
+    }
+  }
+
+  // ── Content padding ────────────────────────────────────────────────────────
+  .pt-content {
+    padding: 0 var(--mf-space-lg) 96px;
+  }
+
+  // ── Hero Treatment Card ────────────────────────────────────────────────────
+  .treatment-hero-card {
+    border-radius: var(--mf-radius-xl);
+    padding: var(--mf-space-lg) var(--mf-space-lg) var(--mf-space-md);
+    min-height: 136px;
+    gap: 12px;
+
+    .hero-label {
+      font-size: var(--mf-font-xs);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .count-numbers {
+      font-size: var(--mf-font-3xl);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tighter);
+      line-height: 1.0;
+    }
+
+    .count-sublabel {
+      font-size: var(--mf-font-sm);
+      font-weight: 600;
+      margin: 3px 0 10px;
+    }
+
+    .progress-bar-container {
+      width: 140px;
+
+      .progress-bar-track {
+        height: 7px;
+        border-radius: 999px;
+      }
+    }
+
+    .hero-illustration {
+      width: 110px;
+      height: 110px;
+      border-radius: var(--mf-radius-lg);
+    }
+  }
+
+  // ── OTP / Session / Payment Banners ───────────────────────────────────────
+  .patient-otp-banner,
+  .active-session-banner,
+  .payment-due-banner {
+    border-radius: var(--mf-radius-xl);
+    padding: var(--mf-space-md) var(--mf-space-md) var(--mf-space-sm);
+    margin-top: var(--mf-space-md);
+
+    .otp-badge-title,
+    .session-badge-title {
+      font-size: var(--mf-font-sm);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-base);
+    }
+
+    .otp-security-pill,
+    .live-status-pill {
+      font-size: var(--mf-font-xs);
+      padding: 3px 8px;
+      font-weight: 700;
+    }
+  }
+
+  // OTP digit cards
+  .otp-display-cards {
+    gap: 10px;
+
+    .otp-card-digit {
+      width: 50px;
+      height: 56px;
+      border-radius: var(--mf-radius-md);
+      font-size: 26px;
+      font-weight: 800;
+    }
+  }
+
+  // ── Doctor info in session banner ──────────────────────────────────────────
+  .dr-avatar {
+    width: 38px;
+    height: 38px;
+    font-size: 14px;
+    font-weight: 800;
+    border-radius: 50%;
+  }
+
+  .dr-title {
+    font-size: var(--mf-font-base);
+    font-weight: 800;
+    letter-spacing: var(--mf-ls-base);
+  }
+
+  .dr-condition-chip {
+    font-size: var(--mf-font-xs);
+    font-weight: 700;
+    padding: 2px 7px;
+  }
+
+  // ── Metric Cards ───────────────────────────────────────────────────────────
+  .metrics-grid {
+    gap: 10px;
+    margin-top: var(--mf-space-md);
+
+    .metric-card {
+      border-radius: var(--mf-radius-xl);
+      padding: var(--mf-space-md);
+      min-height: 118px;
+
+      .icon-bubble {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+      }
+
+      .status-pill {
+        font-size: 9.5px;
+        font-weight: 750;
+        padding: 3px 8px;
+      }
+
+      .metric-title {
+        font-size: var(--mf-font-sm);
+        font-weight: 700;
+        letter-spacing: var(--mf-ls-base);
+      }
+
+      .metric-value {
+        font-size: var(--mf-font-md);
+        font-weight: 800;
+        letter-spacing: var(--mf-ls-tight);
+        margin: 2px 0;
+      }
+
+      .metric-caption {
+        font-size: var(--mf-font-xs);
+        font-weight: 500;
+      }
+    }
+  }
+
+  // ── Quick Actions ──────────────────────────────────────────────────────────
+  .quick-actions-section {
+    margin-top: var(--mf-space-lg);
+
+    .section-title {
+      font-size: var(--mf-font-md);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tight);
+      margin-bottom: 10px;
+    }
+
+    .actions-grid {
+      gap: 8px;
+
+      .action-item {
+        border-radius: var(--mf-radius-lg);
+        padding: 12px 4px 10px;
+        gap: 6px;
+
+        .action-icon-box {
+          width: 42px;
+          height: 42px;
+          border-radius: 12px;
+
+          svg {
+            width: 20px;
+            height: 20px;
+          }
+        }
+
+        .action-title {
+          font-size: var(--mf-font-xs);
+          font-weight: 700;
+          letter-spacing: 0em;
+        }
+      }
+    }
+  }
+
+  // ── Promo Banner ───────────────────────────────────────────────────────────
+  .promo-banner {
+    border-radius: var(--mf-radius-xl);
+    padding: var(--mf-space-md) var(--mf-space-md);
+    margin-top: var(--mf-space-md);
+
+    .promo-heading {
+      font-size: var(--mf-font-md);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tight);
+      line-height: 1.2;
+    }
+
+    .promo-subtext {
+      font-size: var(--mf-font-xs);
+      line-height: 1.4;
+      margin-top: 4px;
+    }
+
+    .promo-art-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: var(--mf-radius-md);
+    }
+  }
+
+  // ── Payment Sheet ──────────────────────────────────────────────────────────
+  .payment-sheet {
+    border-radius: 24px 24px 0 0;
+    padding: 18px 18px calc(var(--safe-bottom) + 20px);
+
+    .sheet-handle {
+      width: 36px;
+      height: 4px;
+      margin: 0 auto 14px;
+    }
+
+    .sheet-title {
+      font-size: var(--mf-font-lg);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tight);
+    }
+
+    .sheet-plan-summary {
+      border-radius: var(--mf-radius-md);
+      padding: 12px 14px;
+
+      .summary-name {
+        font-size: var(--mf-font-base);
+        font-weight: 800;
+      }
+
+      .summary-detail {
+        font-size: var(--mf-font-xs);
+      }
+
+      .summary-price {
+        font-size: var(--mf-font-lg);
+        font-weight: 800;
+      }
+    }
+
+    .method-label {
+      font-size: var(--mf-font-xs);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .method-btn {
+      border-radius: var(--mf-radius-md);
+      padding: 10px 4px;
+      gap: 5px;
+      min-height: 60px;
+
+      .method-name {
+        font-size: var(--mf-font-xs);
+        font-weight: 700;
+      }
+    }
+
+    .sheet-confirm-btn {
+      border-radius: var(--mf-radius-md);
+      padding: 14px 20px;
+      font-size: var(--mf-font-base);
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      min-height: var(--mf-touch-lg);
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 5. PATIENT SESSIONS — Timeline Premium
+// ─────────────────────────────────────────────────────────────────────────────
+.sessions-page {
+  padding-bottom: max(calc(var(--safe-bottom) + 80px), 96px);
+
+  .sessions-header {
+    padding: calc(var(--safe-top) + 2px) var(--mf-space-lg) var(--mf-space-sm);
+
+    .back-btn {
+      width: var(--mf-touch-md);
+      height: var(--mf-touch-md);
+    }
+
+    .page-title {
+      font-size: var(--mf-font-lg);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tight);
+    }
+  }
+
+  .sessions-content {
+    padding: 0 var(--mf-space-lg);
+  }
+
+  .filter-pills-bar {
+    gap: 7px;
+    margin-bottom: 14px;
+    padding-bottom: 2px;
+
+    .pill-btn {
+      padding: 6px 12px;
+      font-size: var(--mf-font-sm);
+      font-weight: 650;
+      border-radius: 999px;
+      min-height: 32px;
+
+      .tab-count-chip {
+        font-size: var(--mf-font-xs);
+        padding: 1px 5px;
+      }
+    }
+  }
+
+  .sessions-list {
+    gap: 10px;
+  }
+
+  .session-card {
+    border-radius: var(--mf-radius-lg);
+    padding: 12px 14px;
+    gap: 12px;
+
+    .session-date-text {
+      font-size: var(--mf-font-base);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-base);
+    }
+
+    .session-time-text {
+      font-size: var(--mf-font-sm);
+      font-weight: 600;
+      gap: 5px;
+      margin-top: 1px;
+    }
+
+    .session-therapist-row {
+      font-size: var(--mf-font-xs);
+      margin-top: 3px;
+    }
+
+    .status-badge {
+      font-size: var(--mf-font-xs);
+      padding: 4px 10px;
+      font-weight: 700;
+    }
+
+    .timeline-dot {
+      width: 11px;
+      height: 11px;
+    }
+
+    .timeline-line {
+      width: 1.5px;
+      height: 34px;
+    }
+  }
+
+  .empty-state-wrap {
+    .empty-icon-box {
+      width: 68px;
+      height: 68px;
+    }
+
+    .empty-title {
+      font-size: var(--mf-font-md);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tight);
+    }
+
+    .empty-subtitle {
+      font-size: var(--mf-font-sm);
+    }
+  }
+
+  .pagination-bar {
+    .page-nav-btn {
+      font-size: var(--mf-font-sm);
+      padding: 7px 12px;
+      min-height: 36px;
+    }
+
+    .page-number-btn {
+      width: 30px;
+      height: 30px;
+      font-size: var(--mf-font-sm);
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 6. PAYMENT HISTORY — Clean Premium Receipts
+// ─────────────────────────────────────────────────────────────────────────────
+.payments-page {
+  padding-bottom: max(calc(var(--safe-bottom) + 80px), 96px);
+
+  .payments-header {
+    padding: calc(var(--safe-top) + 2px) var(--mf-space-lg) var(--mf-space-sm);
+
+    .back-btn {
+      width: var(--mf-touch-md);
+      height: var(--mf-touch-md);
+    }
+
+    .page-title {
+      font-size: var(--mf-font-lg);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tight);
+    }
+  }
+
+  .payments-content {
+    padding: 0 var(--mf-space-lg);
+  }
+
+  .total-paid-card {
+    border-radius: var(--mf-radius-xl);
+    padding: var(--mf-space-md) var(--mf-space-lg) var(--mf-space-md);
+    margin-bottom: var(--mf-space-md);
+
+    // Typography inside the card
+    .total-label,
+    [class*="label"],
+    [class*="subtitle"] {
+      font-size: var(--mf-font-xs);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .total-amount,
+    [class*="amount"],
+    [class*="value"] {
+      font-size: var(--mf-font-3xl);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tighter);
+    }
+  }
+
+  // Filter pills
+  .filter-pills-bar {
+    .pill-btn {
+      padding: 6px 12px;
+      font-size: var(--mf-font-sm);
+      border-radius: 999px;
+      min-height: 32px;
+    }
+  }
+
+  // Payment row cards
+  .payment-card,
+  [class*="payment-row"],
+  [class*="txn-card"] {
+    border-radius: var(--mf-radius-lg);
+    padding: 12px 14px;
+
+    // Amount
+    [class*="amount"],
+    [class*="fee"] {
+      font-size: var(--mf-font-md);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tight);
+    }
+
+    // Doctor name / Label
+    [class*="name"],
+    [class*="title"] {
+      font-size: var(--mf-font-base);
+      font-weight: 700;
+    }
+
+    // Date / meta
+    [class*="date"],
+    [class*="time"],
+    [class*="meta"] {
+      font-size: var(--mf-font-sm);
+      font-weight: 500;
+    }
+
+    // Badge
+    [class*="badge"],
+    [class*="status"] {
+      font-size: var(--mf-font-xs);
+      padding: 3px 9px;
+      font-weight: 700;
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 7. SUBSCRIPTION — Myntra-style Plan Cards
+// ─────────────────────────────────────────────────────────────────────────────
+.subscription-page {
+  padding-bottom: max(calc(var(--safe-bottom) + 80px), 96px);
+
+  .sub-header {
+    padding: calc(var(--safe-top) + 2px) var(--mf-space-lg) var(--mf-space-sm);
+    gap: 12px;
+
+    .back-btn {
+      width: var(--mf-touch-md);
+      height: var(--mf-touch-md);
+    }
+
+    .header-title {
+      font-size: var(--mf-font-xl);
+      font-weight: 850;
+      letter-spacing: var(--mf-ls-tighter);
+    }
+
+    .header-sub {
+      font-size: var(--mf-font-sm);
+      font-weight: 500;
+    }
+  }
+
+  // Generic plan cards
+  .plan-card,
+  .plan-option-card,
+  .sub-plan-card,
+  [class*="plan-card"],
+  [class*="plan-option"] {
+    border-radius: var(--mf-radius-xl);
+    padding: var(--mf-space-md) var(--mf-space-lg);
+
+    // Plan name
+    [class*="plan-name"],
+    [class*="plan-title"] {
+      font-size: var(--mf-font-md);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tight);
+    }
+
+    // Plan price
+    [class*="price"],
+    [class*="amount"] {
+      font-size: var(--mf-font-2xl);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tighter);
+    }
+
+    // Benefit items
+    [class*="benefit"],
+    [class*="feature"] {
+      font-size: var(--mf-font-sm);
+      font-weight: 500;
+    }
+  }
+
+  // Active plan banner / progress card
+  .active-plan-card,
+  .plan-hero-card,
+  .current-plan-card,
+  .sessions-progress-card,
+  .progress-card {
+    border-radius: var(--mf-radius-xl);
+    padding: var(--mf-space-lg);
+
+    [class*="title"],
+    [class*="name"] {
+      font-size: var(--mf-font-lg);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tight);
+    }
+
+    [class*="count"],
+    [class*="number"],
+    [class*="value"] {
+      font-size: var(--mf-font-3xl);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tighter);
+    }
+
+    [class*="label"],
+    [class*="caption"],
+    [class*="subtitle"] {
+      font-size: var(--mf-font-sm);
+    }
+  }
+
+  // Buy / confirm buttons
+  [class*="buy-btn"],
+  [class*="subscribe-btn"],
+  [class*="confirm-btn"],
+  [class*="activate-btn"] {
+    min-height: var(--mf-touch-lg);
+    border-radius: var(--mf-radius-md);
+    font-size: var(--mf-font-base);
+    font-weight: 800;
+    letter-spacing: 0.01em;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 8. WORKER DASHBOARD — Command Center Polish
+// ─────────────────────────────────────────────────────────────────────────────
+.worker-dashboard-container {
+  padding: calc(var(--safe-top) + 4px) var(--mf-space-lg) max(calc(var(--safe-bottom) + 80px), 96px);
+
+  // ── Header ─────────────────────────────────────────────────────────────────
+  .top-bar {
+    margin-bottom: var(--mf-space-lg);
+  }
+
+  .greeting-name {
+    font-size: var(--mf-font-xl);
+    font-weight: 800;
+    letter-spacing: var(--mf-ls-tighter);
+    line-height: 1.1;
+  }
+
+  .doctor-status-badge {
+    padding: 3px 9px;
+    gap: 5px;
+    border-radius: 999px;
+
+    .status-text {
+      font-size: var(--mf-font-xs);
+      font-weight: 700;
+    }
+  }
+
+  .notif-btn {
+    width: var(--mf-touch-md);
+    height: var(--mf-touch-md);
+    border-radius: 50%;
+  }
+
+  // ── 3-col stat cards ───────────────────────────────────────────────────────
+  .stats-row-3 {
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .stat-card {
+    border-radius: var(--mf-radius-lg);
+    padding: 14px 6px 12px;
+
+    .stat-icon-bubble {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      margin-bottom: 8px;
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    .stat-num {
+      font-size: var(--mf-font-2xl);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tighter);
+      line-height: 1.1;
+    }
+
+    .stat-lbl {
+      font-size: var(--mf-font-xs);
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      margin-top: 2px;
+    }
+  }
+
+  // ── 2-col wide cards ───────────────────────────────────────────────────────
+  .stats-row-2 {
+    gap: 10px;
+    margin-bottom: var(--mf-space-lg);
+  }
+
+  .stat-wide-card {
+    border-radius: var(--mf-radius-lg);
+    padding: 12px var(--mf-space-md);
+    min-height: 80px;
+
+    .top-tag,
+    .revenue-tag {
+      font-size: var(--mf-font-xs);
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .rate-sub,
+    .revenue-val {
+      font-size: var(--mf-font-md);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tight);
+    }
+
+    .wide-title {
+      font-size: var(--mf-font-sm);
+      font-weight: 700;
+      letter-spacing: var(--mf-ls-base);
+      margin-top: 3px;
+    }
+
+    .rate-progress-track {
+      height: 4px;
+      margin-top: 7px;
+      border-radius: 999px;
+    }
+  }
+
+  // ── Queue section ──────────────────────────────────────────────────────────
+  .queue-section {
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-size: var(--mf-font-lg);
+    font-weight: 800;
+    letter-spacing: var(--mf-ls-tight);
+  }
+
+  .queue-count-badge {
+    font-size: var(--mf-font-xs);
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 800;
+  }
+
+  .view-all-link {
+    font-size: var(--mf-font-sm);
+    font-weight: 700;
+  }
+
+  // ── Patient row cards (Myntra list item style) ─────────────────────────────
+  .patient-list {
+    gap: 8px;
+  }
+
+  .patient-row-card {
+    border-radius: var(--mf-radius-lg);
+    padding: 12px var(--mf-space-md);
+    gap: 10px;
+    min-height: var(--mf-touch-lg);
+
+    .patient-avatar {
+      width: 42px;
+      height: 42px;
+      font-size: 15px;
+      font-weight: 800;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .patient-name {
+      font-size: var(--mf-font-base);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-base);
+      line-height: 1.2;
+    }
+
+    .patient-meta {
+      font-size: var(--mf-font-sm);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .btn-start {
+      font-size: var(--mf-font-sm);
+      font-weight: 800;
+      border-radius: 999px;
+      padding: 7px 16px;
+      min-height: 34px;
+      letter-spacing: 0.01em;
+    }
+
+    .status-badge {
+      font-size: var(--mf-font-sm);
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 999px;
+    }
+  }
+
+  // ── Empty queue card ───────────────────────────────────────────────────────
+  .empty-queue-card {
+    border-radius: var(--mf-radius-xl);
+    padding: 32px 18px 26px;
+
+    .empty-icon-wrap {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin-bottom: 14px;
+    }
+
+    .empty-title {
+      font-size: var(--mf-font-lg);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tight);
+    }
+
+    .empty-subtitle {
+      font-size: var(--mf-font-sm);
+      line-height: 1.5;
+      max-width: 260px;
+      margin: 4px auto 18px;
+    }
+
+    .btn-intake-primary {
+      border-radius: 999px;
+      padding: 11px 22px;
+      font-size: var(--mf-font-base);
+      font-weight: 800;
+      min-height: var(--mf-touch-md);
+      letter-spacing: 0.01em;
+    }
+  }
+
+  // ── Intake banner ──────────────────────────────────────────────────────────
+  .intake-banner {
+    border-radius: var(--mf-radius-lg);
+    padding: 14px var(--mf-space-md);
+    margin-top: var(--mf-space-md);
+    gap: 10px;
+
+    .banner-text {
+      h4 {
+        font-size: var(--mf-font-base);
+        font-weight: 800;
+        letter-spacing: var(--mf-ls-base);
+      }
+      p {
+        font-size: var(--mf-font-sm);
+        margin-top: 2px;
+        opacity: 0.85;
+      }
+    }
+
+    .banner-search-btn {
+      font-size: var(--mf-font-sm);
+      font-weight: 800;
+      border-radius: 10px;
+      padding: 9px 14px;
+      min-height: var(--mf-touch-sm);
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 9. WORKER ACTIVE SESSION — Clinical Precision
+// ─────────────────────────────────────────────────────────────────────────────
+.session-screen {
+  padding: calc(var(--safe-top) + 4px) var(--mf-space-lg) max(calc(var(--safe-bottom) + 80px), 96px);
+
+  .top-nav-bar {
+    margin-bottom: var(--mf-space-md);
+
+    .back-btn {
+      width: var(--mf-touch-md);
+      height: var(--mf-touch-md);
+    }
+
+    .page-title {
+      font-size: var(--mf-font-lg);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tight);
+    }
+
+    .header-status-badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+
+      .status-txt {
+        font-size: var(--mf-font-xs);
+        font-weight: 700;
+      }
+    }
+  }
+
+  // Generic cards inside this screen
+  [class*="-card"],
+  [class*="card-"] {
+    border-radius: var(--mf-radius-lg);
+    padding: var(--mf-space-md);
+
+    // All headings inside cards
+    h2, h3, h4, [class*="title"] {
+      font-size: var(--mf-font-md);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tight);
+    }
+
+    // All body text
+    p, [class*="meta"], [class*="detail"] {
+      font-size: var(--mf-font-sm);
+      font-weight: 500;
+    }
+
+    // Prominent numbers (timer, count)
+    [class*="timer"],
+    [class*="count"],
+    [class*="number"],
+    [class*="num"] {
+      font-size: var(--mf-font-3xl);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tighter);
+    }
+
+    // Buttons inside cards
+    button, [class*="btn"] {
+      min-height: var(--mf-touch-md);
+      font-size: var(--mf-font-base);
+      font-weight: 800;
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 10. WORKER PATIENT SEARCH — Swiggy/Zomato search bar style
+// ─────────────────────────────────────────────────────────────────────────────
+.patient-search-container {
+  padding: calc(var(--safe-top) + 4px) var(--mf-space-lg) max(calc(var(--safe-bottom) + 80px), 96px);
+
+  .top-nav-bar {
+    margin-bottom: var(--mf-space-md);
+
+    .back-btn {
+      width: var(--mf-touch-md);
+      height: var(--mf-touch-md);
+    }
+
+    .page-title {
+      font-size: var(--mf-font-lg);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tight);
+    }
+  }
+
+  // Search bar — Myntra style
+  .search-input-wrapper {
+    border-radius: var(--mf-radius-md);
+    padding: 11px var(--mf-space-md);
+    gap: 10px;
+    min-height: var(--mf-touch-lg);
+    margin-bottom: var(--mf-space-md);
+
+    .search-field {
+      font-size: var(--mf-font-base);
+      font-weight: 500;
+
+      &::placeholder {
+        font-size: var(--mf-font-base);
+      }
+    }
+  }
+
+  // Result cards
+  .patient-result-card,
+  .result-card,
+  .search-result-card,
+  [class*="card"] {
+    border-radius: var(--mf-radius-lg);
+    padding: 12px var(--mf-space-md);
+
+    [class*="name"],
+    [class*="title"] {
+      font-size: var(--mf-font-base);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-base);
+    }
+
+    [class*="phone"],
+    [class*="age"],
+    [class*="meta"],
+    [class*="detail"] {
+      font-size: var(--mf-font-sm);
+      font-weight: 500;
+    }
+
+    [class*="badge"],
+    [class*="status"] {
+      font-size: var(--mf-font-xs);
+      padding: 3px 9px;
+      font-weight: 700;
+    }
+
+    button, [class*="btn"] {
+      min-height: var(--mf-touch-md);
+      font-size: var(--mf-font-sm);
+      font-weight: 800;
+    }
+  }
+
+  // Form labels
+  label, [class*="label"] {
+    font-size: var(--mf-font-sm);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+  }
+
+  // Form inputs
+  input, select, textarea {
+    font-size: var(--mf-font-base);
+    min-height: var(--mf-touch-md);
+    border-radius: var(--mf-radius-md);
+    padding: 11px var(--mf-space-md);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 11. WORKER SESSION HISTORY
+// ─────────────────────────────────────────────────────────────────────────────
+.session-history-container {
+  padding: calc(var(--safe-top) + 4px) var(--mf-space-lg) max(calc(var(--safe-bottom) + 80px), 96px);
+
+  .page-header {
+    margin-bottom: var(--mf-space-lg);
+
+    .page-title {
+      font-size: var(--mf-font-xl);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tighter);
+    }
+
+    .page-subtitle {
+      font-size: var(--mf-font-sm);
+      margin-top: 2px;
+    }
+
+    .sessions-count-chip {
+      border-radius: 999px;
+      padding: 5px 12px;
+      gap: 4px;
+      font-size: var(--mf-font-sm);
+      font-weight: 700;
+
+      .count-num {
+        font-size: var(--mf-font-sm);
+        font-weight: 800;
+      }
+    }
+  }
+
+  .stats-row {
+    gap: 10px;
+    margin-bottom: var(--mf-space-lg);
+  }
+
+  .stat-kpi-card {
+    border-radius: var(--mf-radius-lg);
+    padding: 12px var(--mf-space-md);
+    gap: 10px;
+
+    .kpi-icon-bubble {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    [class*="label"],
+    [class*="caption"] {
+      font-size: var(--mf-font-xs);
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    [class*="value"],
+    [class*="number"],
+    [class*="count"] {
+      font-size: var(--mf-font-xl);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tighter);
+    }
+  }
+
+  // History list cards
+  .session-hist-card,
+  .history-card,
+  [class*="session-card"],
+  [class*="hist-card"] {
+    border-radius: var(--mf-radius-lg);
+    padding: 12px var(--mf-space-md);
+
+    [class*="name"],
+    [class*="title"] {
+      font-size: var(--mf-font-base);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-base);
+    }
+
+    [class*="date"],
+    [class*="time"],
+    [class*="meta"],
+    [class*="detail"] {
+      font-size: var(--mf-font-sm);
+      font-weight: 500;
+    }
+
+    [class*="badge"],
+    [class*="status"],
+    [class*="chip"] {
+      font-size: var(--mf-font-xs);
+      padding: 3px 9px;
+      font-weight: 700;
+      border-radius: 999px;
+    }
+
+    [class*="amount"],
+    [class*="fee"],
+    [class*="earnings"] {
+      font-size: var(--mf-font-md);
+      font-weight: 800;
+      letter-spacing: var(--mf-ls-tight);
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 12. SHARED BUTTON TOUCH TARGETS (all screens)
+// ─────────────────────────────────────────────────────────────────────────────
+.patient-home,
+.sessions-page,
+.payments-page,
+.subscription-page,
+.worker-dashboard-container,
+.session-screen,
+.patient-search-container,
+.session-history-container {
+
+  // All clickable back buttons, icon buttons
+  .back-btn,
+  .notif-btn,
+  .close-btn,
+  [class*="icon-btn"],
+  [class*="btn-icon"] {
+    min-width: var(--mf-touch-md);
+    min-height: var(--mf-touch-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  // All primary action buttons
+  [class*="confirm"],
+  [class*="pay-btn"],
+  [class*="submit"],
+  [class*="primary-btn"],
+  [class*="cta"] {
+    min-height: var(--mf-touch-lg);
+    font-size: var(--mf-font-base);
+    font-weight: 800;
+    border-radius: var(--mf-radius-md);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 13. SKELETON LOADER REFINEMENTS (mobile optimised)
+// ─────────────────────────────────────────────────────────────────────────────
+.skeleton-line,
+.skeleton-badge,
+.skeleton-btn,
+.skeleton-circle,
+.skeleton-bubble {
+  animation: mobilePulse 1.4s ease-in-out infinite;
+}
+
+@keyframes mobilePulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 14. MICRO-ANIMATION: active state ripple for all tappable cards
+// ─────────────────────────────────────────────────────────────────────────────
+.patient-row-card,
+.session-card,
+.metric-card,
+.stat-card,
+.stat-wide-card,
+.payment-card,
+.stat-kpi-card {
+  &:active {
+    transform: scale(0.985) !important;
+    transition: transform 0.1s ease !important;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 15. SAFE AREA UTILITY (global ensure)
+// ─────────────────────────────────────────────────────────────────────────────
+.bottom-nav {
+  padding-bottom: max(calc(env(safe-area-inset-bottom, 0px) + 6px), 14px);
+}
