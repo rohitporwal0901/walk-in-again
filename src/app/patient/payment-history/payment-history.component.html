@@ -16,66 +16,68 @@
 
     <!-- Top Total Paid Summary Card -->
     @if (isLoading()) {
-      <div class="total-paid-card skeleton-card">
-        <div class="skeleton-line shimmer" style="width: 110px; height: 13px; margin-bottom: 12px; opacity: 0.7;"></div>
-        <div class="skeleton-line shimmer" style="width: 140px; height: 32px; margin-bottom: 14px;"></div>
-        <div class="skeleton-line shimmer" style="width: 180px; height: 18px; border-radius: 999px; opacity: 0.6;"></div>
-      </div>
+    <div class="total-paid-card skeleton-card">
+      <div class="skeleton-line shimmer" style="width: 110px; height: 13px; margin-bottom: 12px; opacity: 0.7;"></div>
+      <div class="skeleton-line shimmer" style="width: 140px; height: 32px; margin-bottom: 14px;"></div>
+      <div class="skeleton-line shimmer" style="width: 180px; height: 18px; border-radius: 999px; opacity: 0.6;"></div>
+    </div>
     } @else if (transactions().length > 0) {
-      <div class="total-paid-card" id="patient-total-paid-card">
-        <div class="card-glow" aria-hidden="true"></div>
-        <div class="card-body">
-          <div class="card-header-row">
-            <div class="badge-label-group">
-              <span class="card-eyebrow">TOTAL AMOUNT PAID</span>
-              <span class="verified-tag">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                Settled
-              </span>
-            </div>
-            <div class="card-icon-pill" aria-hidden="true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-                <line x1="2" y1="10" x2="22" y2="10"></line>
+    <div class="total-paid-card" id="patient-total-paid-card">
+      <div class="card-glow" aria-hidden="true"></div>
+      <div class="card-body">
+        <div class="card-header-row">
+          <div class="badge-label-group">
+            <span class="card-eyebrow">TOTAL AMOUNT PAID</span>
+            <span class="verified-tag">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
-            </div>
-          </div>
-
-          <div class="card-amount-row">
-            <span class="currency-prefix">₹</span>
-            <span class="amount-number">{{ totalAmountPaid().toLocaleString('en-IN') }}</span>
-          </div>
-
-          <div class="card-meta-chips">
-            <span class="meta-chip chip-paid">
-              <span class="chip-dot"></span>
-              {{ paidTransactionsCount() }} {{ paidTransactionsCount() === 1 ? 'Payment' : 'Payments' }}
+              Settled
             </span>
-
-            @if (coveredSessionsCount() > 0) {
-              <span class="meta-chip chip-covered">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2l2.4 7.2h7.6l-6.1 4.5 2.3 7.3L12 16.5l-6.2 4.5 2.3-7.3L2 9.2h7.6z"/>
-                </svg>
-                {{ coveredSessionsCount() }} Plan Covered · Saved ₹{{ totalSavedAmount().toLocaleString('en-IN') }}
-              </span>
-            }
+          </div>
+          <div class="card-icon-pill" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+              <line x1="2" y1="10" x2="22" y2="10"></line>
+            </svg>
           </div>
         </div>
-      </div>
 
-      <div class="section-label-bar">
-        <span class="section-title">All Transactions</span>
-        <span class="section-count-badge">{{ transactions().length }}</span>
+        <div class="card-amount-row">
+          <span class="currency-prefix">₹</span>
+          <span class="amount-number">{{ totalAmountPaid().toLocaleString('en-IN') }}</span>
+        </div>
+
+        <div class="card-meta-chips">
+          <span class="meta-chip chip-paid">
+            <span class="chip-dot"></span>
+            {{ paidTransactionsCount() }} {{ paidTransactionsCount() === 1 ? 'Payment' : 'Payments' }}
+          </span>
+
+          @if (coveredSessionsCount() > 0) {
+          <span class="meta-chip chip-covered">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l2.4 7.2h7.6l-6.1 4.5 2.3 7.3L12 16.5l-6.2 4.5 2.3-7.3L2 9.2h7.6z" />
+            </svg>
+            {{ coveredSessionsCount() }} Plan Covered · Saved ₹{{ totalSavedAmount().toLocaleString('en-IN') }}
+          </span>
+          }
+        </div>
       </div>
+    </div>
+
+    <div class="section-label-bar">
+      <span class="section-title">All Transactions</span>
+      <span class="section-count-badge">{{ transactions().length }}</span>
+    </div>
     }
 
     <!-- Skeleton Loading State -->
     @if (isLoading()) {
     <div class="transactions-container skeleton-container">
-      @for (i of [1, 2, 3, 4]; track i) {
+      @for (i of [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]; track i) {
       <div class="txn-row">
         <div class="txn-row-left">
           <div class="skeleton-line shimmer" style="width: 100px; height: 16px; margin-bottom: 6px;"></div>
@@ -108,21 +110,22 @@
         <div class="txn-row-right">
           <div class="amount-badge-group">
             @if (isSubscriptionMethod(txn.paymentMethod)) {
-              <p class="txn-amount-val amount-covered">
-                <span class="strike-amount">₹{{ txn.amount }}</span>
-                <span class="free-val">₹0</span>
-              </p>
-              <span class="status-pill pill-covered">Plan Covered</span>
+            <p class="txn-amount-val amount-covered">
+              <span class="strike-amount">₹{{ txn.amount }}</span>
+              <span class="free-val">₹0</span>
+            </p>
+            <span class="status-pill pill-covered">Plan Covered</span>
             } @else {
-              <p class="txn-amount-val">₹{{ txn.amount }}</p>
-              @if (txn.status === 'Paid') {
-                <span class="status-pill pill-paid">Paid</span>
-              } @else {
-                <span class="status-pill pill-pending">Pending</span>
-              }
+            <p class="txn-amount-val">₹{{ txn.amount }}</p>
+            @if (txn.status === 'Paid') {
+            <span class="status-pill pill-paid">Paid</span>
+            } @else {
+            <span class="status-pill pill-pending">Pending</span>
+            }
             }
           </div>
-          <svg class="row-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg class="row-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="9 18 15 12 9 6"></polyline>
           </svg>
         </div>
@@ -175,7 +178,8 @@
       </div>
       <div class="header-titles">
         <p class="modal-success-title">Payment Receipt</p>
-        <p class="modal-success-sub">{{ formatShortTxnId(sel.transactionId) }} · {{ (sel.timestamp || sel.sessionDate) | date:'d MMM y, h:mm a' }}</p>
+        <p class="modal-success-sub">{{ formatShortTxnId(sel.transactionId) }} · {{ (sel.timestamp || sel.sessionDate) |
+          date:'d MMM y, h:mm a' }}</p>
       </div>
     </div>
 
@@ -184,17 +188,20 @@
       <div class="receipt-amount-box">
         <span class="amount-label">TOTAL AMOUNT PAID</span>
         @if (isSubscriptionMethod(sel.paymentMethod)) {
-          <div class="amount-val-covered">
-            <span class="strike-amount-modal">₹{{ sel.amount }}</span>
-            <span class="free-modal-val">₹0</span>
-          </div>
-          <span class="amount-status-tag tag-covered">Covered by Subscription</span>
+        <div class="amount-val-covered">
+          <span class="strike-amount-modal">₹{{ sel.amount }}</span>
+          <span class="free-modal-val">₹0</span>
+        </div>
+        <span class="amount-status-tag tag-covered">Covered by Subscription</span>
         } @else {
-          <span class="amount-val">₹{{ sel.amount }}</span>
-          <span class="amount-status-tag">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            {{ sel.status === 'Paid' ? 'Paid Successfully' : sel.status }}
-          </span>
+        <span class="amount-val">₹{{ sel.amount }}</span>
+        <span class="amount-status-tag">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          {{ sel.status === 'Paid' ? 'Paid Successfully' : sel.status }}
+        </span>
         }
       </div>
 
@@ -212,7 +219,8 @@
 
         <div class="detail-row">
           <span class="row-label">Payment Method</span>
-          <span class="row-value">{{ isSubscriptionMethod(sel.paymentMethod) ? 'Subscription Plan (Covered)' : sel.paymentMethod }}</span>
+          <span class="row-value">{{ isSubscriptionMethod(sel.paymentMethod) ? 'Subscription Plan (Covered)' :
+            sel.paymentMethod }}</span>
         </div>
 
         @if (sel.razorpayPaymentId) {

@@ -3,7 +3,8 @@
   <!-- Header -->
   <header class="sessions-header">
     <button class="back-btn" (click)="goBack()" aria-label="Go Back" id="sessions-back-btn">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round">
         <polyline points="15 18 9 12 15 6"></polyline>
       </svg>
     </button>
@@ -16,162 +17,152 @@
     <!-- Filter Pills Bar (All, Completed, Active) -->
     <div class="filter-pills-bar">
       @for (tab of tabs; track tab) {
-        <button
-          class="pill-btn"
-          [class.active]="activeTab() === tab"
-          (click)="setTab(tab)"
-          [id]="'pill-' + tab.toLowerCase()"
-        >
-          <span>{{ tab }}</span>
-          <span class="tab-count-chip">{{ tabCounts()[tab] }}</span>
-          @if (tab === 'Active' && tabCounts().Active > 0) {
-            <span class="live-dot"></span>
-          }
-        </button>
+      <button class="pill-btn" [class.active]="activeTab() === tab" (click)="setTab(tab)"
+        [id]="'pill-' + tab.toLowerCase()">
+        <span>{{ tab }}</span>
+        <span class="tab-count-chip">{{ tabCounts()[tab] }}</span>
+        @if (tab === 'Active' && tabCounts().Active > 0) {
+        <span class="live-dot"></span>
+        }
+      </button>
       }
     </div>
 
     <!-- Skeleton Loading State -->
     @if (isLoading()) {
-      <div class="sessions-list">
-        @for (i of [1, 2, 3, 4]; track i) {
-          <div class="session-card skeleton-card">
-            <div class="card-left-timeline">
-              <div class="timeline-dot-skeleton shimmer"></div>
-              <div class="timeline-line-skeleton"></div>
-            </div>
-            <div class="card-details">
-              <div class="skeleton-line shimmer" style="width: 110px; height: 16px; margin-bottom: 6px;"></div>
-              <div class="skeleton-line shimmer" style="width: 75px; height: 12px; margin-bottom: 6px;"></div>
-              <div class="skeleton-line shimmer" style="width: 140px; height: 12px;"></div>
-            </div>
-            <div class="card-badge-wrap">
-              <div class="skeleton-badge shimmer"></div>
-            </div>
-          </div>
-        }
+    <div class="sessions-list">
+      @for (i of [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]; track i) {
+      <div class="session-card skeleton-card">
+        <div class="card-left-timeline">
+          <div class="timeline-dot-skeleton shimmer"></div>
+          <div class="timeline-line-skeleton"></div>
+        </div>
+        <div class="card-details">
+          <div class="skeleton-line shimmer" style="width: 110px; height: 16px; margin-bottom: 6px;"></div>
+          <div class="skeleton-line shimmer" style="width: 75px; height: 12px; margin-bottom: 6px;"></div>
+          <div class="skeleton-line shimmer" style="width: 140px; height: 12px;"></div>
+        </div>
+        <div class="card-badge-wrap">
+          <div class="skeleton-badge shimmer"></div>
+        </div>
       </div>
+      }
+    </div>
     } @else {
 
-      <!-- Session Cards List (Refined Compact Timeline Layout) -->
-      <div class="sessions-list">
-        @for (session of paginatedSessions(); track session.sessionId; let i = $index) {
-          <div class="session-card" [id]="'session-' + session.sessionId">
-            <!-- Timeline Indicator -->
-            <div class="card-left-timeline">
-              <span class="timeline-dot" [class.dot-active]="session.status === 'active'" [class.dot-pending]="session.status === 'completed' && session.paymentStatus === 'pending'"></span>
-              <span class="timeline-line"></span>
-            </div>
+    <!-- Session Cards List (Refined Compact Timeline Layout) -->
+    <div class="sessions-list">
+      @for (session of paginatedSessions(); track session.sessionId; let i = $index) {
+      <div class="session-card" [id]="'session-' + session.sessionId">
+        <!-- Timeline Indicator -->
+        <div class="card-left-timeline">
+          <span class="timeline-dot" [class.dot-active]="session.status === 'active'"
+            [class.dot-pending]="session.status === 'completed' && session.paymentStatus === 'pending'"></span>
+          <span class="timeline-line"></span>
+        </div>
 
-            <!-- Details Content -->
-            <div class="card-details">
-              <h3 class="session-date-text">
-                {{ session.date | date:'d MMM, y' }}
-              </h3>
-              <p class="session-time-text">
-                <span>{{ session.timeSlot || 'Home Session' }}</span>
-                <span class="meta-dot">•</span>
-                @if (session.isCoveredBySubscription) {
-                  <span class="coverage-tag plan-covered">Plan Covered</span>
-                } @else if (session.paymentStatus === 'paid') {
-                  <span class="coverage-tag paid-tag">₹{{ session.fee || 500 }} Paid</span>
-                } @else if (session.paymentStatus === 'pending') {
-                  <span class="coverage-tag pending-tag">₹{{ session.fee || 500 }} Due</span>
-                }
-              </p>
-              <div class="session-therapist-row">
-                <span class="therapist-name">{{ formatDrName(session.workerName) }}</span>
-                <span class="meta-dot">•</span>
-                <span class="visit-tag">Home Visit</span>
-              </div>
-            </div>
-
-            <!-- Status Pill Badge (Single Clean Badge) -->
-            <div class="card-badge-wrap">
-              @if (session.status === 'completed' && session.paymentStatus === 'pending') {
-                <span class="status-badge badge-pending">Payment Due</span>
-              } @else if (session.status === 'completed') {
-                <span class="status-badge badge-completed">Completed</span>
-              } @else if (session.status === 'active') {
-                <span class="status-badge badge-active">Active</span>
-              } @else {
-                <span class="status-badge badge-cancelled">{{ session.status | titlecase }}</span>
-              }
-            </div>
+        <!-- Details Content -->
+        <div class="card-details">
+          <h3 class="session-date-text">
+            {{ session.date | date:'d MMM, y' }}
+          </h3>
+          <p class="session-time-text">
+            <span>{{ session.timeSlot || 'Home Session' }}</span>
+            <span class="meta-dot">•</span>
+            @if (session.isCoveredBySubscription) {
+            <span class="coverage-tag plan-covered">Plan Covered</span>
+            } @else if (session.paymentStatus === 'paid') {
+            <span class="coverage-tag paid-tag">₹{{ session.fee || 500 }} Paid</span>
+            } @else if (session.paymentStatus === 'pending') {
+            <span class="coverage-tag pending-tag">₹{{ session.fee || 500 }} Due</span>
+            }
+          </p>
+          <div class="session-therapist-row">
+            <span class="therapist-name">{{ formatDrName(session.workerName) }}</span>
+            <span class="meta-dot">•</span>
+            <span class="visit-tag">Home Visit</span>
           </div>
-        }
+        </div>
 
-        <!-- Empty State -->
-        @if (filteredSessions().length === 0) {
-          <div class="empty-state-wrap">
-            <div class="empty-icon-box">
-              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-              </svg>
-            </div>
-            <h4 class="empty-title">
-              @if (activeTab() === 'Active') {
-                No Active Sessions
-              } @else if (activeTab() === 'Completed') {
-                No Completed Sessions
-              } @else {
-                No Sessions Yet
-              }
-            </h4>
-            <p class="empty-subtitle">
-              @if (activeTab() === 'Active') {
-                You don't have any ongoing session right now.
-              } @else if (activeTab() === 'Completed') {
-                No completed physiotherapy sessions recorded yet.
-              } @else {
-                Your walk-in therapy visits will appear here once started.
-              }
-            </p>
-          </div>
+        <!-- Status Pill Badge (Single Clean Badge) -->
+        <div class="card-badge-wrap">
+          @if (session.status === 'completed' && session.paymentStatus === 'pending') {
+          <span class="status-badge badge-pending">Payment Due</span>
+          } @else if (session.status === 'completed') {
+          <span class="status-badge badge-completed">Completed</span>
+          } @else if (session.status === 'active') {
+          <span class="status-badge badge-active">Active</span>
+          } @else {
+          <span class="status-badge badge-cancelled">{{ session.status | titlecase }}</span>
+          }
+        </div>
+      </div>
+      }
+
+      <!-- Empty State -->
+      @if (filteredSessions().length === 0) {
+      <div class="empty-state-wrap">
+        <div class="empty-icon-box">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </div>
+        <h4 class="empty-title">
+          @if (activeTab() === 'Active') {
+          No Active Sessions
+          } @else if (activeTab() === 'Completed') {
+          No Completed Sessions
+          } @else {
+          No Sessions Yet
+          }
+        </h4>
+        <p class="empty-subtitle">
+          @if (activeTab() === 'Active') {
+          You don't have any ongoing session right now.
+          } @else if (activeTab() === 'Completed') {
+          No completed physiotherapy sessions recorded yet.
+          } @else {
+          Your walk-in therapy visits will appear here once started.
+          }
+        </p>
+      </div>
+      }
+    </div>
+
+    <!-- Pagination Controls (Only if total pages > 1) -->
+    @if (totalPages() > 1) {
+    <div class="pagination-bar">
+      <button class="page-nav-btn" [disabled]="currentPage() === 1" (click)="prevPage()" aria-label="Previous Page">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        Prev
+      </button>
+
+      <div class="page-numbers-wrap">
+        @for (p of pageNumbers(); track p) {
+        <button class="page-number-btn" [class.active]="currentPage() === p" (click)="goToPage(p)">{{ p }}</button>
         }
       </div>
 
-      <!-- Pagination Controls (Only if total pages > 1) -->
-      @if (totalPages() > 1) {
-        <div class="pagination-bar">
-          <button
-            class="page-nav-btn"
-            [disabled]="currentPage() === 1"
-            (click)="prevPage()"
-            aria-label="Previous Page"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
-            Prev
-          </button>
+      <button class="page-nav-btn" [disabled]="currentPage() === totalPages()" (click)="nextPage()"
+        aria-label="Next Page">
+        Next
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
 
-          <div class="page-numbers-wrap">
-            @for (p of pageNumbers(); track p) {
-              <button
-                class="page-number-btn"
-                [class.active]="currentPage() === p"
-                (click)="goToPage(p)"
-              >{{ p }}</button>
-            }
-          </div>
-
-          <button
-            class="page-nav-btn"
-            [disabled]="currentPage() === totalPages()"
-            (click)="nextPage()"
-            aria-label="Next Page"
-          >
-            Next
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-          </button>
-        </div>
-
-        <p class="pagination-info">
-          Showing {{ ((currentPage() - 1) * pageSize()) + 1 }} - {{ (currentPage() * pageSize() > filteredSessions().length) ? filteredSessions().length : (currentPage() * pageSize()) }} of {{ filteredSessions().length }} sessions
-        </p>
-      }
+    <p class="pagination-info">
+      Showing {{ ((currentPage() - 1) * pageSize()) + 1 }} - {{ (currentPage() * pageSize() > filteredSessions().length)
+      ? filteredSessions().length : (currentPage() * pageSize()) }} of {{ filteredSessions().length }} sessions
+    </p>
+    }
 
     }
 

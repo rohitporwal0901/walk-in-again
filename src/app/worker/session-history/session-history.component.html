@@ -18,7 +18,8 @@
     <!-- Card 1: Completed Patients -->
     <div class="stat-kpi-card">
       <div class="kpi-icon-bubble bubble-green">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
           <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
           <polyline points="22 4 12 14.01 9 11.01"></polyline>
         </svg>
@@ -49,132 +50,138 @@
   <!-- Sessions List -->
   <div class="sessions-content">
     @if (isLoading()) {
-      <div class="skeleton-list">
-        @for (i of [1, 2, 3]; track i) {
-          <div class="session-card skeleton-card">
-            <div class="skeleton-avatar"></div>
-            <div class="skeleton-lines">
-              <div class="skeleton-line skeleton-title"></div>
-              <div class="skeleton-line skeleton-sub"></div>
-            </div>
-            <div class="skeleton-badge"></div>
-          </div>
-        }
+    <div class="skeleton-list">
+      @for (i of [1, 2, 3,4,5,6,7,8,9,10,11,12,13,14,15,16]; track i) {
+      <div class="session-card skeleton-card">
+        <div class="skeleton-avatar"></div>
+        <div class="skeleton-lines">
+          <div class="skeleton-line skeleton-title"></div>
+          <div class="skeleton-line skeleton-sub"></div>
+        </div>
+        <div class="skeleton-badge"></div>
       </div>
+      }
+    </div>
     } @else {
-      @if (completedSessions().length > 0) {
-        <div class="sessions-list">
-          @for (session of completedSessions(); track session.sessionId; let i = $index) {
-            <div class="session-card" [id]="'session-card-' + session.sessionId">
-              <!-- Top Row: Avatar, Name, Phone, Plan Tag & Highlighted Earning Chip -->
-              <div class="card-top">
-                <div class="patient-main">
-                  <div
-                    class="patient-avatar"
-                    [style.background]="getAvatarColor(session.patientName).bg"
-                    [style.color]="getAvatarColor(session.patientName).text"
-                  >
-                    {{ (session.patientName || 'P').charAt(0).toUpperCase() }}
-                  </div>
+    @if (completedSessions().length > 0) {
+    <div class="sessions-list">
+      @for (session of completedSessions(); track session.sessionId; let i = $index) {
+      <div class="session-card" [id]="'session-card-' + session.sessionId">
+        <!-- Top Row: Avatar, Name, Phone, Plan Tag & Highlighted Earning Chip -->
+        <div class="card-top">
+          <div class="patient-main">
+            <div class="patient-avatar" [style.background]="getAvatarColor(session.patientName).bg"
+              [style.color]="getAvatarColor(session.patientName).text">
+              {{ (session.patientName || 'P').charAt(0).toUpperCase() }}
+            </div>
 
-                  <div class="patient-info">
-                    <h3 class="patient-name">{{ session.patientName }}</h3>
-                    <div class="patient-sub-row">
-                      @if (session.patientMobile) {
-                        <span class="patient-phone">
-                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                          </svg>
-                          +91 {{ session.patientMobile }}
-                        </span>
-                      }
-                      @if (session.isCoveredBySubscription) {
-                        <span class="plan-tag-inline">
-                          <span class="plan-dot"></span>
-                          {{ session.planName || 'Weekly Plan' }}
-                        </span>
-                      }
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Highlighted Earnings Badge -->
-                <div class="earning-chip">
-                  <span class="earning-amount">+₹{{ calculateSessionEarning(session) }}</span>
-                </div>
-              </div>
-
-              <!-- Notes Callout (If exists) -->
-              @if (session.notes) {
-                <div class="session-notes-box">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                    <line x1="16" y1="17" x2="8" y2="17"></line>
+            <div class="patient-info">
+              <h3 class="patient-name">{{ session.patientName }}</h3>
+              <div class="patient-sub-row">
+                @if (session.patientMobile) {
+                <span class="patient-phone">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                      d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                    </path>
                   </svg>
-                  <span class="notes-text">{{ session.notes }}</span>
-                </div>
-              }
-
-              <!-- Footer Row: Date, End Time & Completed Badge -->
-              <div class="card-footer">
-                <div class="footer-meta">
-                  <span class="meta-item">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                      <line x1="16" y1="2" x2="16" y2="6"></line>
-                      <line x1="8" y1="2" x2="8" y2="6"></line>
-                      <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                    {{ session.date | date:'mediumDate' }}
-                  </span>
-                  <span class="meta-dot">·</span>
-
-                  <span class="meta-item">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <polyline points="12 6 12 12 16 14"></polyline>
-                    </svg>
-                    Ended {{ getEndTime(session) }} ({{ session.duration || 1 }}m)
-                  </span>
-                </div>
-
-                <!-- Positioned on bottom right -->
-                <div class="status-wrap">
-                  <span class="status-pill">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    Completed
-                  </span>
-                </div>
+                  +91 {{ session.patientMobile }}
+                </span>
+                }
+                @if (session.isCoveredBySubscription) {
+                <span class="plan-tag-inline">
+                  <span class="plan-dot"></span>
+                  {{ session.planName || 'Weekly Plan' }}
+                </span>
+                }
               </div>
             </div>
-          }
-        </div>
-      } @else {
-        <!-- Centered Empty State -->
-        <div class="empty-sessions-centered">
-          <div class="empty-icon-wrap">
-            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-              <line x1="16" y1="13" x2="8" y2="13"></line>
-              <line x1="16" y1="17" x2="8" y2="17"></line>
-            </svg>
           </div>
-          <h3 class="empty-title">No Completed Sessions Yet</h3>
-          <p class="empty-subtitle">When you complete a walk-in therapy session, it will show up here with full details.</p>
-          <button class="btn-intake" routerLink="/worker/search" type="button">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            Intake New Patient
-          </button>
+
+          <!-- Highlighted Earnings Badge -->
+          <div class="earning-chip">
+            <span class="earning-amount">+₹{{ calculateSessionEarning(session) }}</span>
+          </div>
         </div>
+
+        <!-- Notes Callout (If exists) -->
+        @if (session.notes) {
+        <div class="session-notes-box">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+          <span class="notes-text">{{ session.notes }}</span>
+        </div>
+        }
+
+        <!-- Footer Row: Date, End Time & Completed Badge -->
+        <div class="card-footer">
+          <div class="footer-meta">
+            <span class="meta-item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              {{ session.date | date:'mediumDate' }}
+            </span>
+            <span class="meta-dot">·</span>
+
+            <span class="meta-item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              Ended {{ getEndTime(session) }} ({{ session.duration || 1 }}m)
+            </span>
+          </div>
+
+          <!-- Positioned on bottom right -->
+          <div class="status-wrap">
+            <span class="status-pill">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              Completed
+            </span>
+          </div>
+        </div>
+      </div>
       }
+    </div>
+    } @else {
+    <!-- Centered Empty State -->
+    <div class="empty-sessions-centered">
+      <div class="empty-icon-wrap">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+        </svg>
+      </div>
+      <h3 class="empty-title">No Completed Sessions Yet</h3>
+      <p class="empty-subtitle">When you complete a walk-in therapy session, it will show up here with full details.</p>
+      <button class="btn-intake" routerLink="/worker/search" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Intake New Patient
+      </button>
+    </div>
+    }
     }
   </div>
 

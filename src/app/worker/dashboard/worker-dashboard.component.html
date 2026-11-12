@@ -1,16 +1,16 @@
-<!-- Worker Dashboard (Matching Image 2 Clean Layout) -->
+<!-- Worker Dashboard (Premium Layout Matching Second Screen Design System) -->
 <div class="worker-dashboard-container">
 
   <!-- Top Bar Header -->
   <header class="top-bar">
     <div class="user-greeting">
-      <h1 class="greeting-name">Hi {{ doctorDisplayName() }} 👋</h1>
+      <h1 class="greeting-name">Hi {{ doctorDisplayName() }} <span class="wave-hand">👋</span></h1>
       <div class="doctor-status-badge">
         <span class="online-pulse-dot"></span>
         <span class="status-text">Physiotherapy · Online</span>
       </div>
     </div>
-    <button class="notif-btn" id="notif-btn" type="button" aria-label="Notifications">
+    <button class="notif-btn" id="notif-btn" type="button" aria-label="Notifications" routerLink="/worker/history">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F172A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
         <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
@@ -19,77 +19,146 @@
     </button>
   </header>
 
-  <!-- Metrics Grid: Row 1 (3 Cards) -->
-  <section class="stats-row-3">
-    <!-- Card 1: Patients -->
-    <div class="stat-card">
-      <div class="stat-icon-bubble stat-icon-blue">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-          <circle cx="9" cy="7" r="4"></circle>
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-        </svg>
+  <!-- 1. HERO PRACTICE PROGRESS CARD (Matched directly to Second Screen Hero Card) -->
+  <div class="practice-hero-card">
+    <div class="hero-info">
+      <span class="hero-label">TODAY'S CLINIC PRACTICE</span>
+      <div class="hero-count-row">
+        <span class="count-numbers">{{ completedTodayCount() }} / {{ todaySessions().length }}</span>
       </div>
-      <div class="stat-num">{{ totalPatientsCount() }}</div>
-      <div class="stat-lbl">Patients</div>
-    </div>
+      <p class="count-sublabel">Sessions Completed Today</p>
 
-    <!-- Card 2: Today (Theme matched cyan instead of purple) -->
-    <div class="stat-card">
-      <div class="stat-icon-bubble stat-icon-cyan">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-          <line x1="16" y1="2" x2="16" y2="6"></line>
-          <line x1="8" y1="2" x2="8" y2="6"></line>
-          <line x1="3" y1="10" x2="21" y2="10"></line>
-        </svg>
+      <!-- Rounded Progress Bar -->
+      <div class="progress-bar-container">
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" [style.width.%]="completionPercentageNumber()"></div>
+        </div>
       </div>
-      <div class="stat-num">{{ todaySessions().length }}</div>
-      <div class="stat-lbl">Today</div>
-    </div>
 
-    <!-- Card 3: Completed -->
-    <div class="stat-card">
-      <div class="stat-icon-bubble stat-icon-green">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-          <polyline points="22 4 12 14.01 9 11.01"></polyline>
-        </svg>
-      </div>
-      <div class="stat-num">{{ completedTodayCount() }}</div>
-      <div class="stat-lbl">Completed</div>
-    </div>
-  </section>
-
-  <!-- Metrics Grid: Row 2 (2 Symmetrical Cards) -->
-  <section class="stats-row-2">
-    <!-- Left Card: Top Rate -->
-    <div class="stat-wide-card">
-      <div class="wide-top">
-        <span class="top-tag">Top Rate</span>
-        <span class="rate-sub">{{ completionRate() }}</span>
-      </div>
-      <div class="wide-title">Completed</div>
-      <div class="rate-progress-track">
-        <div class="rate-progress-bar" [style.width]="completionPercentageNumber() + '%'"></div>
+      <!-- Hero Sub Footer -->
+      <div class="hero-sub-meta">
+        <span class="meta-pill">
+          <span class="pill-dot-live"></span>
+          {{ completionRate() }} Completed
+        </span>
+        <span class="meta-pill pill-rev">
+          ₹{{ totalEarnings().toLocaleString('en-IN') }} Billed
+        </span>
       </div>
     </div>
 
-    <!-- Right Card: Earnings -->
-    <div class="stat-wide-card earnings-card">
-      <div class="wide-top">
-        <span class="revenue-tag">
+    <!-- Right Medical Vector / Physio Art -->
+    <div class="hero-illustration" aria-hidden="true">
+      <img src="assets/images/hero-doctor-practice.jpg" alt="Doctor Physiotherapy Practice" class="hero-img" />
+    </div>
+  </div>
+
+  <!-- 2. TWO SYMMETRICAL METRIC CARDS (Exact Match to Second Screen) -->
+  <div class="metrics-grid">
+    <!-- Card 1: Today's Queue & Intake -->
+    <div class="metric-card" routerLink="/worker/search">
+      <div class="metric-top-row">
+        <div class="icon-bubble icon-teal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </div>
+        <span class="status-pill open-pill">
+          <span class="green-dot"></span>
+          Live Queue
+        </span>
+      </div>
+      <div class="metric-body">
+        <h3 class="metric-title">Today's Queue</h3>
+        <p class="metric-value">{{ todaySessions().length }} Patients</p>
+        <p class="metric-caption">{{ totalPatientsCount() }} Registered in Clinic</p>
+      </div>
+    </div>
+
+    <!-- Card 2: Today's Earnings -->
+    <div class="metric-card" routerLink="/worker/history">
+      <div class="metric-top-row">
+        <div class="icon-bubble icon-blue">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+          </svg>
+        </div>
+        <span class="status-pill rev-pill">
           <span class="teal-dot"></span>
           Revenue
         </span>
-        <span class="revenue-val">₹{{ totalEarnings().toLocaleString('en-IN') }}</span>
       </div>
-      <div class="wide-title">Total Earnings</div>
+      <div class="metric-body">
+        <h3 class="metric-title">Total Earnings</h3>
+        <p class="metric-value">₹{{ totalEarnings().toLocaleString('en-IN') }}</p>
+        <p class="metric-caption">{{ completedTodayCount() }} Completed Sessions</p>
+      </div>
     </div>
-  </section>
+  </div>
 
-  <!-- Today's Patients Section -->
+  <!-- 3. QUICK ACTIONS SECTION (Matching Second Screen 4 Colorful Squircles) -->
+  <div class="quick-actions-section">
+    <h2 class="section-title">Quick Actions</h2>
+    <div class="actions-grid">
+      <!-- Action 1: Search Patient -->
+      <div class="action-item" routerLink="/worker/search" id="qa-search">
+        <div class="action-icon-box action-yellow">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
+        <span class="action-label">Find Patient</span>
+      </div>
+
+      <!-- Action 2: New Intake -->
+      <div class="action-item" routerLink="/worker/search" id="qa-intake">
+        <div class="action-icon-box action-green">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <line x1="19" y1="8" x2="19" y2="14"></line>
+            <line x1="22" y1="11" x2="16" y2="11"></line>
+          </svg>
+        </div>
+        <span class="action-label">New Intake</span>
+      </div>
+
+      <!-- Action 3: History -->
+      <div class="action-item" routerLink="/worker/history" id="qa-history">
+        <div class="action-icon-box action-purple">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+        </div>
+        <span class="action-label">History</span>
+      </div>
+
+      <!-- Action 4: Queue -->
+      <div class="action-item" routerLink="/worker/search" id="qa-queue">
+        <div class="action-icon-box action-orange">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </div>
+        <span class="action-label">Schedule</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. TODAY'S PATIENTS SECTION (Clean Symmetrical Cards Matching Image 1 & 2) -->
   <section class="queue-section">
     <div class="section-top">
       <div class="section-title-wrap">
@@ -177,7 +246,7 @@
           </div>
         }
 
-        <!-- Empty Queue State: Clean Card Hero with Single Clear CTA -->
+        <!-- Empty Queue State -->
         @if (todaySessions().length === 0) {
           <div class="empty-queue-card">
             <div class="empty-icon-wrap">
@@ -202,21 +271,19 @@
     }
   </section>
 
-  <!-- Walk-In Intake Quick Bar (Shown when active queue exists for instant access) -->
-  @if (todaySessions().length > 0) {
-    <div class="intake-banner">
-      <div class="banner-text">
-        <h4>Walk-In Patient Intake</h4>
-        <p>Search registered patients by Mobile or Name</p>
-      </div>
-      <button class="banner-search-btn" routerLink="/worker/search" id="quick-search" type="button">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        Search Patient
-      </button>
+  <!-- 5. WALK-IN INTAKE QUICK BAR (Shown for instant search access) -->
+  <div class="intake-banner">
+    <div class="banner-text">
+      <h4>Walk-In Patient Intake</h4>
+      <p>Search registered patients by Mobile or Name</p>
     </div>
-  }
+    <button class="banner-search-btn" routerLink="/worker/search" id="quick-search" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      Search Patient
+    </button>
+  </div>
 
 </div>

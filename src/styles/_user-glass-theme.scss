@@ -496,71 +496,39 @@
 // ══════════════════════════════════════════════════════════════════════════════
 
 .worker-dashboard-container {
-  @extend %user-glass-bg;
-
-  .stat-card {
-    @include glass-card;
-    @include glass-shine;
-    border-radius: 20px;
-
-    .stat-icon-bubble {
-      background: rgba(255, 255, 255, 0.60) !important;
-      backdrop-filter: var(--blur-xs);
-      -webkit-backdrop-filter: var(--blur-xs);
-      border: 1px solid rgba(255, 255, 255, 0.80) !important;
-    }
-  }
-
+  .stat-card,
+  .metric-card,
   .stat-wide-card {
-    @include glass-card;
-    @include glass-shine;
-    border-radius: 20px;
+    background: #FFFFFF !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: 1.5px solid rgba(226, 232, 240, 0.9) !important;
+    box-shadow: 0 4px 18px -2px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(15, 23, 42, 0.02) !important;
+    border-radius: 20px !important;
+
+    &::before {
+      display: none !important;
+    }
   }
 
   .patient-row-card {
-    @include glass-card;
-    @include glass-shine;
-    border-radius: 20px;
-  }
+    background: #FFFFFF !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: 1.5px solid rgba(226, 232, 240, 0.9) !important;
+    box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02) !important;
+    border-radius: 18px !important;
 
-  .empty-queue-card {
-    background: rgba(255, 255, 255, 0.52) !important;
-    backdrop-filter: var(--blur-md);
-    -webkit-backdrop-filter: var(--blur-md);
-    border: 1.5px dashed rgba(2, 132, 199, 0.35) !important;
-    border-radius: 24px;
-    box-shadow: var(--glass-shadow-md);
-
-    .empty-icon-wrap {
-      background: linear-gradient(135deg, rgba(224, 242, 254, 0.80) 0%, rgba(186, 230, 253, 0.70) 100%) !important;
-      backdrop-filter: var(--blur-xs);
-      -webkit-backdrop-filter: var(--blur-xs);
-    }
-  }
-
-  .intake-banner {
-    background: linear-gradient(135deg,
-      rgba(3, 74, 117, 0.85) 0%,
-      rgba(2, 132, 199, 0.80) 100%
-    ) !important;
-    backdrop-filter: var(--blur-sm);
-    -webkit-backdrop-filter: var(--blur-sm);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: var(--glass-shadow-lg);
-
-    .banner-search-btn {
-      background: rgba(255, 255, 255, 0.90) !important;
-      backdrop-filter: var(--blur-xs);
-      -webkit-backdrop-filter: var(--blur-xs);
+    &::before {
+      display: none !important;
     }
   }
 
   .notif-btn {
-    background: rgba(255, 255, 255, 0.65) !important;
-    backdrop-filter: var(--blur-sm);
-    -webkit-backdrop-filter: var(--blur-sm);
-    border: 1.5px solid rgba(255, 255, 255, 0.85) !important;
-    box-shadow: var(--glass-shadow-sm);
+    background: #FFFFFF !important;
+    backdrop-filter: none !important;
+    border: 1.5px solid rgba(226, 232, 240, 0.9) !important;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04) !important;
   }
 }
 
@@ -604,42 +572,56 @@
 // ══════════════════════════════════════════════════════════════════════════════
 
 .patient-search-container {
-  @extend %user-glass-bg;
+  background: #EBF5F9 !important;
 
   .search-input-wrapper {
-    background: rgba(255, 255, 255, 0.72) !important;
-    backdrop-filter: var(--blur-md);
-    -webkit-backdrop-filter: var(--blur-md);
-    border: 1.5px solid rgba(255, 255, 255, 0.90) !important;
-    box-shadow: var(--glass-shadow-sm);
+    background: #FFFFFF !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: 1.5px solid rgba(226, 232, 240, 0.9) !important;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03) !important;
 
     &:focus-within {
-      border-color: rgba(2, 132, 199, 0.55) !important;
-      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12), var(--glass-shadow-sm) !important;
+      border-color: #0284C7 !important;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15) !important;
     }
   }
 
+  .patient-elevated-card,
   .patient-result-card,
   .result-card,
   .search-result-card {
-    @include glass-card;
-    @include glass-shine;
-    border-radius: 18px;
+    background: #FFFFFF !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: 1.5px solid rgba(226, 232, 240, 0.9) !important;
+    box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02) !important;
+    border-radius: 18px !important;
+
+    &::before {
+      display: none !important;
+    }
   }
 
-  [class*="card"],
-  .intake-form-card,
-  .new-patient-card {
-    @include glass-card;
-    @include glass-shine;
-    border-radius: 20px;
+  .btn-action-card,
+  .btn-start,
+  .btn-resume,
+  .btn-otp {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+
+    &::before {
+      display: none !important;
+    }
   }
 
   .back-btn {
-    @include glass-subtle;
+    background: #FFFFFF !important;
+    backdrop-filter: none !important;
     border-radius: 50%;
-    box-shadow: var(--glass-shadow-sm);
-    border-color: rgba(255, 255, 255, 0.70) !important;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04) !important;
+    border: 1px solid rgba(226, 232, 240, 0.85) !important;
   }
 }
 
