@@ -36,8 +36,7 @@ import { AuthService } from './core/services/auth.service';
 
           <!-- Brand Typography -->
           <h1 class="splash-brand-title">Walk In Again</h1>
-          <span class="splash-brand-category">PHYSIOTHERAPY</span>
-          <p class="splash-tagline">Move Better. Live Stronger.</p>
+         
 
           <!-- YouTube / LinkedIn Indeterminate Sliding Progress Bar (Wide & Smooth) -->
           <div class="yt-progress-container" role="progressbar" aria-label="Loading application">
