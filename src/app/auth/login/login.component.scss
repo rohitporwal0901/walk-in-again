@@ -7,7 +7,8 @@
 
 // ─── Viewport Shell ───────────────────────────────────────────────────────────
 .auth-viewport {
-  // On mobile: use height (not min-height) so layout shrinks when keyboard opens
+  position: relative;
+  width: 100vw;
   height: 100vh;
   height: 100dvh;
   background: #060B14;
@@ -26,6 +27,142 @@
   }
 }
 
+// ─── Panoramic Clinic Background (Full-Bleed Option 2) ────────────────────────
+.panoramic-bg-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+
+  .panoramic-bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 26% center; // Frames doctor & patient naturally on left/center
+    display: block;
+    transform: scale(1.02);
+  }
+
+  .panoramic-bg-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        90deg,
+        rgba(6, 12, 22, 0.04) 0%,
+        rgba(6, 12, 22, 0.08) 45%,
+        rgba(6, 12, 22, 0.55) 75%,
+        rgba(6, 12, 22, 0.88) 100%
+      ),
+      linear-gradient(
+        180deg,
+        rgba(6, 12, 22, 0.18) 0%,
+        rgba(6, 12, 22, 0) 35%,
+        rgba(6, 12, 22, 0.25) 70%,
+        rgba(6, 12, 22, 0.78) 100%
+      );
+  }
+}
+
+// ─── Floating Stats Pill (Exact Reference Screenshot) ─────────────────────────
+.floating-stats-pill {
+  position: absolute;
+  bottom: 24px;
+  left: 28px;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(13, 21, 34, 0.82);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 10px 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+
+  .stats-badge-edit {
+    background: #0B1320;
+    color: #F8FAFC;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    letter-spacing: 0.02em;
+  }
+
+  .floating-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .stat-number {
+      font-size: 15px;
+      font-weight: 800;
+      color: #FFFFFF;
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      font-size: 9.5px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.55);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 1px;
+    }
+  }
+
+  .floating-divider {
+    width: 1px;
+    height: 22px;
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  @media (max-width: 899px) {
+    display: none;
+  }
+}
+
+// ─── Floating Quick Action Button (Screenshot Accent) ─────────────────────────
+.floating-action-pill {
+  position: absolute;
+  bottom: 24px;
+  right: 28px;
+  z-index: 15;
+
+  .action-circle-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(13, 21, 34, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #F1F5F9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+
+    &:hover {
+      transform: scale(1.06);
+      background: rgba(19, 32, 50, 0.95);
+      color: #22D3EE;
+    }
+  }
+
+  @media (max-width: 899px) {
+    display: none;
+  }
+}
+
 .auth-desktop-hero {
   display: none;
 }
@@ -35,6 +172,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  z-index: 10;
 }
 
 // ─── Phone Frame ──────────────────────────────────────────────────────────────
@@ -73,19 +212,25 @@
 // ─── HERO TOP — Full-bleed cinematic image ────────────────────────────────────
 .hero-top-section {
   width: 100%;
-  height: 42vh;
-  min-height: 270px;
-  max-height: 360px;
+  height: 48vh;
+  min-height: 320px;
+  max-height: 440px;
   flex: 0 0 auto;
   position: relative;
   overflow: hidden;
   background: #0B1320;
 
+  @media (max-height: 680px) {
+    height: 42vh;
+    min-height: 260px;
+    max-height: 330px;
+  }
+
   .hero-bg-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 18%; // Shows faces and therapist motion cleanly
+    object-position: 6% 18%; // Keeps hand fully visible on the left and frames doctor & patient faces naturally
     display: block;
   }
 
@@ -897,145 +1042,50 @@
 
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// ─── DESKTOP WEB 2-PARTITION SPLIT LAYOUT (min-width: 900px) ───────────────────
-// Left Partition: Clinic Branding & Showcase | Right Partition: Auth Portal Card
+// ─── DESKTOP FULL-BLEED PANORAMIC LAYOUT (min-width: 900px) ───────────────────
+// Full-screen clinic background across entire viewport + Floating right glass card
 // ═══════════════════════════════════════════════════════════════════════════════
 @media (min-width: 900px) {
   .auth-viewport {
-    display: grid;
-    grid-template-columns: 1.15fr 0.85fr;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     height: 100vh;
     height: 100dvh;
     overflow: hidden;
-    background: #070F1E;
+    background: #060B14;
     padding: 0;
   }
 
-  // ─── LEFT PARTITION: Real Exercise Hero Showcase ────────────────────────────
-  .auth-desktop-hero {
-    display: block;
-    position: relative;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-    background: #071120;
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
-
-    .desktop-hero-bg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-
-      .desktop-hero-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center 25%;
-        display: block;
-        transform: scale(1.02);
-      }
-
-      // Smooth edge vignette fading into dark right panel
-      .desktop-hero-overlay {
-        position: absolute;
-        inset: 0;
-        background:
-          linear-gradient(
-            90deg,
-            rgba(7, 15, 30, 0.05) 0%,
-            rgba(7, 15, 30, 0) 60%,
-            rgba(7, 15, 30, 0.6) 88%,
-            #070F1E 100%
-          ),
-          linear-gradient(
-            180deg,
-            rgba(7, 15, 30, 0.1) 0%,
-            rgba(7, 15, 30, 0) 50%,
-            rgba(7, 15, 30, 0.7) 100%
-          );
-        pointer-events: none;
-      }
-    }
-
-    // Glass Floating Trust Card on bottom of left photo
-    .desktop-hero-floating-card {
-      position: absolute;
-      bottom: 28px;
-      left: 28px;
-      right: 28px;
-      background: rgba(13, 21, 34, 0.82);
-      backdrop-filter: blur(24px) saturate(180%);
-      -webkit-backdrop-filter: blur(24px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 20px;
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
-      z-index: 5;
-
-      .floating-stat {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-
-        .stat-number {
-          font-size: 16px;
-          font-weight: 800;
-          color: #FFFFFF;
-          line-height: 1.2;
-        }
-
-        .stat-label {
-          font-size: 10px;
-          font-weight: 600;
-          color: rgba(255, 255, 255, 0.5);
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          margin-top: 2px;
-        }
-      }
-
-      .floating-divider {
-        width: 1px;
-        height: 24px;
-        background: rgba(255, 255, 255, 0.12);
-      }
-    }
-  }
-
-  // ─── RIGHT PARTITION: Modern Centered Auth Portal ───────────────────────────
   .auth-main-panel {
+    width: auto;
+    height: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
-    height: 100%;
-    overflow-y: auto;
-    scrollbar-width: none;
-    &::-webkit-scrollbar { display: none; }
-    padding: clamp(24px, 3vw, 40px);
-    background: radial-gradient(circle at 85% 15%, rgba(2, 132, 199, 0.12) 0%, #071120 75%);
+    justify-content: flex-end;
+    padding: 28px clamp(28px, 5vw, 76px);
+    z-index: 10;
 
-    // Floating Auth Card: Perfectly wraps content without empty void
+    // Floating Glass Auth Card: Matches the reference screenshot mockup
     .phone-frame {
-      max-width: 430px;
+      width: 424px;
+      max-width: 424px;
       height: auto !important;
       min-height: unset !important;
-      max-height: none !important;
+      max-height: 94vh !important;
       border-radius: 28px;
-      background: #0D1522;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(11, 20, 34, 0.84);
+      backdrop-filter: blur(32px) saturate(180%);
+      -webkit-backdrop-filter: blur(32px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       box-shadow:
-        0 24px 60px -15px rgba(0, 0, 0, 0.8),
-        0 0 0 1px rgba(255, 255, 255, 0.06);
+        0 30px 80px -15px rgba(0, 0, 0, 0.85),
+        0 0 0 1px rgba(255, 255, 255, 0.08);
       position: relative;
       overflow: hidden;
 
       .hero-top-section {
-        display: none; // Hidden on desktop since left partition already has full hero!
+        display: none; // Hidden on desktop since panoramic-bg already covers full screen!
       }
 
       .dark-content-section {
@@ -1047,7 +1097,7 @@
         overflow-y: visible;
 
         .card-accent-pill {
-          display: none; // Not needed on desktop card
+          display: none;
         }
       }
 
@@ -1057,12 +1107,14 @@
         max-height: 100%;
         border-radius: 28px;
         border: none;
-        background: #0D1522;
+        background: rgba(11, 20, 34, 0.95);
+        backdrop-filter: blur(32px);
+        -webkit-backdrop-filter: blur(32px);
         padding: 26px 28px;
         box-shadow: none;
 
         .sheet-handle-bar {
-          display: none; // Not needed on desktop card
+          display: none;
         }
       }
     }
