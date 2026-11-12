@@ -7,8 +7,9 @@
 
 // ─── Viewport Shell ───────────────────────────────────────────────────────────
 .auth-viewport {
-  min-height: 100vh;
-  min-height: 100dvh;
+  // On mobile: use height (not min-height) so layout shrinks when keyboard opens
+  height: 100vh;
+  height: 100dvh;
   background: #060B14;
   display: flex;
   align-items: center;
@@ -17,6 +18,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
 
   @media (max-width: 480px) {
     padding: 0;
@@ -39,8 +41,9 @@
 .phone-frame {
   width: 100%;
   max-width: 412px;
-  min-height: 100vh;
-  min-height: 100dvh;
+  // height (not min-height) lets frame shrink when soft keyboard opens on Android
+  height: 100vh;
+  height: 100dvh;
   background: #0B1320;
   position: relative;
   overflow: hidden;
@@ -61,7 +64,9 @@
     max-width: 100%;
     border-radius: 0;
     box-shadow: none;
-    min-height: 100dvh;
+    // Fill available height — shrinks when keyboard is shown (thanks to adjustResize)
+    height: 100%;
+    min-height: unset;
   }
 }
 
@@ -102,6 +107,7 @@
 // ─── BOTTOM CONTENT CARD — Dark Solid Sheet (Exact Screenshot 1) ───────────────
 .dark-content-section {
   flex: 1 1 auto;
+  min-height: 0; // Allow flex item to shrink below its content size (key for keyboard)
   background: #0D1522;
   border-radius: 32px 32px 0 0;
   margin-top: -34px; // Overlaps hero image
@@ -112,7 +118,7 @@
   padding: 10px 20px max(24px, calc(env(safe-area-inset-bottom, 0px) + 20px));
   position: relative;
   z-index: 3;
-  overflow-y: auto;
+  overflow-y: auto; // Scrollable when keyboard is open and content overflows
   scrollbar-width: none;
   &::-webkit-scrollbar { display: none; }
 }

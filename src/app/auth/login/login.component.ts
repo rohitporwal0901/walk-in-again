@@ -1,4 +1,4 @@
-import { Component, signal, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, signal, inject, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -185,7 +185,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         // Account exists -> Open Login Action Sheet (4-Box PIN)
         this.existingUser.set(user);
         this.loginPinDigits.set(['', '', '', '']);
-        this.sheetMode.set('login-pin');
+        this.openSheet('login-pin');
         setTimeout(() => this.focusId('login-0'), 200);
       } else {
         // Account does NOT exist -> Open Patient Registration Action Sheet
@@ -198,7 +198,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         });
         this.registerPinDigits.set(['', '', '', '']);
         this.registerConfirmPinDigits.set(['', '', '', '']);
-        this.sheetMode.set('register');
+        this.openSheet('register');
       }
     } catch {
       this.isCheckingPhone.set(false);
@@ -380,8 +380,30 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
   }
 
-  // ─── Action Sheet Controls ──────────────────────────────────────────────────
+  // ─── Action Sheet Controls with Android Back Navigation Support ─────────────
+  openSheet(mode: SheetMode) {
+    this.sheetMode.set(mode);
+    if (typeof window !== 'undefined' && window.history) {
+      window.history.pushState({ sheetOpen: true }, '');
+    }
+  }
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState() {
+    if (this.sheetMode() !== 'closed') {
+      this.closeSheetInternal();
+    }
+  }
+
   closeSheet() {
+    if (typeof window !== 'undefined' && window.history && window.history.state?.sheetOpen) {
+      window.history.back();
+    } else {
+      this.closeSheetInternal();
+    }
+  }
+
+  private closeSheetInternal() {
     this.sheetMode.set('closed');
     this.errorMsg.set('');
     this.loginPinDigits.set(['', '', '', '']);
