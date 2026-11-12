@@ -550,6 +550,7 @@
     0 4px 18px -2px rgba(7, 31, 54, 0.05),
     0 1px 3px rgba(7, 31, 54, 0.02);
   position: relative;
+  overflow: visible !important;
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
 
   &:hover {
@@ -580,7 +581,8 @@
   &.popular-plan {
     border: 1.5px solid #0284C7;
     box-shadow: 0 8px 26px rgba(2, 132, 199, 0.12);
-    margin-top: 6px;
+    margin-top: 10px;
+    padding-top: 26px; // Generous space so price tag never crowds the top-right ribbon
   }
 
   // Monthly VIP Plan: Golden halo glow
@@ -588,7 +590,8 @@
     border: 1.8px solid #F59E0B;
     box-shadow: 0 8px 28px rgba(245, 158, 11, 0.14);
     background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF7 100%);
-    margin-top: 6px;
+    margin-top: 10px;
+    padding-top: 26px;
 
     .plan-price-group {
       background: #FEF3C7 !important;
@@ -604,29 +607,44 @@
     }
   }
 
-  // Most Popular Floating Ribbon on Top Border
+  // Most Popular Floating Ribbon on Top-Right Border
   .popular-ribbon {
     position: absolute;
     top: -11px;
-    right: 18px;
+    right: 20px;
+    height: 22px;
+    padding: 0 10px;
     background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
     color: #FFFFFF;
     font-size: 10px;
     font-weight: 800;
-    padding: 3px 10px;
+    line-height: 1;
     border-radius: 999px;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 4px;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    box-shadow: 0 4px 10px rgba(2, 132, 199, 0.28);
-    z-index: 5;
+    box-shadow: 0 3px 10px rgba(2, 132, 199, 0.35);
+    border: 2px solid #FFFFFF;
+    z-index: 10;
+    white-space: nowrap;
+    box-sizing: border-box;
+
+    svg {
+      width: 10px;
+      height: 10px;
+      flex-shrink: 0;
+      display: block;
+      fill: #FFFFFF;
+    }
   }
 
   &.monthly-vip-plan .popular-ribbon {
     background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
-    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.35);
+    box-shadow: 0 3px 10px rgba(245, 158, 11, 0.35);
+    border: 2px solid #FFFFFF;
   }
 
   // Main Card Grid

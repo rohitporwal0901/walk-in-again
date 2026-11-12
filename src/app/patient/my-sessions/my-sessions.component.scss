@@ -28,7 +28,8 @@
     box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
     transition: transform 0.15s ease, background-color 0.15s ease;
 
-    &:hover, &:active {
+    &:hover,
+    &:active {
       transform: scale(1.05);
       background-color: #F8FAFC;
     }
@@ -85,7 +86,7 @@
     .tab-count-chip {
       font-size: 11px;
       font-weight: 750;
-      padding: 1px 6px;
+      padding: 3px 6px;
       border-radius: 999px;
       background: #F1F5F9;
       color: #64748B;
@@ -460,13 +461,11 @@
     bottom: 0;
     left: 0;
     transform: translateX(-100%);
-    background-image: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0) 0,
-      rgba(255, 255, 255, 0.4) 20%,
-      rgba(255, 255, 255, 0.7) 60%,
-      rgba(255, 255, 255, 0)
-    );
+    background-image: linear-gradient(90deg,
+        rgba(255, 255, 255, 0) 0,
+        rgba(255, 255, 255, 0.4) 20%,
+        rgba(255, 255, 255, 0.7) 60%,
+        rgba(255, 255, 255, 0));
     animation: shimmer 1.5s infinite;
     content: '';
   }
@@ -479,7 +478,18 @@
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.3); opacity: 0.6; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.3);
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }

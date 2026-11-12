@@ -443,6 +443,7 @@
   .sub-plan-card {
     @include glass-card;
     @include glass-shine;
+    overflow: visible !important;
     border-radius: 20px;
 
     &.plan-selected,

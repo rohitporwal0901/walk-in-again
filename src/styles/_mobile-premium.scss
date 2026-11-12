@@ -635,8 +635,8 @@ body {
     }
 
     // Badge
-    [class*="badge"],
-    [class*="status"] {
+    [class*="badge"]:not([class*="dot"]),
+    [class*="status"]:not([class*="dot"]) {
       font-size: var(--mf-font-xs);
       padding: 3px 9px;
       font-weight: 700;
@@ -1131,8 +1131,8 @@ body {
       font-weight: 500;
     }
 
-    [class*="badge"],
-    [class*="status"] {
+    [class*="badge"]:not([class*="dot"]),
+    [class*="status"]:not([class*="dot"]) {
       font-size: var(--mf-font-xs);
       padding: 3px 9px;
       font-weight: 700;
@@ -1251,9 +1251,9 @@ body {
       font-weight: 500;
     }
 
-    [class*="badge"],
-    [class*="status"],
-    [class*="chip"] {
+    [class*="badge"]:not([class*="dot"]),
+    [class*="status"]:not([class*="dot"]),
+    [class*="chip"]:not([class*="dot"]) {
       font-size: var(--mf-font-xs);
       padding: 3px 9px;
       font-weight: 700;

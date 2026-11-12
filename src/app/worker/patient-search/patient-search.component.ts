@@ -111,7 +111,7 @@ export class PatientSearchComponent implements OnInit, OnDestroy {
     const pid = patient.uid || patient.userId || patient.mobileNumber;
     return this.activeSessions().find(
       s => (s.patientId === pid || s.patientMobile === patient.mobileNumber) &&
-           (s.status === 'active' || s.status === 'pending_otp')
+        (s.status === 'active' || s.status === 'pending_otp')
     );
   }
 
