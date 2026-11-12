@@ -517,7 +517,9 @@
   background: rgba(17, 30, 50, 0.97);
   backdrop-filter: blur(32px) saturate(180%);
   -webkit-backdrop-filter: blur(32px) saturate(180%);
-  border-top: 1px solid rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: none;
   border-radius: 32px 32px 0 0;
   box-shadow:
     0 -20px 60px rgba(0, 0, 0, 0.6),

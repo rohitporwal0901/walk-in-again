@@ -699,8 +699,7 @@
 }
 
 .modal-panel,
-.bottom-sheet,
-.action-sheet {
+.bottom-sheet {
   @include glass-card-strong;
   border-radius: 28px 28px 0 0;
   box-shadow: 0 -8px 48px rgba(7, 31, 54, 0.14);
