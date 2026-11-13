@@ -41,9 +41,9 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 26% center; // Frames doctor & patient naturally on left/center
+    object-position: 24% 20%; // Frames doctor & patient on left side with full headroom
     display: block;
-    transform: scale(1.02);
+    transform: scale(1.01);
   }
 
   .panoramic-bg-overlay {
@@ -213,7 +213,7 @@
 .hero-top-section {
   width: 100%;
   height: 48vh;
-  min-height: 320px;
+  min-height: 280px;
   max-height: 440px;
   flex: 0 0 auto;
   position: relative;
@@ -221,16 +221,22 @@
   background: #0B1320;
 
   @media (max-height: 680px) {
-    height: 42vh;
-    min-height: 260px;
+    height: 40vh;
+    min-height: 220px;
     max-height: 330px;
+  }
+
+  // Very small phones (SE, mini, Galaxy A series)
+  @media (max-width: 380px) {
+    min-height: 200px;
+    height: 38vh;
   }
 
   .hero-bg-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 6% 18%; // Keeps hand fully visible on the left and frames doctor & patient faces naturally
+    object-position: center 8%; // Doctors and patient centered, raised hands and heads fully visible
     display: block;
   }
 
@@ -261,6 +267,10 @@
   display: flex;
   flex-direction: column;
   padding: 10px 20px max(24px, calc(env(safe-area-inset-bottom, 0px) + 20px));
+
+  @media (max-width: 340px) {
+    padding: 8px 14px max(20px, calc(env(safe-area-inset-bottom, 0px) + 16px));
+  }
   position: relative;
   z-index: 3;
   overflow-y: auto; // Scrollable when keyboard is open and content overflows
@@ -290,6 +300,10 @@
     margin: 0 0 5px;
     letter-spacing: -0.025em;
     line-height: 1.15;
+
+    @media (max-width: 340px) {
+      font-size: 26px;
+    }
   }
 
   .brand-subtitle {
@@ -299,6 +313,11 @@
     margin: 0 0 6px;
     text-transform: uppercase;
     color: #22D3EE;
+
+    @media (max-width: 340px) {
+      font-size: 9px;
+      letter-spacing: 0.25em;
+    }
   }
 
   .brand-tagline {
@@ -307,6 +326,11 @@
     font-weight: 400;
     margin: 0 0 14px;
     letter-spacing: 0.01em;
+
+    @media (max-width: 340px) {
+      font-size: 12px;
+      margin: 0 0 10px;
+    }
   }
 }
 
@@ -314,28 +338,54 @@
 .promo-slider-container {
   position: relative;
   width: 100%;
-  height: 74px;
+  height: 84px;
+  min-height: 84px;
   margin: 0 0 10px;
   border-radius: 18px;
   overflow: hidden;
   background: #131E2F;
   border: 1px solid rgba(255, 255, 255, 0.08);
 
+  // Small phones
+  @media (max-width: 380px) {
+    height: 80px;
+    min-height: 80px;
+    border-radius: 16px;
+  }
+
+  @media (max-width: 340px) {
+    height: 76px;
+    min-height: 76px;
+    border-radius: 14px;
+  }
+
   .promo-slide-card {
     position: absolute;
     inset: 0;
     border-radius: 18px;
     background: transparent !important;
-    padding: 9px 12px 9px 14px;
+    padding: 10px 14px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
+    gap: 12px;
     opacity: 0;
     transform: translateX(14px) scale(0.98);
     pointer-events: none;
     transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     cursor: pointer;
+
+    @media (max-width: 380px) {
+      padding: 8px 12px;
+      gap: 10px;
+      border-radius: 16px;
+    }
+
+    @media (max-width: 340px) {
+      padding: 7px 10px;
+      gap: 8px;
+      border-radius: 14px;
+    }
 
     &.active-slide {
       opacity: 1;
@@ -359,13 +409,25 @@
         background: #FFFFFF !important;
         font-size: 8.5px;
         font-weight: 800;
-        padding: 2.5px 7.5px;
+        padding: 2.5px 7px;
         border-radius: 999px;
         text-transform: uppercase;
         letter-spacing: 0.06em;
-        margin-bottom: 5px;
-        line-height: 1.3;
+        margin-bottom: 4px;
+        line-height: 1.25;
         border: none;
+
+        @media (max-width: 380px) {
+          font-size: 8px;
+          padding: 2px 6px;
+          margin-bottom: 3px;
+        }
+
+        @media (max-width: 340px) {
+          font-size: 7.5px;
+          padding: 1.5px 5px;
+          margin-bottom: 2px;
+        }
 
         &::before {
           content: '';
@@ -378,7 +440,7 @@
       }
 
       .slide-title {
-        font-size: 15px;
+        font-size: 14.5px;
         font-weight: 700;
         color: #FFFFFF;
         margin: 0 0 2px;
@@ -387,27 +449,55 @@
         overflow: hidden;
         text-overflow: ellipsis;
         line-height: 1.2;
+
+        @media (max-width: 380px) {
+          font-size: 13.5px;
+        }
+
+        @media (max-width: 340px) {
+          font-size: 12.5px;
+        }
       }
 
       .slide-desc {
-        font-size: 11.5px;
+        font-size: 11px;
         font-weight: 400;
         color: #8493A8;
         margin: 0;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        line-height: 1.3;
+        line-height: 1.25;
+
+        @media (max-width: 380px) {
+          font-size: 10px;
+        }
+
+        @media (max-width: 340px) {
+          font-size: 9.5px;
+        }
       }
     }
 
     .slide-right-visual {
-      width: 54px;
-      height: 54px;
+      width: 52px;
+      height: 52px;
       border-radius: 12px;
       overflow: hidden;
       flex-shrink: 0;
       background: rgba(255, 255, 255, 0.05);
+
+      @media (max-width: 380px) {
+        width: 46px;
+        height: 46px;
+        border-radius: 10px;
+      }
+
+      @media (max-width: 340px) {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+      }
 
       .slide-thumb-img {
         width: 100%;
