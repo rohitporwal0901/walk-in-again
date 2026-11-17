@@ -1,4 +1,4 @@
-import { Component, signal, computed, inject, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, signal, computed, inject, OnInit, OnDestroy, HostListener, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
@@ -24,6 +24,15 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
   private paymentService = inject(PaymentService);
   public pricingService = inject(PricingService);
   private router = inject(Router);
+
+  constructor() {
+    effect(() => {
+      const hasUnpaid = !!this.unpaidCompletedSession();
+      if (typeof document !== 'undefined') {
+        document.body.classList.toggle('payment-locked', hasUnpaid);
+      }
+    });
+  }
 
   readonly defaultWalkInFee = this.pricingService.walkInFee;
 
@@ -157,6 +166,9 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    if (typeof document !== 'undefined') {
+      document.body.classList.remove('payment-locked');
+    }
     if (this.loadTimeout) {
       clearTimeout(this.loadTimeout);
     }
@@ -182,6 +194,12 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
   paySwipeCompleted = signal<boolean>(false);
   private startPayTouchX = 0;
   private maxPaySwipeDistance = 260;
+
+  onSliderClick(session: Session) {
+    if (this.paySwipeProgress() < 0.1 && !this.isPaySwiping() && !this.paySwipeCompleted()) {
+      this.openPaymentSheet(session);
+    }
+  }
 
   onPaySwipeStart(event: TouchEvent | MouseEvent, session: Session) {
     if (this.paySwipeCompleted() || this.isPaying()) return;

@@ -369,51 +369,91 @@
   </div>
   }
 
-  <!-- 3. Unpaid Completed Session: Floating Green Swipe-to-Pay Pill (No Card UI) -->
+  <!-- 3. Unpaid Completed Session: Full Lockout Backdrop & Payment Due Card (Image 1) -->
   @if (unpaidCompletedSession(); as completedSess) {
-  <div class="pay-floating-slider-wrap animate-fade-in-up" id="pay-due-dock">
-    <div
-      class="pay-swipe-slider"
-      id="pay-swipe-container"
-      [class.is-swiping]="isPaySwiping()"
-      [class.is-completed]="paySwipeCompleted()"
-      (touchstart)="onPaySwipeStart($event, completedSess)"
-      (touchmove)="onPaySwipeMove($event)"
-      (touchend)="onPaySwipeEnd(completedSess)"
-      (touchcancel)="onPaySwipeEnd(completedSess)"
-      (mousedown)="onPaySwipeStart($event, completedSess)"
-    >
-      <!-- Background Expanding Track Fill -->
-      <div class="pay-swipe-fill" [style.width.px]="paySwipeOffset() + 48"></div>
+  <div class="payment-lockout-backdrop" (click)="$event.stopPropagation()" id="payment-lockout-backdrop">
+    <div class="payment-due-card animate-scale-up" (click)="$event.stopPropagation()" id="payment-due-card">
 
-      <!-- Center Text: Pay ₹[Fee] to Dr. [Name] with Animated Chevrons -->
-      <div class="pay-swipe-label-wrap" [style.opacity]="1 - (paySwipeProgress() * 1.35)">
-        <span class="pay-swipe-text">
-          Slide to Pay ₹{{ completedSess.fee || defaultWalkInFee() }} to {{ formatDoctorName(completedSess.workerName) }}
-        </span>
-        <div class="pay-swipe-chevrons" aria-hidden="true">
-          <span class="p-chevron pc1">›</span>
-          <span class="p-chevron pc2">›</span>
-          <span class="p-chevron pc3">›</span>
+      <!-- Top Row: Payment Due Badge & Details Link -->
+      <div class="due-card-head">
+        <div class="due-badge-pill">
+          <span class="yellow-dot"></span>
+          <span class="due-badge-text">Payment due</span>
+        </div>
+        <button
+          type="button"
+          class="btn-due-details"
+          (click)="openPaymentSheet(completedSess)"
+          id="pt-due-details-btn"
+        >
+          Details
+        </button>
+      </div>
+
+      <!-- Middle Row: Fee & Doctor Info -->
+      <div class="due-card-body">
+        <div class="fee-col">
+          <span class="fee-label">Session fee</span>
+          <div class="fee-amount">₹{{ completedSess.fee || defaultWalkInFee() }}</div>
+        </div>
+        <div class="dr-col">
+          <div class="dr-name">{{ formatDoctorName(completedSess.workerName) }}</div>
+          <div class="session-step">
+            Session {{ completedSessions() + 1 }} of {{ totalRecommendedSessions() }}
+          </div>
         </div>
       </div>
 
-      <!-- Draggable Circular Thumb Knob -->
+      <!-- Slide to Pay Slider Row -->
       <div
-        class="pay-swipe-thumb"
-        [style.transform]="'translateX(' + paySwipeOffset() + 'px)'"
-        [class.completed]="paySwipeCompleted()"
+        class="pay-swipe-slider"
+        id="pay-swipe-container"
+        [class.is-swiping]="isPaySwiping()"
+        [class.is-completed]="paySwipeCompleted()"
+        (touchstart)="onPaySwipeStart($event, completedSess)"
+        (touchmove)="onPaySwipeMove($event)"
+        (touchend)="onPaySwipeEnd(completedSess)"
+        (touchcancel)="onPaySwipeEnd(completedSess)"
+        (mousedown)="onPaySwipeStart($event, completedSess)"
+        (click)="onSliderClick(completedSess)"
       >
-        @if (paySwipeCompleted()) {
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-        } @else {
-          <svg class="thumb-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        }
+        <!-- Background Expanding Track Fill -->
+        <div class="pay-swipe-fill" [style.width.px]="paySwipeOffset() + 48"></div>
+
+        <!-- Center Text: Slide to pay ₹300 -->
+        <div class="pay-swipe-label-wrap" [style.opacity]="1 - (paySwipeProgress() * 1.35)">
+          <span class="pay-swipe-text">
+            Slide to pay ₹{{ completedSess.fee || defaultWalkInFee() }}
+          </span>
+        </div>
+
+        <!-- Draggable Circular Thumb Knob with Chevron Right -->
+        <div
+          class="pay-swipe-thumb"
+          [style.transform]="'translateX(' + paySwipeOffset() + 'px)'"
+          [class.completed]="paySwipeCompleted()"
+        >
+          @if (paySwipeCompleted()) {
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          } @else {
+            <svg class="thumb-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0e6b56" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          }
+        </div>
       </div>
+
+      <!-- Bottom Row: Secure payment note -->
+      <div class="due-card-footer">
+        <svg class="secure-lock-icon" width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24" stroke="#FBBF24" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="#FBBF24" stroke-width="2.5"></path>
+        </svg>
+        <span class="secure-text">Secure payment · UPI, Card & Cash</span>
+      </div>
+
     </div>
   </div>
   }

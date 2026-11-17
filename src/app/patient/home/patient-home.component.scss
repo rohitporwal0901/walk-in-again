@@ -292,216 +292,311 @@
   }
 }
 
-// ─── Floating Green Swipe-to-Pay Slider Pill (No Card UI) ─────────────────────
-.pay-floating-slider-wrap {
+// ─── Unpaid Completed Session: Full Lockout Backdrop & Payment Due Card (Image 1) ───
+.payment-lockout-backdrop {
   position: fixed;
-  bottom: max(calc(env(safe-area-inset-bottom, 0px) + 72px), 76px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 24px);
-  max-width: 410px;
-  z-index: 990;
-  pointer-events: auto;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background: rgba(15, 23, 42, 0.58);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 16px max(calc(env(safe-area-inset-bottom, 0px) + 85px), 95px);
   box-sizing: border-box;
-  animation: floatSliderSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  pointer-events: auto;
+  touch-action: none;
+  animation: lockoutFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
 
-  // ─── Swipe Slider Track ─────────────────────────────────────────────────────
-  .pay-swipe-slider {
-    position: relative;
+  .payment-due-card {
     width: 100%;
-    height: 52px;
-    border-radius: 9999px;
-    background: linear-gradient(135deg, #059669 0%, #047857 100%);
-    box-shadow: 0 10px 26px -3px rgba(5, 150, 105, 0.45), 0 4px 10px rgba(15, 23, 42, 0.12), inset 0 1px 1.5px rgba(255, 255, 255, 0.35);
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    display: flex;
-    align-items: center;
-    padding: 4px;
+    max-width: 400px;
+    background: linear-gradient(155deg, #0e6453 0%, #0a5244 55%, #063e33 100%);
+    border-radius: 26px;
+    padding: 30px 20px 18px;
     box-sizing: border-box;
-    overflow: hidden;
-    user-select: none;
+    box-shadow:
+      0 24px 52px -6px rgba(4, 43, 35, 0.78),
+      0 12px 28px -4px rgba(0, 0, 0, 0.32),
+      inset 0 1px 1px rgba(255, 255, 255, 0.24);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #FFFFFF;
+    position: relative;
+    pointer-events: auto;
     touch-action: pan-y;
-    cursor: pointer;
-    bottom: 20px;
+    user-select: none;
+    animation: lockoutCardSlideUp 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
 
-    &.is-completed {
-      background: #047857;
+    // Header: Payment Due pill + Details link
+    .due-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+
+      .due-badge-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6.5px;
+        background: rgba(0, 0, 0, 0.22);
+        padding: 4px 11px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+
+        .yellow-dot {
+          width: 7.5px;
+          height: 7.5px;
+          border-radius: 50%;
+          background: #FBBF24;
+          box-shadow: 0 0 8px rgba(251, 191, 36, 0.7);
+          animation: dotPulse 1.8s infinite ease-in-out;
+        }
+
+        .due-badge-text {
+          font-size: 12px;
+          font-weight: 650;
+          color: #FFFFFF;
+          letter-spacing: 0.01em;
+        }
+      }
+
+      .btn-due-details {
+        background: transparent;
+        border: none;
+        color: #99F6E4;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        cursor: pointer;
+        padding: 4px 6px;
+        transition: color 0.15s ease, opacity 0.15s ease;
+
+        &:hover {
+          color: #FFFFFF;
+        }
+
+        &:active {
+          opacity: 0.8;
+        }
+      }
     }
 
-    .pay-swipe-fill {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      background: rgba(2, 44, 34, 0.32);
+    // Body: Session fee + Doctor & Session Count
+    .due-card-body {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 22px;
+
+      .fee-col {
+        .fee-label {
+          display: block;
+          font-size: 13px;
+          font-weight: 500;
+          color: #A7F3D0;
+          margin-bottom: 2px;
+        }
+
+        .fee-amount {
+          font-size: 33px;
+          font-weight: 850;
+          color: #FFFFFF;
+          line-height: 1.05;
+          letter-spacing: -0.025em;
+        }
+      }
+
+      .dr-col {
+        text-align: right;
+
+        .dr-name {
+          font-size: 14.5px;
+          font-weight: 750;
+          color: #FFFFFF;
+          white-space: nowrap;
+          letter-spacing: -0.01em;
+        }
+
+        .session-step {
+          font-size: 12.5px;
+          font-weight: 500;
+          color: #A7F3D0;
+          margin-top: 3px;
+        }
+      }
+    }
+
+    // Swipe Slider Track
+    .pay-swipe-slider {
+      position: relative;
+      width: 100%;
+      height: 52px;
       border-radius: 9999px;
-      pointer-events: none;
-      transition: width 0.08s linear;
+      background: rgba(255, 255, 255, 0.16);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      display: flex;
+      align-items: center;
+      padding: 4px;
+      box-sizing: border-box;
+      overflow: hidden;
+      user-select: none;
+      touch-action: pan-y;
+      cursor: pointer;
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      &.is-completed {
+        background: rgba(16, 185, 129, 0.4);
+      }
+
+      .pay-swipe-fill {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        background: rgba(2, 44, 34, 0.4);
+        border-radius: 9999px;
+        pointer-events: none;
+        transition: width 0.08s linear;
+      }
+
+      .pay-swipe-label-wrap {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 16px 0 48px;
+        pointer-events: none;
+        transition: opacity 0.15s ease;
+
+        .pay-swipe-text {
+          font-size: 14.5px;
+          font-weight: 750;
+          color: #FFFFFF;
+          letter-spacing: 0.015em;
+          white-space: nowrap;
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+        }
+      }
+
+      .pay-swipe-thumb {
+        position: relative;
+        z-index: 2;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: #FFFFFF;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        cursor: grab;
+        transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+
+        &:active {
+          cursor: grabbing;
+          transform: scale(1.04);
+        }
+
+        &.completed {
+          background: #10B981;
+          color: #FFFFFF;
+        }
+
+        .thumb-chevron {
+          margin-left: 2px;
+          animation: chevronNudge 1.6s infinite ease-in-out;
+        }
+      }
+
+      &.is-swiping .pay-swipe-thumb {
+        transition: none;
+      }
     }
 
-    .pay-swipe-label-wrap {
-      position: absolute;
-      inset: 0;
+    // Footer: Secure payment note
+    .due-card-footer {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      padding: 0 16px 0 52px;
-      pointer-events: none;
-      transition: opacity 0.15s ease;
-      min-width: 0;
+      margin-top: 16px;
 
-      .pay-swipe-text {
-        font-size: 13px;
-        font-weight: 750;
-        color: #FFFFFF;
-        letter-spacing: 0.015em;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.22);
-      }
-
-      .pay-swipe-chevrons {
-        display: inline-flex;
-        align-items: center;
-        gap: 1.5px;
-        color: #A7F3D0;
-        font-size: 17px;
-        font-weight: 900;
-        line-height: 1;
+      .secure-lock-icon {
         flex-shrink: 0;
-
-        .p-chevron {
-          animation: pChevronSlide 1.2s infinite ease-in-out;
-
-          &.pc1 {
-            animation-delay: 0s;
-          }
-
-          &.pc2 {
-            animation-delay: 0.2s;
-          }
-
-          &.pc3 {
-            animation-delay: 0.4s;
-          }
-        }
-      }
-    }
-
-    .pay-swipe-thumb {
-      position: relative;
-      z-index: 2;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: #FFFFFF;
-      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      cursor: grab;
-      transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-
-      &:active {
-        cursor: grabbing;
-        transform: scale(1.05);
       }
 
-      &.completed {
-        background: #10B981;
-        color: #FFFFFF;
-      }
-
-      .thumb-chevron {
-        animation: chevronNudge 1.6s infinite ease-in-out;
-      }
-    }
-
-    &.is-swiping .pay-swipe-thumb {
-      transition: none;
-    }
-  }
-}
-
-@media (max-width: 375px) {
-  .pay-floating-slider-wrap {
-    .pay-swipe-slider {
-      height: 48px;
-      padding: 3px;
-
-      .pay-swipe-thumb {
-        width: 40px;
-        height: 40px;
-      }
-
-      .pay-swipe-label-wrap {
-        padding: 0 12px 0 46px;
-
-        .pay-swipe-text {
-          font-size: 11.5px;
-        }
-
-        .pay-swipe-chevrons {
-          font-size: 15px;
-        }
+      .secure-text {
+        font-size: 11.5px;
+        font-weight: 500;
+        color: #A7F3D0;
+        letter-spacing: 0.01em;
       }
     }
   }
 }
 
-// ─── Animations for Floating Slider ───────────────────────────────────────────
-@keyframes floatSliderSlideUp {
-  0% {
+// Global disable for body and bottom navigation when payment lockout is active
+:global(body.payment-locked),
+:global(body:has(.payment-lockout-backdrop)) {
+  overflow: hidden !important;
+
+  .bottom-nav {
+    pointer-events: none !important;
+    filter: blur(1.5px) brightness(0.65) !important;
+    transition: filter 0.25s ease;
+  }
+}
+
+@keyframes lockoutFadeIn {
+  from {
     opacity: 0;
-    transform: translate(-50%, 28px) scale(0.96);
   }
-
-  100% {
+  to {
     opacity: 1;
-    transform: translate(-50%, 0) scale(1);
   }
 }
 
-@keyframes pChevronSlide {
-  0% {
-    opacity: 0.3;
-    transform: translateX(0);
+@keyframes lockoutCardSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
   }
-
-  50% {
+  to {
     opacity: 1;
-    transform: translateX(3px);
+    transform: translateY(0) scale(1);
   }
+}
 
-  100% {
-    opacity: 0.3;
-    transform: translateX(0);
+@keyframes dotPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
   }
 }
 
 @keyframes chevronNudge {
-
-  0%,
-  100% {
+  0%, 100% {
     transform: translateX(0);
   }
-
   50% {
     transform: translateX(2.5px);
-  }
-}
-
-// ─── Dark Theme Support for Floating Green Slider ─────────────────────────────
-:host-context([data-theme="dark"]),
-:host-context([data-admin-theme="dark"]),
-:host-context(.admin-dark-theme) {
-  .pay-floating-slider-wrap {
-    .pay-swipe-slider {
-      box-shadow: 0 10px 28px -2px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(16, 185, 129, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2);
-    }
   }
 }
 
