@@ -2,13 +2,13 @@
   min-height: 100vh;
   min-height: 100dvh;
   background-color: #F0F6FA;
-  background-image: 
+  background-image:
     radial-gradient(at 0% 0%, #E6F3F9 0%, transparent 60%),
     radial-gradient(at 100% 100%, #DFEEF5 0%, #F0F7FB 100%);
   color: #0F172A;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
-  padding-bottom: max(calc(env(safe-area-inset-bottom, 0px) + 88px), 100px);
+  padding-bottom: max(calc(env(safe-area-inset-bottom, 0px) + 165px), 180px);
 }
 
 // ─── Top Header ───────────────────────────────────────────────────────────────
@@ -65,7 +65,8 @@
     box-shadow: 0 4px 14px rgba(7, 31, 54, 0.05);
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 
-    &:hover, &:active {
+    &:hover,
+    &:active {
       transform: scale(1.06);
       background-color: #FFFFFF;
       box-shadow: 0 6px 18px rgba(7, 31, 54, 0.08);
@@ -97,7 +98,7 @@
   border: 1.5px solid rgba(255, 255, 255, 0.9);
   border-radius: 24px;
   padding: 18px 18px 16px;
-  box-shadow: 
+  box-shadow:
     0 12px 32px -4px rgba(2, 132, 199, 0.18),
     0 4px 12px rgba(7, 31, 54, 0.04),
     inset 0 1px 1.5px rgba(255, 255, 255, 0.95);
@@ -187,258 +188,132 @@
   }
 }
 
-// ─── Real-Time OTP Banner for Patient ─────────────────────────────────────────
-.patient-otp-banner {
-  background: #FFFFFF;
-  border-radius: 22px;
-  padding: 18px 20px 16px;
-  margin-top: 14px;
-  box-shadow: 0 4px 20px rgba(2, 132, 199, 0.08), 0 1px 3px rgba(15, 23, 42, 0.04);
-  border: 1.5px solid rgba(2, 132, 199, 0.25);
-  position: relative;
-  overflow: hidden;
+// ─── Real-Time OTP: Minimal Sliding Glass Pill (Header NOT covered, Only OTP) ─
+.otp-glass-strip-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: -6px 0 14px;
+  animation: slideDownGlass 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 
-  // Subtle top medical cyan accent strip
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3.5px;
-    background: linear-gradient(90deg, #0284C7 0%, #38BDF8 50%, #10B981 100%);
-  }
-
-  .otp-banner-top-row {
-    display: flex;
+  .otp-minimal-glass-pill {
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
     gap: 8px;
-    margin-bottom: 12px;
+    padding: 5px 12px 5px 10px;
+    background: rgba(255, 255, 255, 0.84);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1.5px solid rgba(255, 255, 255, 0.95);
+    border-radius: 9999px;
+    box-shadow:
+      0 6px 18px -2px rgba(2, 132, 199, 0.16),
+      0 2px 6px rgba(15, 23, 42, 0.04),
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.95);
 
-    .otp-badge-wrap {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-
-      .live-otp-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: #10B981;
-        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-        animation: pulseDot 1.6s infinite;
-      }
-
-      .otp-badge-title {
-        font-size: 13px;
-        font-weight: 800;
-        color: #0F172A;
-        letter-spacing: -0.01em;
-      }
+    .otp-pill-dot {
+      width: 7px;
+      height: 7px;
+      min-width: 7px;
+      min-height: 7px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: livePulseDot 1.6s infinite;
+      flex-shrink: 0;
     }
 
-    .otp-security-pill {
+    .otp-pill-tag {
+      font-size: 11px;
+      font-weight: 850;
+      color: #0284C7;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .otp-pill-code {
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      background: #E0F2FE;
-      color: #0284C7;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 3px 9px;
-      border-radius: 9999px;
-    }
-  }
 
-  .otp-doctor-callout {
-    background: #F8FAFC;
-    border-radius: 12px;
-    padding: 8px 12px;
-    margin-bottom: 14px;
-    border: 1px solid #E2E8F0;
-
-    .otp-sub-prompt {
-      font-size: 12.5px;
-      color: #475569;
-      margin: 0;
-      line-height: 1.45;
-
-      strong {
-        color: #0F172A;
-        font-weight: 700;
+      .otp-digit-box {
+        width: 26px;
+        height: 30px;
+        border-radius: 8px;
+        background: rgba(2, 132, 199, 0.08);
+        border: 1px solid rgba(2, 132, 199, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16.5px;
+        font-weight: 850;
+        color: #0284C7;
+        font-variant-numeric: tabular-nums;
+        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8);
       }
-    }
-  }
-
-  .otp-display-cards {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 14px;
-
-    .otp-card-digit {
-      width: 54px;
-      height: 60px;
-      border-radius: 16px;
-      background: linear-gradient(180deg, #F0F9FF 0%, #E0F2FE 100%);
-      border: 2px solid rgba(2, 132, 199, 0.35);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      font-weight: 800;
-      color: #0284C7;
-      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.12);
-      transition: transform 0.15s ease;
-
-      &:hover {
-        transform: translateY(-2px);
-        border-color: #0284C7;
-      }
-    }
-  }
-
-  .otp-wait-hint-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    font-size: 11.5px;
-    color: #64748B;
-    text-align: center;
-    line-height: 1.35;
-
-    svg {
-      flex-shrink: 0;
     }
   }
 }
 
-// ─── Payment Due Banner with Rapido-Style Swipe to Pay ───────────────────────
-.payment-due-banner {
-  background: #FFFFFF;
-  border-radius: 22px;
-  padding: 16px 18px 14px;
-  margin-top: 14px;
-  box-shadow: 0 6px 22px rgba(16, 185, 129, 0.08), 0 1px 3px rgba(15, 23, 42, 0.04);
-  border: 1.5px solid rgba(16, 185, 129, 0.3);
-  position: relative;
-  overflow: hidden;
-
-  // Amber/Emerald dual top accent indicator
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3.5px;
-    background: linear-gradient(90deg, #F59E0B 0%, #10B981 100%);
+@keyframes slideDownGlass {
+  0% {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.96);
   }
 
-  .due-banner-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
 
-    .due-badge-wrap {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+// ─── Dark Theme Support for Minimal Glass OTP Pill ────────────────────────────
+:host-context([data-theme="dark"]),
+:host-context([data-admin-theme="dark"]),
+:host-context(.admin-dark-theme) {
+  .otp-glass-strip-wrapper {
+    .otp-minimal-glass-pill {
+      background: rgba(15, 23, 42, 0.86);
+      border-color: rgba(56, 189, 248, 0.35);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
 
-      .live-dot-amber {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: #F59E0B;
-        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.6);
-        animation: pulseDotAmber 1.6s infinite;
+      .otp-pill-tag {
+        color: #38BDF8;
       }
 
-      .due-badge {
-        font-size: 11.5px;
-        font-weight: 700;
-        background: #FEF3C7;
-        color: #92400E;
-        padding: 3px 9px;
-        border-radius: 9999px;
-        border: 1px solid rgba(245, 158, 11, 0.2);
-      }
-    }
-
-    .due-amount-pill {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 2px;
-      font-size: 20px;
-      font-weight: 800;
-      color: #0F172A;
-      font-variant-numeric: tabular-nums;
-
-      .currency-symbol {
-        font-size: 15px;
-        font-weight: 700;
-        color: #059669;
-      }
-
-      .amount-number {
-        letter-spacing: -0.02em;
+      .otp-digit-box {
+        background: rgba(2, 132, 199, 0.22);
+        border-color: rgba(56, 189, 248, 0.45);
+        color: #38BDF8;
+        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15);
       }
     }
   }
+}
 
-  .due-doctor-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    background: #F8FAFC;
-    border-radius: 14px;
-    border: 1px solid #F1F5F9;
-    margin-bottom: 12px;
+// ─── Floating Green Swipe-to-Pay Slider Pill (No Card UI) ─────────────────────
+.pay-floating-slider-wrap {
+  position: fixed;
+  bottom: max(calc(env(safe-area-inset-bottom, 0px) + 72px), 76px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 24px);
+  max-width: 410px;
+  z-index: 990;
+  pointer-events: auto;
+  box-sizing: border-box;
+  animation: floatSliderSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 
-    .doctor-avatar-circle {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: #ECFDF5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      border: 1px solid rgba(16, 185, 129, 0.25);
-    }
-
-    .doctor-info-text {
-      flex: 1;
-      min-width: 0;
-
-      .doctor-title {
-        font-size: 13.5px;
-        font-weight: 800;
-        color: #0F172A;
-        margin: 0 0 2px;
-      }
-
-      .due-desc {
-        font-size: 11.5px;
-        color: #64748B;
-        margin: 0;
-        line-height: 1.35;
-      }
-    }
-  }
-
-  // ─── Rapido-Style Swipe Slider ─────────────────────────────────────────────
+  // ─── Swipe Slider Track ─────────────────────────────────────────────────────
   .pay-swipe-slider {
     position: relative;
     width: 100%;
     height: 52px;
     border-radius: 9999px;
     background: linear-gradient(135deg, #059669 0%, #047857 100%);
-    box-shadow: 0 6px 18px rgba(5, 150, 105, 0.28), inset 0 1px 2px rgba(255, 255, 255, 0.25);
+    box-shadow: 0 10px 26px -3px rgba(5, 150, 105, 0.45), 0 4px 10px rgba(15, 23, 42, 0.12), inset 0 1px 1.5px rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.22);
     display: flex;
     align-items: center;
     padding: 4px;
@@ -447,6 +322,7 @@
     user-select: none;
     touch-action: pan-y;
     cursor: pointer;
+    bottom: 20px;
 
     &.is-completed {
       background: #047857;
@@ -457,7 +333,7 @@
       top: 0;
       left: 0;
       height: 100%;
-      background: rgba(2, 44, 34, 0.25);
+      background: rgba(2, 44, 34, 0.32);
       border-radius: 9999px;
       pointer-events: none;
       transition: width 0.08s linear;
@@ -470,31 +346,46 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
+      padding: 0 16px 0 52px;
       pointer-events: none;
       transition: opacity 0.15s ease;
+      min-width: 0;
 
       .pay-swipe-text {
-        font-size: 13.5px;
-        font-weight: 800;
+        font-size: 13px;
+        font-weight: 750;
         color: #FFFFFF;
-        letter-spacing: 0.02em;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        letter-spacing: 0.015em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.22);
       }
 
       .pay-swipe-chevrons {
         display: inline-flex;
         align-items: center;
-        gap: 1px;
+        gap: 1.5px;
         color: #A7F3D0;
-        font-size: 18px;
+        font-size: 17px;
         font-weight: 900;
         line-height: 1;
+        flex-shrink: 0;
 
         .p-chevron {
           animation: pChevronSlide 1.2s infinite ease-in-out;
-          &.pc1 { animation-delay: 0s; }
-          &.pc2 { animation-delay: 0.2s; }
-          &.pc3 { animation-delay: 0.4s; }
+
+          &.pc1 {
+            animation-delay: 0s;
+          }
+
+          &.pc2 {
+            animation-delay: 0.2s;
+          }
+
+          &.pc3 {
+            animation-delay: 0.4s;
+          }
         }
       }
     }
@@ -506,7 +397,7 @@
       height: 44px;
       border-radius: 50%;
       background: #FFFFFF;
-      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -516,12 +407,16 @@
 
       &:active {
         cursor: grabbing;
-        transform: scale(1.04);
+        transform: scale(1.05);
       }
 
       &.completed {
         background: #10B981;
         color: #FFFFFF;
+      }
+
+      .thumb-chevron {
+        animation: chevronNudge 1.6s infinite ease-in-out;
       }
     }
 
@@ -529,30 +424,85 @@
       transition: none;
     }
   }
+}
 
-  .pay-hint-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    margin-top: 8px;
-    font-size: 11px;
-    color: #64748B;
-    font-weight: 500;
-    text-align: center;
+@media (max-width: 375px) {
+  .pay-floating-slider-wrap {
+    .pay-swipe-slider {
+      height: 48px;
+      padding: 3px;
+
+      .pay-swipe-thumb {
+        width: 40px;
+        height: 40px;
+      }
+
+      .pay-swipe-label-wrap {
+        padding: 0 12px 0 46px;
+
+        .pay-swipe-text {
+          font-size: 11.5px;
+        }
+
+        .pay-swipe-chevrons {
+          font-size: 15px;
+        }
+      }
+    }
+  }
+}
+
+// ─── Animations for Floating Slider ───────────────────────────────────────────
+@keyframes floatSliderSlideUp {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 28px) scale(0.96);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
   }
 }
 
 @keyframes pChevronSlide {
-  0% { opacity: 0.3; transform: translateX(0); }
-  50% { opacity: 1; transform: translateX(3px); }
-  100% { opacity: 0.3; transform: translateX(0); }
+  0% {
+    opacity: 0.3;
+    transform: translateX(0);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateX(3px);
+  }
+
+  100% {
+    opacity: 0.3;
+    transform: translateX(0);
+  }
 }
 
-@keyframes pulseDotAmber {
-  0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
-  70% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+@keyframes chevronNudge {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(2.5px);
+  }
+}
+
+// ─── Dark Theme Support for Floating Green Slider ─────────────────────────────
+:host-context([data-theme="dark"]),
+:host-context([data-admin-theme="dark"]),
+:host-context(.admin-dark-theme) {
+  .pay-floating-slider-wrap {
+    .pay-swipe-slider {
+      box-shadow: 0 10px 28px -2px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(16, 185, 129, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    }
+  }
 }
 
 // ─── Active Ongoing / Scheduled Session Banner ────────────────────────────────
@@ -725,7 +675,7 @@
     border-radius: 22px;
     padding: 16px;
     border: 1px solid rgba(226, 232, 240, 0.9);
-    box-shadow: 
+    box-shadow:
       0 6px 20px -2px rgba(7, 31, 54, 0.04),
       0 1px 3px rgba(7, 31, 54, 0.02);
     cursor: pointer;
@@ -735,7 +685,8 @@
     flex-direction: column;
     justify-content: space-between;
 
-    &:hover, &:active {
+    &:hover,
+    &:active {
       transform: translateY(-2px);
       box-shadow: 0 12px 28px rgba(7, 31, 54, 0.08);
       border-color: rgba(186, 230, 253, 0.9);
@@ -865,7 +816,8 @@
       box-shadow: 0 4px 14px rgba(7, 31, 54, 0.04);
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 
-      &:hover, &:active {
+      &:hover,
+      &:active {
         transform: translateY(-2px);
         box-shadow: 0 8px 22px rgba(7, 31, 54, 0.08);
         border-color: rgba(186, 230, 253, 0.9);
@@ -915,7 +867,8 @@
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 
-  &:hover, &:active {
+  &:hover,
+  &:active {
     transform: translateY(-1px);
     box-shadow: 0 8px 22px rgba(245, 158, 11, 0.1);
   }
@@ -1004,13 +957,11 @@
     bottom: 0;
     left: 0;
     transform: translateX(-100%);
-    background-image: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0) 0,
-      rgba(255, 255, 255, 0.4) 20%,
-      rgba(255, 255, 255, 0.7) 60%,
-      rgba(255, 255, 255, 0)
-    );
+    background-image: linear-gradient(90deg,
+        rgba(255, 255, 255, 0) 0,
+        rgba(255, 255, 255, 0.4) 20%,
+        rgba(255, 255, 255, 0.7) 60%,
+        rgba(255, 255, 255, 0));
     animation: shimmer 1.5s infinite;
     content: '';
   }
@@ -1023,20 +974,54 @@
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.3); opacity: 0.6; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.3);
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @keyframes waveHand {
-  0% { transform: rotate(0deg); }
-  10% { transform: rotate(14deg); }
-  20% { transform: rotate(-8deg); }
-  30% { transform: rotate(14deg); }
-  40% { transform: rotate(-4deg); }
-  50% { transform: rotate(10deg); }
-  60% { transform: rotate(0deg); }
-  100% { transform: rotate(0deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  10% {
+    transform: rotate(14deg);
+  }
+
+  20% {
+    transform: rotate(-8deg);
+  }
+
+  30% {
+    transform: rotate(14deg);
+  }
+
+  40% {
+    transform: rotate(-4deg);
+  }
+
+  50% {
+    transform: rotate(10deg);
+  }
+
+  60% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
 // ─── Payment Bottom Sheet (Matching Subscription Style) ───────────────────────
@@ -1127,6 +1112,7 @@
         color: #0F172A;
         margin: 0 0 2px;
       }
+
       .summary-detail {
         font-size: 11px;
         color: #64748B;
@@ -1271,8 +1257,13 @@
 }
 
 @keyframes overlayFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes sheetSlideUp {
@@ -1280,9 +1271,9 @@
     transform: translateY(100%);
     opacity: 0.8;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
   }
 }
-
