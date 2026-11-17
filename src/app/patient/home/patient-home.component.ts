@@ -25,15 +25,6 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
   public pricingService = inject(PricingService);
   private router = inject(Router);
 
-  constructor() {
-    effect(() => {
-      const hasUnpaid = !!this.unpaidCompletedSession();
-      if (typeof document !== 'undefined') {
-        document.body.classList.toggle('payment-locked', hasUnpaid);
-      }
-    });
-  }
-
   readonly defaultWalkInFee = this.pricingService.walkInFee;
 
   private sessionsUnsub: Unsubscribe | null = null;
@@ -166,9 +157,6 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (typeof document !== 'undefined') {
-      document.body.classList.remove('payment-locked');
-    }
     if (this.loadTimeout) {
       clearTimeout(this.loadTimeout);
     }
@@ -196,13 +184,14 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
   private maxPaySwipeDistance = 260;
 
   onSliderClick(session: Session) {
-    if (this.paySwipeProgress() < 0.1 && !this.isPaySwiping() && !this.paySwipeCompleted()) {
-      this.openPaymentSheet(session);
+    if (!this.isPaySwiping() && !this.paySwipeCompleted() && !this.isPaying()) {
+      this.confirmSessionPayment();
     }
   }
 
   onPaySwipeStart(event: TouchEvent | MouseEvent, session: Session) {
     if (this.paySwipeCompleted() || this.isPaying()) return;
+    this.paymentError.set('');
     this.isPaySwiping.set(true);
     const clientX = 'touches' in event ? event.touches[0].clientX : event.clientX;
     this.startPayTouchX = clientX - this.paySwipeOffset();
@@ -215,7 +204,7 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
   }
 
   onPaySwipeMove(event: TouchEvent | MouseEvent) {
-    if (!this.isPaySwiping() || this.paySwipeCompleted()) return;
+    if (!this.isPaySwiping() || this.paySwipeCompleted() || this.isPaying()) return;
     const clientX = 'touches' in event ? event.touches[0].clientX : event.clientX;
     const rawDelta = clientX - this.startPayTouchX;
     const clamped = Math.max(0, Math.min(rawDelta, this.maxPaySwipeDistance));
@@ -227,20 +216,14 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
     if (!this.isPaySwiping() || this.paySwipeCompleted()) return;
     this.isPaySwiping.set(false);
 
-    if (this.paySwipeProgress() >= 0.70) {
+    if (this.paySwipeProgress() >= 0.65) {
       // Completed swipe: snap knob to end
       this.paySwipeOffset.set(this.maxPaySwipeDistance);
       this.paySwipeProgress.set(1);
       this.paySwipeCompleted.set(true);
 
-      // Open payment action sheet
-      setTimeout(() => {
-        this.openPaymentSheet(session);
-        // Reset slider smoothly after sheet opens
-        setTimeout(() => {
-          this.resetPaySwipe();
-        }, 400);
-      }, 200);
+      // Directly use existing confirmSessionPayment!
+      this.confirmSessionPayment();
     } else {
       // Revert smoothly
       this.paySwipeOffset.set(0);
@@ -296,7 +279,7 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
 
   /** Confirm session payment with selected method (UPI, Card, Cash) */
   async confirmSessionPayment() {
-    const session = this.selectedSessionToPay();
+    const session = this.selectedSessionToPay() || this.unpaidCompletedSession();
     if (!session || this.isPaying()) return;
 
     this.isPaying.set(true);
@@ -341,11 +324,13 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
 
       this.showPaymentSheet.set(false);
       this.isPaying.set(false);
+      this.resetPaySwipe();
       this.router.navigate(['/patient/payments']);
     } catch (err: any) {
       console.warn('Patient session payment cancelled or error:', err);
       this.paymentError.set(err?.message || 'Payment cancelled or failed. Please try again.');
       this.isPaying.set(false);
+      this.resetPaySwipe();
     }
   }
 

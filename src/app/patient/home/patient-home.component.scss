@@ -292,59 +292,67 @@
   }
 }
 
-// ─── Unpaid Completed Session: Full Lockout Backdrop & Payment Due Card (Image 1) ───
-.payment-lockout-backdrop {
+// ─── Unpaid Completed Session: Floating Card with In-Card Method Selector (Image 2) ───
+.payment-card-dock {
   position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
-  background: rgba(15, 23, 42, 0.58);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  z-index: 2000;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 0 16px max(calc(env(safe-area-inset-bottom, 0px) + 85px), 95px);
-  box-sizing: border-box;
+  bottom: max(calc(env(safe-area-inset-bottom, 0px) + 70px), 76px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 24px);
+  max-width: 410px;
+  z-index: 990;
   pointer-events: auto;
-  touch-action: none;
-  animation: lockoutFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+  box-sizing: border-box;
+  animation: cardDockSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 
   .payment-due-card {
     width: 100%;
-    max-width: 400px;
     background: linear-gradient(155deg, #0e6453 0%, #0a5244 55%, #063e33 100%);
-    border-radius: 26px;
-    padding: 30px 20px 18px;
+    border-radius: 24px;
+    padding: 16px 18px 14px;
     box-sizing: border-box;
-    box-shadow:
-      0 24px 52px -6px rgba(4, 43, 35, 0.78),
-      0 12px 28px -4px rgba(0, 0, 0, 0.32),
-      inset 0 1px 1px rgba(255, 255, 255, 0.24);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
     border: 1px solid rgba(255, 255, 255, 0.16);
     color: #FFFFFF;
     position: relative;
-    pointer-events: auto;
-    touch-action: pan-y;
+    overflow: hidden;
     user-select: none;
-    animation: lockoutCardSlideUp 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 
-    // Header: Payment Due pill + Details link
+    // Subtle metallic light streak shimmer sweep
+    &::after {
+      content: '';
+      position: absolute;
+      top: -60%;
+      left: -60%;
+      width: 45%;
+      height: 220%;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.02) 20%,
+        rgba(255, 255, 255, 0.18) 50%,
+        rgba(255, 255, 255, 0.02) 80%,
+        transparent 100%
+      );
+      transform: rotate(26deg);
+      pointer-events: none;
+      animation: cardShimmerSweep 4.5s infinite cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1;
+    }
+
+    // Header: Payment Due pill only (Labels removed)
     .due-card-head {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 12px;
 
       .due-badge-pill {
         display: inline-flex;
         align-items: center;
-        gap: 6.5px;
+        gap: 6px;
         background: rgba(0, 0, 0, 0.22);
-        padding: 4px 11px;
+        padding: 4px 10px;
         border-radius: 999px;
         border: 1px solid rgba(255, 255, 255, 0.1);
 
@@ -364,27 +372,6 @@
           letter-spacing: 0.01em;
         }
       }
-
-      .btn-due-details {
-        background: transparent;
-        border: none;
-        color: #99F6E4;
-        font-size: 13px;
-        font-weight: 600;
-        text-decoration: underline;
-        text-underline-offset: 2px;
-        cursor: pointer;
-        padding: 4px 6px;
-        transition: color 0.15s ease, opacity 0.15s ease;
-
-        &:hover {
-          color: #FFFFFF;
-        }
-
-        &:active {
-          opacity: 0.8;
-        }
-      }
     }
 
     // Body: Session fee + Doctor & Session Count
@@ -392,19 +379,19 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      margin-bottom: 22px;
+      margin-bottom: 14px;
 
       .fee-col {
         .fee-label {
           display: block;
-          font-size: 13px;
+          font-size: 12.5px;
           font-weight: 500;
           color: #A7F3D0;
           margin-bottom: 2px;
         }
 
         .fee-amount {
-          font-size: 33px;
+          font-size: 32px;
           font-weight: 850;
           color: #FFFFFF;
           line-height: 1.05;
@@ -424,12 +411,77 @@
         }
 
         .session-step {
-          font-size: 12.5px;
+          font-size: 12px;
           font-weight: 500;
           color: #A7F3D0;
-          margin-top: 3px;
+          margin-top: 2px;
         }
       }
+    }
+
+    // In-Card Payment Method Selector (Image 2)
+    .in-card-methods {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin-bottom: 14px;
+
+      .card-method-pill {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        height: 42px;
+        border-radius: 999px;
+        border: 1.5px solid rgba(255, 255, 255, 0.28);
+        background: rgba(255, 255, 255, 0.08);
+        color: #FFFFFF;
+        font-size: 13.5px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        user-select: none;
+
+        .method-emoji {
+          font-size: 15px;
+        }
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.16);
+        }
+
+        &.active {
+          background: #FFFFFF;
+          color: #0F172A;
+          border-color: #FFFFFF;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+        }
+      }
+    }
+
+    .in-card-cash-note {
+      background: rgba(0, 0, 0, 0.22);
+      border-radius: 10px;
+      padding: 6px 10px;
+      font-size: 11.5px;
+      color: #A7F3D0;
+      text-align: center;
+      margin-bottom: 12px;
+
+      strong {
+        color: #FFFFFF;
+      }
+    }
+
+    .in-card-error {
+      background: rgba(220, 38, 38, 0.25);
+      border: 1px solid rgba(220, 38, 38, 0.4);
+      border-radius: 10px;
+      padding: 6px 10px;
+      font-size: 11.5px;
+      color: #FEE2E2;
+      text-align: center;
+      margin-bottom: 12px;
     }
 
     // Swipe Slider Track
@@ -481,7 +533,7 @@
         transition: opacity 0.15s ease;
 
         .pay-swipe-text {
-          font-size: 14.5px;
+          font-size: 13.5px;
           font-weight: 750;
           color: #FFFFFF;
           letter-spacing: 0.015em;
@@ -515,6 +567,15 @@
           color: #FFFFFF;
         }
 
+        .knob-spinner {
+          width: 18px;
+          height: 18px;
+          border: 2px solid rgba(14, 100, 83, 0.3);
+          border-top-color: #0e6453;
+          border-radius: 50%;
+          animation: spin 0.8s linear infinite;
+        }
+
         .thumb-chevron {
           margin-left: 2px;
           animation: chevronNudge 1.6s infinite ease-in-out;
@@ -526,13 +587,24 @@
       }
     }
 
+    .due-card-head,
+    .due-card-body,
+    .in-card-methods,
+    .in-card-cash-note,
+    .in-card-error,
+    .pay-swipe-slider,
+    .due-card-footer {
+      position: relative;
+      z-index: 2;
+    }
+
     // Footer: Secure payment note
     .due-card-footer {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      margin-top: 16px;
+      margin-top: 12px;
 
       .secure-lock-icon {
         flex-shrink: 0;
@@ -548,35 +620,23 @@
   }
 }
 
-// Global disable for body and bottom navigation when payment lockout is active
-:global(body.payment-locked),
-:global(body:has(.payment-lockout-backdrop)) {
-  overflow: hidden !important;
-
-  .bottom-nav {
-    pointer-events: none !important;
-    filter: blur(1.5px) brightness(0.65) !important;
-    transition: filter 0.25s ease;
+@keyframes cardShimmerSweep {
+  0% {
+    transform: translateX(-160%) rotate(26deg);
+  }
+  32%, 100% {
+    transform: translateX(400%) rotate(26deg);
   }
 }
 
-@keyframes lockoutFadeIn {
+@keyframes cardDockSlideUp {
   from {
     opacity: 0;
+    transform: translate(-50%, 28px) scale(0.96);
   }
   to {
     opacity: 1;
-  }
-}
-
-@keyframes lockoutCardSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translate(-50%, 0) scale(1);
   }
 }
 
