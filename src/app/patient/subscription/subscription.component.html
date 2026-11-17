@@ -80,19 +80,79 @@
   </div>
   }
 
+  <!-- Mini Active Plan Popup -->
+  @if (showActivePlanModal()) {
+  <div class="mini-popup-backdrop" (click)="closeActivePlanModal()">
+    <div class="mini-popup-card" (click)="$event.stopPropagation()">
+      <button class="mini-popup-close" (click)="closeActivePlanModal()" aria-label="Close" id="btn-mini-close">
+        ✕
+      </button>
+
+      <div class="mini-popup-icon-wrap">
+        <span class="mini-icon">⚡</span>
+      </div>
+
+      <h3 class="mini-popup-title">Plan Already Active!</h3>
+
+      @if (activeSub(); as sub) {
+      <p class="mini-popup-desc">
+        You already have an active <strong>{{ sub.planName }} Plan</strong> with <strong>{{ sub.remainingSessions }} {{ sub.remainingSessions === 1 ? 'session' : 'sessions' }}</strong> remaining.
+      </p>
+
+      <div class="mini-plan-pill">
+        <div class="mini-plan-left">
+          <span class="mini-plan-name">{{ sub.planName }} Plan</span>
+          <span class="mini-plan-sub">{{ sub.remainingSessions }} of {{ sub.totalSessions }} Sessions Left</span>
+        </div>
+        <span class="mini-status-badge">● Active</span>
+      </div>
+
+      @if (attemptedPlan(); as attempt) {
+      <p class="mini-switch-text">
+        Do you want to switch to the <strong>{{ attempt.name }} Plan</strong> (₹{{ attempt.price | number }})?
+      </p>
+
+      <div class="mini-btn-row">
+        <button type="button" class="mini-btn-primary" (click)="closeActivePlanModal()" id="btn-mini-keep">
+          Keep Current Plan
+        </button>
+        <button type="button" class="mini-btn-secondary" (click)="proceedWithPlanChange()" id="btn-mini-switch">
+          Switch to {{ attempt.name }}
+        </button>
+      </div>
+      } @else {
+      <div class="mini-btn-row">
+        <button type="button" class="mini-btn-primary" (click)="closeActivePlanModal()" id="btn-mini-ok">
+          Got It, Thanks!
+        </button>
+      </div>
+      }
+      }
+    </div>
+  </div>
+  }
+
   <div class="sub-content">
 
     <!-- Active Subscription Hero Card (Prominently Highlighted, Reference Matched) -->
     @if (activeSub(); as sub) {
-    <div class="active-plan-hero-card">
+    <div class="active-plan-hero-card" (click)="viewCurrentPlanDetails()" style="cursor: pointer;" title="Tap to view full plan details">
       <div class="active-card-top">
         <span class="active-status-badge">
           <span class="live-pulse-dot"></span>
           Active Plan
         </span>
-        <span class="active-days-tag">
-          {{ sub.remainingSessions }} Sessions Left
-        </span>
+        <div class="active-card-top-right">
+          <span class="active-days-tag">
+            {{ sub.remainingSessions }} Sessions Left
+          </span>
+          <span class="active-tap-chip">
+            Details
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </span>
+        </div>
       </div>
 
       <div class="active-card-body">
@@ -269,12 +329,12 @@
         <!-- Action Button -->
         <div class="plan-action-box">
           @if (activeSub()?.planId === plan.id) {
-          <button class="plan-btn current-active-btn" disabled>
+          <button class="plan-btn current-active-btn" (click)="viewCurrentPlanDetails()" [id]="'current-plan-' + plan.id">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"
               stroke-linecap="round" stroke-linejoin="round">
               <polyline points="20 6 9 17 4 12"></polyline>
             </svg>
-            You're on this plan
+            Current Plan (Active)
           </button>
           } @else {
           <button class="plan-btn" [class.btn-popular]="plan.isPopular" [class.btn-monthly]="plan.id === 'plan_monthly'"

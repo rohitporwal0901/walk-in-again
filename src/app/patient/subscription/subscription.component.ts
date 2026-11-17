@@ -34,10 +34,19 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   purchaseSuccess = signal(false);
   errorMsg = signal('');
 
+  // Active Subscription check & modal state
+  showActivePlanModal = signal(false);
+  attemptedPlan = signal<SubscriptionPlan | null>(null);
+
   private subUnsub: Unsubscribe | null = null;
   private plansUnsub: Unsubscribe | null = null;
   private confettiAnimId: number | null = null;
   private autoCloseTimer: any = null;
+
+  hasActiveSubscription = computed(() => {
+    const sub = this.activeSub();
+    return !!sub && sub.status === 'active' && (sub.remainingSessions ?? 0) > 0;
+  });
 
   planRemainingDays = computed(() => {
     const sub = this.activeSub();
@@ -87,9 +96,46 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   }
 
   selectPlan(plan: SubscriptionPlan) {
+    // Check if user already has an active subscription
+    if (this.hasActiveSubscription()) {
+      if (this.activeSub()?.planId === plan.id) {
+        this.attemptedPlan.set(null);
+      } else {
+        this.attemptedPlan.set(plan);
+      }
+      this.showActivePlanModal.set(true);
+      return;
+    }
+
     this.selectedPlan.set(plan);
     this.showPaymentSheet.set(true);
     this.errorMsg.set('');
+  }
+
+  viewCurrentPlanDetails() {
+    this.attemptedPlan.set(null);
+    this.showActivePlanModal.set(true);
+  }
+
+  closeActivePlanModal() {
+    this.showActivePlanModal.set(false);
+    this.attemptedPlan.set(null);
+  }
+
+  proceedWithPlanChange() {
+    const plan = this.attemptedPlan();
+    this.showActivePlanModal.set(false);
+    this.attemptedPlan.set(null);
+    if (plan) {
+      this.selectedPlan.set(plan);
+      this.showPaymentSheet.set(true);
+      this.errorMsg.set('');
+    }
+  }
+
+  goToSessions() {
+    this.closeActivePlanModal();
+    this.router.navigate(['/patient/sessions']);
   }
 
   closeSheet() {

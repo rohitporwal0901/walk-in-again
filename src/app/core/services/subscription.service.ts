@@ -125,6 +125,24 @@ export class SubscriptionService {
     paymentMethod: 'UPI' | 'Card' | 'Cash';
     razorpayPaymentId?: string;
   }): Promise<string> {
+    // If patient already has active subscription(s), mark them as replaced/cancelled
+    try {
+      const activeQuery = query(
+        collection(this.firestore, 'subscriptions'),
+        where('patientId', '==', data.patientId),
+        where('status', '==', 'active')
+      );
+      const activeSnap = await getDocs(activeQuery);
+      for (const oldDoc of activeSnap.docs) {
+        await updateDoc(doc(this.firestore, 'subscriptions', oldDoc.id), {
+          status: 'cancelled',
+          updatedAt: new Date().toISOString()
+        });
+      }
+    } catch (e) {
+      console.warn('Could not archive previous active subscriptions:', e);
+    }
+
     // 1. Standard Firestore Auto-Generated Document ID
     const subRef = doc(collection(this.firestore, 'subscriptions'));
     const subscriptionId = subRef.id;
