@@ -475,6 +475,12 @@
           }
         }
 
+        &.status-cancelled {
+          background: #FEF2F2;
+          color: #DC2626;
+          border: 1px solid #FECACA;
+        }
+
         &.status-expired {
           background: #F1F5F9;
           color: #64748B;
@@ -541,6 +547,142 @@
       border-top-color: #0284C7;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
+    }
+  }
+
+  // ─── Pagination Bar ──────────────────────────────────────────────────────────
+  .pagination-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: #FFFFFF;
+    border-top: 1.5px solid #F1F5F9;
+    flex-wrap: wrap;
+    gap: 14px;
+
+    .pagination-info {
+      font-size: 13px;
+      color: #64748B;
+
+      strong {
+        color: #0F172A;
+        font-weight: 700;
+      }
+    }
+
+    .pagination-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+
+      .page-size-selector {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12.5px;
+        color: #64748B;
+        font-weight: 600;
+
+        .page-size-dropdown {
+          height: 32px;
+          padding: 0 10px;
+          border-radius: 8px;
+          border: 1.5px solid #E2E8F0;
+          background: #F8FAFC;
+          color: #0F172A;
+          font-size: 12.5px;
+          font-weight: 600;
+          outline: none;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:focus {
+            border-color: #0284C7;
+            box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.12);
+          }
+        }
+      }
+
+      .page-nav-btns {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        .page-nav-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          height: 32px;
+          padding: 0 12px;
+          border-radius: 8px;
+          border: 1.5px solid #E2E8F0;
+          background: #F8FAFC;
+          color: #334155;
+          font-size: 12.5px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.18s ease;
+
+          &:hover:not(:disabled) {
+            background: #0284C7;
+            border-color: #0284C7;
+            color: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
+          }
+
+          &:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            background: #F8FAFC;
+            color: #94A3B8;
+          }
+        }
+
+        .page-numbers {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+
+          .page-ellipsis {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            color: #94A3B8;
+            font-weight: 700;
+            font-size: 13px;
+          }
+
+          .page-num-btn {
+            min-width: 32px;
+            height: 32px;
+            padding: 0 6px;
+            border-radius: 8px;
+            border: 1.5px solid #E2E8F0;
+            background: #F8FAFC;
+            color: #334155;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.18s ease;
+
+            &:hover:not(.active) {
+              background: #E2E8F0;
+              color: #0F172A;
+            }
+
+            &.active {
+              background: linear-gradient(135deg, #0284C7 0%, #0D9488 100%);
+              border-color: transparent;
+              color: #FFFFFF;
+              box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -713,10 +855,16 @@
           .pulse-dot { background: #34D399 !important; }
         }
 
-        &.status-expired {
+        &.status-cancelled {
           background: rgba(239, 68, 68, 0.18) !important;
           color: #F87171 !important;
           border-color: rgba(248, 113, 113, 0.3) !important;
+        }
+
+        &.status-expired {
+          background: rgba(148, 163, 184, 0.14) !important;
+          color: #94A3B8 !important;
+          border-color: rgba(148, 163, 184, 0.25) !important;
         }
       }
     }
@@ -743,6 +891,72 @@
       .spinner-ring {
         border-color: #1E2D48 !important;
         border-top-color: #38BDF8 !important;
+      }
+    }
+
+    .pagination-bar {
+      background: #0F172A !important;
+      border-top-color: #1E2D48 !important;
+
+      .pagination-info {
+        color: #94A3B8 !important;
+        strong { color: #F8FAFC !important; }
+      }
+
+      .pagination-actions {
+        .page-size-selector {
+          color: #94A3B8 !important;
+          .page-size-dropdown {
+            background: #131E35 !important;
+            border-color: #1E2D48 !important;
+            color: #F8FAFC !important;
+            &:focus {
+              border-color: #0284C7 !important;
+              box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.25) !important;
+            }
+          }
+        }
+
+        .page-nav-btns {
+          .page-nav-btn {
+            background: #131E35 !important;
+            border-color: #1E2D48 !important;
+            color: #CBD5E1 !important;
+
+            &:hover:not(:disabled) {
+              background: #0284C7 !important;
+              border-color: #0284C7 !important;
+              color: #FFFFFF !important;
+            }
+
+            &:disabled {
+              background: #131E35 !important;
+              border-color: #1A2740 !important;
+              color: #475569 !important;
+            }
+          }
+
+          .page-numbers {
+            .page-ellipsis { color: #64748B !important; }
+
+            .page-num-btn {
+              background: #131E35 !important;
+              border-color: #1E2D48 !important;
+              color: #CBD5E1 !important;
+
+              &:hover:not(.active) {
+                background: #1E2D48 !important;
+                color: #F8FAFC !important;
+              }
+
+              &.active {
+                background: linear-gradient(135deg, #0284C7 0%, #0D9488 100%) !important;
+                border-color: transparent !important;
+                color: #FFFFFF !important;
+              }
+            }
+          }
+        }
       }
     }
   }

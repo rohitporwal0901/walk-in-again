@@ -21,7 +21,11 @@ export class AdminSubscriptionsComponent implements OnInit, OnDestroy {
   // Filters
   searchQuery = signal<string>('');
   selectedPlanFilter = signal<string>('All');
-  selectedStatusFilter = signal<'All' | 'active' | 'expired'>('All');
+  selectedStatusFilter = signal<'All' | 'active' | 'expired' | 'cancelled'>('All');
+
+  // Pagination
+  currentPage = signal<number>(1);
+  pageSize = signal<number>(10);
 
   // Computed Metrics
   totalActiveCount = computed(() =>
@@ -43,9 +47,7 @@ export class AdminSubscriptionsComponent implements OnInit, OnDestroy {
   );
 
   totalSubRevenue = computed(() =>
-    this.subscriptions()
-      .filter(s => s.status === 'active' || s.status === 'expired')
-      .reduce((sum, s) => sum + (Number(s.price) || 0), 0)
+    this.subscriptions().reduce((sum, s) => sum + (Number(s.price) || 0), 0)
   );
 
   // Filtered List
@@ -79,12 +81,104 @@ export class AdminSubscriptionsComponent implements OnInit, OnDestroy {
       // Status match
       let matchesStatus = true;
       if (status !== 'All') {
-        matchesStatus = s.status === status;
+        if (status === 'active') {
+          matchesStatus = s.status === 'active' && s.remainingSessions > 0;
+        } else if (status === 'cancelled') {
+          matchesStatus = s.status === 'cancelled';
+        } else if (status === 'expired') {
+          matchesStatus = s.status === 'expired' || (s.status === 'active' && s.remainingSessions <= 0);
+        }
       }
 
       return matchesSearch && matchesPlan && matchesStatus;
     });
   });
+
+  // Pagination Computations
+  totalPages = computed(() => {
+    const pages = Math.ceil(this.filteredSubscriptions().length / this.pageSize());
+    return pages > 0 ? pages : 1;
+  });
+
+  paginatedSubscriptions = computed(() => {
+    const list = this.filteredSubscriptions();
+    const page = this.currentPage();
+    const size = this.pageSize();
+    const start = (page - 1) * size;
+    return list.slice(start, start + size);
+  });
+
+  startIndex = computed(() => {
+    const len = this.filteredSubscriptions().length;
+    if (len === 0) return 0;
+    return (this.currentPage() - 1) * this.pageSize() + 1;
+  });
+
+  endIndex = computed(() => {
+    return Math.min(this.currentPage() * this.pageSize(), this.filteredSubscriptions().length);
+  });
+
+  totalItems = computed(() => this.filteredSubscriptions().length);
+
+  onSearch(val: string) {
+    this.searchQuery.set(val);
+    this.currentPage.set(1);
+  }
+
+  onPlanFilterChange(plan: string) {
+    this.selectedPlanFilter.set(plan);
+    this.currentPage.set(1);
+  }
+
+  onStatusFilterChange(st: 'All' | 'active' | 'expired' | 'cancelled') {
+    this.selectedStatusFilter.set(st);
+    this.currentPage.set(1);
+  }
+
+  setPage(page: number) {
+    if (page >= 1 && page <= this.totalPages()) {
+      this.currentPage.set(page);
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage() > 1) {
+      this.currentPage.update(p => p - 1);
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage() < this.totalPages()) {
+      this.currentPage.update(p => p + 1);
+    }
+  }
+
+  setPageSize(size: number) {
+    this.pageSize.set(size);
+    this.currentPage.set(1);
+  }
+
+  getPageNumbers(): (number | string)[] {
+    const total = this.totalPages();
+    const current = this.currentPage();
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+    const pages: (number | string)[] = [1];
+    if (current > 3) {
+      pages.push('...');
+    }
+    const start = Math.max(2, current - 1);
+    const end = Math.min(total - 1, current + 1);
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    if (current < total - 2) {
+      pages.push('...');
+    }
+    pages.push(total);
+    return pages;
+  }
 
   ngOnInit() {
     this.listenToSubscriptions();
