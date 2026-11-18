@@ -1,4 +1,4 @@
-import { Component, signal, computed, inject, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, signal, computed, inject, OnInit, OnDestroy, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { SubscriptionService } from '../../core/services/subscription.service';
@@ -33,6 +33,14 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   selectedMethod = signal<'UPI' | 'Card' | 'Cash'>('UPI');
   purchaseSuccess = signal(false);
   errorMsg = signal('');
+
+  // ─── Direct Swipe-to-Pay State (Image 1 Style Card) ──────────────────────
+  paySwipeOffset = signal<number>(0);
+  paySwipeProgress = signal<number>(0);
+  isPaySwiping = signal<boolean>(false);
+  paySwipeCompleted = signal<boolean>(false);
+  private startPayTouchX = 0;
+  private maxPaySwipeDistance = 260;
 
   // Active Subscription check & modal state
   showActivePlanModal = signal(false);
@@ -108,6 +116,7 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
     }
 
     this.selectedPlan.set(plan);
+    this.resetPaySwipe();
     this.showPaymentSheet.set(true);
     this.errorMsg.set('');
   }
@@ -128,6 +137,7 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
     this.attemptedPlan.set(null);
     if (plan) {
       this.selectedPlan.set(plan);
+      this.resetPaySwipe();
       this.showPaymentSheet.set(true);
       this.errorMsg.set('');
     }
@@ -141,6 +151,84 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   closeSheet() {
     this.showPaymentSheet.set(false);
     this.selectedPlan.set(null);
+    this.resetPaySwipe();
+  }
+
+  // ─── Rapido-Style Swipe to Pay Handlers ─────────────────────────────────────
+  onSliderClick() {
+    if (!this.isPaySwiping() && !this.paySwipeCompleted() && !this.isPurchasing()) {
+      this.confirmPurchase();
+    }
+  }
+
+  onPaySwipeStart(event: TouchEvent | MouseEvent) {
+    if (this.paySwipeCompleted() || this.isPurchasing()) return;
+    this.errorMsg.set('');
+    this.isPaySwiping.set(true);
+    const clientX = 'touches' in event ? event.touches[0].clientX : event.clientX;
+    this.startPayTouchX = clientX - this.paySwipeOffset();
+
+    const container = document.getElementById('plan-pay-swipe-container');
+    if (container) {
+      const containerWidth = container.clientWidth;
+      this.maxPaySwipeDistance = Math.max(120, containerWidth - 54);
+    }
+  }
+
+  onPaySwipeMove(event: TouchEvent | MouseEvent) {
+    if (!this.isPaySwiping() || this.paySwipeCompleted() || this.isPurchasing()) return;
+    const clientX = 'touches' in event ? event.touches[0].clientX : event.clientX;
+    const rawDelta = clientX - this.startPayTouchX;
+    const clamped = Math.max(0, Math.min(rawDelta, this.maxPaySwipeDistance));
+    this.paySwipeOffset.set(clamped);
+    this.paySwipeProgress.set(clamped / this.maxPaySwipeDistance);
+  }
+
+  onPaySwipeEnd() {
+    if (!this.isPaySwiping() || this.paySwipeCompleted()) return;
+    this.isPaySwiping.set(false);
+
+    if (this.paySwipeProgress() >= 0.65) {
+      this.paySwipeOffset.set(this.maxPaySwipeDistance);
+      this.paySwipeProgress.set(1);
+      this.paySwipeCompleted.set(true);
+      this.confirmPurchase();
+    } else {
+      this.paySwipeOffset.set(0);
+      this.paySwipeProgress.set(0);
+    }
+  }
+
+  resetPaySwipe() {
+    this.paySwipeOffset.set(0);
+    this.paySwipeProgress.set(0);
+    this.isPaySwiping.set(false);
+    this.paySwipeCompleted.set(false);
+  }
+
+  @HostListener('window:mousemove', ['$event'])
+  onWindowMouseMove(event: MouseEvent) {
+    if (this.isPaySwiping()) {
+      this.onPaySwipeMove(event);
+    }
+  }
+
+  @HostListener('window:mouseup')
+  onWindowMouseUp() {
+    if (this.isPaySwiping()) {
+      this.onPaySwipeEnd();
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (!this.showPaymentSheet()) return;
+    const target = event.target as HTMLElement;
+    if (!target) return;
+    const card = document.getElementById('plan-payment-card-dock');
+    if (card && card.contains(target)) return;
+    if (target.closest('.plan-btn')) return;
+    this.closeSheet();
   }
 
   closeCelebration() {
@@ -192,6 +280,7 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
 
       this.lastPurchasedPlan.set(plan);
       this.showPaymentSheet.set(false);
+      this.resetPaySwipe();
       this.purchaseSuccess.set(true);
       setTimeout(() => this.launchConfetti(), 30);
 
@@ -201,6 +290,7 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
       }, 6500);
     } catch (err: any) {
       this.errorMsg.set(err?.message || 'Payment failed. Please try again.');
+      this.resetPaySwipe();
     } finally {
       this.isPurchasing.set(false);
     }
