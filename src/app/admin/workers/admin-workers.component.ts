@@ -79,7 +79,7 @@ interface WorkerRow {
             <span class="kpi-value">₹{{ totalStaffEarnings().toLocaleString('en-IN') }}</span>
             <div class="kpi-icon-wrap">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                <path d="M18 5H7h3a4 4 0 0 1 0 8H7l6 6M7 9h11"></path>
               </svg>
             </div>
           </div>
@@ -242,8 +242,11 @@ interface WorkerRow {
               <div class="form-group">
                 <label class="form-label">Mobile Number *</label>
                 <div class="input-with-prefix">
-                  <span class="prefix">+91</span>
-                  <input type="tel" formControlName="phone" placeholder="10-digit mobile" maxlength="10" class="modal-input" />
+                  <span class="prefix">
+                    <span class="flag-icon">🇮🇳</span>
+                    <span>+91</span>
+                  </span>
+                  <input type="tel" formControlName="phone" placeholder="10-digit mobile" maxlength="10" class="prefix-input" />
                 </div>
               </div>
 
@@ -265,7 +268,22 @@ interface WorkerRow {
 
               <div class="form-group">
                 <label class="form-label">Assign 4-Digit M-PIN *</label>
-                <input type="password" formControlName="pin" placeholder="4-digit PIN (e.g. 1234)" maxlength="4" inputmode="numeric" class="modal-input" />
+                <div class="pin-input-wrap">
+                  <input [type]="showWorkerPin() ? 'text' : 'password'" formControlName="pin" placeholder="4-digit PIN (e.g. 1234)" maxlength="4" inputmode="numeric" class="modal-input pin-field" />
+                  <button type="button" class="pin-toggle-btn" (click)="toggleWorkerPin()" [attr.aria-label]="showWorkerPin() ? 'Hide PIN' : 'Show PIN'">
+                    @if (showWorkerPin()) {
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                      </svg>
+                    } @else {
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    }
+                  </button>
+                </div>
                 <span class="field-hint">Worker will use this PIN to log in on their mobile.</span>
               </div>
 
@@ -374,10 +392,93 @@ interface WorkerRow {
     .form-label { font-size: 12px; font-weight: 700; color: #0F172A; }
     .modal-input, .modal-select { width: 100%; height: 38px; padding: 0 12px; border: 1.5px solid #E2E8F0; border-radius: 10px; background: #F8FAFC; font-size: 13px; color: #0F172A; outline: none; transition: all 0.2s ease; }
     .modal-input:focus, .modal-select:focus { border-color: #0284C7; background: white; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12); }
-    .input-with-prefix { display: flex; align-items: center; background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 10px; padding: 0 10px; height: 38px; transition: all 0.2s ease; }
-    .input-with-prefix:focus-within { border-color: #0284C7; background: white; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12); }
-    .prefix { font-weight: 700; font-size: 13px; color: #64748B; margin-right: 8px; padding-right: 8px; border-right: 1px solid #CBD5E1; }
-    .input-with-prefix .modal-input { border: none; padding: 0; background: transparent; box-shadow: none; }
+    .input-with-prefix {
+      display: flex;
+      align-items: center;
+      background: #F8FAFC;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 0;
+      height: 42px;
+      box-sizing: border-box;
+      transition: all 0.2s ease;
+      overflow: hidden;
+
+      &:focus-within {
+        border-color: #0D9488;
+        background: #FFFFFF;
+        box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+      }
+
+      .prefix {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-weight: 700;
+        font-size: 13px;
+        color: #64748B;
+        padding: 0 12px;
+        height: 100%;
+        background: #F1F5F9;
+        border-right: 1.5px solid #E2E8F0;
+        user-select: none;
+        flex-shrink: 0;
+
+        .flag-icon { font-size: 14px; line-height: 1; }
+      }
+
+      .prefix-input,
+      .modal-input {
+        border: none !important;
+        padding: 0 12px !important;
+        height: 100% !important;
+        flex: 1 !important;
+        width: 100% !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        outline: none !important;
+        color: #0F172A;
+        font-size: 13.5px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+    }
+
+    .pin-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+
+      .pin-field {
+        width: 100%;
+        padding-right: 42px;
+        letter-spacing: 2px;
+        font-size: 15px;
+      }
+
+      .pin-toggle-btn {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        padding: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748B;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+
+        &:hover {
+          color: #0D9488;
+          background: #F1F5F9;
+        }
+      }
+    }
     .field-hint { font-size: 11px; color: #94A3B8; }
     .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; }
 
@@ -507,7 +608,32 @@ interface WorkerRow {
         .input-with-prefix {
           background: #0F172A !important;
           border-color: #1E2D48 !important;
-          .prefix { color: #94A3B8 !important; border-right-color: #1E2D48 !important; }
+          .prefix {
+            background: #131E35 !important;
+            color: #94A3B8 !important;
+            border-right-color: #1E2D48 !important;
+          }
+          &:focus-within {
+            background: #0F172A !important;
+            border-color: #00D2B4 !important;
+            box-shadow: 0 0 0 3px rgba(0, 210, 180, 0.2) !important;
+          }
+          .prefix-input,
+          .modal-input {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            color: #F8FAFC !important;
+          }
+        }
+        .pin-input-wrap {
+          .pin-toggle-btn {
+            color: #94A3B8 !important;
+            &:hover {
+              color: #00D2B4 !important;
+              background: rgba(255, 255, 255, 0.08) !important;
+            }
+          }
         }
       }
     }
@@ -529,6 +655,7 @@ export class AdminWorkersComponent implements OnInit, OnDestroy {
   selectedSpec = signal<string>('All');
 
   showAddWorkerModal = signal<boolean>(false);
+  showWorkerPin = signal<boolean>(false);
   isSubmittingWorker = signal<boolean>(false);
   workerModalError = signal<string>('');
   workerModalSuccess = signal<string>('');
@@ -639,11 +766,17 @@ export class AdminWorkersComponent implements OnInit, OnDestroy {
       experience: '3 Years',
       pin: '1234'
     });
+    this.showWorkerPin.set(false);
     this.showAddWorkerModal.set(true);
   }
 
   closeAddWorkerModal() {
     this.showAddWorkerModal.set(false);
+    this.showWorkerPin.set(false);
+  }
+
+  toggleWorkerPin() {
+    this.showWorkerPin.update(v => !v);
   }
 
   async submitNewWorker() {

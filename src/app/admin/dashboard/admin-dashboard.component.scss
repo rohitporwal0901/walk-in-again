@@ -1125,32 +1125,88 @@
     background: #F8FAFC;
     border: 1.5px solid #E2E8F0;
     border-radius: 10px;
-    padding: 0 10px;
-    height: 38px;
+    padding: 0;
+    height: 42px;
     box-sizing: border-box;
     transition: all 0.2s ease;
+    overflow: hidden;
 
     &:focus-within {
-      border-color: #0284C7;
+      border-color: #0D9488;
       background: #FFFFFF;
-      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
     }
 
     .prefix {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
       font-weight: 700;
       font-size: 13px;
       color: #64748B;
-      margin-right: 8px;
-      padding-right: 8px;
-      border-right: 1px solid #CBD5E1;
+      padding: 0 12px;
+      height: 100%;
+      background: #F1F5F9;
+      border-right: 1.5px solid #E2E8F0;
+      user-select: none;
+      flex-shrink: 0;
+
+      .flag-icon {
+        font-size: 14px;
+        line-height: 1;
+      }
     }
 
+    .prefix-input,
     .modal-input {
-      border: none;
-      padding: 0;
-      height: 100%;
+      border: none !important;
+      padding: 0 12px !important;
+      height: 100% !important;
+      flex: 1 !important;
+      width: 100% !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      outline: none !important;
+      color: #0F172A;
+      font-size: 13.5px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  .pin-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    .pin-field {
+      width: 100%;
+      padding-right: 42px;
+      letter-spacing: 2px;
+      font-size: 15px;
+    }
+
+    .pin-toggle-btn {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
       background: transparent;
-      box-shadow: none;
+      border: none;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748B;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        color: #0D9488;
+        background: #F1F5F9;
+      }
     }
   }
 
@@ -1688,14 +1744,33 @@
       border: 1.5px solid #1E2D48 !important;
 
       .prefix {
+        background: #131E35 !important;
         color: #94A3B8 !important;
         border-right: 1.5px solid #1E2D48 !important;
       }
 
       &:focus-within {
-        background: #131E35 !important;
-        border-color: #38BDF8 !important;
-        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2) !important;
+        background: #0F172A !important;
+        border-color: #00D2B4 !important;
+        box-shadow: 0 0 0 3px rgba(0, 210, 180, 0.2) !important;
+      }
+
+      .prefix-input,
+      .modal-input {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: #F8FAFC !important;
+      }
+    }
+
+    .pin-input-wrap {
+      .pin-toggle-btn {
+        color: #94A3B8 !important;
+        &:hover {
+          color: #00D2B4 !important;
+          background: rgba(255, 255, 255, 0.08) !important;
+        }
       }
     }
 

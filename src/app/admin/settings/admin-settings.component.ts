@@ -69,8 +69,7 @@ import { Unsubscribe } from '@angular/fire/firestore';
             <div class="ch-left">
               <span class="head-icon icon-blue">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="12" y1="1" x2="12" y2="23"></line>
-                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                  <path d="M18 5H7h3a4 4 0 0 1 0 8H7l6 6M7 9h11"></path>
                 </svg>
               </span>
               <div>

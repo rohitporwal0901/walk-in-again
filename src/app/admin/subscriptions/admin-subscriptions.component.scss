@@ -27,24 +27,87 @@
     margin: 0;
   }
 
-  .top-status-badge {
+  .top-date-filter-wrap {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    background: #DCFCE7;
-    color: #166534;
-    border: 1px solid #BBF7D0;
-    padding: 5px 12px;
-    border-radius: 999px;
-    font-size: 11.5px;
-    font-weight: 700;
+    gap: 8px;
+    flex-wrap: wrap;
 
-    .live-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #16A34A;
-      animation: pulse 1.5s infinite;
+    .top-date-selector {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+
+      .date-icon {
+        position: absolute;
+        left: 12px;
+        color: #0D9488;
+        pointer-events: none;
+      }
+
+      .chevron-icon {
+        position: absolute;
+        right: 12px;
+        color: #64748B;
+        pointer-events: none;
+      }
+
+      .top-date-select {
+        height: 36px;
+        appearance: none;
+        -webkit-appearance: none;
+        padding: 0 32px 0 36px;
+        border-radius: 999px;
+        border: 1px solid #E2E8F0;
+        background: #FFFFFF;
+        color: #0F172A;
+        font-size: 12.5px;
+        font-weight: 600;
+        cursor: pointer;
+        outline: none;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: #F8FAFC;
+          border-color: #CBD5E1;
+        }
+
+        &:focus {
+          background: #FFFFFF;
+          border-color: #0D9488;
+          box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+        }
+      }
+    }
+
+    .top-custom-date-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #FFFFFF;
+      padding: 4px 12px;
+      border-radius: 999px;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+
+      .date-sep {
+        font-size: 11px;
+        font-weight: 700;
+        color: #64748B;
+        text-transform: uppercase;
+      }
+
+      .top-custom-date-input {
+        height: 26px;
+        padding: 0 4px;
+        border: none;
+        background: transparent;
+        color: #0F172A;
+        font-size: 11.5px;
+        font-weight: 600;
+        outline: none;
+      }
     }
   }
 }
@@ -700,56 +763,42 @@
 // ─── Scoped Dark Theme Overrides ────────────────────────────────────────────
 :host-context(.admin-dark-theme) {
   .page-title { color: #F8FAFC !important; }
-  .page-sub   { color: #94A3B8 !important; }
-
-  .top-status-badge {
-    background: rgba(16, 185, 129, 0.16) !important;
-    color: #34D399 !important;
-    border-color: rgba(16, 185, 129, 0.35) !important;
-    .live-dot { background: #34D399 !important; }
-  }
-
-  .controls-panel {
-    background: #131E35 !important;
-    border-color: #1E2D48 !important;
-    box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.5) !important;
-
-    .search-wrap svg {
-      stroke: #64748B !important;
-    }
-
-    .search-input {
-      background: #0F172A !important;
-      border-color: #1E2D48 !important;
-      color: #F8FAFC !important;
-      &::placeholder { color: #64748B !important; }
-      &:focus {
+  .top-date-filter-wrap {
+    .top-date-selector {
+      .date-icon { color: #00D2B4 !important; }
+      .chevron-icon { color: #94A3B8 !important; }
+      .top-date-select {
         background: #131E35 !important;
-        border-color: #0284C7 !important;
-        box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25) !important;
-      }
-    }
-
-    .filter-group {
-      .filter-lbl { color: #94A3B8 !important; }
-
-      .filter-pill {
-        background: #0F172A !important;
-        border-color: #1E2D48 !important;
-        color: #94A3B8 !important;
+        border-color: #243656 !important;
+        color: #F8FAFC !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
 
         &:hover {
           background: #192744 !important;
-          color: #F8FAFC !important;
-          border-color: #243656 !important;
+          border-color: #00D2B4 !important;
         }
 
-        &.active {
-          background: linear-gradient(135deg, #0284C7 0%, #0D9488 100%) !important;
-          color: #FFFFFF !important;
-          border-color: transparent !important;
-          box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35) !important;
+        &:focus {
+          background: #131E35 !important;
+          border-color: #00D2B4 !important;
+          box-shadow: 0 0 0 3px rgba(0, 210, 180, 0.25) !important;
         }
+
+        option {
+          background: #0F172A;
+          color: #F8FAFC;
+        }
+      }
+    }
+
+    .top-custom-date-wrap {
+      background: #131E35 !important;
+      border-color: #243656 !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+      .date-sep { color: #94A3B8 !important; }
+      .top-custom-date-input {
+        color: #F8FAFC !important;
+        color-scheme: dark;
       }
     }
   }

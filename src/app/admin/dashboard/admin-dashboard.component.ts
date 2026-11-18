@@ -80,6 +80,7 @@ export class AdminDashboardComponent implements OnInit {
 
   selectedPeriod = signal<'Week' | 'Month'>('Month');
   showAddWorkerModal = signal<boolean>(false);
+  showWorkerPin = signal<boolean>(false);
   isSubmittingWorker = signal<boolean>(false);
   workerModalError = signal<string>('');
   workerModalSuccess = signal<string>('');
@@ -549,6 +550,7 @@ export class AdminDashboardComponent implements OnInit {
   openAddWorkerModal() {
     this.workerModalError.set('');
     this.workerModalSuccess.set('');
+    this.showWorkerPin.set(false);
     this.workerForm.reset({
       name: '',
       phone: '',
@@ -561,6 +563,11 @@ export class AdminDashboardComponent implements OnInit {
 
   closeAddWorkerModal() {
     this.showAddWorkerModal.set(false);
+    this.showWorkerPin.set(false);
+  }
+
+  toggleWorkerPin() {
+    this.showWorkerPin.update(v => !v);
   }
 
   async submitNewWorker() {

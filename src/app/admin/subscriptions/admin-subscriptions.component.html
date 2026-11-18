@@ -6,9 +6,51 @@
       <h1 class="page-title">Patient Subscription Plans</h1>
       <p class="page-sub">Live management of patient treatment packages, sessions balance, and revenue</p>
     </div>
-    <div class="top-status-badge">
-      <span class="live-dot"></span>
-      <span>Live Firestore Sync</span>
+
+    <!-- Date Filtering Dropdown in Top Bar (Replaces static sync badge) -->
+    <div class="top-date-filter-wrap">
+      <div class="top-date-selector">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="date-icon">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        <select
+          class="top-date-select"
+          [value]="selectedDateFilter()"
+          (change)="onDateFilterChange($any($event.target).value)"
+          id="sub-date-filter-select"
+        >
+          <option value="All">All Dates</option>
+          <option value="today">Today</option>
+          <option value="yesterday">Yesterday</option>
+          <option value="week">Last 7 Days</option>
+          <option value="month">Last 30 Days</option>
+          <option value="custom">Custom Range</option>
+        </select>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="chevron-icon">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+
+      @if (selectedDateFilter() === 'custom') {
+        <div class="top-custom-date-wrap">
+          <input
+            type="date"
+            class="top-custom-date-input"
+            [value]="customStartDate()"
+            (input)="onCustomStartDate($any($event.target).value)"
+          />
+          <span class="date-sep">to</span>
+          <input
+            type="date"
+            class="top-custom-date-input"
+            [value]="customEndDate()"
+            (input)="onCustomEndDate($any($event.target).value)"
+          />
+        </div>
+      }
     </div>
   </header>
 
@@ -72,7 +114,7 @@
         <div class="kpi-icon-wrap">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
             stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            <path d="M18 5H7h3a4 4 0 0 1 0 8H7l6 6M7 9h11"></path>
           </svg>
         </div>
       </div>

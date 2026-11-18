@@ -22,32 +22,81 @@ export class AdminSubscriptionsComponent implements OnInit, OnDestroy {
   searchQuery = signal<string>('');
   selectedPlanFilter = signal<string>('All');
   selectedStatusFilter = signal<'All' | 'active' | 'expired' | 'cancelled'>('All');
+  selectedDateFilter = signal<string>('All');
+  customStartDate = signal<string>('');
+  customEndDate = signal<string>('');
 
   // Pagination
   currentPage = signal<number>(1);
   pageSize = signal<number>(10);
 
-  // Computed Metrics
+  // Date-filtered base list for KPIs and table
+  dateFilteredSubscriptions = computed(() => {
+    let list = this.subscriptions();
+    const dateFilter = this.selectedDateFilter();
+
+    if (dateFilter !== 'All') {
+      const now = new Date();
+      const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+      const endOfToday = startOfToday + 86400000 - 1;
+
+      if (dateFilter === 'today') {
+        list = list.filter(s => {
+          const raw = new Date(s.createdAt || s.startDate || 0).getTime();
+          return raw >= startOfToday && raw <= endOfToday;
+        });
+      } else if (dateFilter === 'yesterday') {
+        const startOfYesterday = startOfToday - 86400000;
+        list = list.filter(s => {
+          const raw = new Date(s.createdAt || s.startDate || 0).getTime();
+          return raw >= startOfYesterday && raw < startOfToday;
+        });
+      } else if (dateFilter === 'week') {
+        const weekAgo = now.getTime() - 7 * 86400000;
+        list = list.filter(s => {
+          const raw = new Date(s.createdAt || s.startDate || 0).getTime();
+          return raw >= weekAgo;
+        });
+      } else if (dateFilter === 'month') {
+        const monthAgo = now.getTime() - 30 * 86400000;
+        list = list.filter(s => {
+          const raw = new Date(s.createdAt || s.startDate || 0).getTime();
+          return raw >= monthAgo;
+        });
+      } else if (dateFilter === 'custom') {
+        const start = this.customStartDate() ? new Date(this.customStartDate()).setHours(0, 0, 0, 0) : 0;
+        const end = this.customEndDate() ? new Date(this.customEndDate()).setHours(23, 59, 59, 999) : Infinity;
+        list = list.filter(s => {
+          const raw = new Date(s.createdAt || s.startDate || 0).getTime();
+          return raw >= start && raw <= end;
+        });
+      }
+    }
+
+    return list;
+  });
+
+  // Computed Metrics dynamically based on dateFilteredSubscriptions()!
   totalActiveCount = computed(() =>
-    this.subscriptions().filter(s => s.status === 'active' && s.remainingSessions > 0).length
+    this.dateFilteredSubscriptions().filter(s => s.status === 'active' && s.remainingSessions > 0).length
   );
 
   totalMonthlyCount = computed(() =>
-    this.subscriptions().filter(s =>
+    this.dateFilteredSubscriptions().filter(s =>
       s.status === 'active' &&
       ((s.planName || '').toLowerCase().includes('month') || (s.planName || '').toLowerCase().includes('30'))
     ).length
   );
 
   total15DaysCount = computed(() =>
-    this.subscriptions().filter(s =>
+    this.dateFilteredSubscriptions().filter(s =>
       s.status === 'active' &&
       ((s.planName || '').toLowerCase().includes('15') || (s.planName || '').toLowerCase().includes('biweekly'))
     ).length
   );
 
   totalSubRevenue = computed(() =>
-    this.subscriptions().reduce((sum, s) => sum + (Number(s.price) || 0), 0)
+    this.dateFilteredSubscriptions().reduce((sum, s) => sum + (Number(s.price) || 0), 0)
   );
 
   // Filtered List
@@ -56,7 +105,7 @@ export class AdminSubscriptionsComponent implements OnInit, OnDestroy {
     const plan = this.selectedPlanFilter();
     const status = this.selectedStatusFilter();
 
-    return this.subscriptions().filter(s => {
+    return this.dateFilteredSubscriptions().filter(s => {
       // Search match
       const nameMatch = (s.patientName || '').toLowerCase().includes(q);
       const phoneMatch = (s.subscriptionId || '').toLowerCase().includes(q);
@@ -132,6 +181,21 @@ export class AdminSubscriptionsComponent implements OnInit, OnDestroy {
 
   onStatusFilterChange(st: 'All' | 'active' | 'expired' | 'cancelled') {
     this.selectedStatusFilter.set(st);
+    this.currentPage.set(1);
+  }
+
+  onDateFilterChange(filter: string) {
+    this.selectedDateFilter.set(filter);
+    this.currentPage.set(1);
+  }
+
+  onCustomStartDate(date: string) {
+    this.customStartDate.set(date);
+    this.currentPage.set(1);
+  }
+
+  onCustomEndDate(date: string) {
+    this.customEndDate.set(date);
     this.currentPage.set(1);
   }
 
