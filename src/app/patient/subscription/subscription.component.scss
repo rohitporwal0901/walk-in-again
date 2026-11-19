@@ -1169,6 +1169,28 @@
       animation: cardSpringRise 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
+    // Subtle metallic light streak shimmer sweep
+    &::after {
+      content: '';
+      position: absolute;
+      top: -80%;
+      left: -80%;
+      width: 50%;
+      height: 260%;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.02) 20%,
+        rgba(255, 255, 255, 0.22) 50%,
+        rgba(255, 255, 255, 0.02) 80%,
+        transparent 100%
+      );
+      transform: rotate(26deg);
+      pointer-events: none;
+      animation: cardShimmerSweep 4.5s infinite cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 3;
+    }
+
     .payment-card-bg-img {
       position: absolute;
       inset: 0;
@@ -1180,7 +1202,7 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        opacity: 0.85;
+        opacity: 0.9;
         filter: brightness(1.05) contrast(1.1);
       }
 
@@ -1189,9 +1211,9 @@
         inset: 0;
         background: linear-gradient(
           180deg,
-          rgba(11, 25, 44, 0.32) 0%,
-          rgba(11, 25, 44, 0.55) 45%,
-          rgba(11, 25, 44, 0.82) 100%
+          rgba(11, 25, 44, 0.22) 0%,
+          rgba(11, 25, 44, 0.48) 45%,
+          rgba(11, 25, 44, 0.78) 100%
         );
       }
     }
@@ -1213,70 +1235,52 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        background: rgba(239, 68, 68, 0.18);
-        border: 1px solid rgba(239, 68, 68, 0.4);
+        background: rgba(16, 185, 129, 0.16);
+        border: 1px solid rgba(52, 211, 153, 0.45);
         padding: 4px 10px;
         border-radius: 999px;
+        box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
 
         .pay-due-dot {
           width: 7px;
           height: 7px;
           border-radius: 50%;
-          background: #EF4444;
-          box-shadow: 0 0 6px rgba(239, 68, 68, 0.9);
-          animation: pulse-red 1.8s infinite;
+          background: #10B981;
+          box-shadow: 0 0 8px rgba(16, 185, 129, 0.9);
+          animation: pulse-emerald 1.8s infinite;
         }
 
         .pay-due-txt {
           font-size: 11px;
           font-weight: 850;
-          color: #FCA5A5;
-          letter-spacing: 0.04em;
+          color: #A7F3D0;
+          letter-spacing: 0.05em;
           text-transform: uppercase;
         }
       }
 
-      .pay-top-right {
+      .pay-close-btn {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        color: #E2E8F0;
         display: flex;
         align-items: center;
-        gap: 8px;
+        justify-content: center;
+        cursor: pointer;
+        padding: 0;
+        transition: all 0.15s ease;
 
-        .pay-secure-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 5px;
-          font-size: 11px;
-          font-weight: 750;
-          color: #FDE68A;
-          background: rgba(245, 158, 11, 0.14);
-          border: 1px solid rgba(245, 158, 11, 0.32);
-          padding: 3.5px 9px;
-          border-radius: 999px;
+        &:hover {
+          background: rgba(255, 255, 255, 0.25);
+          color: #FFFFFF;
+          transform: scale(1.08);
         }
 
-        .pay-close-btn {
-          width: 28px;
-          height: 28px;
-          border-radius: 50%;
-          background: rgba(255, 255, 255, 0.14);
-          border: 1px solid rgba(255, 255, 255, 0.22);
-          color: #E2E8F0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          padding: 0;
-          transition: all 0.15s ease;
-
-          &:hover {
-            background: rgba(255, 255, 255, 0.25);
-            color: #FFFFFF;
-            transform: scale(1.08);
-          }
-
-          &:active {
-            transform: scale(0.95);
-          }
+        &:active {
+          transform: scale(0.95);
         }
       }
     }
@@ -1291,12 +1295,13 @@
       .pay-amount-left {
         .pay-fee-label {
           font-size: 11px;
-          font-weight: 700;
-          color: #94A3B8;
+          font-weight: 800;
+          color: #6EE7B7;
           text-transform: uppercase;
-          letter-spacing: 0.05em;
+          letter-spacing: 0.06em;
           display: block;
           margin-bottom: 2px;
+          text-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
         }
 
         .pay-fee-amount {
@@ -1305,36 +1310,34 @@
           color: #FFFFFF;
           line-height: 1.1;
           letter-spacing: -0.02em;
-          text-shadow: 0 2px 10px rgba(255, 255, 255, 0.2);
+          text-shadow: 0 2px 14px rgba(16, 185, 129, 0.35);
         }
       }
 
       .pay-dr-right {
         text-align: right;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
 
         .pay-dr-name {
-          font-size: 14.5px;
-          font-weight: 800;
-          color: #F1F5F9;
-          margin-bottom: 3px;
-        }
-
-        .pay-session-info {
-          font-size: 11.5px;
-          font-weight: 650;
-          color: #38BDF8;
-          background: rgba(56, 189, 248, 0.14);
-          border: 1px solid rgba(56, 189, 248, 0.28);
-          padding: 2.5px 8px;
-          border-radius: 7px;
-          display: inline-block;
+          font-size: 16px;
+          font-weight: 850;
+          color: #FFFFFF;
+          letter-spacing: -0.01em;
+          text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
         }
       }
     }
 
     .pay-divider {
       height: 1px;
-      background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.16) 50%, rgba(255, 255, 255, 0.03) 100%);
+      background: linear-gradient(
+        90deg,
+        rgba(16, 185, 129, 0.05) 0%,
+        rgba(52, 211, 153, 0.35) 50%,
+        rgba(16, 185, 129, 0.05) 100%
+      );
       margin-bottom: 12px;
     }
 
@@ -1350,14 +1353,15 @@
         align-items: center;
         justify-content: center;
         gap: 6px;
-        padding: 8px 6px;
+        padding: 8.5px 6px;
         border-radius: 12px;
-        background: rgba(255, 255, 255, 0.08);
-        border: 1.5px solid rgba(255, 255, 255, 0.14);
-        color: #CBD5E1;
+        background: rgba(11, 25, 44, 0.65);
+        border: 1.5px solid rgba(255, 255, 255, 0.15);
+        color: #E2E8F0;
         font-size: 13px;
         font-weight: 750;
         cursor: pointer;
+        backdrop-filter: blur(8px);
         transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 
         .pay-method-icon {
@@ -1365,29 +1369,43 @@
         }
 
         &:hover {
-          background: rgba(255, 255, 255, 0.14);
+          background: rgba(16, 185, 129, 0.15);
+          border-color: rgba(52, 211, 153, 0.4);
           color: #FFFFFF;
         }
 
         &.pay-method-active {
-          background: linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(13, 148, 136, 0.4) 100%);
-          border-color: #10B981;
-          color: #A7F3D0;
-          box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+          background: linear-gradient(135deg, rgba(16, 185, 129, 0.38) 0%, rgba(13, 148, 136, 0.5) 100%);
+          border-color: #34D399;
+          color: #FFFFFF;
+          font-weight: 850;
+          box-shadow: 0 0 14px rgba(16, 185, 129, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
         }
       }
     }
 
     .pay-cash-note {
-      background: rgba(245, 158, 11, 0.14);
-      border: 1px solid rgba(245, 158, 11, 0.35);
-      color: #FDE68A;
-      font-size: 12px;
+      background: rgba(11, 25, 44, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #FFFFFF;
+      font-size: 12.5px;
       font-weight: 600;
-      padding: 6px 10px;
-      border-radius: 9px;
+      padding: 7px 12px;
+      border-radius: 10px;
       margin-bottom: 12px;
       text-align: center;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+
+      span {
+        color: #FFFFFF;
+      }
+
+      strong {
+        color: #FFFFFF;
+        font-weight: 850;
+        text-shadow: 0 0 10px rgba(16, 185, 129, 0.45);
+      }
     }
 
     .pay-error-note {
@@ -1406,8 +1424,8 @@
     .rapido-swipe-track {
       position: relative;
       height: 52px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1.5px solid rgba(255, 255, 255, 0.18);
+      background: rgba(11, 25, 44, 0.7);
+      border: 1.5px solid rgba(52, 211, 153, 0.35);
       border-radius: 999px;
       display: flex;
       align-items: center;
@@ -1416,7 +1434,8 @@
       -webkit-user-select: none;
       cursor: grab;
       overflow: hidden;
-      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 2px 6px rgba(0, 0, 0, 0.4);
 
       &:active {
         cursor: grabbing;
@@ -1424,7 +1443,7 @@
 
       &.is-completed {
         background: #059669;
-        border-color: #10B981;
+        border-color: #34D399;
         cursor: default;
       }
 
@@ -1434,7 +1453,7 @@
         top: 0;
         bottom: 0;
         min-width: 48px;
-        background: linear-gradient(90deg, rgba(16, 185, 129, 0.35) 0%, rgba(16, 185, 129, 0.85) 100%);
+        background: linear-gradient(90deg, rgba(16, 185, 129, 0.45) 0%, rgba(16, 185, 129, 0.9) 100%);
         border-radius: 999px;
         pointer-events: none;
         transition: width 0.05s ease-out;
@@ -1453,10 +1472,10 @@
 
         .rapido-label-text {
           font-size: 13px;
-          font-weight: 800;
+          font-weight: 850;
           color: #FFFFFF;
           letter-spacing: -0.01em;
-          text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+          text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8), 0 0 12px rgba(16, 185, 129, 0.25);
         }
 
         .rapido-chevrons {
@@ -1464,8 +1483,8 @@
           align-items: center;
           font-size: 17px;
           line-height: 1;
-          color: #6EE7B7;
-          font-weight: 800;
+          color: #34D399;
+          font-weight: 850;
 
           .rc {
             animation: chevronPulse 1.4s infinite;
@@ -1519,9 +1538,10 @@
 
       .pay-footer-txt {
         font-size: 11.5px;
-        font-weight: 600;
-        color: #94A3B8;
+        font-weight: 650;
+        color: #CBD5E1;
         letter-spacing: 0.02em;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
       }
     }
   }
@@ -1555,6 +1575,17 @@
   }
   50% {
     transform: translateX(3px);
+  }
+}
+
+@keyframes pulse-emerald {
+  0%, 100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
   }
 }
 
