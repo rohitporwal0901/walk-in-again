@@ -357,125 +357,145 @@
 
   </div>
 
-  <!-- Payment Card Floating Dock (Image 1 Style - Floating above bottom nav menu) -->
+  <!-- PAYMENT LOCK OVERLAY: Full screen blur when subscription payment card is active -->
   @if (showPaymentSheet()) {
     @if (selectedPlan(); as plan) {
-    <div class="payment-card-dock" id="plan-payment-card-dock">
-      <div class="payment-due-card" id="plan-payment-due-card">
+    <div class="payment-lock-overlay" id="plan-payment-lock-overlay" aria-modal="true" role="dialog">
+      <!-- Blur shield covering everything below (blurring bottom menu & background) -->
+      <div class="lock-blur-shield" (click)="closeSheet()"></div>
 
-        <!-- Top Row: Payment Due Badge + Dismiss Close Button -->
-        <div class="due-card-head">
-          <div class="due-badge-pill">
-            <span class="yellow-dot"></span>
-            <span class="due-badge-text">Payment due</span>
-          </div>
+      <!-- Premium Rapido/Myntra Style Payment Card -->
+      <div class="rapido-payment-card animate-card-rise" id="plan-payment-card-dock" (click)="$event.stopPropagation()">
 
-          <button type="button" class="card-close-btn" (click)="closeSheet()" aria-label="Close" id="plan-sheet-close">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-              stroke-linecap="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
+        <!-- BG image layer -->
+        <div class="payment-card-bg-img">
+          <img src="assets/images/payment-card-bg.jpg" alt="" class="pay-bg-img" />
+          <div class="pay-bg-overlay"></div>
         </div>
 
-        <!-- Middle Row: Fee & Plan Name Info -->
-        <div class="due-card-body">
-          <div class="fee-col">
-            <span class="fee-label">Plan fee</span>
-            <div class="fee-amount">₹{{ plan.price | number }}</div>
-          </div>
-          <div class="dr-col">
-            <div class="dr-name">{{ plan.name }} Plan</div>
-            <div class="session-step">
-              {{ plan.sessions }} Sessions Package
+        <!-- Card Content -->
+        <div class="pay-card-content">
+
+          <!-- TOP: Payment Due Badge + Secured Badge + Close button -->
+          <div class="pay-top-row">
+            <div class="pay-due-badge">
+              <span class="pay-due-dot"></span>
+              <span class="pay-due-txt">Plan Payment</span>
+            </div>
+
+            <div class="pay-top-right">
+              <div class="pay-secure-badge">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="#FBBF24" stroke="none">
+                  <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" />
+                </svg>
+                <span>Secured</span>
+              </div>
+
+              <button type="button" class="pay-close-btn" (click)="closeSheet()" aria-label="Close" id="plan-sheet-close">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
             </div>
           </div>
-        </div>
 
-        <!-- Payment Method Tabs Directly on Card (UPI, Card, Cash) -->
-        <div class="in-card-methods">
-          <button type="button" class="card-method-pill" [class.active]="selectedMethod() === 'UPI'"
-            (click)="selectedMethod.set('UPI'); errorMsg.set('')" id="plan-method-upi">
-            <span class="method-emoji">📱</span>
-            <span>UPI</span>
-          </button>
+          <!-- AMOUNT HERO ROW -->
+          <div class="pay-amount-row">
+            <div class="pay-amount-left">
+              <span class="pay-fee-label">Package fee</span>
+              <div class="pay-fee-amount">₹{{ plan.price | number }}</div>
+            </div>
+            <div class="pay-dr-right">
+              <div class="pay-dr-name">{{ plan.name }} Plan</div>
+              <div class="pay-session-info">{{ plan.sessions }} Sessions Pack</div>
+            </div>
+          </div>
 
-          <button type="button" class="card-method-pill" [class.active]="selectedMethod() === 'Card'"
-            (click)="selectedMethod.set('Card'); errorMsg.set('')" id="plan-method-card">
-            <span class="method-emoji">💳</span>
-            <span>Card</span>
-          </button>
+          <!-- DIVIDER -->
+          <div class="pay-divider"></div>
 
-          <button type="button" class="card-method-pill" [class.active]="selectedMethod() === 'Cash'"
-            (click)="selectedMethod.set('Cash'); errorMsg.set('')" id="plan-method-cash">
-            <span class="method-emoji">💵</span>
-            <span>Cash</span>
-          </button>
-        </div>
+          <!-- PAYMENT METHOD PILLS -->
+          <div class="pay-methods-row">
+            <button type="button" class="pay-method-pill" [class.pay-method-active]="selectedMethod() === 'UPI'"
+              (click)="selectedMethod.set('UPI'); errorMsg.set('')" id="plan-method-upi">
+              <span class="pay-method-icon">📱</span><span>UPI</span>
+            </button>
+            <button type="button" class="pay-method-pill" [class.pay-method-active]="selectedMethod() === 'Card'"
+              (click)="selectedMethod.set('Card'); errorMsg.set('')" id="plan-method-card">
+              <span class="pay-method-icon">💳</span><span>Card</span>
+            </button>
+            <button type="button" class="pay-method-pill" [class.pay-method-active]="selectedMethod() === 'Cash'"
+              (click)="selectedMethod.set('Cash'); errorMsg.set('')" id="plan-method-cash">
+              <span class="pay-method-icon">💵</span><span>Cash</span>
+            </button>
+          </div>
 
-        <!-- Cash Handover Notice if Cash selected -->
-        @if (selectedMethod() === 'Cash') {
-        <div class="in-card-cash-note">
-          <span>Handover <strong>₹{{ plan.price | number }}</strong> cash to doctor or desk</span>
-        </div>
-        }
+          <!-- Cash note -->
+          @if (selectedMethod() === 'Cash') {
+          <div class="pay-cash-note">
+            <span>Handover <strong>₹{{ plan.price | number }}</strong> cash to doctor or desk</span>
+          </div>
+          }
 
-        <!-- Payment Error Message if any -->
-        @if (errorMsg()) {
-        <div class="in-card-error">
-          <span>{{ errorMsg() }}</span>
-        </div>
-        }
+          <!-- Error note -->
+          @if (errorMsg()) {
+          <div class="pay-error-note"><span>{{ errorMsg() }}</span></div>
+          }
 
-        <!-- Slide to Pay Slider Row (Direct Execution) -->
-        <div class="pay-swipe-slider" id="plan-pay-swipe-container" [class.is-swiping]="isPaySwiping()"
-          [class.is-completed]="paySwipeCompleted()" (touchstart)="onPaySwipeStart($event)"
-          (touchmove)="onPaySwipeMove($event)" (touchend)="onPaySwipeEnd()" (touchcancel)="onPaySwipeEnd()"
-          (mousedown)="onPaySwipeStart($event)" (click)="onSliderClick()">
-          <!-- Background Expanding Track Fill -->
-          <div class="pay-swipe-fill" [style.width.px]="paySwipeOffset() + 48"></div>
+          <!-- SWIPE TO PAY SLIDER -->
+          <div class="rapido-swipe-track" id="plan-pay-swipe-container" [class.is-swiping]="isPaySwiping()"
+            [class.is-completed]="paySwipeCompleted()" (touchstart)="onPaySwipeStart($event)"
+            (touchmove)="onPaySwipeMove($event)" (touchend)="onPaySwipeEnd()"
+            (touchcancel)="onPaySwipeEnd()" (mousedown)="onPaySwipeStart($event)"
+            (click)="onSliderClick()">
+            <!-- Expanding fill -->
+            <div class="rapido-track-fill" [style.width.px]="paySwipeOffset() + 42"></div>
 
-          <!-- Center Text: Slide to pay ₹4,500 via [Method] -->
-          <div class="pay-swipe-label-wrap" [style.opacity]="1 - (paySwipeProgress() * 1.35)">
-            <span class="pay-swipe-text">
-              @if (isPurchasing()) {
-              Processing Payment...
-              } @else {
-              Slide to pay ₹{{ plan.price | number }} via {{ selectedMethod() }}
+            <!-- Label -->
+            <div class="rapido-label-wrap" [style.opacity]="1 - (paySwipeProgress() * 1.4)">
+              <span class="rapido-label-text">
+                @if (isPurchasing()) { Processing Payment... }
+                @else { Slide to pay ₹{{ plan.price | number }} via {{ selectedMethod() }} }
+              </span>
+              @if (!isPurchasing() && !paySwipeCompleted()) {
+              <div class="rapido-chevrons">
+                <span class="rc rc1">›</span>
+                <span class="rc rc2">›</span>
+                <span class="rc rc3">›</span>
+              </div>
               }
-            </span>
+            </div>
+
+            <!-- Thumb knob -->
+            <div class="rapido-thumb" [style.transform]="'translateX(' + paySwipeOffset() + 'px)'"
+              [class.completed]="paySwipeCompleted()">
+              @if (isPurchasing()) {
+              <span class="rapido-spinner"></span>
+              } @else if (paySwipeCompleted()) {
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              } @else {
+              <svg class="rapido-chevron-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669"
+                stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+              }
+            </div>
           </div>
 
-          <!-- Draggable Circular Thumb Knob with Chevron Right -->
-          <div class="pay-swipe-thumb" [style.transform]="'translateX(' + paySwipeOffset() + 'px)'"
-            [class.completed]="paySwipeCompleted()">
-            @if (isPurchasing()) {
-            <span class="knob-spinner"></span>
-            } @else if (paySwipeCompleted()) {
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3"
-              stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="20 6 9 17 4 12"></polyline>
+          <!-- Footer -->
+          <div class="pay-footer-row">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="#FBBF24" stroke="none">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="#FBBF24" stroke-width="2.5"></path>
             </svg>
-            } @else {
-            <svg class="thumb-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669"
-              stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-            }
+            <span class="pay-footer-txt">Secure payment · UPI, Card &amp; Cash</span>
           </div>
-        </div>
 
-        <!-- Bottom Row: Secure payment note -->
-        <div class="due-card-footer">
-          <svg class="secure-lock-icon" width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24" stroke="#FBBF24"
-            stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="#FBBF24" stroke-width="2.5"></path>
-          </svg>
-          <span class="secure-text">Secure payment · UPI, Card & Cash</span>
         </div>
-
       </div>
     </div>
     }

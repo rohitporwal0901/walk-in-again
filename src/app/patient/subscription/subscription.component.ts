@@ -171,7 +171,7 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
     const container = document.getElementById('plan-pay-swipe-container');
     if (container) {
       const containerWidth = container.clientWidth;
-      this.maxPaySwipeDistance = Math.max(120, containerWidth - 54);
+      this.maxPaySwipeDistance = Math.max(100, containerWidth - 44);
     }
   }
 
