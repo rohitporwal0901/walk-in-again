@@ -1137,7 +1137,7 @@
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
-  padding: 0 12px max(calc(env(safe-area-inset-bottom, 0px) + 14px), 18px);
+  padding: 0 14px max(calc(env(safe-area-inset-bottom, 0px) + 16px), 20px);
   animation: overlayFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   pointer-events: auto;
 
@@ -1155,13 +1155,13 @@
     position: relative;
     z-index: 10;
     width: 100%;
-    max-width: 356px;
-    border-radius: 20px;
+    max-width: 412px;
+    border-radius: 24px;
     overflow: hidden;
     background: #0B192C;
-    border: 1.5px solid rgba(255, 255, 255, 0.16);
+    border: 1.5px solid rgba(255, 255, 255, 0.18);
     box-shadow:
-      0 20px 50px -10px rgba(0, 0, 0, 0.65),
+      0 24px 60px -10px rgba(0, 0, 0, 0.7),
       0 0 0 1px rgba(16, 185, 129, 0.25),
       inset 0 1px 1px rgba(255, 255, 255, 0.3);
 
@@ -1199,7 +1199,7 @@
     .pay-card-content {
       position: relative;
       z-index: 2;
-      padding: 13px 14px 11px;
+      padding: 16px 18px 14px;
     }
 
     // Top Row
@@ -1207,20 +1207,20 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
 
       .pay-due-badge {
         display: inline-flex;
         align-items: center;
-        gap: 5px;
+        gap: 6px;
         background: rgba(239, 68, 68, 0.18);
         border: 1px solid rgba(239, 68, 68, 0.4);
-        padding: 2.5px 8px;
+        padding: 4px 10px;
         border-radius: 999px;
 
         .pay-due-dot {
-          width: 6px;
-          height: 6px;
+          width: 7px;
+          height: 7px;
           border-radius: 50%;
           background: #EF4444;
           box-shadow: 0 0 6px rgba(239, 68, 68, 0.9);
@@ -1228,7 +1228,7 @@
         }
 
         .pay-due-txt {
-          font-size: 10px;
+          font-size: 11px;
           font-weight: 850;
           color: #FCA5A5;
           letter-spacing: 0.04em;
@@ -1239,27 +1239,27 @@
       .pay-top-right {
         display: flex;
         align-items: center;
-        gap: 6px;
+        gap: 8px;
 
         .pay-secure-badge {
           display: inline-flex;
           align-items: center;
-          gap: 4px;
-          font-size: 10px;
+          gap: 5px;
+          font-size: 11px;
           font-weight: 750;
           color: #FDE68A;
           background: rgba(245, 158, 11, 0.14);
           border: 1px solid rgba(245, 158, 11, 0.32);
-          padding: 2.5px 7px;
+          padding: 3.5px 9px;
           border-radius: 999px;
         }
 
         .pay-close-btn {
-          width: 24px;
-          height: 24px;
+          width: 28px;
+          height: 28px;
           border-radius: 50%;
-          background: rgba(255, 255, 255, 0.12);
-          border: 1px solid rgba(255, 255, 255, 0.2);
+          background: rgba(255, 255, 255, 0.14);
+          border: 1px solid rgba(255, 255, 255, 0.22);
           color: #E2E8F0;
           display: flex;
           align-items: center;
@@ -1286,21 +1286,21 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
 
       .pay-amount-left {
         .pay-fee-label {
-          font-size: 9.5px;
+          font-size: 11px;
           font-weight: 700;
           color: #94A3B8;
           text-transform: uppercase;
           letter-spacing: 0.05em;
           display: block;
-          margin-bottom: 0px;
+          margin-bottom: 2px;
         }
 
         .pay-fee-amount {
-          font-size: 26px;
+          font-size: 30px;
           font-weight: 900;
           color: #FFFFFF;
           line-height: 1.1;
@@ -1313,20 +1313,20 @@
         text-align: right;
 
         .pay-dr-name {
-          font-size: 13px;
+          font-size: 14.5px;
           font-weight: 800;
           color: #F1F5F9;
-          margin-bottom: 2px;
+          margin-bottom: 3px;
         }
 
         .pay-session-info {
-          font-size: 10.5px;
+          font-size: 11.5px;
           font-weight: 650;
           color: #38BDF8;
           background: rgba(56, 189, 248, 0.14);
           border: 1px solid rgba(56, 189, 248, 0.28);
-          padding: 1.5px 6px;
-          border-radius: 6px;
+          padding: 2.5px 8px;
+          border-radius: 7px;
           display: inline-block;
         }
       }
@@ -1335,33 +1335,33 @@
     .pay-divider {
       height: 1px;
       background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.16) 50%, rgba(255, 255, 255, 0.03) 100%);
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
 
     // Payment Methods Pills
     .pay-methods-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      margin-bottom: 9px;
+      gap: 8px;
+      margin-bottom: 12px;
 
       .pay-method-pill {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 5px;
-        padding: 6px 4px;
-        border-radius: 10px;
-        background: rgba(255, 255, 255, 0.07);
-        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        gap: 6px;
+        padding: 8px 6px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1.5px solid rgba(255, 255, 255, 0.14);
         color: #CBD5E1;
-        font-size: 11.5px;
+        font-size: 13px;
         font-weight: 750;
         cursor: pointer;
         transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 
         .pay-method-icon {
-          font-size: 13px;
+          font-size: 15px;
         }
 
         &:hover {
@@ -1382,11 +1382,11 @@
       background: rgba(245, 158, 11, 0.14);
       border: 1px solid rgba(245, 158, 11, 0.35);
       color: #FDE68A;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
-      padding: 5px 8px;
-      border-radius: 8px;
-      margin-bottom: 8px;
+      padding: 6px 10px;
+      border-radius: 9px;
+      margin-bottom: 12px;
       text-align: center;
     }
 
@@ -1394,24 +1394,24 @@
       background: rgba(239, 68, 68, 0.18);
       border: 1px solid rgba(239, 68, 68, 0.4);
       color: #FCA5A5;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
-      padding: 5px 8px;
-      border-radius: 8px;
-      margin-bottom: 8px;
+      padding: 6px 10px;
+      border-radius: 9px;
+      margin-bottom: 12px;
       text-align: center;
     }
 
     // Rapido / Myntra Swipe to Pay Track
     .rapido-swipe-track {
       position: relative;
-      height: 44px;
+      height: 52px;
       background: rgba(255, 255, 255, 0.08);
-      border: 1.5px solid rgba(255, 255, 255, 0.16);
+      border: 1.5px solid rgba(255, 255, 255, 0.18);
       border-radius: 999px;
       display: flex;
       align-items: center;
-      padding: 3px;
+      padding: 4px;
       user-select: none;
       -webkit-user-select: none;
       cursor: grab;
@@ -1433,7 +1433,7 @@
         left: 0;
         top: 0;
         bottom: 0;
-        min-width: 42px;
+        min-width: 48px;
         background: linear-gradient(90deg, rgba(16, 185, 129, 0.35) 0%, rgba(16, 185, 129, 0.85) 100%);
         border-radius: 999px;
         pointer-events: none;
@@ -1446,13 +1446,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 5px;
+        gap: 6px;
         pointer-events: none;
         transition: opacity 0.15s ease;
-        padding-left: 24px;
+        padding-left: 28px;
 
         .rapido-label-text {
-          font-size: 11.5px;
+          font-size: 13px;
           font-weight: 800;
           color: #FFFFFF;
           letter-spacing: -0.01em;
@@ -1462,7 +1462,7 @@
         .rapido-chevrons {
           display: inline-flex;
           align-items: center;
-          font-size: 15px;
+          font-size: 17px;
           line-height: 1;
           color: #6EE7B7;
           font-weight: 800;
@@ -1479,11 +1479,11 @@
       .rapido-thumb {
         position: relative;
         z-index: 5;
-        width: 38px;
-        height: 38px;
+        width: 44px;
+        height: 44px;
         border-radius: 50%;
         background: #FFFFFF;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1496,9 +1496,9 @@
         }
 
         .rapido-spinner {
-          width: 18px;
-          height: 18px;
-          border: 2px solid rgba(5, 150, 105, 0.25);
+          width: 20px;
+          height: 20px;
+          border: 2.5px solid rgba(5, 150, 105, 0.25);
           border-top-color: #059669;
           border-radius: 50%;
           animation: spin 0.8s linear infinite;
@@ -1514,11 +1514,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 5px;
-      margin-top: 8px;
+      gap: 6px;
+      margin-top: 12px;
 
       .pay-footer-txt {
-        font-size: 10px;
+        font-size: 11.5px;
         font-weight: 600;
         color: #94A3B8;
         letter-spacing: 0.02em;

@@ -199,7 +199,7 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
     const container = document.getElementById('pay-swipe-container');
     if (container) {
       const containerWidth = container.clientWidth;
-      this.maxPaySwipeDistance = Math.max(100, containerWidth - 44);
+      this.maxPaySwipeDistance = Math.max(100, containerWidth - 52);
     }
   }
 
