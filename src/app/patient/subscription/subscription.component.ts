@@ -23,6 +23,8 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private location = inject(Location);
 
+  readonly patientName = this.authService.userName;
+
   plans = signal<SubscriptionPlan[]>([]);
   activeSub = signal<UserSubscription | null>(null);
   isLoading = signal(true);
@@ -31,6 +33,7 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   lastPurchasedPlan = signal<SubscriptionPlan | null>(null);
   showPaymentSheet = signal(false);
   selectedMethod = signal<'UPI' | 'Card' | 'Cash'>('UPI');
+  selectedUpiApp = signal<string>('PhonePe');
   purchaseSuccess = signal(false);
   errorMsg = signal('');
 

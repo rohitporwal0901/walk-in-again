@@ -1526,8 +1526,7 @@
   }
 }
 
-// ─── RAPIDO / MYNTRA PAYMENT LOCK OVERLAY ──────────────────────────────────────
-// High-z-index full-screen frosted blur overlay covering everything (including bottom nav)
+// ─── THEME-ALIGNED CREDIT CARD PAYMENT OVERLAY ────────────────────────
 .payment-lock-overlay {
   position: fixed;
   inset: 0;
@@ -1536,399 +1535,617 @@
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
-  padding: 0 14px max(calc(env(safe-area-inset-bottom, 0px) + 16px), 20px);
-  animation: overlayFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  padding: 0 16px max(calc(env(safe-area-inset-bottom, 0px) + 16px), 22px);
+  animation: overlayFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   pointer-events: auto;
 
   .lock-blur-shield {
     position: absolute;
     inset: 0;
     z-index: 1;
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    background: rgba(7, 24, 46, 0.72);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    background: rgba(4, 15, 20, 0.78);
     pointer-events: auto;
   }
 
-  .rapido-payment-card {
+  /* ===== OUTER CARD + HOLOGRAPHIC BORDER ===== */
+  .pay {
     position: relative;
     z-index: 10;
     width: 100%;
     max-width: 412px;
-    border-radius: 24px;
+    margin: 0 auto;
+    border-radius: 30px;
+    padding: 1.5px;
     overflow: hidden;
-    background: #0B192C;
-    border: 1.5px solid rgba(255, 255, 255, 0.18);
-    box-shadow:
-      0 24px 60px -10px rgba(0, 0, 0, 0.7),
-      0 0 0 1px rgba(16, 185, 129, 0.25),
-      inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    isolation: isolate;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), 0 0 40px rgba(45, 212, 191, 0.12);
 
     &.animate-card-rise {
-      animation: cardSpringRise 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: cardSpringRise 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    // Subtle metallic light streak shimmer sweep
-    &::after {
-      content: '';
+    &::before {
+      content: "";
       position: absolute;
-      top: -80%;
-      left: -80%;
-      width: 50%;
-      height: 260%;
-      background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(255, 255, 255, 0.02) 20%,
-        rgba(255, 255, 255, 0.22) 50%,
-        rgba(255, 255, 255, 0.02) 80%,
-        transparent 100%
-      );
-      transform: rotate(26deg);
-      pointer-events: none;
-      animation: cardShimmerSweep 4.5s infinite cubic-bezier(0.4, 0, 0.2, 1);
-      z-index: 3;
+      left: 50%;
+      top: 50%;
+      width: 200%;
+      aspect-ratio: 1;
+      translate: -50% -50%;
+      background: conic-gradient(from 0deg, #2dd4bf, #0284c7, #071f36, #10b981, #0284c7, #2dd4bf);
+      animation: spinBorder 7s linear infinite;
+      z-index: -1;
     }
+  }
 
-    .payment-card-bg-img {
+  .in {
+    position: relative;
+    border-radius: 28.5px;
+    padding: 16px 16px 14px;
+    color: #eafffa;
+    overflow: hidden;
+    background:
+      radial-gradient(80% 60% at 100% 0%, #063c47 0%, transparent 65%),
+      radial-gradient(60% 50% at 0% 100%, #053b30 0%, transparent 60%),
+      linear-gradient(165deg, #071d2b 0%, #031217 100%);
+
+    &::after {
+      content: "";
       position: absolute;
       inset: 0;
-      z-index: 1;
+      background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.06) 48%, transparent 60%);
+      transform: translateX(-120%);
+      animation: glint 5s ease-in-out 1s infinite;
       pointer-events: none;
-      overflow: hidden;
-
-      .pay-bg-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        opacity: 0.9;
-        filter: brightness(1.05) contrast(1.1);
-      }
-
-      .pay-bg-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-          180deg,
-          rgba(11, 25, 44, 0.22) 0%,
-          rgba(11, 25, 44, 0.48) 45%,
-          rgba(11, 25, 44, 0.78) 100%
-        );
-      }
     }
+  }
 
-    .pay-card-content {
-      position: relative;
-      z-index: 2;
-      padding: 16px 18px 14px;
+  /* ===== HEADER ===== */
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .badge {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.9px;
+    padding: 6px 11px;
+    border-radius: 20px;
+    background: rgba(45, 212, 191, 0.12);
+    border: 1px solid rgba(45, 212, 191, 0.35);
+    color: #7ff0dd;
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #2dd4bf;
+    box-shadow: 0 0 8px #2dd4bf;
+  }
+
+  .x {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+    font-size: 13px;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: all 0.2s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.05);
     }
+  }
 
-    // Top Row
-    .pay-top-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
+  /* ===== CREDIT CARD ===== */
+  .cc {
+    position: relative;
+    height: 198px;
+    margin: 14px 0 14px;
+    border-radius: 20px;
+  }
 
-      .pay-due-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: rgba(16, 185, 129, 0.16);
-        border: 1px solid rgba(52, 211, 153, 0.45);
-        padding: 4px 10px;
-        border-radius: 999px;
-        box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+  .ccin {
+    position: relative;
+    height: 100%;
+    border-radius: 20px;
+  }
 
-        .pay-due-dot {
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          background: #10B981;
-          box-shadow: 0 0 8px rgba(16, 185, 129, 0.9);
-          animation: pulse-emerald 1.8s infinite;
-        }
+  .face {
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(45, 212, 191, 0.35);
+    box-shadow:
+      0 20px 42px rgba(0, 0, 0, 0.7),
+      inset 0 1px 1.5px rgba(56, 189, 248, 0.4),
+      inset 0 -1px 1.5px rgba(45, 212, 191, 0.4),
+      inset 0 0 25px rgba(2, 132, 199, 0.15);
+    background:
+      radial-gradient(ellipse 90% 80% at 95% 15%, rgba(45, 212, 191, 0.32) 0%, transparent 60%),
+      radial-gradient(circle at 10% 85%, rgba(2, 132, 199, 0.35) 0%, transparent 60%),
+      linear-gradient(135deg, #071f36 0%, #09333d 35%, #064035 70%, #021a19 100%);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 
-        .pay-due-txt {
-          font-size: 11px;
-          font-weight: 850;
-          color: #A7F3D0;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-        }
-      }
-    }
-
-    // Amount Row
-    .pay-amount-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-
-      .pay-amount-left {
-        .pay-fee-label {
-          font-size: 11px;
-          font-weight: 800;
-          color: #6EE7B7;
-          text-transform: uppercase;
-          letter-spacing: 0.06em;
-          display: block;
-          margin-bottom: 2px;
-          text-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
-        }
-
-        .pay-fee-amount {
-          font-size: 30px;
-          font-weight: 900;
-          color: #FFFFFF;
-          line-height: 1.1;
-          letter-spacing: -0.02em;
-          text-shadow: 0 2px 14px rgba(16, 185, 129, 0.35);
-        }
-      }
-
-      .pay-dr-right {
-        text-align: right;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-
-        .pay-dr-name {
-          font-size: 16px;
-          font-weight: 850;
-          color: #FFFFFF;
-          letter-spacing: -0.01em;
-          text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
-        }
-      }
-    }
-
-    .pay-divider {
-      height: 1px;
+    /* Dazzling Card Holographic Shimmer Sweep */
+    &::after {
+      content: "";
+      position: absolute;
+      top: -60%;
+      left: -60%;
+      width: 220%;
+      height: 220%;
       background: linear-gradient(
-        90deg,
-        rgba(16, 185, 129, 0.05) 0%,
-        rgba(52, 211, 153, 0.35) 50%,
-        rgba(16, 185, 129, 0.05) 100%
+        115deg,
+        transparent 35%,
+        rgba(255, 255, 255, 0.08) 42%,
+        rgba(255, 255, 255, 0.45) 50%,
+        rgba(240, 207, 126, 0.4) 53%,
+        rgba(255, 255, 255, 0.1) 58%,
+        transparent 65%
       );
-      margin-bottom: 12px;
+      transform: rotate(20deg) translateX(-130%);
+      animation: cardShimmerBeam 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      pointer-events: none;
+      z-index: 1;
     }
+  }
 
-    // Payment Methods Pills
-    .pay-methods-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 12px;
+  .front {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    padding: 16px 18px 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-      .pay-method-pill {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        padding: 8.5px 6px;
-        border-radius: 12px;
-        background: rgba(11, 25, 44, 0.65);
-        border: 1.5px solid rgba(255, 255, 255, 0.15);
-        color: #E2E8F0;
-        font-size: 13px;
-        font-weight: 750;
-        cursor: pointer;
-        backdrop-filter: blur(8px);
-        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  .back {
+    display: none;
+  }
 
-        .pay-method-icon {
-          font-size: 15px;
-        }
+  .r {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-        &:hover {
-          background: rgba(16, 185, 129, 0.15);
-          border-color: rgba(52, 211, 153, 0.4);
-          color: #FFFFFF;
-        }
+  .chip {
+    width: 40px;
+    height: 29px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #fae5a8 0%, #c49437 55%, #f5d487 100%);
+    position: relative;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(0, 0, 0, 0.25);
 
-        &.pay-method-active {
-          background: linear-gradient(135deg, rgba(16, 185, 129, 0.38) 0%, rgba(13, 148, 136, 0.5) 100%);
-          border-color: #34D399;
-          color: #FFFFFF;
-          font-weight: 850;
-          box-shadow: 0 0 14px rgba(16, 185, 129, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
-        }
-      }
+    &::before, &::after {
+      content: "";
+      position: absolute;
+      background: rgba(0, 0, 0, 0.35);
     }
-
-    .pay-cash-note {
-      background: rgba(11, 25, 44, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #FFFFFF;
-      font-size: 12.5px;
-      font-weight: 600;
-      padding: 7px 12px;
-      border-radius: 10px;
-      margin-bottom: 12px;
-      text-align: center;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
-
-      span {
-        color: #FFFFFF;
-      }
-
-      strong {
-        color: #FFFFFF;
-        font-weight: 850;
-        text-shadow: 0 0 10px rgba(16, 185, 129, 0.45);
-      }
+    &::before {
+      left: 0;
+      right: 0;
+      top: 50%;
+      height: 1px;
     }
-
-    .pay-error-note {
-      background: rgba(239, 68, 68, 0.18);
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      color: #FCA5A5;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 6px 10px;
-      border-radius: 9px;
-      margin-bottom: 12px;
-      text-align: center;
+    &::after {
+      top: 0;
+      bottom: 0;
+      left: 36%;
+      width: 1px;
+      box-shadow: 11px 0 0 rgba(0, 0, 0, 0.35);
     }
+  }
 
-    // Rapido / Myntra Swipe to Pay Track
-    .rapido-swipe-track {
-      position: relative;
-      height: 52px;
-      background: rgba(11, 25, 44, 0.7);
-      border: 1.5px solid rgba(52, 211, 153, 0.35);
-      border-radius: 999px;
-      display: flex;
-      align-items: center;
-      padding: 4px;
-      user-select: none;
-      -webkit-user-select: none;
-      cursor: grab;
+  .nfc {
+    margin-left: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #5eead4;
+    letter-spacing: -2px;
+    transform: rotate(90deg);
+    display: inline-block;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  }
+
+  .plan {
+    font-size: 10.5px;
+    font-weight: 850;
+    letter-spacing: 1px;
+    color: #03201b;
+    background: linear-gradient(135deg, #fae59f 0%, #d9a93f 100%);
+    padding: 5px 12px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  }
+
+  .fee-group {
+    margin-top: 6px;
+    margin-bottom: 2px;
+  }
+
+  .l {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    color: #5eead4;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95);
+    text-transform: uppercase;
+    line-height: 1.2;
+    margin-bottom: 3px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .v {
+    font-family: Fraunces, Georgia, serif;
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    line-height: 1.05;
+    background: linear-gradient(
+      90deg,
+      #d4a237 0%,
+      #fff8dc 25%,
+      #f5d17a 50%,
+      #ffffff 75%,
+      #d4a237 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    animation: goldTextShimmer 3.2s linear infinite;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .num {
+    font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: 3.5px;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.95);
+    white-space: nowrap;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .bt {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    b {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 850;
+      letter-spacing: 1.2px;
+      color: #ffffff;
+      max-width: 160px;
       overflow: hidden;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 2px 6px rgba(0, 0, 0, 0.4);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-transform: uppercase;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95);
+      -webkit-font-smoothing: antialiased;
+    }
+  }
 
-      &:active {
-        cursor: grabbing;
-      }
+  .net {
+    display: flex;
+    align-items: center;
 
-      &.is-completed {
-        background: #059669;
-        border-color: #34D399;
-        cursor: default;
-      }
+    i {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #0284c7;
+      opacity: 0.92;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 
-      .rapido-track-fill {
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        min-width: 48px;
-        background: linear-gradient(90deg, rgba(16, 185, 129, 0.45) 0%, rgba(16, 185, 129, 0.9) 100%);
-        border-radius: 999px;
-        pointer-events: none;
-        transition: width 0.05s ease-out;
-      }
-
-      .rapido-label-wrap {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        pointer-events: none;
-        transition: opacity 0.15s ease;
-        padding-left: 28px;
-
-        .rapido-label-text {
-          font-size: 13px;
-          font-weight: 850;
-          color: #FFFFFF;
-          letter-spacing: -0.01em;
-          text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8), 0 0 12px rgba(16, 185, 129, 0.25);
-        }
-
-        .rapido-chevrons {
-          display: inline-flex;
-          align-items: center;
-          font-size: 17px;
-          line-height: 1;
-          color: #34D399;
-          font-weight: 850;
-
-          .rc {
-            animation: chevronPulse 1.4s infinite;
-          }
-          .rc1 { animation-delay: 0s; }
-          .rc2 { animation-delay: 0.2s; }
-          .rc3 { animation-delay: 0.4s; }
-        }
-      }
-
-      .rapido-thumb {
-        position: relative;
-        z-index: 5;
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        background: #FFFFFF;
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        transition: transform 0.05s ease-out;
-
-        &.completed {
-          background: #10B981;
-          box-shadow: 0 0 14px rgba(16, 185, 129, 0.85);
-        }
-
-        .rapido-spinner {
-          width: 20px;
-          height: 20px;
-          border: 2.5px solid rgba(5, 150, 105, 0.25);
-          border-top-color: #059669;
-          border-radius: 50%;
-          animation: spin 0.8s linear infinite;
-        }
-
-        .rapido-chevron-icon {
-          animation: nudgeRight 1.5s infinite ease-in-out;
-        }
+      + i {
+        margin-left: -11px;
+        background: #2dd4bf;
+        mix-blend-mode: screen;
       }
     }
+  }
 
-    .pay-footer-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      margin-top: 12px;
+  .strip {
+    height: 34px;
+    background: #02080a;
+    margin-top: 18px;
+  }
 
-      .pay-footer-txt {
-        font-size: 11.5px;
-        font-weight: 650;
-        color: #CBD5E1;
-        letter-spacing: 0.02em;
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
-      }
+  .sig {
+    display: flex;
+    margin: 14px 14px 0;
+    gap: 8px;
+    align-items: center;
+
+    div {
+      flex: 1;
+      height: 30px;
+      border-radius: 4px;
+      background: repeating-linear-gradient(90deg, #e9eef0 0 6px, #d3dadd 6px 12px);
     }
+
+    b {
+      background: #fff;
+      color: #111;
+      border-radius: 4px;
+      padding: 7px 10px;
+      font: 700 13px monospace;
+      letter-spacing: 2px;
+      min-width: 52px;
+      text-align: center;
+    }
+  }
+
+  .bk {
+    padding: 14px;
+    font-size: 9px;
+    color: #9cc7bd;
+    letter-spacing: 0.5px;
+    line-height: 1.5;
+  }
+
+  /* ===== TABS ===== */
+  .tabs {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 4px;
+    border-radius: 16px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .thumb {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
+    width: calc((100% - 8px) / 3);
+    border-radius: 12px;
+    background: linear-gradient(135deg, #0f9d8a, #2dd4bf);
+    box-shadow: 0 6px 20px rgba(45, 212, 191, 0.45);
+    transition: transform 0.35s cubic-bezier(0.3, 1.3, 0.5, 1);
+  }
+
+  .tab {
+    position: relative;
+    border: 0;
+    background: none;
+    color: #8fb8ae;
+    padding: 10px 0;
+    font: 600 13px inherit;
+    font-family: inherit;
+    cursor: pointer;
+    transition: color 0.2s;
+    text-align: center;
+
+    &.on {
+      color: #03201b;
+    }
+  }
+
+  .pane {
+    display: none;
+    margin-top: 10px;
+
+    &.on {
+      display: block;
+    }
+  }
+
+  /* ===== INPUTS & NOTES ===== */
+  input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 12px;
+    color: #eafffa;
+    font: 14px inherit;
+    font-family: inherit;
+    margin-bottom: 7px;
+    outline: none;
+    letter-spacing: 0.5px;
+    box-sizing: border-box;
+
+    &:focus {
+      border-color: #f0cf7e;
+    }
+
+    &::placeholder {
+      color: #648b81;
+    }
+  }
+
+  .r2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+  }
+
+  .note {
+    font-size: 12px;
+    color: #9cc4ba;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 12px;
+  }
+
+  .err-note {
+    background: rgba(239, 68, 68, 0.18);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #fca5a5;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 9px;
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  /* ===== SLIDE TO PAY ===== */
+  .slide {
+    position: relative;
+    height: 60px;
+    border-radius: 30px;
+    margin-top: 12px;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1.5px solid rgba(240, 207, 126, 0.35);
+    overflow: hidden;
+    touch-action: none;
+    user-select: none;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+  }
+
+  .fill {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    border-radius: 30px;
+    background: linear-gradient(90deg, #0f9d8a, #2dd4bf);
+    transition: width 0.05s ease-out;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .lbl {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding-left: 48px;
+    font-size: 13px;
+    font-weight: 750;
+    letter-spacing: 0.3px;
+    background: linear-gradient(90deg, #a8cfc6 30%, #ffffff 50%, #a8cfc6 70%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    animation: shLabel 2.4s linear infinite;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .knob {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 28%, #fff8dc, #e8c26b 55%, #b98a2e);
+    color: #3b2a05;
+    display: grid;
+    place-items: center;
+    font-size: 24px;
+    font-weight: 900;
+    cursor: grab;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 0 3px rgba(240, 207, 126, 0.25);
+    transition: transform 0.05s ease-out;
+    z-index: 3;
+
+    .knob-spinner {
+      width: 20px;
+      height: 20px;
+      border: 2.5px solid rgba(59, 42, 5, 0.3);
+      border-top-color: #3b2a05;
+      border-radius: 50%;
+      animation: spinBorder 0.8s linear infinite;
+    }
+  }
+
+  .sec {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 11px;
+    font-size: 10px;
+    color: #7fa89e;
+    letter-spacing: 0.4px;
+  }
+}
+
+@keyframes spinBorder {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes cardShimmerBeam {
+  0% {
+    transform: rotate(20deg) translateX(-130%);
+  }
+  38%, 100% {
+    transform: rotate(20deg) translateX(130%);
+  }
+}
+
+@keyframes goldTextShimmer {
+  0% {
+    background-position: 250% 0;
+  }
+  100% {
+    background-position: -250% 0;
+  }
+}
+
+@keyframes glint {
+  0% {
+    transform: translateX(-120%);
+  }
+  40%, 100% {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes shLabel {
+  to {
+    background-position: -200% 0;
   }
 }
 
 @keyframes cardSpringRise {
   0% {
     opacity: 0;
-    transform: translateY(60px) scale(0.96);
+    transform: translateY(40px);
   }
   100% {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 

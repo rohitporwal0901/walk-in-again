@@ -375,130 +375,90 @@
   </div>
   }
 
-  <!-- PAYMENT LOCK OVERLAY: Full screen blur when payment card is active -->
-  @if (unpaidCompletedSession(); as completedSess) {
+  <!-- PAYMENT LOCK OVERLAY: Due session payment card -->
+  @if (!dismissPayment() && unpaidCompletedSession(); as completedSess) {
     <div class="payment-lock-overlay" id="payment-lock-overlay" aria-modal="true" role="dialog">
 
       <!-- Blur shield covering everything below -->
-      <div class="lock-blur-shield"></div>
+      <div class="lock-blur-shield" (click)="dismissPayment.set(true)"></div>
 
-      <!-- Premium Rapido/Myntra Style Payment Card -->
-      <div class="rapido-payment-card animate-card-rise" id="payment-card-dock">
+      <!-- Holographic Border Outer Container -->
+      <div class="pay animate-card-rise" id="payment-card-dock" (click)="$event.stopPropagation()">
+        <div class="in">
 
-        <!-- BG image layer -->
-        <div class="payment-card-bg-img">
-          <img src="assets/images/payment-card-bg.jpg" alt="" class="pay-bg-img" />
-          <div class="pay-bg-overlay"></div>
-        </div>
-
-        <!-- Card Content -->
-        <div class="pay-card-content">
-
-          <!-- TOP: Payment Due Badge -->
-          <div class="pay-top-row">
-            <div class="pay-due-badge">
-              <span class="pay-due-dot"></span>
-              <span class="pay-due-txt">Payment Due</span>
-            </div>
+          <div class="top">
+            <span class="badge"><span class="dot"></span>PLAN PAYMENT</span>
+            <button type="button" class="x" (click)="dismissPayment.set(true)" aria-label="Close" id="due-sheet-close">✕</button>
           </div>
 
-          <!-- AMOUNT HERO ROW -->
-          <div class="pay-amount-row">
-            <div class="pay-amount-left">
-              <span class="pay-fee-label">Session fee</span>
-              <div class="pay-fee-amount">₹{{ completedSess.fee || defaultWalkInFee() }}</div>
-            </div>
-            <div class="pay-dr-right">
-              <div class="pay-dr-name">{{ formatDoctorName(completedSess.workerName) }}</div>
-            </div>
-          </div>
-
-          <!-- DIVIDER -->
-          <div class="pay-divider"></div>
-
-          <!-- PAYMENT METHOD PILLS -->
-          <div class="pay-methods-row">
-            <button type="button" class="pay-method-pill" [class.pay-method-active]="selectedMethod() === 'UPI'"
-              (click)="selectedMethod.set('UPI'); paymentError.set('')" id="due-method-upi">
-              <span class="pay-method-icon">📱</span><span>UPI</span>
-            </button>
-            <button type="button" class="pay-method-pill" [class.pay-method-active]="selectedMethod() === 'Card'"
-              (click)="selectedMethod.set('Card'); paymentError.set('')" id="due-method-card">
-              <span class="pay-method-icon">💳</span><span>Card</span>
-            </button>
-            <button type="button" class="pay-method-pill" [class.pay-method-active]="selectedMethod() === 'Cash'"
-              (click)="selectedMethod.set('Cash'); paymentError.set('')" id="due-method-cash">
-              <span class="pay-method-icon">💵</span><span>Cash</span>
-            </button>
-          </div>
-
-          <!-- Cash note -->
-          @if (selectedMethod() === 'Cash') {
-          <div class="pay-cash-note">
-            <span>Hand ₹{{ completedSess.fee || defaultWalkInFee() }} cash to doctor or reception</span>
-          </div>
-          }
-
-          <!-- Error -->
-          @if (paymentError()) {
-          <div class="pay-error-note"><span>{{ paymentError() }}</span></div>
-          }
-
-          <!-- SWIPE TO PAY SLIDER -->
-          <div class="rapido-swipe-track" id="pay-swipe-container" [class.is-swiping]="isPaySwiping()"
-            [class.is-completed]="paySwipeCompleted()" (touchstart)="onPaySwipeStart($event, completedSess)"
-            (touchmove)="onPaySwipeMove($event)" (touchend)="onPaySwipeEnd(completedSess)"
-            (touchcancel)="onPaySwipeEnd(completedSess)" (mousedown)="onPaySwipeStart($event, completedSess)"
-            (click)="onSliderClick(completedSess)">
-            <!-- Expanding fill -->
-            <div class="rapido-track-fill" [style.width.px]="paySwipeOffset() + 48"></div>
-
-            <!-- Label -->
-            <div class="rapido-label-wrap" [style.opacity]="1 - (paySwipeProgress() * 1.4)">
-              <span class="rapido-label-text">
-                @if (isPaying()) { Processing... }
-                @else { Slide to pay ₹{{ completedSess.fee || defaultWalkInFee() }} via {{ selectedMethod() }} }
-              </span>
-              @if (!isPaying() && !paySwipeCompleted()) {
-              <div class="rapido-chevrons">
-                <span class="rc rc1">›</span>
-                <span class="rc rc2">›</span>
-                <span class="rc rc3">›</span>
+          <!-- CREDIT CARD -->
+          <div class="cc"><div class="ccin" id="ccin">
+            <div class="face front">
+              <div class="r">
+                <div style="display:flex;align-items:center"><div class="chip"></div><span class="nfc">)))</span></div>
+                <span class="plan">{{ completedSess.workerName ? formatDoctorName(completedSess.workerName) : '15 DAYS PLAN' }}</span>
               </div>
-              }
+              <div class="fee-group"><div class="l">PACKAGE FEE</div><div class="v">₹{{ (completedSess.fee || defaultWalkInFee()) | number }}</div></div>
+              <div class="num" id="num">•••• •••• •••• ••••</div>
+              <div class="bt">
+                <div><div class="l" id="l1">CARD HOLDER</div><b id="nm">{{ patientName() || 'PATIENT' }}</b></div>
+                <div><div class="l">VALID THRU</div><b id="ex">NOW</b></div>
+                <div class="net"><i></i><i></i></div>
+              </div>
             </div>
+          </div></div>
 
-            <!-- Thumb knob -->
-            <div class="rapido-thumb" [style.transform]="'translateX(' + paySwipeOffset() + 'px)'"
-              [class.completed]="paySwipeCompleted()">
+          <!-- TABS -->
+          <div class="tabs">
+            <div class="thumb" id="thumb" [style.transform]="selectedMethod() === 'UPI' ? 'translateX(0)' : selectedMethod() === 'Card' ? 'translateX(100%)' : 'translateX(200%)'"></div>
+            <button type="button" class="tab" [class.on]="selectedMethod() === 'UPI'" (click)="selectedMethod.set('UPI'); paymentError.set('')" id="due-method-upi">UPI</button>
+            <button type="button" class="tab" [class.on]="selectedMethod() === 'Card'" (click)="selectedMethod.set('Card'); paymentError.set('')" id="due-method-card">Card</button>
+            <button type="button" class="tab" [class.on]="selectedMethod() === 'Cash'" (click)="selectedMethod.set('Cash'); paymentError.set('')" id="due-method-cash">Cash</button>
+          </div>
+
+          <!-- CASH NOTE -->
+          @if (selectedMethod() === 'Cash') {
+          <div class="pane on" id="cash"><div class="note">
+            <b style="color:#eafffa">Pay at the clinic</b><br>
+            Pay ₹{{ (completedSess.fee || defaultWalkInFee()) | number }} in cash on your visit.
+          </div></div>
+          }
+
+          @if (paymentError()) {
+            <div class="err-note"><span>{{ paymentError() }}</span></div>
+          }
+
+          <!-- SLIDE TO PAY -->
+          <div class="slide" id="pay-swipe-container"
+            [class.is-swiping]="isPaySwiping()"
+            [class.is-completed]="paySwipeCompleted()"
+            (touchstart)="onPaySwipeStart($event, completedSess)"
+            (touchmove)="onPaySwipeMove($event)"
+            (touchend)="onPaySwipeEnd(completedSess)"
+            (touchcancel)="onPaySwipeEnd(completedSess)"
+            (mousedown)="onPaySwipeStart($event, completedSess)"
+            (click)="onSliderClick(completedSess)">
+            <div class="fill" id="fill" [style.width.px]="paySwipeOffset() > 0 ? (paySwipeOffset() + 50) : 0"></div>
+            <div class="lbl" id="lbl" [style.opacity]="1 - (paySwipeProgress() * 1.4)">
+              @if (isPaying()) { Processing Payment... }
+              @else { Slide to pay ₹{{ (completedSess.fee || defaultWalkInFee()) | number }} via {{ selectedMethod() }}  ››› }
+            </div>
+            <div class="knob" id="knob" [style.transform]="'translateX(' + paySwipeOffset() + 'px)'">
               @if (isPaying()) {
-              <span class="rapido-spinner"></span>
+                <span class="knob-spinner"></span>
               } @else if (paySwipeCompleted()) {
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3"
-                stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
+                <span>✓</span>
               } @else {
-              <svg class="rapido-chevron-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669"
-                stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
+                <span>›</span>
               }
             </div>
           </div>
 
-          <!-- Footer -->
-          <div class="pay-footer-row">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24" stroke="none">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke="#FBBF24" stroke-width="2.5"></path>
-            </svg>
-            <span class="pay-footer-txt">Secure payment · UPI, Card &amp; Cash</span>
-          </div>
+          <div class="sec"><span>🔒</span><span>256-bit encrypted · UPI · Card · Cash</span></div>
 
         </div>
       </div>
     </div>
-    }
+  }
 
   </div>

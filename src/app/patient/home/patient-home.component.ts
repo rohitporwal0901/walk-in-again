@@ -173,6 +173,8 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
   showPaymentSheet = signal<boolean>(false);
   selectedSessionToPay = signal<Session | null>(null);
   selectedMethod = signal<'UPI' | 'Card' | 'Cash'>('UPI');
+  selectedUpiApp = signal<string>('PhonePe');
+  dismissPayment = signal<boolean>(false);
   paymentError = signal<string>('');
 
   // ─── Rapido-Style Swipe to Pay State ─────────────────────────────────────────
