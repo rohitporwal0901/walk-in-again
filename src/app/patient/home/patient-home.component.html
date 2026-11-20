@@ -392,7 +392,7 @@
           </div>
 
           <!-- CREDIT CARD -->
-          <div class="cc"><div class="ccin" id="ccin">
+          <div class="cc"><div class="ccin" id="ccin" [class.flip]="selectedMethod() === 'Card'">
             <div class="face front">
               <div class="r">
                 <div style="display:flex;align-items:center"><div class="chip"></div><span class="nfc">)))</span></div>
@@ -404,6 +404,20 @@
                 <div><div class="l" id="l1">CARD HOLDER</div><b id="nm">{{ patientName() || 'PATIENT' }}</b></div>
                 <div><div class="l">VALID THRU</div><b id="ex">NOW</b></div>
                 <div class="net"><i></i><i></i></div>
+              </div>
+            </div>
+            <div class="face back">
+              <div class="strip"></div>
+              <div class="sig-box">
+                <div class="l">AUTHORISED SIGNATURE</div>
+                <div class="sig">
+                  <div></div>
+                  <b id="cv">849</b>
+                </div>
+              </div>
+              <div class="bk">
+                <div class="bk-tag">🔒 256-Bit Encrypted Health Membership</div>
+                <span>Authorised signature · CVV · Valid for session visit · Non-transferable</span>
               </div>
             </div>
           </div></div>
