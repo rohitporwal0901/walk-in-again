@@ -11,7 +11,8 @@
       </div>
     </div>
     <button class="notif-btn" id="notif-btn" type="button" aria-label="Notifications" routerLink="/worker/history">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F172A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F172A" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
         <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
       </svg>
@@ -19,91 +20,125 @@
     </button>
   </header>
 
-  <!-- 1. HERO PRACTICE PROGRESS CARD (Matched directly to Second Screen Hero Card) -->
-  <div class="practice-hero-card">
-    <!-- BG Image Layer -->
-    <div class="hero-bg-img-wrap" aria-hidden="true">
-      <img src="assets/images/worker-hero-bg.jpg" alt="" class="hero-bg-img" />
-      <div class="hero-bg-gradient-tint"></div>
-    </div>
-
-    <div class="hero-info">
-      <span class="hero-label">TODAY'S CLINIC PRACTICE</span>
-      <div class="hero-count-row">
-        <span class="count-numbers">{{ completedTodayCount() }} / {{ todaySessions().length }}</span>
-      </div>
-      <p class="count-sublabel">Sessions Completed Today</p>
-
-      <!-- Rounded Progress Bar -->
-      <div class="progress-bar-container">
-        <div class="progress-bar-track">
-          <div class="progress-bar-fill" [style.width.%]="completionPercentageNumber()"></div>
-        </div>
+  <!-- 1. DOCTOR EXECUTIVE PRACTICE HERO CARD (Modern Clinical Cockpit) -->
+  <div class="doctor-practice-hero-card">
+    <div class="hero-main-content">
+      <!-- Tag / Clinical Shift Badge -->
+      <div class="hero-top-badge">
+        <span class="badge-icon">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+        </span>
+        <span class="badge-text">TODAY'S CLINIC PRACTICE</span>
+        <span class="badge-dot-live"></span>
       </div>
 
-      <!-- Hero Sub Footer -->
-      <div class="hero-sub-meta">
-        <span class="meta-pill">
-          <span class="pill-dot-live"></span>
+      <!-- Main Count Display -->
+      <div class="hero-count-group">
+        <span class="count-big">{{ completedTodayCount() }}</span>
+        <span class="count-denom">/ {{ todaySessions().length }}</span>
+      </div>
+      <p class="count-desc">Sessions Completed Today</p>
+
+      <!-- Meta Badges (Completed % & Billed Amount) -->
+      <div class="hero-meta-badges">
+        <span class="meta-badge badge-completed">
+          <span class="dot-green"></span>
           {{ completionRate() }} Completed
         </span>
-        <span class="meta-pill pill-rev">
+        <span class="meta-badge badge-revenue">
           ₹{{ totalEarnings().toLocaleString('en-IN') }} Billed
         </span>
       </div>
     </div>
 
-    <!-- Right Medical Vector / Physio Art -->
-    <div class="hero-illustration" aria-hidden="true">
-      <img src="assets/images/hero-doctor-practice.jpg" alt="Doctor Physiotherapy Practice" class="hero-img" />
+    <!-- Right Side: Circular Radial Progress Ring -->
+    <div class="hero-radial-gauge" aria-label="Shift Completion Gauge">
+      <div class="radial-ring-box">
+        <svg class="radial-svg" viewBox="0 0 92 92" width="88" height="88">
+          <defs>
+            <linearGradient id="doctorRadialGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#0284C7" />
+              <stop offset="100%" stop-color="#38BDF8" />
+            </linearGradient>
+          </defs>
+          <!-- Background track -->
+          <circle cx="46" cy="46" r="38" class="radial-track" />
+          <!-- Animated dynamic progress arc -->
+          <circle
+            cx="46"
+            cy="46"
+            r="38"
+            class="radial-fill"
+            [style.strokeDashoffset]="radialProgressOffset()"
+          />
+        </svg>
+
+        <!-- Centered Metric Inside Radial Ring -->
+        <div class="radial-center-stats">
+          <span class="radial-number">{{ completionPercentageNumber() }}%</span>
+          <span class="radial-caption">Target</span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- 2. TWO SYMMETRICAL METRIC CARDS (Exact Match to Second Screen) -->
-  <div class="metrics-grid">
-    <!-- Card 1: Today's Queue & Intake -->
-    <div class="metric-card" routerLink="/worker/search">
-      <div class="metric-top-row">
-        <div class="icon-bubble icon-teal">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-          </svg>
-        </div>
-        <span class="status-pill open-pill">
-          <span class="green-dot"></span>
-          Live Queue
-        </span>
+  <!-- 2. ASYMMETRICAL METRICS SECTION (Exact Match to Screenshot 1 Layout) -->
+  <div class="analytics-metrics-grid">
+    <!-- Left Column: Total Earnings & Weekly Bar Chart -->
+    <div class="analytics-card revenue-graph-card" routerLink="/worker/history" role="button" tabindex="0">
+      <div class="analytics-card-header">
+        <span class="analytics-title">Total earnings</span>
+        <span class="badge-pill revenue-pill">Revenue</span>
       </div>
-      <div class="metric-body">
-        <h3 class="metric-title">Today's Queue</h3>
-        <p class="metric-value">{{ todaySessions().length }} Patients</p>
-        <p class="metric-caption">{{ totalPatientsCount() }} Registered in Clinic</p>
+
+      <div class="analytics-card-body">
+        <div class="analytics-main-value">₹{{ totalEarnings().toLocaleString('en-IN') }}</div>
+        <div class="analytics-sub-caption">{{ completedTodayCount() }} completed sessions</div>
+      </div>
+
+      <!-- 7-Day Weekly Bar Graph (Accurate Session Data) -->
+      <div class="weekly-graph-container" aria-label="Weekly Sessions Graph">
+        <div class="bar-col" *ngFor="let item of weeklyBarChartData()"
+          [title]="item.fullDay + ': ' + item.count + ' sessions'">
+          <div class="bar-track">
+            <div class="bar-fill" [class.bar-today]="item.isToday" [style.height.%]="item.heightPercent"></div>
+          </div>
+          <span class="bar-label" [class.label-today]="item.isToday">{{ item.day }}</span>
+        </div>
       </div>
     </div>
 
-    <!-- Card 2: Today's Earnings -->
-    <div class="metric-card" routerLink="/worker/history">
-      <div class="metric-top-row">
-        <div class="icon-bubble icon-blue">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-            <line x1="1" y1="10" x2="23" y2="10"></line>
-          </svg>
+    <!-- Right Column: Stacked 2 Cards -->
+    <div class="right-stacked-metrics">
+      <!-- Right Card 1: Live Queue -->
+      <div class="analytics-card mini-metric-card live-queue-card" routerLink="/worker/search" role="button"
+        tabindex="0">
+        <div class="mini-status-row">
+          <span class="live-dot-pulse"></span>
+          <span class="live-status-label">Live queue</span>
         </div>
-        <span class="status-pill rev-pill">
-          <span class="teal-dot"></span>
-          Revenue
-        </span>
+        <div class="mini-metric-value">{{ todaySessions().length }}</div>
+        <div class="mini-metric-caption">patients today</div>
       </div>
-      <div class="metric-body">
-        <h3 class="metric-title">Total Earnings</h3>
-        <p class="metric-value">₹{{ totalEarnings().toLocaleString('en-IN') }}</p>
-        <p class="metric-caption">{{ completedTodayCount() }} Completed Sessions</p>
+
+      <!-- Right Card 2: Registered in Clinic with Avatars -->
+      <div class="analytics-card mini-metric-card registered-clinic-card" routerLink="/worker/search" role="button"
+        tabindex="0">
+        <div class="mini-header-label">Registered in clinic</div>
+        <div class="mini-metric-value">{{ totalPatientsCount() }}</div>
+
+        <!-- Overlapping Patient Avatar Chips -->
+        <div class="avatar-chips-stack" aria-label="Registered Patients">
+          <div class="avatar-chip" *ngFor="let p of recentPatientAvatars()" [style.background]="p.bg"
+            [style.color]="p.text" [title]="p.name">
+            {{ p.initial }}
+          </div>
+          <div class="avatar-chip chip-more" *ngIf="remainingPatientsCount() > 0" title="More patients">
+            +{{ remainingPatientsCount() }}
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -115,7 +150,8 @@
       <!-- Action 1: Search Patient -->
       <div class="action-item" routerLink="/worker/search" id="qa-search">
         <div class="action-icon-box action-yellow">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
@@ -126,7 +162,8 @@
       <!-- Action 2: New Intake -->
       <div class="action-item" routerLink="/worker/search" id="qa-intake">
         <div class="action-icon-box action-green">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
             <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
             <circle cx="9" cy="7" r="4"></circle>
             <line x1="19" y1="8" x2="19" y2="14"></line>
@@ -139,7 +176,8 @@
       <!-- Action 3: History -->
       <div class="action-item" routerLink="/worker/history" id="qa-history">
         <div class="action-icon-box action-purple">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
             <polyline points="14 2 14 8 20 8"></polyline>
             <line x1="16" y1="13" x2="8" y2="13"></line>
@@ -152,7 +190,8 @@
       <!-- Action 4: Queue -->
       <div class="action-item" routerLink="/worker/search" id="qa-queue">
         <div class="action-icon-box action-orange">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
             <line x1="16" y1="2" x2="16" y2="6"></line>
             <line x1="8" y1="2" x2="8" y2="6"></line>
@@ -175,105 +214,94 @@
     </div>
 
     @if (isLoading()) {
-      <!-- Skeleton Loading State -->
-      <div class="patient-list">
-        @for (i of [1, 2, 3]; track i) {
-          <div class="patient-row-card skeleton-card">
-            <div class="skeleton-circle"></div>
-            <div class="skeleton-lines">
-              <div class="skeleton-line skeleton-title"></div>
-              <div class="skeleton-line skeleton-sub"></div>
-            </div>
-            <div class="skeleton-btn"></div>
-          </div>
-        }
+    <!-- Skeleton Loading State -->
+    <div class="patient-list">
+      @for (i of [1, 2, 3]; track i) {
+      <div class="patient-row-card skeleton-card">
+        <div class="skeleton-circle"></div>
+        <div class="skeleton-lines">
+          <div class="skeleton-line skeleton-title"></div>
+          <div class="skeleton-line skeleton-sub"></div>
+        </div>
+        <div class="skeleton-btn"></div>
       </div>
+      }
+    </div>
     } @else {
-      <!-- Patients List -->
-      <div class="patient-list">
-        @for (session of todaySessions(); track session.sessionId) {
-          <div class="patient-row-card" [id]="'patient-card-' + session.sessionId">
-            <!-- Left: Avatar -->
-            <div
-              class="patient-avatar"
-              [style.background]="getAvatarColor(session.patientName).bg"
-              [style.color]="getAvatarColor(session.patientName).text"
-            >
-              {{ (session.patientName || 'P').charAt(0).toUpperCase() }}
-            </div>
+    <!-- Patients List -->
+    <div class="patient-list">
+      @for (session of todaySessions(); track session.sessionId) {
+      <div class="patient-row-card" [id]="'patient-card-' + session.sessionId">
+        <!-- Left: Avatar -->
+        <div class="patient-avatar" [style.background]="getAvatarColor(session.patientName).bg"
+          [style.color]="getAvatarColor(session.patientName).text">
+          {{ (session.patientName || 'P').charAt(0).toUpperCase() }}
+        </div>
 
-            <!-- Middle: Name & Status Time -->
-            <div class="patient-details">
-              <h3 class="patient-name">{{ session.patientName }}</h3>
-              <p class="patient-meta">
-                @if (session.status === 'completed') {
-                  <span class="completed-meta">Ended at {{ getEndTime(session) }} ({{ session.duration || 1 }}m)</span>
-                } @else if (session.status === 'active') {
-                  <span class="active-badge-text">● In Progress</span>
-                } @else {
-                  <span>{{ session.timeSlot || '10:30 AM' }}</span>
-                }
-              </p>
-            </div>
+        <!-- Middle: Name & Status Time -->
+        <div class="patient-details">
+          <h3 class="patient-name">{{ session.patientName }}</h3>
+          <p class="patient-meta">
+            @if (session.status === 'completed') {
+            <span class="completed-meta">Ended at {{ getEndTime(session) }} ({{ session.duration || 1 }}m)</span>
+            } @else if (session.status === 'active') {
+            <span class="active-badge-text">● In Progress</span>
+            } @else {
+            <span>{{ session.timeSlot || '10:30 AM' }}</span>
+            }
+          </p>
+        </div>
 
-            <!-- Right: Pill Action (Completed or Start) -->
-            <div class="patient-action">
-              @if (session.status === 'completed') {
-                <span class="status-badge status-completed">Completed</span>
-              } @else if (session.status === 'active') {
-                <button
-                  type="button"
-                  class="btn-start btn-active"
-                  (click)="startSession(session)"
-                  [id]="'start-' + session.sessionId"
-                >
-                  Resume
-                </button>
-              } @else if (session.status === 'pending_otp') {
-                <button
-                  type="button"
-                  class="btn-start btn-active"
-                  routerLink="/worker/search"
-                  [id]="'start-' + session.sessionId"
-                >
-                  Enter OTP
-                </button>
-              } @else {
-                <button
-                  type="button"
-                  class="btn-start"
-                  (click)="startSession(session)"
-                  [id]="'start-' + session.sessionId"
-                >
-                  Start
-                </button>
-              }
-            </div>
-          </div>
-        }
-
-        <!-- Empty Queue State -->
-        @if (todaySessions().length === 0) {
-          <div class="empty-queue-card">
-            <div class="empty-icon-wrap">
-              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"></path>
-                <path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"></path>
-                <circle cx="20" cy="10" r="2"></circle>
-              </svg>
-            </div>
-            <h3 class="empty-title">No Patients in Queue</h3>
-            <p class="empty-subtitle">Ready for consultations. Search or intake a walk-in patient to start a therapy session.</p>
-            <button class="btn-intake-primary" routerLink="/worker/search" type="button" id="empty-intake-btn">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
-              <span>Intake Walk-In Patient</span>
-            </button>
-          </div>
-        }
+        <!-- Right: Pill Action (Completed or Start) -->
+        <div class="patient-action">
+          @if (session.status === 'completed') {
+          <span class="status-badge status-completed">Completed</span>
+          } @else if (session.status === 'active') {
+          <button type="button" class="btn-start btn-active" (click)="startSession(session)"
+            [id]="'start-' + session.sessionId">
+            Resume
+          </button>
+          } @else if (session.status === 'pending_otp') {
+          <button type="button" class="btn-start btn-active" routerLink="/worker/search"
+            [id]="'start-' + session.sessionId">
+            Enter OTP
+          </button>
+          } @else {
+          <button type="button" class="btn-start" (click)="startSession(session)" [id]="'start-' + session.sessionId">
+            Start
+          </button>
+          }
+        </div>
       </div>
+      }
+
+      <!-- Empty Queue State -->
+      @if (todaySessions().length === 0) {
+      <div class="empty-queue-card">
+        <div class="empty-icon-wrap">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3">
+            </path>
+            <path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"></path>
+            <circle cx="20" cy="10" r="2"></circle>
+          </svg>
+        </div>
+        <h3 class="empty-title">No Patients in Queue</h3>
+        <p class="empty-subtitle">Ready for consultations. Search or intake a walk-in patient to start a therapy
+          session.</p>
+        <button class="btn-intake-primary" routerLink="/worker/search" type="button" id="empty-intake-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>Intake Walk-In Patient</span>
+        </button>
+      </div>
+      }
+    </div>
     }
   </section>
 
@@ -284,7 +312,8 @@
       <p>Search registered patients by Mobile or Name</p>
     </div>
     <button class="banner-search-btn" routerLink="/worker/search" id="quick-search" type="button">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round">
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>

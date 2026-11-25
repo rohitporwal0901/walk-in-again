@@ -122,241 +122,109 @@
 }
 
 // ─── 1. Hero Practice Progress Card (Exact Match to Second Screen) ────────────
-.practice-hero-card {
-  background: linear-gradient(135deg, #D4EDFA 0%, #BFE7FA 50%, #B2E2F9 100%);
-  border: 1.5px solid rgba(255, 255, 255, 0.95);
+// ─── 1. Doctor Executive Practice Hero Card (Option 3: Modern Clinical Cockpit) ──
+.doctor-practice-hero-card {
+  background: #FFFFFF;
+  border: 1.5px solid rgba(186, 230, 253, 0.85);
   border-radius: 24px;
-  padding: 18px 18px 16px;
+  padding: 20px 20px 18px;
   box-shadow: 
-    0 12px 32px -4px rgba(2, 132, 199, 0.18),
-    0 4px 12px rgba(7, 31, 54, 0.04),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.95);
+    0 10px 28px -4px rgba(2, 132, 199, 0.08),
+    0 2px 6px rgba(15, 23, 42, 0.03);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
   position: relative;
   overflow: hidden;
-  min-height: 144px;
   margin-bottom: 16px;
+  background-image: 
+    radial-gradient(circle at 100% 0%, rgba(224, 242, 254, 0.5) 0%, transparent 60%),
+    radial-gradient(circle at 0% 100%, rgba(240, 249, 255, 0.8) 0%, transparent 50%);
 
-  .hero-bg-img-wrap {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    overflow: hidden;
-    border-radius: 24px;
-
-    .hero-bg-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0.35;
-      mix-blend-mode: multiply;
-      transform: scale(1.02);
-    }
-
-    .hero-bg-gradient-tint {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        90deg,
-        rgba(255, 255, 255, 0.95) 0%,
-        rgba(255, 255, 255, 0.84) 48%,
-        rgba(255, 255, 255, 0.28) 78%,
-        transparent 100%
-      );
-    }
-  }
-
-  .hero-info {
+  .hero-main-content {
     flex: 1;
     z-index: 2;
 
-    .hero-label {
+    .hero-top-badge {
       display: inline-flex;
       align-items: center;
-      font-size: 10.5px;
-      font-weight: 850;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 800;
       color: #0369A1;
-      background: rgba(2, 132, 199, 0.12);
-      border: 1px solid rgba(2, 132, 199, 0.28);
-      padding: 3px 9px;
-      border-radius: 6px;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin-bottom: 7px;
+      background: #F0F9FF;
+      border: 1px solid rgba(2, 132, 199, 0.22);
+      padding: 4px 10px;
+      border-radius: 9999px;
+      letter-spacing: 0.03em;
+      margin-bottom: 8px;
+
+      .badge-icon {
+        display: inline-flex;
+        align-items: center;
+        color: #0284C7;
+      }
+
+      .badge-dot-live {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #10B981;
+        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
+      }
     }
 
-    .hero-count-row {
+    .hero-count-group {
       display: flex;
       align-items: baseline;
+      gap: 5px;
 
-      .count-numbers {
-        font-size: 34px;
+      .count-big {
+        font-size: 36px;
         font-weight: 900;
-        color: #071F36;
-        line-height: 1.1;
-        letter-spacing: -0.025em;
+        color: #0F172A;
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+      }
+
+      .count-denom {
+        font-size: 19px;
+        font-weight: 700;
+        color: #94A3B8;
+        letter-spacing: -0.01em;
       }
     }
 
-    .count-sublabel {
+    .count-desc {
       font-size: 12.5px;
-      font-weight: 700;
-      color: #0F172A;
-      margin: 4px 0 12px;
+      font-weight: 600;
+      color: #64748B;
+      margin: 3px 0 12px;
+      letter-spacing: -0.01em;
     }
 
-    .progress-bar-container {
-      width: 155px;
-      max-width: 100%;
-
-      .progress-bar-track {
-        height: 8px;
-        background: rgba(7, 31, 54, 0.12);
-        border-radius: 999px;
-        overflow: hidden;
-        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
-
-        .progress-bar-fill {
-          height: 100%;
-          background: linear-gradient(90deg, #0284C7 0%, #0D9488 100%);
-          border-radius: 999px;
-          transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-          box-shadow: 0 2px 6px rgba(13, 148, 136, 0.4);
-        }
-      }
-    }
-
-    .hero-sub-meta {
+    .hero-meta-badges {
       display: flex;
       align-items: center;
-      gap: 6px;
-      margin-top: 11px;
+      gap: 8px;
       flex-wrap: wrap;
 
-      .meta-pill {
+      .meta-badge {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
-        font-size: 11px;
-        font-weight: 800;
-        background: #FFFFFF;
-        color: #0369A1;
-        padding: 3px 9px;
-        border-radius: 999px;
-        border: 1px solid rgba(2, 132, 199, 0.22);
-        box-shadow: 0 2px 6px rgba(7, 31, 54, 0.06);
-
-        .pill-dot-live {
-          width: 5px;
-          height: 5px;
-          border-radius: 50%;
-          background: #0284C7;
-        }
-
-        &.pill-rev {
-          color: #071F36;
-          font-weight: 850;
-          border-color: rgba(7, 31, 54, 0.15);
-        }
-      }
-    }
-  }
-
-  .hero-illustration {
-    width: 120px;
-    height: 120px;
-    flex-shrink: 0;
-    margin-right: -6px;
-    margin-bottom: -4px;
-    z-index: 1;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    border-radius: 18px;
-    overflow: hidden;
-
-    .hero-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      mix-blend-mode: multiply;
-      border-radius: 18px;
-      filter: drop-shadow(0 6px 12px rgba(7, 31, 54, 0.1));
-    }
-  }
-}
-
-// ─── 2. Symmetrical 2 Metric Cards Grid (Exact Match to Second Screen) ────────
-.metrics-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 20px;
-
-  .metric-card {
-    background: #FFFFFF;
-    border-radius: 22px;
-    padding: 16px;
-    border: 1.5px solid rgba(226, 232, 240, 0.9);
-    box-shadow: 
-      0 6px 20px -2px rgba(7, 31, 54, 0.04),
-      0 1px 3px rgba(7, 31, 54, 0.02);
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    min-height: 124px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    &:hover, &:active {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 28px rgba(7, 31, 54, 0.08);
-      border-color: rgba(186, 230, 253, 0.9);
-    }
-
-    .metric-top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-
-      .icon-bubble {
-        width: 38px;
-        height: 38px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        &.icon-teal {
-          background: #E0F2FE;
-          color: #0284C7;
-        }
-
-        &.icon-blue {
-          background: #F3E8FF;
-          color: #9333EA;
-        }
-      }
-
-      .status-pill {
-        font-size: 11px;
+        gap: 5px;
+        font-size: 11.5px;
         font-weight: 750;
-        padding: 3px 8px;
+        padding: 4px 10px;
         border-radius: 9999px;
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
 
-        &.open-pill {
+        &.badge-completed {
           background: #ECFDF5;
           color: #059669;
           border: 1px solid rgba(16, 185, 129, 0.25);
 
-          .green-dot {
+          .dot-green {
             width: 6px;
             height: 6px;
             border-radius: 50%;
@@ -364,54 +232,322 @@
           }
         }
 
-        &.rev-pill {
+        &.badge-revenue {
           background: #F0F9FF;
           color: #0284C7;
           border: 1px solid rgba(2, 132, 199, 0.22);
-
-          .teal-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #0284C7;
-          }
         }
       }
     }
+  }
 
-    .metric-body {
-      .metric-title {
-        font-size: 12px;
-        font-weight: 600;
-        color: #64748B;
-        margin: 0 0 3px;
-        letter-spacing: -0.01em;
+  // Right Side Circular Radial Gauge
+  .hero-radial-gauge {
+    flex-shrink: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .radial-ring-box {
+      position: relative;
+      width: 88px;
+      height: 88px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .radial-svg {
+        transform: rotate(-90deg); // Starts arc at 12 o'clock position
+        display: block;
+
+        .radial-track {
+          fill: none;
+          stroke: #E0F2FE;
+          stroke-width: 7;
+        }
+
+        .radial-fill {
+          fill: none;
+          stroke: url(#doctorRadialGrad);
+          stroke-width: 7;
+          stroke-linecap: round;
+          stroke-dasharray: 238.76;
+          transition: stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
       }
 
-      .metric-value {
-        font-size: 17.5px;
-        font-weight: 850;
-        color: #0F172A;
-        margin: 0 0 3px;
-        letter-spacing: -0.02em;
-        line-height: 1.2;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
+      .radial-center-stats {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        pointer-events: none;
 
-      .metric-caption {
-        font-size: 11px;
-        font-weight: 500;
-        color: #94A3B8;
-        margin: 0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        .radial-number {
+          font-size: 18px;
+          font-weight: 850;
+          color: #0F172A;
+          letter-spacing: -0.02em;
+          line-height: 1.1;
+        }
+
+        .radial-caption {
+          font-size: 9.5px;
+          font-weight: 750;
+          color: #64748B;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          margin-top: 1px;
+        }
       }
     }
   }
 }
+
+
+// ─── 2. Asymmetrical Metrics Grid (Exact Match to Screenshot 1 Layout) ────────
+.analytics-metrics-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+  align-items: stretch;
+
+  .analytics-card {
+    background: #FFFFFF;
+    border-radius: 22px;
+    border: 1.5px solid rgba(226, 232, 240, 0.9);
+    box-shadow: 
+      0 6px 20px -2px rgba(7, 31, 54, 0.04),
+      0 1px 3px rgba(7, 31, 54, 0.02);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    outline: none;
+
+    &:hover, &:active {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(7, 31, 54, 0.08);
+      border-color: rgba(186, 230, 253, 0.95);
+    }
+  }
+
+  // Left Column: Total Earnings + Weekly Bar Graph
+  .revenue-graph-card {
+    padding: 16px 14px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .analytics-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+
+      .analytics-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: #64748B;
+        letter-spacing: -0.01em;
+      }
+
+      .badge-pill.revenue-pill {
+        font-size: 11px;
+        font-weight: 750;
+        padding: 3px 9px;
+        border-radius: 9999px;
+        background: #F0F9FF;
+        color: #0284C7;
+        border: 1px solid rgba(2, 132, 199, 0.2);
+      }
+    }
+
+    .analytics-card-body {
+      .analytics-main-value {
+        font-size: 21px;
+        font-weight: 850;
+        color: #0F172A;
+        letter-spacing: -0.025em;
+        line-height: 1.2;
+        margin-bottom: 2px;
+      }
+
+      .analytics-sub-caption {
+        font-size: 11px;
+        font-weight: 500;
+        color: #94A3B8;
+        line-height: 1.3;
+      }
+    }
+
+    // Weekly Graph Container
+    .weekly-graph-container {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 6px;
+      padding-top: 18px;
+      margin-top: auto;
+      height: 96px;
+
+      .bar-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        flex: 1;
+        height: 100%;
+        justify-content: flex-end;
+
+        .bar-track {
+          width: 100%;
+          max-width: 13px;
+          height: 66px;
+          background: #F1F5F9;
+          border-radius: 9999px;
+          display: flex;
+          align-items: flex-end;
+          overflow: hidden;
+
+          .bar-fill {
+            width: 100%;
+            border-radius: 9999px;
+            background: #BAE6FD; // Soft sky-blue pastel like Screenshot 1
+            transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s;
+
+            &.bar-today {
+              background: #38BDF8; // Active/today prominent vibrant sky-blue
+            }
+          }
+        }
+
+        .bar-label {
+          font-size: 10.5px;
+          font-weight: 600;
+          color: #94A3B8;
+          text-transform: uppercase;
+          line-height: 1;
+
+          &.label-today {
+            color: #0284C7;
+            font-weight: 800;
+          }
+        }
+      }
+    }
+  }
+
+  // Right Column: Stack of 2 Cards
+  .right-stacked-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+
+    .mini-metric-card {
+      padding: 13px 15px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 90px;
+
+      &.live-queue-card {
+        .mini-status-row {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          margin-bottom: 2px;
+
+          .live-dot-pulse {
+            width: 6.5px;
+            height: 6.5px;
+            border-radius: 50%;
+            background: #10B981;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+          }
+
+          .live-status-label {
+            font-size: 12px;
+            font-weight: 750;
+            color: #059669;
+            letter-spacing: -0.01em;
+          }
+        }
+
+        .mini-metric-value {
+          font-size: 24px;
+          font-weight: 850;
+          color: #0F172A;
+          letter-spacing: -0.025em;
+          line-height: 1.15;
+          margin: 3px 0 1px;
+        }
+
+        .mini-metric-caption {
+          font-size: 11px;
+          font-weight: 500;
+          color: #64748B;
+        }
+      }
+
+      &.registered-clinic-card {
+        .mini-header-label {
+          font-size: 12px;
+          font-weight: 600;
+          color: #64748B;
+          letter-spacing: -0.01em;
+          margin-bottom: 2px;
+        }
+
+        .mini-metric-value {
+          font-size: 24px;
+          font-weight: 850;
+          color: #0F172A;
+          letter-spacing: -0.025em;
+          line-height: 1.15;
+          margin: 2px 0 6px;
+        }
+
+        .avatar-chips-stack {
+          display: flex;
+          align-items: center;
+          margin-left: 2px;
+
+          .avatar-chip {
+            width: 23px;
+            height: 23px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 800;
+            border: 2px solid #FFFFFF;
+            margin-left: -6px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+
+            &:first-child {
+              margin-left: 0;
+            }
+
+            &.chip-more {
+              background: #F1F5F9;
+              color: #0284C7;
+              font-size: 9px;
+              font-weight: 800;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 
 // ─── 3. Quick Actions Section (Exact Match to Second Screen) ──────────────────
 .quick-actions-section {
