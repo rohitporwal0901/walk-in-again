@@ -356,7 +356,7 @@ export class AdminPatientsComponent implements OnInit, OnDestroy {
 
     return this.patients().map(p => {
       const sub = subs[p.uid] || (p.mobileNumber ? subs[p.mobileNumber] : null);
-      const sessDone = sessions[p.uid] || (p.mobileNumber ? sessions[p.mobileNumber] : 0);
+      const sessDone = sessions[p.uid] || (p.mobileNumber ? sessions[p.mobileNumber] || 0 : 0);
 
       const hasActiveSub = !!(sub && (sub.remainingSessions ?? 0) > 0 && sub.status === 'active');
       return {
@@ -378,7 +378,7 @@ export class AdminPatientsComponent implements OnInit, OnDestroy {
   );
 
   totalCompletedTreatments = computed(() =>
-    this.patientRows().reduce((sum, p) => sum + p.completedSessions, 0)
+    this.patientRows().reduce((sum, p) => sum + (p.completedSessions || 0), 0)
   );
 
   filteredPatients = computed(() => {
