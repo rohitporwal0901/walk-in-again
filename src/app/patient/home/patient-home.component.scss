@@ -20,6 +20,20 @@
   background-color: transparent;
 
   .user-greeting-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .patient-header-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid #FFFFFF;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15);
+      flex-shrink: 0;
+    }
+
     .pt-name {
       font-size: 24px;
       font-weight: 850;
@@ -830,9 +844,10 @@
       min-width: 0;
 
       .dr-avatar {
-        width: 40px;
-        height: 40px;
+        width: 44px;
+        height: 44px;
         border-radius: 50%;
+        overflow: hidden;
         background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
         color: #FFFFFF;
         display: flex;

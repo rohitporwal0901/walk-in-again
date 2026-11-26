@@ -2,6 +2,7 @@ import { Component, signal, computed, inject, OnInit, OnDestroy } from '@angular
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Firestore, collection, onSnapshot, Unsubscribe } from '@angular/fire/firestore';
+import { AvatarService } from '../../core/services/avatar.service';
 import { Transaction, PaymentMethod, PaymentStatus } from '../../core/models/transaction.model';
 
 interface FormattedTransaction {
@@ -232,7 +233,7 @@ interface FormattedTransaction {
                     <td class="col-patient">
                       <div class="patient-cell">
                         <div class="patient-avatar">
-                          {{ (txn.patientName || 'P').charAt(0).toUpperCase() }}
+                          <img [src]="avatarService.getPatientAvatar(txn.patientName)" [alt]="txn.patientName" class="avatar-photo-img" />
                         </div>
                         <div class="patient-info">
                           <strong class="p-name">{{ txn.patientName }}</strong>
@@ -982,17 +983,16 @@ interface FormattedTransaction {
     }
 
     .patient-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      overflow: hidden;
       background: #E0F2FE;
       color: #0284C7;
       border: 1px solid #BAE6FD;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
-      font-weight: 800;
       flex-shrink: 0;
     }
 
@@ -1497,6 +1497,7 @@ interface FormattedTransaction {
 })
 export class AdminTransactionsComponent implements OnInit, OnDestroy {
   private firestore = inject(Firestore);
+  readonly avatarService = inject(AvatarService);
   private txnsUnsub: Unsubscribe | null = null;
 
   transactions = signal<FormattedTransaction[]>([]);

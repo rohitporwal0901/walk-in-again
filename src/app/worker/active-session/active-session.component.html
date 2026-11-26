@@ -21,7 +21,7 @@
   <!-- Patient Profile Header Card -->
   <div class="patient-hero-card animate-fade-in-up">
     <div class="patient-hero-avatar">
-      {{ (patientName() || 'P').charAt(0).toUpperCase() }}
+      <img [src]="avatarService.getPatientAvatar(patientName())" [alt]="patientName()" class="avatar-photo-img" />
     </div>
     <div class="patient-hero-details">
       <div class="patient-name-row">
@@ -213,7 +213,7 @@
   <div class="summary-card animate-fade-in-up">
     <div class="summary-pt-row">
       <div class="summary-pt-av">
-        {{ (patientName() || 'P').charAt(0).toUpperCase() }}
+        <img [src]="avatarService.getPatientAvatar(patientName())" [alt]="patientName()" class="avatar-photo-img" />
       </div>
       <div class="summary-pt-info">
         <div class="pt-title-wrap">

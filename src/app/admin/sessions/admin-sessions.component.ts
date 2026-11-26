@@ -2,6 +2,7 @@ import { Component, signal, computed, inject, OnInit, OnDestroy } from '@angular
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Firestore, collection, onSnapshot, Unsubscribe } from '@angular/fire/firestore';
+import { AvatarService } from '../../core/services/avatar.service';
 import { Session, calculateSessionEarning } from '../../core/models/session.model';
 
 interface FormattedSession {
@@ -227,7 +228,7 @@ interface FormattedSession {
                     <td class="col-patient">
                       <div class="patient-cell">
                         <div class="patient-avatar">
-                          {{ (sess.patientName || 'P').charAt(0).toUpperCase() }}
+                          <img [src]="avatarService.getPatientAvatar(sess.patientName)" [alt]="sess.patientName" class="avatar-photo-img" />
                         </div>
                         <div class="patient-info">
                           <strong class="p-name">{{ sess.patientName }}</strong>
@@ -239,7 +240,9 @@ interface FormattedSession {
                     <!-- Worker -->
                     <td class="col-worker">
                       <div class="worker-pill">
-                        <span class="worker-dot"></span>
+                        <div class="worker-mini-avatar">
+                          <img [src]="avatarService.getWorkerAvatar(sess.workerName)" [alt]="sess.workerName" class="avatar-photo-img" />
+                        </div>
                         <span>{{ sess.workerName }}</span>
                       </div>
                     </td>
@@ -991,18 +994,27 @@ interface FormattedSession {
     }
 
     .patient-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      overflow: hidden;
       background: #E0F2FE;
       color: #0284C7;
       border: 1px solid #BAE6FD;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
-      font-weight: 800;
       flex-shrink: 0;
+    }
+
+    .worker-mini-avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      display: inline-flex;
+      border: 1px solid rgba(2, 132, 199, 0.3);
     }
 
     .patient-info {
@@ -1581,6 +1593,7 @@ interface FormattedSession {
 })
 export class AdminSessionsComponent implements OnInit, OnDestroy {
   private firestore = inject(Firestore);
+  readonly avatarService = inject(AvatarService);
   private sessionsUnsub: Unsubscribe | null = null;
 
   sessions = signal<FormattedSession[]>([]);

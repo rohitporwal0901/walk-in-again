@@ -100,6 +100,7 @@
     width: 46px;
     height: 46px;
     border-radius: 50%;
+    overflow: hidden;
     background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);
     color: #0284C7;
     font-size: 18px;
@@ -669,6 +670,7 @@
       width: 46px;
       height: 46px;
       border-radius: 50%;
+      overflow: hidden;
       background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
       color: #FFFFFF;
       display: flex;

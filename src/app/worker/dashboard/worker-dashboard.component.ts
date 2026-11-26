@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { Firestore, collection, query, where, onSnapshot, Unsubscribe } from '@angular/fire/firestore';
 import { AuthService } from '../../core/services/auth.service';
 import { SessionService } from '../../core/services/session.service';
+import { AvatarService } from '../../core/services/avatar.service';
 import { Session, calculateSessionEarning } from '../../core/models/session.model';
 
 @Component({
@@ -16,6 +17,7 @@ import { Session, calculateSessionEarning } from '../../core/models/session.mode
 export class WorkerDashboardComponent implements OnDestroy {
   private auth = inject(AuthService);
   private sessionService = inject(SessionService);
+  readonly avatarService = inject(AvatarService);
   private firestore = inject(Firestore);
   private router = inject(Router);
 
@@ -23,6 +25,9 @@ export class WorkerDashboardComponent implements OnDestroy {
   private usersUnsub: Unsubscribe | null = null;
 
   readonly workerName = this.auth.userName;
+  readonly doctorAvatarUrl = computed(() => this.avatarService.getUserAvatar(this.auth.currentUser()));
+  isUploadingAvatar = signal<boolean>(false);
+  avatarToastMsg = signal<string>('');
 
   /**
    * Proper doctor name with "Dr." prefix and full name (e.g. "Dr. Rahul Sharma")
@@ -305,5 +310,29 @@ export class WorkerDashboardComponent implements OnDestroy {
 
   startSession(session: Session) {
     this.router.navigate(['/worker/session', session.sessionId]);
+  }
+
+  async onAvatarSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+    const file = input.files[0];
+
+    try {
+      this.isUploadingAvatar.set(true);
+      const base64 = await this.avatarService.compressAndConvertToBase64(file);
+      await this.auth.updateUserAvatar(base64);
+      this.showAvatarToast('Doctor photo updated! ✓');
+    } catch (err: any) {
+      console.error('Error updating doctor avatar:', err);
+      this.showAvatarToast(err.message || 'Failed to update photo');
+    } finally {
+      this.isUploadingAvatar.set(false);
+      input.value = '';
+    }
+  }
+
+  private showAvatarToast(msg: string): void {
+    this.avatarToastMsg.set(msg);
+    setTimeout(() => this.avatarToastMsg.set(''), 3000);
   }
 }

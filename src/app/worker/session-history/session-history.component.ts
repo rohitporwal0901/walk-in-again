@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { SessionService } from '../../core/services/session.service';
 import { AuthService } from '../../core/services/auth.service';
+import { AvatarService } from '../../core/services/avatar.service';
 import { Session, calculateSessionEarning } from '../../core/models/session.model';
 import { Unsubscribe } from '@angular/fire/firestore';
 
@@ -16,6 +17,7 @@ import { Unsubscribe } from '@angular/fire/firestore';
 export class SessionHistoryComponent implements OnDestroy {
   private sessionService = inject(SessionService);
   private auth = inject(AuthService);
+  readonly avatarService = inject(AvatarService);
   private router = inject(Router);
 
   calculateSessionEarning = calculateSessionEarning;

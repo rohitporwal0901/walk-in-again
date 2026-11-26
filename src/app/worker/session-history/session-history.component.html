@@ -70,9 +70,8 @@
         <!-- Top Row: Avatar, Name, Phone, Plan Tag & Highlighted Earning Chip -->
         <div class="card-top">
           <div class="patient-main">
-            <div class="patient-avatar" [style.background]="getAvatarColor(session.patientName).bg"
-              [style.color]="getAvatarColor(session.patientName).text">
-              {{ (session.patientName || 'P').charAt(0).toUpperCase() }}
+            <div class="patient-avatar">
+              <img [src]="avatarService.getPatientAvatar(session.patientName)" [alt]="session.patientName" class="avatar-photo-img" />
             </div>
 
             <div class="patient-info">

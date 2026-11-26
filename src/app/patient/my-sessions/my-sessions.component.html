@@ -78,6 +78,9 @@
             }
           </p>
           <div class="session-therapist-row">
+            <div class="therapist-mini-av">
+              <img [src]="avatarService.getWorkerAvatar(session.workerName)" [alt]="session.workerName" class="avatar-photo-img" />
+            </div>
             <span class="therapist-name">{{ formatDrName(session.workerName) }}</span>
             <span class="meta-dot">•</span>
             <span class="visit-tag">Home Visit</span>

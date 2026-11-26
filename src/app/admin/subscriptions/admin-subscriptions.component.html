@@ -198,7 +198,7 @@
             <td class="col-patient">
               <div class="patient-cell">
                 <div class="avatar-bubble">
-                  {{ (sub.patientName || 'P').charAt(0).toUpperCase() }}
+                  <img [src]="avatarService.getPatientAvatar(sub.patientName)" [alt]="sub.patientName" class="avatar-photo-img" />
                 </div>
                 <div class="patient-text">
                   <strong class="name">{{ sub.patientName }}</strong>

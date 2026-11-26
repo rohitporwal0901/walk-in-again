@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SessionService } from '../../core/services/session.service';
 import { PaymentService } from '../../core/services/payment.service';
 import { AuthService } from '../../core/services/auth.service';
+import { AvatarService } from '../../core/services/avatar.service';
 import { TherapyItem, Session, calculateSessionEarning } from '../../core/models/session.model';
 import { Unsubscribe } from '@angular/fire/firestore';
 
@@ -19,6 +20,7 @@ export class ActiveSessionComponent implements OnInit, OnDestroy {
   private sessionService = inject(SessionService);
   private paymentService = inject(PaymentService);
   private authService = inject(AuthService);
+  readonly avatarService = inject(AvatarService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 

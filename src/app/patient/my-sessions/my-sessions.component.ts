@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Session } from '../../core/models/session.model';
 import { SessionService } from '../../core/services/session.service';
 import { AuthService } from '../../core/services/auth.service';
+import { AvatarService } from '../../core/services/avatar.service';
 import { Unsubscribe } from '@angular/fire/firestore';
 
 export type FilterTab = 'All' | 'Completed' | 'Active';
@@ -18,6 +19,7 @@ export type FilterTab = 'All' | 'Completed' | 'Active';
 export class MySessionsComponent implements OnInit, OnDestroy {
   private sessionService = inject(SessionService);
   private auth = inject(AuthService);
+  readonly avatarService = inject(AvatarService);
   private router = inject(Router);
   private location = inject(Location);
 

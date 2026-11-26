@@ -357,9 +357,10 @@
         gap: 12px;
 
         .avatar-bubble {
-          width: 36px;
-          height: 36px;
-          border-radius: 10px;
+          width: 38px;
+          height: 38px;
+          border-radius: 12px;
+          overflow: hidden;
           background: #E0F2FE;
           color: #0284C7;
           border: 1px solid #BAE6FD;

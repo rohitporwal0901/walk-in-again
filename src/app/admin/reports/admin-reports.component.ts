@@ -1,6 +1,7 @@
 import { Component, signal, computed, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Firestore, collection, onSnapshot, Unsubscribe } from '@angular/fire/firestore';
+import { AvatarService } from '../../core/services/avatar.service';
 import { Transaction } from '../../core/models/transaction.model';
 import { Session, calculateSessionEarning } from '../../core/models/session.model';
 import { User } from '../../core/models/user.model';
@@ -209,7 +210,9 @@ interface WorkerPerformance {
                 <tr>
                   <td>
                     <div class="physio-cell">
-                      <div class="physio-avatar">{{ w.name.charAt(0) }}</div>
+                      <div class="physio-avatar">
+                        <img [src]="avatarService.getWorkerAvatar(w.name)" [alt]="w.name" class="avatar-photo-img" />
+                      </div>
                       <strong>{{ w.name }}</strong>
                     </div>
                   </td>
@@ -316,7 +319,18 @@ interface WorkerPerformance {
     .report-table td { padding: 13px 18px; font-size: 13px; color: #1E293B; vertical-align: middle; }
 
     .physio-cell { display: flex; align-items: center; gap: 10px; }
-    .physio-avatar { width: 32px; height: 32px; border-radius: 10px; background: linear-gradient(135deg, #0284C7 0%, #0D9488 100%); color: white; display: flex; align-items: center; justify-content: center; font-size: 12.5px; font-weight: 700; }
+    .physio-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #E0F2FE;
+      border: 1px solid #BAE6FD;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
     .sess-pill { background: #E0F2FE; color: #0369A1; padding: 4px 10px; border-radius: 8px; font-size: 11.5px; font-weight: 700; border: 1px solid #BAE6FD; }
     .earnings-val { font-size: 14px; font-weight: 800; color: #0D9488; }
     .avg-val { font-size: 13px; font-weight: 600; color: #475569; }
@@ -327,6 +341,7 @@ interface WorkerPerformance {
 export class AdminReportsComponent implements OnInit, OnDestroy {
   protected readonly Math = Math;
   private firestore = inject(Firestore);
+  readonly avatarService = inject(AvatarService);
 
   private txnsUnsub: Unsubscribe | null = null;
   private sessionsUnsub: Unsubscribe | null = null;

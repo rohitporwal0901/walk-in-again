@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { RouterModule } from '@angular/router';
 import { Firestore, collection, query, where, getDocs, onSnapshot, orderBy, limit, DocumentData } from '@angular/fire/firestore';
 import { AuthService } from '../../core/services/auth.service';
+import { AvatarService } from '../../core/services/avatar.service';
 import { User } from '../../core/models/user.model';
 import { Session, calculateSessionEarning } from '../../core/models/session.model';
 import { Transaction } from '../../core/models/transaction.model';
@@ -77,6 +78,7 @@ export class AdminDashboardComponent implements OnInit {
   private firestore = inject(Firestore);
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
+  readonly avatarService = inject(AvatarService);
 
   selectedPeriod = signal<'Week' | 'Month'>('Month');
   showAddWorkerModal = signal<boolean>(false);

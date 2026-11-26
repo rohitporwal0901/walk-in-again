@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Firestore, collection, query, where, onSnapshot, Unsubscribe } from '@angular/fire/firestore';
 import { AuthService } from '../../core/services/auth.service';
+import { AvatarService } from '../../core/services/avatar.service';
 import { User } from '../../core/models/user.model';
 import { Session, calculateSessionEarning } from '../../core/models/session.model';
 
@@ -142,7 +143,7 @@ interface WorkerRow {
                     <td class="col-physio">
                       <div class="physio-cell">
                         <div class="worker-avatar">
-                          {{ (worker.name || 'W').charAt(0).toUpperCase() }}
+                          <img [src]="avatarService.getWorkerAvatar(worker.name)" [alt]="worker.name" class="avatar-photo-img" />
                         </div>
                         <div class="worker-name-block">
                           <strong class="w-name">{{ worker.name }}</strong>
@@ -354,7 +355,19 @@ interface WorkerRow {
     .workers-table td { padding: 14px 16px; font-size: 13px; color: #1E293B; vertical-align: middle; }
 
     .col-physio .physio-cell { display: flex; align-items: center; gap: 12px; }
-    .worker-avatar { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #0284C7 0%, #0D9488 100%); color: white; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; flex-shrink: 0; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25); }
+    .worker-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #E0F2FE;
+      border: 1.5px solid #BAE6FD;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.15);
+    }
     .worker-name-block { display: flex; flex-direction: column; gap: 1px; }
     .w-name { font-size: 13.5px; font-weight: 700; color: #0F172A; }
     .w-id { font-size: 11px; color: #94A3B8; font-family: monospace; }
@@ -643,6 +656,7 @@ export class AdminWorkersComponent implements OnInit, OnDestroy {
   private firestore = inject(Firestore);
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
+  readonly avatarService = inject(AvatarService);
 
   private usersUnsub: Unsubscribe | null = null;
   private sessionsUnsub: Unsubscribe | null = null;

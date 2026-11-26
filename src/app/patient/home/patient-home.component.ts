@@ -6,6 +6,7 @@ import { SessionService } from '../../core/services/session.service';
 import { SubscriptionService } from '../../core/services/subscription.service';
 import { PaymentService } from '../../core/services/payment.service';
 import { PricingService } from '../../core/services/pricing.service';
+import { AvatarService } from '../../core/services/avatar.service';
 import { Session } from '../../core/models/session.model';
 import { UserSubscription } from '../../core/models/subscription.model';
 import { Unsubscribe } from '@angular/fire/firestore';
@@ -23,6 +24,7 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
   private subscriptionService = inject(SubscriptionService);
   private paymentService = inject(PaymentService);
   public pricingService = inject(PricingService);
+  readonly avatarService = inject(AvatarService);
   private router = inject(Router);
 
   readonly defaultWalkInFee = this.pricingService.walkInFee;
@@ -35,6 +37,10 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
   private subLoaded = false;
 
   readonly patientName = this.auth.userName;
+  readonly userAvatarUrl = computed(() => this.avatarService.getUserAvatar(this.auth.currentUser()));
+  isUploadingAvatar = signal<boolean>(false);
+  avatarToastMsg = signal<string>('');
+
   readonly greeting = computed(() => {
     const h = new Date().getHours();
     if (h < 12) return 'Good Morning';
@@ -334,6 +340,30 @@ export class PatientHomeComponent implements OnInit, OnDestroy {
       this.isPaying.set(false);
       this.resetPaySwipe();
     }
+  }
+
+  async onAvatarSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+    const file = input.files[0];
+
+    try {
+      this.isUploadingAvatar.set(true);
+      const base64 = await this.avatarService.compressAndConvertToBase64(file);
+      await this.auth.updateUserAvatar(base64);
+      this.showAvatarToast('Profile photo updated! ✓');
+    } catch (err: any) {
+      console.error('Error updating avatar:', err);
+      this.showAvatarToast(err.message || 'Failed to update photo');
+    } finally {
+      this.isUploadingAvatar.set(false);
+      input.value = '';
+    }
+  }
+
+  private showAvatarToast(msg: string): void {
+    this.avatarToastMsg.set(msg);
+    setTimeout(() => this.avatarToastMsg.set(''), 3000);
   }
 
   navigate(route: string) {

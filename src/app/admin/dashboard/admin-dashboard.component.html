@@ -205,7 +205,9 @@
           <div class="sub-item-card">
             <div class="sub-head">
               <div class="sub-patient-info">
-                <div class="sub-av">{{ (sub.patientName || 'P').charAt(0).toUpperCase() }}</div>
+                <div class="sub-av">
+                  <img [src]="avatarService.getPatientAvatar(sub.patientName)" [alt]="sub.patientName" class="avatar-photo-img" />
+                </div>
                 <div>
                   <h4 class="sub-patient-name">{{ sub.patientName }}</h4>
                   <span class="sub-plan-tag">{{ sub.planName }}</span>
@@ -322,7 +324,9 @@
           @for (worker of topWorkers(); track worker.name; let i = $index) {
           <div class="worker-rank-item">
             <span class="rank-num">#{{ i + 1 }}</span>
-            <div class="rank-av">{{ worker.initial }}</div>
+            <div class="rank-av">
+              <img [src]="avatarService.getWorkerAvatar(worker.name)" [alt]="worker.name" class="avatar-photo-img" />
+            </div>
             <div class="rank-info">
               <p class="rank-name">{{ worker.name }}</p>
               <p class="rank-sessions">{{ worker.sessions }} sessions · {{ worker.specialization || 'Physiotherapist' }}

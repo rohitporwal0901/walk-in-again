@@ -7,6 +7,7 @@ import { User, PatientProfile } from '../../core/models/user.model';
 import { Session } from '../../core/models/session.model';
 import { AuthService } from '../../core/services/auth.service';
 import { SessionService } from '../../core/services/session.service';
+import { AvatarService } from '../../core/services/avatar.service';
 
 @Component({
   selector: 'app-patient-search',
@@ -19,6 +20,7 @@ export class PatientSearchComponent implements OnInit, OnDestroy {
   private firestore = inject(Firestore);
   private auth = inject(AuthService);
   private sessionService = inject(SessionService);
+  readonly avatarService = inject(AvatarService);
   private router = inject(Router);
 
   searchQuery = signal<string>('');

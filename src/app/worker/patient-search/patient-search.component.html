@@ -56,9 +56,8 @@
     @for (patient of filteredPatients(); track patient.userId; let i = $index) {
     <div class="patient-elevated-card" [id]="'patient-row-' + patient.userId">
       <!-- Left: Avatar (Squircle Matching Reference Screen) -->
-      <div class="patient-avatar" [style.background]="getAvatarColor(patient.name).bg"
-        [style.color]="getAvatarColor(patient.name).text">
-        {{ (patient.name || 'P').charAt(0).toUpperCase() }}
+      <div class="patient-avatar">
+        <img [src]="avatarService.getPatientAvatar(patient.name, patient.gender)" [alt]="patient.name" class="avatar-photo-img" />
       </div>
 
       <!-- Middle: Patient Info -->
@@ -166,9 +165,8 @@
         @if (selectedPatient(); as pt) {
         <div class="selected-patient-box">
           <div class="pt-av-wrapper">
-            <div class="pt-av" [style.background]="getAvatarColor(pt.name).bg"
-              [style.color]="getAvatarColor(pt.name).text">
-              {{ (pt.name || 'P').charAt(0).toUpperCase() }}
+            <div class="pt-av">
+              <img [src]="avatarService.getPatientAvatar(pt.name, pt.gender)" [alt]="pt.name" class="avatar-photo-img" />
             </div>
             <span class="pt-active-dot" aria-hidden="true"></span>
           </div>

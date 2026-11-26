@@ -217,6 +217,18 @@
           <span class="row-value">{{ getTransactionSubtitle(sel) }}</span>
         </div>
 
+        @if (sel.workerName) {
+        <div class="detail-row">
+          <span class="row-label">Attending Doctor</span>
+          <span class="row-value" style="display: inline-flex; align-items: center; gap: 6px;">
+            <span style="width: 20px; height: 20px; border-radius: 50%; overflow: hidden; display: inline-flex;">
+              <img [src]="avatarService.getWorkerAvatar(sel.workerName)" [alt]="sel.workerName" class="avatar-photo-img" />
+            </span>
+            <span>Dr. {{ sel.workerName }}</span>
+          </span>
+        </div>
+        }
+
         <div class="detail-row">
           <span class="row-label">Payment Method</span>
           <span class="row-value">{{ isSubscriptionMethod(sel.paymentMethod) ? 'Subscription Plan (Covered)' :

@@ -2,6 +2,7 @@ import { Component, signal, computed, inject, OnInit, OnDestroy } from '@angular
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Firestore, collection, query, where, onSnapshot, Unsubscribe } from '@angular/fire/firestore';
+import { AvatarService } from '../../core/services/avatar.service';
 import { User } from '../../core/models/user.model';
 import { Session } from '../../core/models/session.model';
 import { UserSubscription } from '../../core/models/subscription.model';
@@ -145,7 +146,7 @@ interface PatientRow {
                     <td class="col-patient">
                       <div class="patient-cell">
                         <div class="avatar-bubble">
-                          {{ (patient.name || 'P').charAt(0).toUpperCase() }}
+                          <img [src]="avatarService.getPatientAvatar(patient.name)" [alt]="patient.name" class="avatar-photo-img" />
                         </div>
                         <div class="patient-text">
                           <strong class="name">{{ patient.name }}</strong>
@@ -283,7 +284,19 @@ interface PatientRow {
     .patients-table td { padding: 14px 16px; font-size: 13px; color: #1E293B; vertical-align: middle; }
 
     .col-patient .patient-cell { display: flex; align-items: center; gap: 12px; }
-    .avatar-bubble { width: 36px; height: 36px; border-radius: 10px; background: #E0F2FE; color: #0284C7; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .avatar-bubble {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #E0F2FE;
+      border: 1.5px solid #BAE6FD;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.12);
+    }
     .patient-text { display: flex; flex-direction: column; gap: 1px; }
     .name { font-size: 13.5px; font-weight: 700; color: #0F172A; }
     .pid { font-size: 11px; color: #94A3B8; font-family: monospace; }
@@ -323,6 +336,7 @@ interface PatientRow {
 })
 export class AdminPatientsComponent implements OnInit, OnDestroy {
   private firestore = inject(Firestore);
+  readonly avatarService = inject(AvatarService);
 
   private usersUnsub: Unsubscribe | null = null;
   private subsUnsub: Unsubscribe | null = null;

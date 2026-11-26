@@ -2,6 +2,7 @@ import { Component, signal, computed, inject, OnInit, OnDestroy } from '@angular
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Firestore, collection, onSnapshot, query, Unsubscribe } from '@angular/fire/firestore';
+import { AvatarService } from '../../core/services/avatar.service';
 import { UserSubscription } from '../../core/models/subscription.model';
 
 @Component({
@@ -13,6 +14,7 @@ import { UserSubscription } from '../../core/models/subscription.model';
 })
 export class AdminSubscriptionsComponent implements OnInit, OnDestroy {
   private firestore = inject(Firestore);
+  readonly avatarService = inject(AvatarService);
   private subUnsub: Unsubscribe | null = null;
 
   subscriptions = signal<UserSubscription[]>([]);

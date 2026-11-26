@@ -5,6 +5,7 @@ import { Transaction } from '../../core/models/transaction.model';
 import { SessionService } from '../../core/services/session.service';
 import { SubscriptionService } from '../../core/services/subscription.service';
 import { AuthService } from '../../core/services/auth.service';
+import { AvatarService } from '../../core/services/avatar.service';
 import { Unsubscribe } from '@angular/fire/firestore';
 
 @Component({
@@ -18,6 +19,7 @@ export class PaymentHistoryComponent implements OnInit, OnDestroy {
   private sessionService = inject(SessionService);
   private subscriptionService = inject(SubscriptionService);
   private auth = inject(AuthService);
+  readonly avatarService = inject(AvatarService);
   private router = inject(Router);
   private location = inject(Location);
 

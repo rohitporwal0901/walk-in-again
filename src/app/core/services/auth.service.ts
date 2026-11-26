@@ -299,6 +299,25 @@ export class AuthService {
     this.router.navigate([routes[role]]);
   }
 
+  // ─── Update User Profile Avatar ──────────────────────────────────────────
+  async updateUserAvatar(avatarUrl: string, uid?: string): Promise<void> {
+    const targetUid = uid || this.currentUser()?.uid;
+    if (!targetUid) {
+      throw new Error('User is not authenticated.');
+    }
+    const userDocRef = doc(this.firestore, `users/${targetUid}`);
+    await updateDoc(userDocRef, {
+      avatarUrl,
+      updatedAt: new Date().toISOString()
+    });
+
+    // Optimistically update current user signal
+    this.currentUser.update(curr => {
+      if (!curr) return null;
+      return { ...curr, avatarUrl };
+    });
+  }
+
   // ─── Logout (Explicit user action) ──────────────────────────────────────────
   async logout(): Promise<void> {
     if (this.profileUnsubscribe) {
